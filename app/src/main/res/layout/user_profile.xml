@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:p1="http://schemas.android.com/apk/res/android"
+    p1:layout_width="match_parent"
+    p1:layout_height="match_parent"
+    p1:id="@+id/friend_profile_layout"
+    p1:background="#FFF">
+    <EditText
+        p1:hint="Your Name"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/user_name"
+        p1:textColor="#000"
+        p1:textSize="30sp"
+        p1:layout_centerHorizontal="true" />
+    <TextView
+        p1:text="Events attended:"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/events_attended_text"
+        p1:textSize="22sp"
+        p1:textColor="#000"
+        p1:layout_marginTop="50dp"
+        p1:layout_below="@+id/profile_pic"
+        p1:layout_centerHorizontal="true" />
+    <ListView
+        p1:layout_width="match_parent"
+        p1:id="@+id/events_attended_list"
+        p1:minHeight="5dp"
+        p1:layout_height="120dp"
+        p1:background="#FFF"
+        p1:layout_below="@+id/events_attended_text"
+        p1:layout_centerHorizontal="true"
+        p1:layout_marginTop="12dp"
+        p1:scrollbarStyle="insideInset" />
+    <ListView
+        p1:layout_width="match_parent"
+        p1:layout_height="120dp"
+        p1:id="@+id/events_hosted_list"
+        p1:minHeight="5dp"
+        p1:layout_centerHorizontal="true"
+        p1:background="#FFF"
+        p1:layout_below="@+id/events_hosted_text"
+        p1:scrollbarStyle="insideInset"
+        p1:layout_marginTop="12dp"
+        p1:layout_alignStart="@+id/events_attended_list" />
+    <TextView
+        p1:text="College: "
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/user_college"
+        p1:textSize="22sp"
+        p1:textColor="#000"
+        p1:layout_toRightOf="@+id/profile_pic"
+        p1:layout_below="@+id/user_name"
+        p1:layout_marginLeft="15dp" />
+    <TextView
+        p1:text="Age: 19"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/user_age"
+        p1:textSize="22sp"
+        p1:textColor="#000"
+        p1:layout_marginTop="8dp"
+        p1:layout_marginLeft="15dp"
+        p1:layout_below="@+id/user_college"
+        p1:layout_toEndOf="@+id/profile_pic" />
+    <TextView
+        p1:text="User rating:"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/user_rating"
+        p1:textSize="22sp"
+        p1:textColor="#000"
+        p1:layout_marginTop="8dp"
+        p1:layout_marginLeft="15dp"
+        p1:layout_below="@+id/user_age"
+        p1:layout_toEndOf="@+id/profile_pic" />
+    <TextView
+        p1:text="Events hosted:"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:id="@+id/events_hosted_text"
+        p1:textSize="22sp"
+        p1:textColor="#000"
+        p1:layout_below="@+id/events_attended_list"
+        p1:layout_marginTop="12dp"
+        p1:layout_centerHorizontal="true" />
+    <ImageView
+        p1:layout_width="120dp"
+        p1:id="@+id/profile_pic"
+        p1:layout_height="110dp"
+        p1:background="#000"
+        p1:layout_below="@+id/user_name"
+        p1:layout_alignStart="@+id/events_attended_list"
+        p1:layout_marginStart="11dp" />
+    <EditText
+        p1:hint="UCSB"
+        p1:layout_width="wrap_content"
+        p1:layout_height="wrap_content"
+        p1:textSize="22sp"
+        p1:id="@+id/edit_college"
+        p1:textColor="#000"
+        p1:layout_alignBaseline="@+id/user_college"
+        p1:layout_toEndOf="@+id/user_college" />
+    <TextView
+        p1:layout_width="120dp"
+        p1:layout_height="15dp"
+        p1:text="Change picture"
+        p1:textSize="12sp"
+        p1:textColor="#FFF"
+        p1:gravity="center"
+        p1:background="#A9A9A9"
+        p1:layout_below="@+id/profile_pic"
+        p1:layout_alignStart="@+id/events_attended_list"
+        p1:layout_marginStart="11dp" />
+    <ImageView
+        p1:src="@drawable/backarrow"
+        p1:layout_width="40dp"
+        p1:layout_height="40dp"
+        p1:id="@+id/back_arrow"
+        p1:scaleType="fitCenter" p1:layout_alignParentTop="true" p1:layout_alignParentStart="true"/>
+</RelativeLayout>
