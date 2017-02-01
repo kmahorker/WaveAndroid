@@ -96,7 +96,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/back_arrow"
+        android:src="@drawable/backarrow"
         android:id="@+id/back_arrow"
         android:padding="0dp"
         android:layout_above="@+id/host_text"
