@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/find_events"
+            android:title="FIND EVENTS"/>
+        <item
+            android:id="@+id/my_events"
+            android:title="MY EVENTS"/>
+        <item
+            android:id="@+id/friends"
+            android:title="FRIENDS"/>
+        <item
+            android:id="@+id/host"
+            android:title="HOST"/>
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/options"
+                android:title="Options"/>
+            <item
+                android:id="@+id/log_out"
+                android:title="Log out"/>
+        </menu>
+    </item>
+
+</menu>

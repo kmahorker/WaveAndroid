@@ -87,7 +87,7 @@
         p1:layout_marginTop="12dp"
         p1:layout_centerHorizontal="true" />
     <ImageView
-        p1:src="@drawable/backarrow"
+        p1:src="@drawable/back_arrow"
         p1:layout_width="40dp"
         p1:layout_height="40dp"
         p1:id="@+id/back_arrow"

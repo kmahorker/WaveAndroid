@@ -114,7 +114,7 @@
         p1:layout_alignStart="@+id/events_attended_list"
         p1:layout_marginStart="11dp" />
     <ImageView
-        p1:src="@drawable/backarrow"
+        p1:src="@drawable/back_arrow"
         p1:layout_width="40dp"
         p1:layout_height="40dp"
         p1:id="@+id/back_arrow"

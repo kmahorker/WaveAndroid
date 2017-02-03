@@ -13,7 +13,7 @@ import android.provider.ContactsContract;
  */
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 
-public class DatabaseAccess //implements DatabaseInterface
+public class DatabaseAccess implements DatabaseInterface
 {
     public DatabaseAccess()
     {
