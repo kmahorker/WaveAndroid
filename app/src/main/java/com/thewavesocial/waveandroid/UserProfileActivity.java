@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid;
 
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -100,7 +101,7 @@ public class UserProfileActivity extends AppCompatActivity
 
     private void updateActionBar()
     {
-        //getSupportActionBar().setTitle( user.getFirstName() + " " + user.getLastName() );
+        //getSupportActionBar().setTitle(user.getFirstName() + " " + user.getLastName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -117,11 +118,11 @@ public class UserProfileActivity extends AppCompatActivity
     {
         switch (item.getItemId())
         {
-            case R.id.home:
-                onBackPressed();
+            case android.R.id.home:
+                finish();
                 return true;
             case R.id.profile_edit_button:
-                onBackPressed();
+                //action here
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -141,7 +142,7 @@ public class UserProfileActivity extends AppCompatActivity
 
         age.setText("Age: " + 18);
         college.setText("College: " + "UCSB");
-        getSupportActionBar().setTitle( "Melvin Zaid" );
         image.setImageResource(R.drawable.profile_sample);
+        getSupportActionBar().setTitle("            Melvin Zaid");
     }
 }
