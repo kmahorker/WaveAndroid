@@ -17,13 +17,12 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="150dp"
+        android:layout_width="160dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:background="@color/appColor"
         android:theme="@style/DrawerStyle"
-        android:layout_marginTop="50dp"
         app:headerLayout="@layout/nav_header_home_drawer"
         app:menu="@menu/home_drawer_layout_drawer"
         app:itemTextColor="#FFF"/>

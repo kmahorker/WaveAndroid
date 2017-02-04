@@ -3,15 +3,7 @@
     p1:layout_width="match_parent"
     p1:layout_height="match_parent"
     p1:id="@+id/friend_profile_layout"
-    p1:background="#FFF">
-    <EditText
-        p1:hint="Your Name"
-        p1:layout_width="wrap_content"
-        p1:layout_height="wrap_content"
-        p1:id="@+id/user_name"
-        p1:textColor="#000"
-        p1:textSize="30sp"
-        p1:layout_centerHorizontal="true" />
+    p1:background="@color/appColor">
     <TextView
         p1:text="Events attended:"
         p1:layout_width="wrap_content"
@@ -92,7 +84,7 @@
         p1:background="#000"
         p1:layout_below="@+id/user_name"
         p1:layout_alignStart="@+id/events_attended_list"
-        p1:layout_marginStart="11dp" />
+        p1:layout_marginStart="50dp" />
     <EditText
         p1:hint="UCSB"
         p1:layout_width="wrap_content"
@@ -112,11 +104,5 @@
         p1:background="#A9A9A9"
         p1:layout_below="@+id/profile_pic"
         p1:layout_alignStart="@+id/events_attended_list"
-        p1:layout_marginStart="11dp" />
-    <ImageView
-        p1:src="@drawable/back_arrow"
-        p1:layout_width="40dp"
-        p1:layout_height="40dp"
-        p1:id="@+id/back_arrow"
-        p1:scaleType="fitCenter" p1:layout_alignParentTop="true" p1:layout_alignParentStart="true"/>
+        p1:layout_marginStart="50dp" />
 </RelativeLayout>

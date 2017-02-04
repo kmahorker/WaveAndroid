@@ -20,7 +20,7 @@ import java.util.List;
 public class UserProfileActivity extends AppCompatActivity
 {
     private User user;
-    private EditText username, college;
+    private TextView college;
     private TextView age;
     ImageView image;
 
@@ -30,52 +30,34 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(bundle);
         setContentView(R.layout.user_profile);
 
+
         user = CurrentUser.getTheUser();
-        username = (EditText)findViewById(R.id.user_name);
         college = (EditText)findViewById(R.id.edit_college);
         age = (TextView)findViewById(R.id.user_age);
         image = (ImageView)findViewById(R.id.profile_pic);
 
-        username.setText(user.getFullName());
         age.setText("Age: " + computeAge(user.getBirthday()));
         college.setText(user.getCollege());
-        //image = user.getImage();
-
-        username.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-                user.setFirstName(username.getText().toString()
-                        .substring(0, username.getText().toString().lastIndexOf(' ')));
-                user.setLastName(username.getText().toString()
-                        .substring(username.getText().toString().lastIndexOf(' ') + 1));
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable){}
-        });
-
-        college.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){}
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-                user.setCollege( college.getText().toString() );
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable){}
-        });
 
         updatePartiesAttended( user.getAttending() );
         updatePartiesHosted( user.getHosting() );
+        updateActionBar();
+
+        //image = user.getImage();
+//        college.addTextChangedListener(new TextWatcher()
+//        {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){}
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+//            {
+//                user.setCollege( college.getText().toString() );
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable){}
+//        });
     }
 
     private int computeAge(Date birth)
@@ -110,5 +92,11 @@ public class UserProfileActivity extends AppCompatActivity
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.each_party_item, parties);
         ListView listView = (ListView)findViewById(R.id.events_hosted_list);
         listView.setAdapter(arrayAdapter);
+    }
+
+    private void updateActionBar()
+    {
+        getActionBar().setTitle( user.getFirstName() + " " + user.getLastName() );
+        getActionBar().setIcon(R.drawable.back_arrow);
     }
 }
