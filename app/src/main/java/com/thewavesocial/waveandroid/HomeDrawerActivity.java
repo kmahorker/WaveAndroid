@@ -1,8 +1,10 @@
 package com.thewavesocial.waveandroid;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -24,6 +27,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         setContentView(R.layout.home_drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        updateActionBar();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -63,7 +67,7 @@ public class HomeDrawerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_drawer, menu);
+        getMenuInflater().inflate(R.menu.home_notif_menu, menu);
         return true;
     }
 
@@ -74,6 +78,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         {
             case android.R.id.home:
                 //Do stuff
+                return true;
+            case R.id.notif_button:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,5 +121,10 @@ public class HomeDrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void updateActionBar()
+    {
+        getSupportActionBar().setTitle("                 WAVE");
     }
 }
