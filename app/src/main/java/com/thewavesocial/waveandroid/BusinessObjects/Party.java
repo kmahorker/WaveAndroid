@@ -1,5 +1,8 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,8 +14,7 @@ import java.util.List;
  * 3. Changed DateTime to Date
  * - Wei Tung
  */
-public class Party
-{
+public class Party implements Parcelable {
     private long partyID;
     private String name;
     private double price; //decimal == double?
@@ -168,4 +170,59 @@ public class Party
         return name;
     }
 
+
+    protected Party(Parcel in) {
+        partyID = in.readLong();
+        name = in.readString();
+        price = in.readDouble();
+        hostName = in.readString();
+        long tmpStartingDateTime = in.readLong();
+        startingDateTime = tmpStartingDateTime != -1 ? new Date(tmpStartingDateTime) : null;
+        long tmpEndingDateTime = in.readLong();
+        endingDateTime = tmpEndingDateTime != -1 ? new Date(tmpEndingDateTime) : null;
+        address = in.readString();
+        if (in.readByte() == 0x01) {
+            attendingUsers = new ArrayList<Long>();
+            in.readList(attendingUsers, Long.class.getClassLoader());
+        } else {
+            attendingUsers = null;
+        }
+        isPublic = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(partyID);
+        dest.writeString(name);
+        dest.writeDouble(price);
+        dest.writeString(hostName);
+        dest.writeLong(startingDateTime != null ? startingDateTime.getTime() : -1L);
+        dest.writeLong(endingDateTime != null ? endingDateTime.getTime() : -1L);
+        dest.writeString(address);
+        if (attendingUsers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(attendingUsers);
+        }
+        dest.writeByte((byte) (isPublic ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Party> CREATOR = new Parcelable.Creator<Party>() {
+        @Override
+        public Party createFromParcel(Parcel in) {
+            return new Party(in);
+        }
+
+        @Override
+        public Party[] newArray(int size) {
+            return new Party[size];
+        }
+    };
 }
