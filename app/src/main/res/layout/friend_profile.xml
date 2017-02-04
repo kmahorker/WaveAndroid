@@ -87,12 +87,6 @@
         p1:layout_marginTop="12dp"
         p1:layout_centerHorizontal="true" />
     <ImageView
-        p1:src="@drawable/back_arrow"
-        p1:layout_width="40dp"
-        p1:layout_height="40dp"
-        p1:id="@+id/back_arrow"
-        p1:scaleType="fitCenter" />
-    <ImageView
         p1:layout_width="120dp"
         p1:id="@+id/profile_pic"
         p1:layout_height="110dp"
