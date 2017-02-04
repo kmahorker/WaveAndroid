@@ -20,6 +20,7 @@ public class FriendProfileActivity extends AppCompatActivity
         super.onCreate(bundle);
         setContentView(R.layout.friend_profile);
 
+        //TODO get intent, extract user object, and update the fields
         // access current user data
         User user = CurrentUser.getTheUser();
         updateUsername(user.getFullName());

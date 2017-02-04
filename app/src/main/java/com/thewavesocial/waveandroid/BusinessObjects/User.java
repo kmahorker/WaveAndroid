@@ -1,5 +1,12 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
+//import android.media.Image;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,8 +18,7 @@ import java.util.List;
  * 3. Changed DateTime to Date
  * - Wei Tung
  */
-public class User
-{
+public class User implements Parcelable {
     private long userID;
     private String firstName;
     private String lastName;
@@ -27,9 +33,13 @@ public class User
     private List<Long> attending;
     private List<Long> hosting;
     private List<Long> bouncing;
+    private BitmapDrawable profilePic;
+
+
 
     public User()
     {
+
         userID = 0;
         firstName = "";
         lastName = "";
@@ -42,6 +52,7 @@ public class User
         attending = new ArrayList<Long>();
         hosting = new ArrayList<Long>();
         bouncing = new ArrayList<Long>();
+        profilePic = new BitmapDrawable();
     }
 
     public User(//Int64 userID,
@@ -56,7 +67,8 @@ public class User
                 List<Long> bestFriends,
                 List<Long> attending,
                 List<Long> hosting,
-                List<Long> bouncing)
+                List<Long> bouncing,
+                BitmapDrawable profilePic)
     {
         //this.userID = userID;
         this.firstName = firstName;
@@ -71,6 +83,7 @@ public class User
         this.attending = attending;
         this.hosting = hosting;
         this.bouncing = bouncing;
+        this.profilePic = profilePic;
     }
 
     //Deleting Block
@@ -191,6 +204,8 @@ public class User
         this.bouncing = bouncing;
     }
 
+    public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
+
     //Getter Block
     public long getUserID()
     {
@@ -256,4 +271,114 @@ public class User
     {
         return bouncing;
     }
+
+    public BitmapDrawable getProfilePic() { return profilePic; }
+
+    //http://www.parcelabler.com/
+    //Allows putExtra(String, Parcelable Obj)
+    protected User(Parcel in) {
+        userID = in.readLong();
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        password = in.readString();
+        college = in.readString();
+        gender = in.readString();
+        long tmpBirthday = in.readLong();
+        birthday = tmpBirthday != -1 ? new Date(tmpBirthday) : null;
+        if (in.readByte() == 0x01) {
+            bestFriends = new ArrayList<Long>();
+            in.readList(bestFriends, Long.class.getClassLoader());
+        } else {
+            bestFriends = null;
+        }
+        if (in.readByte() == 0x01) {
+            friends = new ArrayList<Long>();
+            in.readList(friends, Long.class.getClassLoader());
+        } else {
+            friends = null;
+        }
+        if (in.readByte() == 0x01) {
+            attending = new ArrayList<Long>();
+            in.readList(attending, Long.class.getClassLoader());
+        } else {
+            attending = null;
+        }
+        if (in.readByte() == 0x01) {
+            hosting = new ArrayList<Long>();
+            in.readList(hosting, Long.class.getClassLoader());
+        } else {
+            hosting = null;
+        }
+        if (in.readByte() == 0x01) {
+            bouncing = new ArrayList<Long>();
+            in.readList(bouncing, Long.class.getClassLoader());
+        } else {
+            bouncing = null;
+        }
+        Bitmap bitmap = (Bitmap)in.readParcelable(getClass().getClassLoader());
+        profilePic = new BitmapDrawable(bitmap);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(userID);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(college);
+        dest.writeString(gender);
+        dest.writeLong(birthday != null ? birthday.getTime() : -1L);
+        if (bestFriends == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bestFriends);
+        }
+        if (friends == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(friends);
+        }
+        if (attending == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(attending);
+        }
+        if (hosting == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(hosting);
+        }
+        if (bouncing == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bouncing);
+        }
+        Bitmap bitmap = profilePic.getBitmap();
+        dest.writeParcelable(bitmap, flags);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }
