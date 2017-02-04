@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,20 +33,21 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(bundle);
         setContentView(R.layout.user_profile);
 
-
         user = CurrentUser.getTheUser();
-        college = (EditText)findViewById(R.id.edit_college);
-        age = (TextView)findViewById(R.id.user_age);
-        image = (ImageView)findViewById(R.id.profile_pic);
 
+        college = (TextView)findViewById(R.id.user_college);
+        college.setText("College: " + user.getCollege());
+        age = (TextView)findViewById(R.id.user_age);
         age.setText("Age: " + computeAge(user.getBirthday()));
-        college.setText(user.getCollege());
+        image = (ImageView)findViewById(R.id.profile_pic);
+        //image = user.getImage();
 
         updatePartiesAttended( user.getAttending() );
         updatePartiesHosted( user.getHosting() );
+
+        updateSample();
         updateActionBar();
 
-        //image = user.getImage();
 //        college.addTextChangedListener(new TextWatcher()
 //        {
 //            @Override
@@ -96,7 +100,48 @@ public class UserProfileActivity extends AppCompatActivity
 
     private void updateActionBar()
     {
-        getActionBar().setTitle( user.getFirstName() + " " + user.getLastName() );
-        getActionBar().setIcon(R.drawable.back_arrow);
+        //getSupportActionBar().setTitle( user.getFirstName() + " " + user.getLastName() );
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.user_profile_edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.profile_edit_button:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void updateSample()
+    {
+        List<Long> sampleList = new ArrayList<Long>();
+        sampleList.add(new Long(1));
+        sampleList.add(new Long(2));
+        sampleList.add(new Long(3));
+        sampleList.add(new Long(4));
+        sampleList.add(new Long(5));
+        updatePartiesAttended(sampleList);
+        updatePartiesHosted( sampleList );
+
+        age.setText("Age: " + 18);
+        college.setText("College: " + "UCSB");
+        getSupportActionBar().setTitle( "Melvin Zaid" );
+        image.setImageResource(R.drawable.profile_sample);
     }
 }
