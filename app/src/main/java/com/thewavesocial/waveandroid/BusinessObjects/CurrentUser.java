@@ -1,7 +1,7 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
 //Nothing changed
-public final class CurrentUser extends User
+public final class CurrentUser
 {
     private static User theUser = new User(); //replace with getCurrentUser from databaseAccess class
 

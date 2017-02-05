@@ -105,6 +105,7 @@
         p1:layout_below="@+id/profile_pic"
         p1:layout_alignStart="@+id/events_attended_list"
         p1:layout_marginStart="11dp" />
+    <!-- NOT INCLUDED IN MVP
     <TextView
         p1:text="is attending an event right now"
         p1:id="@+id/attending_text"
@@ -115,5 +116,5 @@
         p1:paddingTop="5dp"
         p1:paddingBottom="10dp"
         p1:layout_below="@+id/user_name"
-        p1:textColor="#9ACD32" />
+        p1:textColor="#9ACD32" /> -->
 </RelativeLayout>

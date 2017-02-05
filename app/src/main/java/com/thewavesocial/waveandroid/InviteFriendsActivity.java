@@ -11,6 +11,5 @@ public class InviteFriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
 
-
     }
 }

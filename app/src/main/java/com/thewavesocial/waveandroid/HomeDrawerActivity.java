@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -92,6 +94,7 @@ public class HomeDrawerActivity extends AppCompatActivity
     {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment fragment = null;
 
         if (id == R.id.find_events)
         {
@@ -103,7 +106,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.friends)
         {
-
+            fragment = new FriendsListFragment();
         }
         else if (id == R.id.host)
         {
@@ -118,8 +121,12 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         }
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_home_drawer, fragment).commit(); //Not sure if this is right
+
         return true;
     }
 
