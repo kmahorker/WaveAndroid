@@ -5,7 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class MapsFragmentActivity extends Fragment implements OnMapReadyCallback
         super.onViewCreated(view, savedInstanceState);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
         mapFragment.getMapAsync(this);
     }
 

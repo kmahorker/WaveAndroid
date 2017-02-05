@@ -1,7 +1,9 @@
 package com.thewavesocial.waveandroid;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,15 +21,19 @@ public class FriendProfileActivity extends AppCompatActivity
     {
         super.onCreate(bundle);
         setContentView(R.layout.friend_profile);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //TODO get intent, extract user object, and update the fields
         // access current user data
-        User user = CurrentUser.getTheUser();
+        Intent intent = getIntent();
+        User user = intent.getExtras().getParcelable("userObj");
         updateUsername(user.getFullName());
         updateAge(user.getBirthday());
         updateCollege(user.getCollege());
         updatePartiesAttended(user.getAttending());
         updatePartiesHosted(user.getHosting());
+
+
+
     }
 
     private void updateUsername(String str)
@@ -80,5 +86,15 @@ public class FriendProfileActivity extends AppCompatActivity
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.each_party_item, parties);
         ListView listView = (ListView)findViewById(R.id.events_hosted_list);
         listView.setAdapter(arrayAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home)
+        {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

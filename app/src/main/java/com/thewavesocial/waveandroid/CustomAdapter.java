@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +23,16 @@ import java.util.List;
 
 public class CustomAdapter extends BaseAdapter {
     String [] result;
-    FriendsListActivity context;
+    FragmentActivity context;
     int [] imageId;
     List<User> userList;
+    FriendsListFragment fragment;
     private static LayoutInflater inflater=null;
-    public CustomAdapter(FriendsListActivity mainActivity, List<User> userList) {
+    public CustomAdapter(FragmentActivity mainActivity, FriendsListFragment fragment, List<User> userList) {
         this.userList = userList;
         //result = friendsNamesList;
         context = mainActivity;
+        this.fragment = fragment;
         //imageId = friendsImagesList;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -70,7 +74,7 @@ public class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
-                    context.showFriendProfileActivity(v, userList.get(position));
+                    fragment.showFriendProfileActivity(v, userList.get(position));
                    // Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
 
                 }

@@ -19,7 +19,8 @@
 
         <activity android:name=".FriendProfileActivity" />
         <activity android:name=".PartyProfileActivity" />
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".UserProfileActivity">
+        </activity>
         <activity android:name=".LoginActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -40,10 +41,12 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter></activity>
+            </intent-filter>
+        </activity>
+        <!--<activity android:name=".FriendsListActivity">
 
-        <activity android:name=".FriendsListActivity"></activity>
+        </activity>
+        -->
         <activity android:name=".InviteFriendsActivity"></activity>
     </application>
-
 </manifest>
