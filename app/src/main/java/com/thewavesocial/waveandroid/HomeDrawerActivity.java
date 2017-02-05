@@ -30,6 +30,27 @@ public class HomeDrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         updateActionBar();
 
+        FloatingActionButton sos_button = (FloatingActionButton) findViewById(R.id.sos_button);
+        sos_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        FloatingActionButton cur_loc_button = (FloatingActionButton) findViewById(R.id.sos_button);
+        cur_loc_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
