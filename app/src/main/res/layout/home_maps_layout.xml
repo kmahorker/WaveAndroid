@@ -3,4 +3,22 @@
         android:id="@+id/maps_fragment"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              class="com.google.android.gms.maps.SupportMapFragment"></fragment>
+              class="com.google.android.gms.maps.SupportMapFragment">
+    <ImageView
+        android:id="@+id/sos_button"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="130dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/sos_button"/>
+
+    <ImageView
+        android:id="@+id/cur_loc_button"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/compass"/>
+</fragment>
