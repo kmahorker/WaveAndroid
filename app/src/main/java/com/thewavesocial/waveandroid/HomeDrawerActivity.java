@@ -31,16 +31,6 @@ public class HomeDrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         updateActionBar();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,6 +40,11 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        FragmentManager fragmentM = getSupportFragmentManager();
+        Fragment frag = new MapsFragmentActivity();
+        fragmentM.beginTransaction().replace(R.id.content_home_drawer, frag).commit();
+
     }
 
     @Override

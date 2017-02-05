@@ -1,10 +1,21 @@
 package com.thewavesocial.waveandroid;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+//import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -13,20 +24,26 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 
 import java.util.List;
+import java.util.zip.Inflater;
 
-public class MapsFragmentActivity extends FragmentActivity implements OnMapReadyCallback
+public class MapsFragmentActivity extends Fragment implements OnMapReadyCallback
 {
 
     private GoogleMap mMap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_maps_layout);
+        return inflater.inflate(R.layout.home_maps_layout, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.maps_fragment);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
         mapFragment.getMapAsync(this);
     }
 
@@ -34,7 +51,7 @@ public class MapsFragmentActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-        refreshParty("UCSB", 34, 120);
+        refreshParty("UCSB", 34.4133, -119.8610);
     }
 
     // Add a marker to UCSB and move the camera
@@ -44,8 +61,14 @@ public class MapsFragmentActivity extends FragmentActivity implements OnMapReady
         mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .title("Marker at " + name)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.happy_house)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(150,150))));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
+    }
+
+    public Bitmap resizeMapIcons(int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_house);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
 //    public void refreshParties(GoogleMap googleMap, List<String> parties_addresses)
