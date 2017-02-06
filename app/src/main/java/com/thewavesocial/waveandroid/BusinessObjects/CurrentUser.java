@@ -5,8 +5,6 @@ public final class CurrentUser
 {
     private static User theUser = new User(); //replace with getCurrentUser from databaseAccess class
 
-    //string n = CurrentUser.theUser.getFirstName();
-
     public static User getTheUser()
     {
         return theUser;

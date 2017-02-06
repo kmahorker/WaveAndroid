@@ -4,37 +4,15 @@
     android:layout_height="match_parent"
     android:id="@+id/friend_profile_layout"
     android:background="@color/appColor">
-    <TextView
-        android:text="Events attended:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/events_attended_text"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/profile_pic"
-        android:layout_centerHorizontal="true" />
-    <ListView
-        android:layout_width="match_parent"
-        android:id="@+id/events_attended_list"
-        android:minHeight="5dp"
-        android:layout_height="120dp"
-        android:background="#FFF"
-        android:layout_below="@+id/events_attended_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:scrollbarStyle="insideInset" />
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:id="@+id/events_hosted_list"
-        android:minHeight="5dp"
-        android:layout_centerHorizontal="true"
-        android:background="#FFF"
-        android:layout_below="@+id/events_hosted_text"
-        android:scrollbarStyle="insideInset"
-        android:layout_marginTop="12dp"
-        android:layout_alignStart="@+id/events_attended_list" />
+
+    <ImageView
+    android:layout_width="120dp"
+    android:id="@+id/profile_pic"
+    android:background="#000"
+    android:layout_below="@+id/user_name"
+    android:layout_alignStart="@+id/events_attended_list"
+    android:layout_marginStart="50dp"
+    android:layout_marginTop="20dp" android:layout_height="120dp"/> <!-- profile picture-->
     <TextView
         android:text="College: UCSB"
         android:layout_width="wrap_content"
@@ -45,7 +23,7 @@
         android:layout_toRightOf="@+id/profile_pic"
         android:layout_below="@+id/user_name"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"/> <!--college (text)-->
     <TextView
         android:text="Age: 19"
         android:layout_width="wrap_content"
@@ -56,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="15dp"
         android:layout_below="@+id/user_college"
-        android:layout_toEndOf="@+id/profile_pic" />
+        android:layout_toEndOf="@+id/profile_pic" /> <!--age (text)-->
     <TextView
         android:text="User rating:"
         android:layout_width="wrap_content"
@@ -67,7 +45,27 @@
         android:layout_marginTop="8dp"
         android:layout_marginLeft="15dp"
         android:layout_below="@+id/user_age"
-        android:layout_toEndOf="@+id/profile_pic" />
+        android:layout_toEndOf="@+id/profile_pic" /> <!--user rating (text)-->
+    <TextView
+        android:text="Events attended:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/events_attended_text"
+        android:textSize="22sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/profile_pic"
+        android:layout_centerHorizontal="true" /> <!--events attended (text)-->
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/events_attended_list"
+        android:minHeight="5dp"
+        android:layout_height="120dp"
+        android:background="#FFF"
+        android:layout_below="@+id/events_attended_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:scrollbarStyle="insideInset" /> <!--events attended (list)-->
     <TextView
         android:text="Events hosted:"
         android:layout_width="wrap_content"
@@ -77,13 +75,17 @@
         android:textColor="#FFF"
         android:layout_below="@+id/events_attended_list"
         android:layout_marginTop="12dp"
-        android:layout_centerHorizontal="true" />
-    <ImageView
-        android:layout_width="120dp"
-        android:id="@+id/profile_pic"
-        android:background="#000"
-        android:layout_below="@+id/user_name"
-        android:layout_alignStart="@+id/events_attended_list"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp" android:layout_height="120dp"/>
+        android:layout_centerHorizontal="true" /> <!--events hosted (text)-->
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/events_hosted_list"
+        android:minHeight="5dp"
+        android:layout_centerHorizontal="true"
+        android:background="#FFF"
+        android:layout_below="@+id/events_hosted_text"
+        android:scrollbarStyle="insideInset"
+        android:layout_marginTop="12dp"
+        android:layout_alignStart="@+id/events_attended_list" /> <!--events hosted (list)-->
+
 </RelativeLayout>

@@ -1,7 +1,9 @@
 package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,6 +18,7 @@ public class EditUserProfileActivity extends AppCompatActivity
 {
     EditText edit_email, edit_school, edit_bday,edit_address;
     User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -38,6 +41,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         setActionbar();
     }
 
+    //setup the actionbar
     private void setActionbar()
     {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,6 +60,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         });
     }
 
+    //send new data back to user info
     private void updateUserData()
     {
         user.setEmail(edit_email.getText().toString());
@@ -73,8 +78,34 @@ public class EditUserProfileActivity extends AppCompatActivity
     {
         if (item.getItemId() == android.R.id.home)
         {
-            onBackPressed();
+            askToSave();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    //displays a dialogue asking the user to save changes or not
+    private void askToSave()
+    {
+        AlertDialog.Builder confirmMessage = new AlertDialog.Builder(this);
+        confirmMessage.setTitle("Delete Unsaved Data")
+                .setMessage("Are you sure you want to discard the changes?")
+                .setCancelable(false)
+                .setPositiveButton("Discard", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        onBackPressed();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        //do nothing
+                    }
+                })
+                .show();
     }
 }
