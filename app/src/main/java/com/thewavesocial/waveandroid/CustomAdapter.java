@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,11 +27,14 @@ public class CustomAdapter extends BaseAdapter {
     String [] result;
     FragmentActivity context;
     int [] imageId;
-    List<User> userList;
+    List<User> userList = new ArrayList<User>();;
     FriendsListFragment fragment;
     private static LayoutInflater inflater=null;
+
     public CustomAdapter(FragmentActivity mainActivity, FriendsListFragment fragment, List<User> userList) {
-        this.userList = userList;
+        super();
+        this.userList.addAll(userList);
+        //this.userList.addAll(userList);
         //result = friendsNamesList;
         context = mainActivity;
         this.fragment = fragment;
@@ -58,10 +63,15 @@ public class CustomAdapter extends BaseAdapter {
         ImageView img;
     }
 
-    public void setUserList(List<User> user){
+    /*public void setUserList(List<User> user){
         this.userList = user;
-    }
+    }*/
 
+    public void updateUserList(List<User> user){
+        userList.clear();
+        userList.addAll(user);
+        this.notifyDataSetChanged();
+    }
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
@@ -79,8 +89,9 @@ public class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
+                    Log.d("query", userList.get(position).getFirstName());
                     fragment.showFriendProfileActivity(v, userList.get(position));
-                   // Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
+                   //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
 
                 }
             });

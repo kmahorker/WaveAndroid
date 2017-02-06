@@ -37,7 +37,7 @@ public class FriendsListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private FriendsListFragment thisFragment;
    // private OnFragmentInteractionListener mListener;
 
     public FriendsListFragment() {
@@ -77,6 +77,7 @@ public class FriendsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_friends_list, container, false);
+        thisFragment = this;
         //ListView friendsList = (ListView) findViewById(R.id.friendsList);
         //List<User> users = generateTestUserList(); //TODO testing
         //friendsList.setAdapter(new CustomAdapter(this, users));
@@ -107,10 +108,11 @@ public class FriendsListFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List<User> refinedUserList = search(friendsUsers, query);
+                List<User> refinedUserList = new ArrayList<User>();
+                refinedUserList.addAll(search(friendsUsers, query));
                 //friendsList.setAdapter(null);
-                adapt.setUserList(refinedUserList);
-                adapt.notifyDataSetChanged();
+                adapt.updateUserList(refinedUserList);
+                //adapt.notifyDataSetChanged();
                 friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
                 searchView.clearFocus();
                 return true;
@@ -119,9 +121,9 @@ public class FriendsListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 List<User> refinedUserList = search(friendsUsers, newText);
-                adapt.setUserList(refinedUserList);
-                adapt.notifyDataSetChanged();
-                friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                adapt.updateUserList(refinedUserList);
+                //adapt.notifyDataSetChanged();
+                friendsList.setAdapter(new CustomAdapter(getActivity(), thisFragment , refinedUserList));
                 return true;
             }
         });
@@ -158,8 +160,8 @@ public class FriendsListFragment extends Fragment {
         User d = new User();
         User e = new User();
 
-        a.setFirstName("Bobasdfasdf");
-        a.setLastName("Jone");
+        a.setFirstName("Bob");
+        a.setLastName("Jones");
         b.setFirstName("John");
         b.setLastName("Smith");
         c.setFirstName("Jone");
@@ -167,7 +169,7 @@ public class FriendsListFragment extends Fragment {
         d.setFirstName("Turn");
         d.setLastName("Up");
         e.setFirstName("Kau");
-        e.setLastName("Mahlkasdjfalsk;dfjasdf");
+        e.setLastName("Mah");
 
         userList.add(a);
         userList.add(b);
@@ -188,17 +190,19 @@ public class FriendsListFragment extends Fragment {
         for(User u : us){
 
             if((u.getFirstName().matches("(?i:" + query + ".*)"))){
-                //System.out.print("  firstName: " + u.getFirstName());
-                //System.out.print("    bool: " + u.getFirstName().contains(query));
+                Log.d("V","  firstName: " + u.getFirstName());
+                Log.d("V","    bool: " + u.getFirstName().contains(query));
                 users.add(u);
             }
 
             else if(u.getLastName().matches("(?i:" + query + ".*)")){
-                //System.out.print("  lastName: " + u.getLastName());
-                //System.out.print("    bool: " + u.getLastName().contains(query));
+                Log.d("V","  lastName: " + u.getLastName());
+                Log.d("V","    bool: " + u.getLastName().contains(query));
                 users.add(u);
             }
-            //System.out.println("    " + users);
+            for(User check: users) {
+                Log.d("V","    " + check.getFirstName());
+            }
         }
 
         //System.out.println("    " + users);
