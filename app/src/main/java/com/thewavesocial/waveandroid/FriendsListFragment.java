@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,10 +107,11 @@ public class FriendsListFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                List<User> refinedUserList = search(friendsUsers, query);
+                List<User> refinedUserList = new ArrayList<User>();
+                refinedUserList.addAll(search(friendsUsers, query));
                 //friendsList.setAdapter(null);
-                adapt.setUserList(refinedUserList);
-                adapt.notifyDataSetChanged();
+                adapt.updateUserList(refinedUserList);
+                //adapt.notifyDataSetChanged();
                 //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
                 searchView.clearFocus();
                 return true;
@@ -118,8 +120,8 @@ public class FriendsListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 List<User> refinedUserList = search(friendsUsers, newText);
-                adapt.setUserList(refinedUserList);
-                adapt.notifyDataSetChanged();
+                adapt.updateUserList(refinedUserList);
+                //adapt.notifyDataSetChanged();
                 //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
                 return true;
             }
@@ -157,8 +159,8 @@ public class FriendsListFragment extends Fragment {
         User d = new User();
         User e = new User();
 
-        a.setFirstName("Bobasdfasdf");
-        a.setLastName("Jonesokokokokokokokokokokokokokok");
+        a.setFirstName("Bob");
+        a.setLastName("Jones");
         b.setFirstName("John");
         b.setLastName("Smith");
         c.setFirstName("Dumb");
@@ -166,7 +168,7 @@ public class FriendsListFragment extends Fragment {
         d.setFirstName("Turn");
         d.setLastName("Up");
         e.setFirstName("Kau");
-        e.setLastName("Mahlkasdjfalsk;dfjasdf");
+        e.setLastName("Mah");
 
         userList.add(a);
         userList.add(b);
@@ -179,7 +181,8 @@ public class FriendsListFragment extends Fragment {
     }
 
     public List<User> search(List<User> us, String query){
-        System.out.print("query: " + query);
+        //System.out.print("query: " + query);
+        Log.d("V", "query: " + query);
         if(query == ""){
             return us;
         }
@@ -187,17 +190,19 @@ public class FriendsListFragment extends Fragment {
         for(User u : us){
 
             if((u.getFirstName().matches("(?i:" + query + ".*)"))){
-                //System.out.print("  firstName: " + u.getFirstName());
-                //System.out.print("    bool: " + u.getFirstName().contains(query));
+                Log.d("V","  firstName: " + u.getFirstName());
+                Log.d("V","    bool: " + u.getFirstName().contains(query));
                 users.add(u);
             }
 
             else if(u.getLastName().matches("(?i:" + query + ".*)")){
-                //System.out.print("  lastName: " + u.getLastName());
-                //System.out.print("    bool: " + u.getLastName().contains(query));
+                Log.d("V","  lastName: " + u.getLastName());
+                Log.d("V","    bool: " + u.getLastName().contains(query));
                 users.add(u);
             }
-            //System.out.println("    " + users);
+            for(User check: users) {
+                Log.d("V","    " + check.getFirstName());
+            }
         }
 
         //System.out.println("    " + users);
