@@ -42,29 +42,55 @@ public class UserProfileFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        user = CurrentUser.getTheUser();
+        user = CurrentUser.theUser;
 
-        college = (TextView)view.findViewById(R.id.user_college);
-        college.setText("College: " + user.getCollege());
-        age = (TextView)view.findViewById(R.id.user_age);
-        age.setText("Age: " + computeAge(user.getBirthday()));
-        image = (ImageView)view.findViewById(R.id.profile_pic);
-        image.setImageDrawable(user.getProfilePic());
 
+        updateProfileInfo();
+        updateActionbar();
         updatePartiesAttended( user.getAttending() );
         updatePartiesHosted( user.getHosting() );
-
         updateSample();
-        updateActionbar(user.getFirstName() + " " + user.getLastName());
-
     }
 
-    //update actionbar
-    private void updateActionbar(String title)
+    @Override //Update result after new user data saved
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK && requestCode == 1)
+        {
+            //store data to User
+            User savedUser = data.getExtras().getParcelable("savedUserInfo");
+            user.setEmail(savedUser.getEmail());
+            user.setCollege(savedUser.getCollege());
+            user.setBirthday(savedUser.getBirthday());
+            user.setAddress(savedUser.getAddress());
+            user.setProfilePic(savedUser.getProfilePic());
+
+            //display data on profile
+            updateActionbar();
+            updateProfileInfo();
+        }
+    }
+
+//------------------------------------------------------------------------------ OnCreate Sub-tasks
+
+    //display user information
+    private void updateProfileInfo()
+    {
+        college = (TextView)getActivity().findViewById(R.id.user_college);
+        college.setText("College: " + user.getCollege());
+        age = (TextView)getActivity().findViewById(R.id.user_age);
+        age.setText("Age: " + computeAge(user.getBirthday()));
+        image = (ImageView)getActivity().findViewById(R.id.profile_pic);
+        image.setImageDrawable(user.getProfilePic());
+    }
+
+    //display actionbar
+    private void updateActionbar()
     {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_user);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle(title);
+        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle(user.getFirstName() + " " + user.getLastName());
 
         ImageView actionbar_userprofile = (ImageView) getActivity().findViewById(R.id.actionbar_userprofile);
         actionbar_userprofile.setOnClickListener(new View.OnClickListener()
@@ -77,25 +103,6 @@ public class UserProfileFragment extends Fragment
                 startActivityForResult(intent, 1);
             }
         });
-    }
-
-    //compute age based on birthday: need fixed
-    private int computeAge(Date birth)
-    {
-        Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.getYear(), bmonth = birth.getMonth(), bday = birth.getDate();
-        if (month == bmonth)
-        {
-            if (day < bday)
-                return year - byear - 1;
-            else
-                return year - byear;
-        }
-        else if (month > bmonth)
-            return year - byear;
-        else
-            return year - byear - 1;
     }
 
     //update parties attended
@@ -116,32 +123,23 @@ public class UserProfileFragment extends Fragment
         listView.setAdapter(arrayAdapter);
     }
 
-    //Update result after new user data saved
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    //compute age based on birthday: need fixed
+    private int computeAge(Date birth)
     {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(user.getCollege());
-        if(resultCode == Activity.RESULT_OK && requestCode == 1)
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
+        int byear = birth.getYear(), bmonth = birth.getMonth(), bday = birth.getDate();
+        if (month == bmonth)
         {
-            //store data to User
-            User savedUser = data.getExtras().getParcelable("savedUserInfo");
-            user.setEmail(savedUser.getEmail());
-            user.setCollege(savedUser.getCollege());
-            user.setBirthday(savedUser.getBirthday());
-            user.setAddress(savedUser.getAddress());
-            user.setProfilePic(savedUser.getProfilePic());
-
-            //display data on profile
-            updateActionbar(user.getFirstName() + " " + user.getLastName());
-            college = (TextView)getActivity().findViewById(R.id.user_college);
-            age = (TextView)getActivity().findViewById(R.id.user_age);
-            image = (ImageView)getActivity().findViewById(R.id.profile_pic);
-
-            college.setText("College: " + user.getCollege());
-            age.setText("Age: " + computeAge(user.getBirthday()));
-            image.setImageDrawable(user.getProfilePic());
+            if (day < bday)
+                return year - byear - 1;
+            else
+                return year - byear;
         }
+        else if (month > bmonth)
+            return year - byear;
+        else
+            return year - byear - 1;
     }
 
     //Sample dummies for testing purpose

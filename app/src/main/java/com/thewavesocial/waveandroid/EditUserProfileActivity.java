@@ -25,55 +25,15 @@ public class EditUserProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_profile);
 
-        edit_email = (EditText) findViewById(R.id.edit_email);
-        edit_school = (EditText) findViewById(R.id.edit_school);
-        edit_bday = (EditText) findViewById(R.id.edit_bday);
-        edit_address = (EditText) findViewById(R.id.edit_address);
-
         Intent intent = getIntent();
         user = intent.getExtras().getParcelable("myProfileObj");
 
-        edit_email.setText(user.getEmail());
-        edit_school.setText(user.getCollege());
-        edit_bday.setText(user.getBirthday().toString());
-        edit_address.setText(user.getAddress());
-
-        setActionbar();
-    }
-
-    //setup the actionbar
-    private void setActionbar()
-    {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.actionbar_edit_user);
-        TextView save_text = (TextView) findViewById(R.id.actionbar_editsave);
-
-        save_text.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                updateUserData();
-                onBackPressed();
-            }
-        });
-    }
-
-    //send new data back to user info
-    private void updateUserData()
-    {
-        user.setEmail(edit_email.getText().toString());
-        user.setCollege(edit_school.getText().toString());
-        //user.setBirthday(edit_bday.getText().toString());
-        user.setAddress(edit_address.getText().toString());
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("savedUserInfo", user);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        updateFieldText();
+        updateActionbar();
     }
 
     @Override
+    //onClick event for back button pressed
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (item.getItemId() == android.R.id.home)
@@ -83,7 +43,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    //displays a dialogue asking the user to save changes or not
+    //ask user to save changes or not
     private void askToSave()
     {
         AlertDialog.Builder confirmMessage = new AlertDialog.Builder(this);
@@ -107,5 +67,55 @@ public class EditUserProfileActivity extends AppCompatActivity
                     }
                 })
                 .show();
+    }
+
+    //send new data back to user info
+    private void saveData()
+    {
+        user.setEmail(edit_email.getText().toString());
+        user.setCollege(edit_school.getText().toString());
+        //user.setBirthday(edit_bday.getText().toString());
+        user.setAddress(edit_address.getText().toString());
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("savedUserInfo", user);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+
+//------------------------------------------------------------------------------ OnCreate Sub-tasks
+
+    //update text fields with user info
+    private void updateFieldText()
+    {
+        //get references
+        edit_email = (EditText) findViewById(R.id.edit_email);
+        edit_school = (EditText) findViewById(R.id.edit_school);
+        edit_bday = (EditText) findViewById(R.id.edit_bday);
+        edit_address = (EditText) findViewById(R.id.edit_address);
+
+        //update text with old user info
+        edit_email.setText(user.getEmail());
+        edit_school.setText(user.getCollege());
+        edit_bday.setText(user.getBirthday().toString());
+        edit_address.setText(user.getAddress());
+    }
+
+    //setup the actionbar + onClick for saveData
+    private void updateActionbar()
+    {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_edit_user);
+
+        TextView save_text = (TextView) findViewById(R.id.actionbar_editsave);
+        save_text.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                saveData();
+                onBackPressed();
+            }
+        });
     }
 }

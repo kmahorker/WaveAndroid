@@ -13,7 +13,7 @@
     <include
         layout="@layout/app_bar_home_drawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"/> <!--Actionbar settings-->
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -25,6 +25,6 @@
         android:theme="@style/DrawerStyle"
         app:headerLayout="@layout/nav_header_home_drawer"
         app:menu="@menu/home_drawer_layout_drawer"
-        app:itemTextColor="#FFF"/>
+        app:itemTextColor="#FFF"/> <!--Drawer settings-->
 
 </android.support.v4.widget.DrawerLayout>

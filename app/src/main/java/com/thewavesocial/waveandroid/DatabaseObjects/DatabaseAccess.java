@@ -47,7 +47,7 @@ public class DatabaseAccess implements DatabaseInterface
     public User getUser(long userID)
     {
         //Temporary for testing
-        return CurrentUser.getTheUser();
+        return CurrentUser.theUser;
     }
 
     public boolean updateParty(long partyID, String param)

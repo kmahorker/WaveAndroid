@@ -9,5 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.thewavesocial.waveandroid.HomeDrawerActivity"
     tools:showIn="@layout/app_bar_home_drawer">
-    
+
+    <!--nothing but a layout-->
+
 </RelativeLayout>

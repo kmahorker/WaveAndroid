@@ -17,7 +17,6 @@ import android.widget.TextView;
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -30,8 +29,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         setUserProfileOnclickEvents();
     }
 
-    //back pressed only when drawer is closed
     @Override
+    //back pressed only when drawer is closed
     public void onBackPressed()
     {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -44,8 +43,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
     }
 
-    //notification button clicked (need to be changed to another style)
     @Override
+    //notification button clicked (need to be changed to another style)
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -57,8 +56,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
     }
 
-    //onclick events for drawer items
     @Override
+    //onclick events for drawer items
     public boolean onNavigationItemSelected(MenuItem item)
     {
         // Handle navigation view item clicks here.
