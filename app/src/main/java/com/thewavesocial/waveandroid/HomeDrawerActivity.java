@@ -26,73 +26,22 @@ import static com.thewavesocial.waveandroid.R.id.searchView;
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
+    private HomeDrawerActivity h = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final HomeDrawerActivity h = this;
+
         setContentView(R.layout.home_drawer_layout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initializeDrawer();
         updateActionBar();
-
-
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name) {
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
-                super.onDrawerClosed(drawerView);
-                UtilityClass.hideKeyboard(h);
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
-                super.onDrawerOpened(drawerView);
-                UtilityClass.hideKeyboard(h);
-            }
-        };
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-
-        //initialize map view
-        FragmentManager fragmentM = getSupportFragmentManager();
-        final Fragment frag = new MapsFragment();
-        fragmentM.beginTransaction().replace(R.id.content_home_drawer, frag).commit();
-
-
-        TextView homeUsername = (TextView) headerView.findViewById(R.id.home_user_name);
-        homeUsername.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                openUserProfile();
-            }
-        });
-
-        ImageView homeUserProfile = (ImageView) headerView.findViewById(R.id.home_user_profile);
-        homeUserProfile.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                openUserProfile();
-            }
-        });
-
+        initializeGoogleMapFragment();
+        setUserProfileOnclickEvents();
     }
 
     @Override
+    //back pressed only when drawer is closed
     public void onBackPressed()
     {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -106,13 +55,11 @@ public class HomeDrawerActivity extends AppCompatActivity
     }
 
     @Override
+    //notification button clicked (need to be changed to another style)
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
         {
-            case android.R.id.home:
-                //Do stuff
-                return true;
             case R.id.notif_button:
                 return true;
             default:
@@ -120,8 +67,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
+    //onclick events for drawer items
     public boolean onNavigationItemSelected(MenuItem item)
     {
         // Handle navigation view item clicks here.
@@ -162,17 +109,84 @@ public class HomeDrawerActivity extends AppCompatActivity
         return true;
     }
 
+//------------------------------------------------------------------------------ OnCreate Sub-tasks
+
+    //initialize drawer layout
+    private void initializeDrawer()
+    {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                UtilityClass.hideKeyboard(h);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                UtilityClass.hideKeyboard(h);
+            }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    //update actionbar
     private void updateActionBar()
     {
         getSupportActionBar().setTitle("WAVE");
     }
 
+    //initialize map view
+    private void initializeGoogleMapFragment()
+    {
+        FragmentManager fragmentM = getSupportFragmentManager();
+        final Fragment frag = new MapsFragment();
+        fragmentM.beginTransaction().replace(R.id.content_home_drawer, frag).commit();
+    }
+
+    //onclick events for user profile
+    private void setUserProfileOnclickEvents()
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView homeUsername = (TextView) headerView.findViewById(R.id.home_user_name);
+        homeUsername.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                openUserProfile();
+            }
+        });
+
+        ImageView homeUserProfile = (ImageView) headerView.findViewById(R.id.home_user_profile);
+        homeUserProfile.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                openUserProfile();
+            }
+        });
+    }
+
+    //open user profile fragment
     public void openUserProfile()
     {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         Fragment fragment = new UserProfileFragment();
         FragmentManager fragmentM = getSupportFragmentManager();
         fragmentM.beginTransaction().replace(R.id.content_home_drawer, fragment).commit();
     }
-
-
 }

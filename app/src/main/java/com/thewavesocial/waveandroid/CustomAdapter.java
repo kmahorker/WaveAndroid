@@ -89,10 +89,8 @@ public class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
-                    Log.d("query", userList.get(position).getFirstName());
                     fragment.showFriendProfileActivity(v, userList.get(position));
                    //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
-
                 }
             });
             return rowView;

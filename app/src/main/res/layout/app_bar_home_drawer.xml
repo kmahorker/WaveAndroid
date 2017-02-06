@@ -20,8 +20,8 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-    </android.support.design.widget.AppBarLayout>
+    </android.support.design.widget.AppBarLayout> <!--Actionbar settings-->
 
-    <include layout="@layout/content_home_drawer"/>
+    <include layout="@layout/content_home_drawer"/> <!--Drawer contents-->
 
 </android.support.design.widget.CoordinatorLayout>

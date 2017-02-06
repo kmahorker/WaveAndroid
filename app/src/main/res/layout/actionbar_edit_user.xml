@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/actionbar_edittitle"
         android:layout_width="wrap_content"
@@ -10,7 +11,8 @@
         android:layout_centerInParent="true"
         android:textColor="#FFF"
         android:textSize="24sp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"/> <!--Edit profile (Text)-->
+
     <TextView
         android:id="@+id/actionbar_editsave"
         android:layout_width="40dp"
@@ -18,6 +20,8 @@
         android:text="SAVE"
         android:textSize="15sp"
         android:textColor="#FFF"
+        android:layout_centerInParent="true"
         android:src="@drawable/notif_house"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"/> <!--SAVE (Text)-->
+
 </RelativeLayout>

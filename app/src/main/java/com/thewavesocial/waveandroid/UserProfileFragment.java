@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,29 +44,53 @@ public class UserProfileFragment extends Fragment
 
         user = CurrentUser.theUser;
 
-        college = (TextView)view.findViewById(R.id.user_college);
-        college.setText("College: " + user.getCollege());
-        age = (TextView)view.findViewById(R.id.user_age);
-        age.setText("Age: " + computeAge(user.getBirthday()));
-        image = (ImageView)view.findViewById(R.id.profile_pic);
-        image.setImageDrawable(user.getProfilePic());
 
+        updateProfileInfo();
+        updateActionbar();
         updatePartiesAttended( user.getAttending() );
         updatePartiesHosted( user.getHosting() );
-
         updateSample();
-        updateActionbar();
-
     }
 
+    @Override //Update result after new user data saved
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK && requestCode == 1)
+        {
+            //store data to User
+            User savedUser = data.getExtras().getParcelable("savedUserInfo");
+            user.setEmail(savedUser.getEmail());
+            user.setCollege(savedUser.getCollege());
+            user.setBirthday(savedUser.getBirthday());
+            user.setAddress(savedUser.getAddress());
+            user.setProfilePic(savedUser.getProfilePic());
+
+            //display data on profile
+            updateActionbar();
+            updateProfileInfo();
+        }
+    }
+
+//------------------------------------------------------------------------------ OnCreate Sub-tasks
+
+    //display user information
+    private void updateProfileInfo()
+    {
+        college = (TextView)getActivity().findViewById(R.id.user_college);
+        college.setText("College: " + user.getCollege());
+        age = (TextView)getActivity().findViewById(R.id.user_age);
+        age.setText("Age: " + computeAge(user.getBirthday()));
+        image = (ImageView)getActivity().findViewById(R.id.profile_pic);
+        image.setImageDrawable(user.getProfilePic());
+    }
+
+    //display actionbar
     private void updateActionbar()
     {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_user);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle(user.getFirstName() + " " + user.getLastName());
-
-//        TextView actionbar_username = (TextView) getActivity().findViewById(R.id.actionbar_username);
-//        actionbar_username.setText(user.getFirstName() + " " + user.getLastName());
 
         ImageView actionbar_userprofile = (ImageView) getActivity().findViewById(R.id.actionbar_userprofile);
         actionbar_userprofile.setOnClickListener(new View.OnClickListener()
@@ -75,11 +100,30 @@ public class UserProfileFragment extends Fragment
             {
                 Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
                 intent.putExtra("myProfileObj", user);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
     }
 
+    //update parties attended
+    private void updatePartiesAttended(List<Long> list)
+    {
+        Long[] parties = list.toArray(new Long[list.size()]);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.each_party_item, parties);
+        ListView listView = (ListView)getActivity().findViewById(R.id.events_attended_list);
+        listView.setAdapter(arrayAdapter);
+    }
+
+    //update parties hosted
+    private void updatePartiesHosted(List<Long> list)
+    {
+        Long[] parties = list.toArray(new Long[list.size()]);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.each_party_item, parties);
+        ListView listView = (ListView)getActivity().findViewById(R.id.events_hosted_list);
+        listView.setAdapter(arrayAdapter);
+    }
+
+    //compute age based on birthday: need fixed
     private int computeAge(Date birth)
     {
         Calendar now = Calendar.getInstance();
@@ -98,22 +142,7 @@ public class UserProfileFragment extends Fragment
             return year - byear - 1;
     }
 
-    private void updatePartiesAttended(List<Long> list)
-    {
-        Long[] parties = list.toArray(new Long[list.size()]);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.each_party_item, parties);
-        ListView listView = (ListView)getActivity().findViewById(R.id.events_attended_list);
-        listView.setAdapter(arrayAdapter);
-    }
-
-    private void updatePartiesHosted(List<Long> list)
-    {
-        Long[] parties = list.toArray(new Long[list.size()]);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.each_party_item, parties);
-        ListView listView = (ListView)getActivity().findViewById(R.id.events_hosted_list);
-        listView.setAdapter(arrayAdapter);
-    }
-
+    //Sample dummies for testing purpose
     private void updateSample()
     {
         List<Long> sampleList = new ArrayList<Long>();
@@ -128,34 +157,5 @@ public class UserProfileFragment extends Fragment
         age.setText("Age: " + 18);
         college.setText("College: " + "UCSB");
         image.setImageResource(R.drawable.profile_sample);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(user.getCollege());
-        if(resultCode == Activity.RESULT_OK)
-        {
-            User savedUser = data.getExtras().getParcelable("savedUserInfo");
-            user.setEmail(savedUser.getEmail());
-            user.setCollege(savedUser.getCollege());
-            user.setBirthday(savedUser.getBirthday());
-            user.setAddress(savedUser.getAddress());
-
-            college = (TextView)getActivity().findViewById(R.id.user_college);
-            college.setText("College: " + user.getCollege());
-            age = (TextView)getActivity().findViewById(R.id.user_age);
-            age.setText("Age: " + computeAge(user.getBirthday()));
-            image = (ImageView)getActivity().findViewById(R.id.profile_pic);
-            image.setImageDrawable(user.getProfilePic());
-
-            updatePartiesAttended( user.getAttending() );
-            updatePartiesHosted( user.getHosting() );
-            updateActionbar();
-            System.out.println(user.getCollege());
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-            ((HomeDrawerActivity)getActivity()).openUserProfile();
-        }
     }
 }
