@@ -2,18 +2,23 @@ package com.thewavesocial.waveandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.google.android.gms.drive.metadata.SearchableCollectionMetadataField;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
@@ -87,20 +92,27 @@ public class FriendsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        final FriendsListFragment fragment = this;
 
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         //Should take Sorted List as argument
         final ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
+
         final List<User> friendsUsers = generateTestUserList(); //CurrentUser.theUser.getFriends() //TODO testing need to replace with actual List
+
         final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
-        final FriendsListFragment fragment = this;
         friendsList.setAdapter(adapt);
+
+
+        final LinearLayout lin = (LinearLayout) getActivity().findViewById(R.id.LinearLayout);
+
         ImageButton inviteFriends = (ImageButton) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+                //UtilityClass.hideKeyboard(fragment.getActivity());
                 showInviteFriendsActivity(v);
             }
         });
@@ -130,14 +142,27 @@ public class FriendsListFragment extends Fragment {
                 return true;
             }
         });
-        searchView.setOnFocusChangeListener(new SearchView.OnFocusChangeListener() {
+
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus) {
-                    UtilityClass.hideKeyboard(getActivity());
-                }
+            public boolean onTouch(View v, MotionEvent ev) {
+                UtilityClass.hideKeyboard(fragment.getActivity());
+                return true;
             }
         });
+
+        friendsList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent ev) {
+                searchView.clearFocus();
+                //if(((CustomAdapter)(friendsList.getAdapter())).getCount() == 0) {
+                    //UtilityClass.hideKeyboard(fragment.getActivity());
+                //}
+                return false;
+            }
+        });
+
+
     }
 
     //Supporting Methods
@@ -214,4 +239,5 @@ public class FriendsListFragment extends Fragment {
         //System.out.println("    " + users);
         return users;
     }
+
 }

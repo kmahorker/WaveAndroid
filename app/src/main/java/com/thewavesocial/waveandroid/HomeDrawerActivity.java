@@ -1,9 +1,12 @@
 package com.thewavesocial.waveandroid;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,8 +15,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+
+import static com.thewavesocial.waveandroid.R.id.holo_dark;
+import static com.thewavesocial.waveandroid.R.id.searchView;
 
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -23,16 +31,34 @@ public class HomeDrawerActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        final HomeDrawerActivity h = this;
         setContentView(R.layout.home_drawer_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         updateActionBar();
 
+
+
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
+                super.onDrawerClosed(drawerView);
+                UtilityClass.hideKeyboard(h);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
+                super.onDrawerOpened(drawerView);
+                UtilityClass.hideKeyboard(h);
+            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -63,6 +89,7 @@ public class HomeDrawerActivity extends AppCompatActivity
                 openUserProfile();
             }
         });
+
     }
 
     @Override
@@ -146,5 +173,6 @@ public class HomeDrawerActivity extends AppCompatActivity
         FragmentManager fragmentM = getSupportFragmentManager();
         fragmentM.beginTransaction().replace(R.id.content_home_drawer, fragment).commit();
     }
+
 
 }

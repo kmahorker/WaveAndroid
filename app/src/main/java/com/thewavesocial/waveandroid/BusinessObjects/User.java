@@ -54,7 +54,7 @@ public class User implements Parcelable {
         attending = new ArrayList<Long>();
         hosting = new ArrayList<Long>();
         bouncing = new ArrayList<Long>();
-        profilePic = new BitmapDrawable();
+        profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
     public User(//Int64 userID,
