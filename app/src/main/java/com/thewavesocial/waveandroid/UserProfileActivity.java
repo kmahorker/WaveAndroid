@@ -34,7 +34,7 @@ public class UserProfileActivity extends AppCompatActivity
         super.onCreate(bundle);
         setContentView(R.layout.user_profile);
 
-        user = CurrentUser.getTheUser();
+        user = CurrentUser.theUser;
 
         college = (TextView)findViewById(R.id.user_college);
         college.setText("College: " + user.getCollege());

@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.util.ArrayList;
@@ -92,8 +93,9 @@ public class FriendsListFragment extends Fragment {
 
         //Should take Sorted List as argument
         final ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
-        final List<User> friendsUsers = generateTestUserList(); //TODO testing need to replace with actual List
+        final List<User> friendsUsers = generateTestUserList(); //CurrentUser.theUser.getFriends() //TODO testing need to replace with actual List
         final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
+        final FriendsListFragment fragment = this;
         friendsList.setAdapter(adapt);
         ImageButton inviteFriends = (ImageButton) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +112,9 @@ public class FriendsListFragment extends Fragment {
                 List<User> refinedUserList = new ArrayList<User>();
                 refinedUserList.addAll(search(friendsUsers, query));
                 //friendsList.setAdapter(null);
-                adapt.updateUserList(refinedUserList);
+                //adapt.updateUserList(refinedUserList);
                 //adapt.notifyDataSetChanged();
-                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                friendsList.setAdapter(new CustomAdapter(getActivity(), fragment, refinedUserList));
                 searchView.clearFocus();
                 return true;
             }
@@ -120,9 +122,10 @@ public class FriendsListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 List<User> refinedUserList = search(friendsUsers, newText);
-                adapt.updateUserList(refinedUserList);
+                //adapt.updateUserList(refinedUserList);
                 //adapt.notifyDataSetChanged();
-                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                //Fragment fragment =
+                friendsList.setAdapter(new CustomAdapter(getActivity(),fragment, refinedUserList));
                 return true;
             }
         });
@@ -198,6 +201,9 @@ public class FriendsListFragment extends Fragment {
             else if(u.getLastName().matches("(?i:" + query + ".*)")){
                 Log.d("V","  lastName: " + u.getLastName());
                 Log.d("V","    bool: " + u.getLastName().contains(query));
+                users.add(u);
+            }
+            else if(u.getFullName().matches("(?i:" + query + ".*)")){
                 users.add(u);
             }
             for(User check: users) {
