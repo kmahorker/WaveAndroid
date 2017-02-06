@@ -18,6 +18,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback
 {
@@ -39,11 +41,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
         mapFragment.getMapAsync(this);
 
-        //actionbar settings
+        setupActionbar();
+        setupFloatingButtons();
+    }
+
+    @Override
+    //triggered when map is ready
+    public void onMapReady(GoogleMap googleMap)
+    {
+        mMap = googleMap;
+        addParty("UCSB", 34.4133, -119.8610);
+    }
+
+//--------------------------------------------------------------------------OnViewCreated Sub-tasks
+
+    //actionbar settings
+    private void setupActionbar()
+    {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_home);
+    }
 
-        ImageView sos_button = (ImageView) view.findViewById(R.id.sos_button);
+    //setup sos and curloc buttons
+    private void setupFloatingButtons()
+    {
+        ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
         sos_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -54,7 +76,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
             }
         });
 
-        ImageView cur_loc_button = (ImageView) view.findViewById(R.id.cur_loc_button);
+        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
         cur_loc_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -65,15 +87,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
         });
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap)
-    {
-        mMap = googleMap;
-        refreshParty("UCSB", 34.4133, -119.8610);
-    }
+//----------------------------------------------------------------------------------Other Sub-tasks
 
     // Add a marker to UCSB and move the camera
-    public void refreshParty(String name, double lat, double lng)
+    public void addParty(String name, double lat, double lng)
     {
         LatLng loc = new LatLng(lat, lng);
         mMap.addMarker(new MarkerOptions()
@@ -83,26 +100,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
         moveMapCamera(loc);
     }
 
-    public Bitmap resizeMapIcons(int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_house);
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
+    //refresh partylist
+    public void addParties(GoogleMap googleMap, List<String> parties_addresses)
+    {
+        for ( String each_address : parties_addresses )
+        {
+            //refreshParty(googleMap, each_address);
+        }
     }
 
+    //move camera with specified loc
     public void moveMapCamera(LatLng loc)
     {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
     }
 
-//    public void refreshParties(GoogleMap googleMap, List<String> parties_addresses)
-//    {
-//        for ( String each_address : parties_addresses )
-//        {
-//            refreshParty(googleMap, each_address);
-//        }
-//    }
-//
-//    private void refreshParty(GoogleMap googleMap, String each_address)
-//    {
-//    }
+    //resize image icons
+    public Bitmap resizeMapIcons(int width, int height)
+    {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_house);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
+    }
 }

@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -18,6 +16,9 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.dummy.DummyUser;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,27 +33,27 @@ public class UserProfileFragment extends Fragment
     ImageView image;
 
     @Override
+    //get fragment layout reference
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return inflater.inflate(R.layout.user_profile, container, false);
     }
 
     @Override
+    //initialize everything
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        user = DummyUser.dummyUser;
 
-        user = CurrentUser.theUser;
+        setupProfileInfo();
+        setupActionbar();
 
-
-        updateProfileInfo();
-        updateActionbar();
-        updatePartiesAttended( user.getAttending() );
-        updatePartiesHosted( user.getHosting() );
-        updateSample();
+//        updateSample();
     }
 
-    @Override //Update result after new user data saved
+    @Override
+    //Update result after new user data is saved
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -67,30 +68,21 @@ public class UserProfileFragment extends Fragment
             user.setProfilePic(savedUser.getProfilePic());
 
             //display data on profile
-            updateActionbar();
-            updateProfileInfo();
+            setupActionbar();
+            setupProfileInfo();
         }
     }
 
-//------------------------------------------------------------------------------ OnCreate Sub-tasks
+//-------------------------------------------------------------------------------OnCreate Sub-tasks
 
-    //display user information
-    private void updateProfileInfo()
-    {
-        college = (TextView)getActivity().findViewById(R.id.user_college);
-        college.setText("College: " + user.getCollege());
-        age = (TextView)getActivity().findViewById(R.id.user_age);
-        age.setText("Age: " + computeAge(user.getBirthday()));
-        image = (ImageView)getActivity().findViewById(R.id.profile_pic);
-        image.setImageDrawable(user.getProfilePic());
-    }
-
-    //display actionbar
-    private void updateActionbar()
+    //initialize actionbar
+    private void setupActionbar()
     {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_user);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle(user.getFirstName() + " " + user.getLastName());
+
+        TextView username = (TextView) getActivity().findViewById(R.id.actionbar_username);
+        username.setText(user.getFirstName() + " " + user.getLastName());
 
         ImageView actionbar_userprofile = (ImageView) getActivity().findViewById(R.id.actionbar_userprofile);
         actionbar_userprofile.setOnClickListener(new View.OnClickListener()
@@ -103,6 +95,41 @@ public class UserProfileFragment extends Fragment
                 startActivityForResult(intent, 1);
             }
         });
+    }
+
+    //initialize user information
+    private void setupProfileInfo()
+    {
+        college = (TextView)getActivity().findViewById(R.id.user_college);
+        college.setText("College: " + user.getCollege());
+        age = (TextView)getActivity().findViewById(R.id.user_age);
+        age.setText("Age: " + computeAge(user.getBirthday()));
+        image = (ImageView)getActivity().findViewById(R.id.profile_pic);
+        image.setImageDrawable(user.getProfilePic());
+
+        updatePartiesAttended( user.getAttended() );
+        updatePartiesHosted( user.getHosted() );
+    }
+
+//----------------------------------------------------------------------------------Other Sub-tasks
+
+    //compute age based on birthday: need fixed
+    private int computeAge(Calendar birth)
+    {
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
+        int byear = birth.get(Calendar.YEAR), bmonth = birth.get(Calendar.MONTH), bday = birth.get(Calendar.DATE);
+        if (month == bmonth)
+        {
+            if (day < bday)
+                return year - byear - 1;
+            else
+                return year - byear;
+        }
+        else if (month > bmonth)
+            return year - byear;
+        else
+            return year - byear - 1;
     }
 
     //update parties attended
@@ -121,25 +148,6 @@ public class UserProfileFragment extends Fragment
         ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), R.layout.each_party_item, parties);
         ListView listView = (ListView)getActivity().findViewById(R.id.events_hosted_list);
         listView.setAdapter(arrayAdapter);
-    }
-
-    //compute age based on birthday: need fixed
-    private int computeAge(Date birth)
-    {
-        Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.getYear(), bmonth = birth.getMonth(), bday = birth.getDate();
-        if (month == bmonth)
-        {
-            if (day < bday)
-                return year - byear - 1;
-            else
-                return year - byear;
-        }
-        else if (month > bmonth)
-            return year - byear;
-        else
-            return year - byear - 1;
     }
 
     //Sample dummies for testing purpose

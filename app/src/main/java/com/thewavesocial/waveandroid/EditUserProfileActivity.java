@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -13,21 +14,23 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
+import java.util.Calendar;
+
 
 public class EditUserProfileActivity extends AppCompatActivity
 {
     EditText edit_email, edit_school, edit_bday,edit_address;
     User user;
+    private User birthday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.d("query", "came to onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_profile);
-
         Intent intent = getIntent();
         user = intent.getExtras().getParcelable("myProfileObj");
-
         updateFieldText();
         updateActionbar();
     }
@@ -74,7 +77,7 @@ public class EditUserProfileActivity extends AppCompatActivity
     {
         user.setEmail(edit_email.getText().toString());
         user.setCollege(edit_school.getText().toString());
-        //user.setBirthday(edit_bday.getText().toString());
+        setBirthday(user);
         user.setAddress(edit_address.getText().toString());
         Intent resultIntent = new Intent();
         resultIntent.putExtra("savedUserInfo", user);
@@ -96,13 +99,16 @@ public class EditUserProfileActivity extends AppCompatActivity
         //update text with old user info
         edit_email.setText(user.getEmail());
         edit_school.setText(user.getCollege());
-        edit_bday.setText(user.getBirthday().toString());
+        edit_bday.setText(user.getBirthday().get(Calendar.MONTH)
+                + "/" + user.getBirthday().get(Calendar.DATE)
+                + "/" + user.getBirthday().get(Calendar.YEAR));
         edit_address.setText(user.getAddress());
     }
 
     //setup the actionbar + onClick for saveData
     private void updateActionbar()
     {
+        Log.d("query", "came to Actionbar");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_edit_user);
@@ -117,5 +123,11 @@ public class EditUserProfileActivity extends AppCompatActivity
                 onBackPressed();
             }
         });
+    }
+
+    public void setBirthday(User user)
+    {
+        //user.getBirthday().set(edit_bday.getText().toString());
+
     }
 }

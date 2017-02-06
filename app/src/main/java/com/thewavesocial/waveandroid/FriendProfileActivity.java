@@ -1,10 +1,12 @@
 package com.thewavesocial.waveandroid;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,46 +18,65 @@ import java.util.List;
 
 public class FriendProfileActivity extends AppCompatActivity
 {
+    private User friend;
+
     @Override
+    //initialize everything
     protected void onCreate(Bundle bundle)
     {
         super.onCreate(bundle);
         setContentView(R.layout.friend_profile);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //TODO get intent, extract user object, and update the fields
-        // access current user data
+
+        // access current friend data
         Intent intent = getIntent();
-        User user = intent.getExtras().getParcelable("userObj");
-        updateUsername(user.getFullName());
-        updateAge(user.getBirthday());
-        updateCollege(user.getCollege());
-        updatePartiesAttended(user.getAttending());
-        updatePartiesHosted(user.getHosting());
+        friend = intent.getExtras().getParcelable("userObj");
+
+        setupFriendInfo();
+        setupActionbar();
     }
 
-    private void updateUsername(String str)
+    @Override
+    //onClick event for back button pressed
+    public boolean onOptionsItemSelected(MenuItem item)
     {
-        TextView username = (TextView)findViewById (R.id.user_name);
-        username.setText(str);
+        if (item.getItemId() == android.R.id.home)
+        {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    private void updatePicture(Object img)
+//-------------------------------------------------------------------------------OnCreate Sub-tasks
+
+    //initialize actionbar
+    private void setupActionbar()
     {
-        //ImageView image = FindViewById<ImageView>(Resource.Id.profile_pic);
-        //image.SetImageResource(img);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(friend.getFirstName() + " " + friend.getLastName());
     }
 
-    private void updateCollege(String str)
+    //initialize friend data
+    private void setupFriendInfo()
     {
         TextView username = (TextView)findViewById(R.id.user_college);
-        username.setText("College: " + str);
+        ImageView image = (ImageView)findViewById(R.id.profile_pic);
+
+        username.setText("College: " + friend.getCollege());
+        image.setImageDrawable(friend.getProfilePic());
+
+        updateAge(friend.getBirthday());
+        updatePartiesAttended(friend.getAttended());
+        updatePartiesHosted(friend.getHosted());
     }
 
-    private int updateAge(Date birth)
+//----------------------------------------------------------------------------------Other Sub-tasks
+
+    //update friend age
+    private int updateAge(Calendar birth)
     {
         Calendar now = Calendar.getInstance();
         int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.getYear(), bmonth = birth.getMonth(), bday = birth.getDate();
+        int byear = birth.get(Calendar.YEAR), bmonth = birth.get(Calendar.MONTH), bday = birth.get(Calendar.DATE);
         if (month == bmonth)
         {
             if (day < bday)
@@ -69,6 +90,7 @@ public class FriendProfileActivity extends AppCompatActivity
             return year - byear - 1;
     }
 
+    //update parties attended
     private void updatePartiesAttended(List<Long> list)
     {
         Long[] parties = list.toArray(new Long[list.size()]);
@@ -77,21 +99,12 @@ public class FriendProfileActivity extends AppCompatActivity
         listView.setAdapter(arrayAdapter);
     }
 
+    //update parties hosted
     private void updatePartiesHosted(List<Long> list)
     {
         Long[] parties = list.toArray(new Long[list.size()]);
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.each_party_item, parties);
         ListView listView = (ListView)findViewById(R.id.events_hosted_list);
         listView.setAdapter(arrayAdapter);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home)
-        {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

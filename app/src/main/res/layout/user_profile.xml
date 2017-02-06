@@ -22,9 +22,8 @@
         android:textSize="22sp"
         android:textColor="#FFF"
         android:layout_toRightOf="@+id/profile_pic"
-        android:layout_below="@+id/user_name"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="20dp"/> <!--college (text)-->
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"/> <!--college (text)-->
 
     <TextView
         android:text="Age: 19"
@@ -34,21 +33,9 @@
         android:textSize="22sp"
         android:textColor="#FFF"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="20dp"
         android:layout_below="@+id/user_college"
         android:layout_toEndOf="@+id/profile_pic" /> <!--age (text)-->
-
-    <TextView
-        android:text="User rating:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_rating"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_below="@+id/user_age"
-        android:layout_toEndOf="@+id/profile_pic" /> <!--user rating (text)-->
 
     <TextView
         android:text="Events attended:"
@@ -59,7 +46,7 @@
         android:textColor="#FFF"
         android:layout_marginTop="50dp"
         android:layout_below="@+id/profile_pic"
-        android:layout_centerHorizontal="true" /> <!--events attended (text)-->
+        android:layout_marginStart="20dp" /> <!--events attended (text)-->
 
     <ListView
         android:layout_width="match_parent"
@@ -81,7 +68,7 @@
         android:textColor="#FFF"
         android:layout_below="@+id/events_attended_list"
         android:layout_marginTop="12dp"
-        android:layout_centerHorizontal="true" /> <!--events hosted (text)-->
+        android:layout_marginStart="20dp" /> <!--events hosted (text)-->
 
     <ListView
         android:layout_width="match_parent"

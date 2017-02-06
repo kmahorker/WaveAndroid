@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /*
@@ -27,20 +27,19 @@ public class User implements Parcelable {
     private String college;
     private String gender;
     private String address;
-    private Date birthday;
+    private Calendar birthday;
     private List<Long> bestFriends;
     private List<Long> friends;
     //Below contain list of PartyIDs
-    private List<Long> attending;
-    private List<Long> hosting;
-    private List<Long> bouncing;
+    private List<Long> attended;
+    private List<Long> hosted;
+    private List<Long> bounced;
     private BitmapDrawable profilePic;
 
 
 
     public User()
     {
-
         userID = 0;
         firstName = "";
         lastName = "";
@@ -49,15 +48,15 @@ public class User implements Parcelable {
         college = "";
         gender = "";
         address = "";
-        birthday = new Date();
+        birthday = Calendar.getInstance();
         bestFriends = new ArrayList<Long>();
-        attending = new ArrayList<Long>();
-        hosting = new ArrayList<Long>();
-        bouncing = new ArrayList<Long>();
+        attended = new ArrayList<Long>();
+        hosted = new ArrayList<Long>();
+        bounced = new ArrayList<Long>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
-    public User(//Int64 userID,
+    public User(Long userID,
                 String firstName,
                 String lastName,
                 String email,
@@ -65,15 +64,15 @@ public class User implements Parcelable {
                 String college,
                 String gender,
                 String address,
-                Date birthday,
+                Calendar birthday,
                 List<Long> friends,
                 List<Long> bestFriends,
-                List<Long> attending,
-                List<Long> hosting,
-                List<Long> bouncing,
+                List<Long> attended,
+                List<Long> hosted,
+                List<Long> bounced,
                 BitmapDrawable profilePic)
     {
-        //this.userID = userID;
+        this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -81,12 +80,12 @@ public class User implements Parcelable {
         this.college = college;
         this.gender = gender;
         this.address = address;
-        this.birthday = birthday;
+        this.birthday = Calendar.getInstance();
         this.friends = friends;
         this.bestFriends = bestFriends;
-        this.attending = attending;
-        this.hosting = hosting;
-        this.bouncing = bouncing;
+        this.attended = attended;
+        this.hosted = hosted;
+        this.bounced = bounced;
         this.profilePic = profilePic;
     }
 
@@ -102,19 +101,19 @@ public class User implements Parcelable {
         return bestFriends.remove(bestFriendIDToRemove);
     }
 
-    public boolean removeAttending(long attendingIDToRemove)
+    public boolean removeAttended(long attendedIDToRemove)
     {
-        return attending.remove(attendingIDToRemove);
+        return attended.remove(attendedIDToRemove);
     }
 
-    public boolean removeHosting(long hostingIDToRemove)
+    public boolean removeHosted(long hostedIDToRemove)
     {
-        return hosting.remove(hostingIDToRemove);
+        return hosted.remove(hostedIDToRemove);
     }
 
-    public boolean removeBouncing(long bouncingIDToRemove)
+    public boolean removeBounced(long bouncedIDToRemove)
     {
-        return bouncing.remove(bouncingIDToRemove);
+        return bounced.remove(bouncedIDToRemove);
     }
 
     //Adding Block
@@ -127,19 +126,19 @@ public class User implements Parcelable {
         this.bestFriends.add(bestFriendID);
     }
 
-    public void addAttending(long attendingPartyID)
+    public void addAttended(long attendedPartyID)
     {
-        this.attending.add(attendingPartyID);
+        this.attended.add(attendedPartyID);
     }
 
-    public void addHosting(long hostingPartyID)
+    public void addHosted(long hostedPartyID)
     {
-        this.hosting.add(hostingPartyID);
+        this.hosted.add(hostedPartyID);
     }
 
-    public void addBouncing(long bouncingPartyID)
+    public void addBounced(long bouncedPartyID)
     {
-        this.bouncing.add(bouncingPartyID);
+        this.bounced.add(bouncedPartyID);
     }
 
     //Setter Block
@@ -183,9 +182,9 @@ public class User implements Parcelable {
         this.address = address;
     }
 
-    public void setBirthday(Date birthday)
+    public void setBirthday(Calendar birthday)
     {
-        this.birthday = birthday;
+        this.birthday = Calendar.getInstance();
     }
 
     public void setFriends(List<Long> friends)
@@ -198,19 +197,19 @@ public class User implements Parcelable {
         this.bestFriends = bestFriends;
     }
 
-    public void setAttending(List<Long> attending)
+    public void setAttended(List<Long> attended)
     {
-        this.attending = attending;
+        this.attended = attended;
     }
 
-    public void setHosting(List<Long> hosting)
+    public void setHosted(List<Long> hosted)
     {
-        this.hosting = hosting;
+        this.hosted = hosted;
     }
 
-    public void setBouncing(List<Long> bouncing)
+    public void setBounced(List<Long> bounced)
     {
-        this.bouncing = bouncing;
+        this.bounced = bounced;
     }
 
     public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
@@ -256,7 +255,7 @@ public class User implements Parcelable {
         return address;
     }
 
-    public Date getBirthday()
+    public Calendar getBirthday()
     {
         return birthday;
     }
@@ -271,19 +270,19 @@ public class User implements Parcelable {
         return bestFriends;
     }
 
-    public List<Long> getAttending()
+    public List<Long> getAttended()
     {
-        return attending;
+        return attended;
     }
 
-    public List<Long> getHosting()
+    public List<Long> getHosted()
     {
-        return hosting;
+        return hosted;
     }
 
-    public List<Long> getBouncing()
+    public List<Long> getBounced()
     {
-        return bouncing;
+        return bounced;
     }
 
     public BitmapDrawable getProfilePic() { return profilePic; }
@@ -299,8 +298,7 @@ public class User implements Parcelable {
         college = in.readString();
         gender = in.readString();
         address = in.readString();
-        long tmpBirthday = in.readLong();
-        birthday = tmpBirthday != -1 ? new Date(tmpBirthday) : null;
+        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
             bestFriends = new ArrayList<Long>();
             in.readList(bestFriends, Long.class.getClassLoader());
@@ -314,22 +312,22 @@ public class User implements Parcelable {
             friends = null;
         }
         if (in.readByte() == 0x01) {
-            attending = new ArrayList<Long>();
-            in.readList(attending, Long.class.getClassLoader());
+            attended = new ArrayList<Long>();
+            in.readList(attended, Long.class.getClassLoader());
         } else {
-            attending = null;
+            attended = null;
         }
         if (in.readByte() == 0x01) {
-            hosting = new ArrayList<Long>();
-            in.readList(hosting, Long.class.getClassLoader());
+            hosted = new ArrayList<Long>();
+            in.readList(hosted, Long.class.getClassLoader());
         } else {
-            hosting = null;
+            hosted = null;
         }
         if (in.readByte() == 0x01) {
-            bouncing = new ArrayList<Long>();
-            in.readList(bouncing, Long.class.getClassLoader());
+            bounced = new ArrayList<Long>();
+            in.readList(bounced, Long.class.getClassLoader());
         } else {
-            bouncing = null;
+            bounced = null;
         }
         Bitmap bitmap = (Bitmap)in.readParcelable(getClass().getClassLoader());
         profilePic = new BitmapDrawable(bitmap);
@@ -350,7 +348,7 @@ public class User implements Parcelable {
         dest.writeString(college);
         dest.writeString(gender);
         dest.writeString(address);
-        dest.writeLong(birthday != null ? birthday.getTime() : -1L);
+        dest.writeValue(birthday);
         if (bestFriends == null) {
             dest.writeByte((byte) (0x00));
         } else {
@@ -363,23 +361,23 @@ public class User implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(friends);
         }
-        if (attending == null) {
+        if (attended == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(attending);
+            dest.writeList(attended);
         }
-        if (hosting == null) {
+        if (hosted == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(hosting);
+            dest.writeList(hosted);
         }
-        if (bouncing == null) {
+        if (bounced == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(bouncing);
+            dest.writeList(bounced);
         }
         Bitmap bitmap = profilePic.getBitmap();
         dest.writeParcelable(bitmap, flags);
