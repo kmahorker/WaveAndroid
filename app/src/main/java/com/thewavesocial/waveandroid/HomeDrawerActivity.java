@@ -16,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.LatLng;
 
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -31,28 +34,6 @@ public class HomeDrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         updateActionBar();
 
-        FloatingActionButton sos_button = (FloatingActionButton) findViewById(R.id.sos_button);
-        sos_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        FloatingActionButton cur_loc_button = (FloatingActionButton) findViewById(R.id.sos_button);
-        cur_loc_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -62,10 +43,10 @@ public class HomeDrawerActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //initialize map view
         FragmentManager fragmentM = getSupportFragmentManager();
-        Fragment frag = new MapsFragmentActivity();
+        final Fragment frag = new MapsFragmentActivity();
         fragmentM.beginTransaction().replace(R.id.content_home_drawer, frag).commit();
-
     }
 
     @Override
@@ -79,14 +60,6 @@ public class HomeDrawerActivity extends AppCompatActivity
         {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_notif_menu, menu);
-        return true;
     }
 
     @Override
@@ -114,11 +87,11 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         if (id == R.id.find_events)
         {
-
+            fragment = new FriendsListFragment();
         }
         else if (id == R.id.my_events)
         {
-
+            fragment = new FriendsListFragment();
         }
         else if (id == R.id.friends)
         {
@@ -126,15 +99,15 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.host)
         {
-
+            fragment = new FriendsListFragment();
         }
         else if (id == R.id.options)
         {
-
+            fragment = new FriendsListFragment();
         }
         else if (id == R.id.log_out)
         {
-
+            fragment = new FriendsListFragment();
         }
 
 
