@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
@@ -88,9 +89,11 @@ public class FriendsListFragment extends Fragment {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
-        ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
-        List<User> users = generateTestUserList(); //TODO testing
-        friendsList.setAdapter(new CustomAdapter(getActivity(), this, users));
+        //Should take Sorted List as argument
+        final ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
+        final List<User> friendsUsers = generateTestUserList(); //TODO testing need to replace with actual List
+        final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
+        friendsList.setAdapter(adapt);
         ImageButton inviteFriends = (ImageButton) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,46 +101,38 @@ public class FriendsListFragment extends Fragment {
                 showInviteFriendsActivity(v);
             }
         });
+        final SearchView searchView = (SearchView) getActivity().findViewById(R.id.searchView);
+        searchView.setQueryHint("Search Friends Name");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                List<User> refinedUserList = search(friendsUsers, query);
+                //friendsList.setAdapter(null);
+                adapt.setUserList(refinedUserList);
+                adapt.notifyDataSetChanged();
+                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<User> refinedUserList = search(friendsUsers, newText);
+                adapt.setUserList(refinedUserList);
+                adapt.notifyDataSetChanged();
+                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                return true;
+            }
+        });
+        searchView.setOnFocusChangeListener(new SearchView.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus) {
+                    UtilityClass.hideKeyboard(getActivity());
+                }
+            }
+        });
     }
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 
     //Supporting Methods
 
@@ -162,8 +157,8 @@ public class FriendsListFragment extends Fragment {
         User d = new User();
         User e = new User();
 
-        a.setFirstName("Bob");
-        a.setLastName("Jones");
+        a.setFirstName("Bobasdfasdf");
+        a.setLastName("Jonesokokokokokokokokokokokokokok");
         b.setFirstName("John");
         b.setLastName("Smith");
         c.setFirstName("Dumb");
@@ -171,7 +166,7 @@ public class FriendsListFragment extends Fragment {
         d.setFirstName("Turn");
         d.setLastName("Up");
         e.setFirstName("Kau");
-        e.setLastName("Mah");
+        e.setLastName("Mahlkasdjfalsk;dfjasdf");
 
         userList.add(a);
         userList.add(b);
@@ -181,5 +176,31 @@ public class FriendsListFragment extends Fragment {
 
         return userList;
 
+    }
+
+    public List<User> search(List<User> us, String query){
+        System.out.print("query: " + query);
+        if(query == ""){
+            return us;
+        }
+        List<User> users = new ArrayList<User>();
+        for(User u : us){
+
+            if((u.getFirstName().matches("(?i:" + query + ".*)"))){
+                //System.out.print("  firstName: " + u.getFirstName());
+                //System.out.print("    bool: " + u.getFirstName().contains(query));
+                users.add(u);
+            }
+
+            else if(u.getLastName().matches("(?i:" + query + ".*)")){
+                //System.out.print("  lastName: " + u.getLastName());
+                //System.out.print("    bool: " + u.getLastName().contains(query));
+                users.add(u);
+            }
+            //System.out.println("    " + users);
+        }
+
+        //System.out.println("    " + users);
+        return users;
     }
 }

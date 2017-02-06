@@ -57,6 +57,11 @@ public class CustomAdapter extends BaseAdapter {
         TextView tv;
         ImageView img;
     }
+
+    public void setUserList(List<User> user){
+        this.userList = user;
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
