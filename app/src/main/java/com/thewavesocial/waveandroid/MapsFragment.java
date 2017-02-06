@@ -2,35 +2,24 @@ package com.thewavesocial.waveandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-//import android.app.Fragment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.thewavesocial.waveandroid.BusinessObjects.*;
 
-import java.util.List;
-import java.util.zip.Inflater;
 
-public class MapsFragmentActivity extends Fragment implements OnMapReadyCallback
+public class MapsFragment extends Fragment implements OnMapReadyCallback
 {
 
     private GoogleMap mMap;
@@ -53,7 +42,6 @@ public class MapsFragmentActivity extends Fragment implements OnMapReadyCallback
         //actionbar settings
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_home);
-
 
         ImageView sos_button = (ImageView) view.findViewById(R.id.sos_button);
         sos_button.setOnClickListener(new View.OnClickListener()

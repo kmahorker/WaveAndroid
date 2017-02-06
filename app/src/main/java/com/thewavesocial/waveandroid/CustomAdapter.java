@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +89,9 @@ public class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
+                    Log.d("query", userList.get(position).getFirstName());
                     fragment.showFriendProfileActivity(v, userList.get(position));
-                   // Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
+                   //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
 
                 }
             });

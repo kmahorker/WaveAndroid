@@ -16,7 +16,7 @@
             android:title="HOST"/>
     </group>
 
-    <item android:title="">
+    <item android:title="" android:visible="false">
         <menu>
             <item
                 android:id="@+id/options"

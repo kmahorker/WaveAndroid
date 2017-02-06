@@ -1,9 +1,6 @@
 package com.thewavesocial.waveandroid;
 
-import android.app.ActionBar;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
@@ -14,12 +11,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.model.LatLng;
 
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -34,7 +28,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         updateActionBar();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -42,11 +36,33 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
 
         //initialize map view
         FragmentManager fragmentM = getSupportFragmentManager();
-        final Fragment frag = new MapsFragmentActivity();
+        final Fragment frag = new MapsFragment();
         fragmentM.beginTransaction().replace(R.id.content_home_drawer, frag).commit();
+
+
+        TextView homeUsername = (TextView) headerView.findViewById(R.id.home_user_name);
+        homeUsername.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                openUserProfile();
+            }
+        });
+
+        ImageView homeUserProfile = (ImageView) headerView.findViewById(R.id.home_user_profile);
+        homeUserProfile.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                openUserProfile();
+            }
+        });
     }
 
     @Override
@@ -121,6 +137,14 @@ public class HomeDrawerActivity extends AppCompatActivity
 
     private void updateActionBar()
     {
-        getSupportActionBar().setTitle("                 WAVE");
+        getSupportActionBar().setTitle("WAVE");
     }
+
+    public void openUserProfile()
+    {
+        Fragment fragment = new UserProfileFragment();
+        FragmentManager fragmentM = getSupportFragmentManager();
+        fragmentM.beginTransaction().replace(R.id.content_home_drawer, fragment).commit();
+    }
+
 }

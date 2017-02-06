@@ -26,6 +26,7 @@ public class User implements Parcelable {
     private String password;
     private String college;
     private String gender;
+    private String address;
     private Date birthday;
     private List<Long> bestFriends;
     private List<Long> friends;
@@ -47,6 +48,7 @@ public class User implements Parcelable {
         password = "";
         college = "";
         gender = "";
+        address = "";
         birthday = new Date();
         bestFriends = new ArrayList<Long>();
         attending = new ArrayList<Long>();
@@ -62,6 +64,7 @@ public class User implements Parcelable {
                 String password,
                 String college,
                 String gender,
+                String address,
                 Date birthday,
                 List<Long> friends,
                 List<Long> bestFriends,
@@ -77,6 +80,7 @@ public class User implements Parcelable {
         this.password = password;
         this.college = college;
         this.gender = gender;
+        this.address = address;
         this.birthday = birthday;
         this.friends = friends;
         this.bestFriends = bestFriends;
@@ -174,6 +178,11 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
+    public void setAddress(String address)
+    {
+        this.address = address;
+    }
+
     public void setBirthday(Date birthday)
     {
         this.birthday = birthday;
@@ -242,6 +251,11 @@ public class User implements Parcelable {
         return gender;
     }
 
+    public String getAddress()
+    {
+        return address;
+    }
+
     public Date getBirthday()
     {
         return birthday;
@@ -284,6 +298,7 @@ public class User implements Parcelable {
         password = in.readString();
         college = in.readString();
         gender = in.readString();
+        address = in.readString();
         long tmpBirthday = in.readLong();
         birthday = tmpBirthday != -1 ? new Date(tmpBirthday) : null;
         if (in.readByte() == 0x01) {
@@ -334,6 +349,7 @@ public class User implements Parcelable {
         dest.writeString(password);
         dest.writeString(college);
         dest.writeString(gender);
+        dest.writeString(address);
         dest.writeLong(birthday != null ? birthday.getTime() : -1L);
         if (bestFriends == null) {
             dest.writeByte((byte) (0x00));

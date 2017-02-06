@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FriendsListFragment.OnFragmentInteractionListener} interface
+ * {FriendsListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link FriendsListFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -38,7 +38,7 @@ public class FriendsListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private FriendsListFragment thisFragment;
    // private OnFragmentInteractionListener mListener;
 
     public FriendsListFragment() {
@@ -126,6 +126,7 @@ public class FriendsListFragment extends Fragment {
                 //adapt.notifyDataSetChanged();
                 //Fragment fragment =
                 friendsList.setAdapter(new CustomAdapter(getActivity(),fragment, refinedUserList));
+
                 return true;
             }
         });
@@ -166,7 +167,7 @@ public class FriendsListFragment extends Fragment {
         a.setLastName("Jones");
         b.setFirstName("John");
         b.setLastName("Smith");
-        c.setFirstName("Dumb");
+        c.setFirstName("Jone");
         c.setLastName("Dude");
         d.setFirstName("Turn");
         d.setLastName("Up");
@@ -185,7 +186,6 @@ public class FriendsListFragment extends Fragment {
 
     public List<User> search(List<User> us, String query){
         //System.out.print("query: " + query);
-        Log.d("V", "query: " + query);
         if(query == ""){
             return us;
         }
