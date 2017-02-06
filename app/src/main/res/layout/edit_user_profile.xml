@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_user_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thewavesocial.waveandroid.EditUserProfileActivity">
+
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/edit_profile_pic"
+        android:background="#000"
+        android:layout_below="@+id/user_name"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_username"
+        android:text="User Name"
+        android:textColor="#000"
+        android:textSize="35sp"
+        android:layout_below="@+id/edit_profile_pic"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_email_text"
+        android:textSize="17sp"
+        android:text="Email"
+        android:textColor="@color/appColor"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="35dp"
+        android:layout_below="@id/edit_username"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_email"
+        android:text="youremail@xxxx.com"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_below="@id/edit_email_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_school_text"
+        android:textSize="17sp"
+        android:text="School"
+        android:textColor="@color/appColor"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="35dp"
+        android:layout_below="@id/edit_email"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_school"
+        android:text="Your College"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_below="@id/edit_school_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_bday_text"
+        android:textSize="17sp"
+        android:text="Birthday"
+        android:textColor="@color/appColor"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="35dp"
+        android:layout_below="@id/edit_school"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_bday"
+        android:text="Jan 14, 2016"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_below="@id/edit_bday_text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_address_text"
+        android:textSize="17sp"
+        android:text="Address"
+        android:textColor="@color/appColor"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="35dp"
+        android:layout_below="@id/edit_bday"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_address"
+        android:text="123 Address Dr. Santa Barbara, CA 12345"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_below="@id/edit_address_text"
+        android:inputType="text"/>
+    <TextView
+        android:text="EDIT"
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:background="#00DCDC"
+        android:textColor="#000"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/edit_profile_pic"
+        android:layout_alignEnd="@+id/edit_profile_pic"
+        android:id="@+id/edit_profile_pic_button"/>
+
+</RelativeLayout>

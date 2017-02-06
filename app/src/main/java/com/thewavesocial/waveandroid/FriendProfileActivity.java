@@ -31,9 +31,6 @@ public class FriendProfileActivity extends AppCompatActivity
         updateCollege(user.getCollege());
         updatePartiesAttended(user.getAttending());
         updatePartiesHosted(user.getHosting());
-
-
-
     }
 
     private void updateUsername(String str)

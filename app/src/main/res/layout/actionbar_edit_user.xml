@@ -3,18 +3,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <TextView
-        android:id="@+id/home_title"
+        android:id="@+id/actionbar_edittitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WAVE"
+        android:text="EDIT PROFILE"
         android:layout_centerInParent="true"
         android:textColor="#FFF"
         android:textSize="24sp"
         android:layout_weight="1"/>
-    <ImageView
-        android:id="@+id/notif_button"
+    <TextView
+        android:id="@+id/actionbar_editsave"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:text="SAVE"
+        android:textSize="15sp"
+        android:textColor="#FFF"
         android:src="@drawable/notif_house"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>
