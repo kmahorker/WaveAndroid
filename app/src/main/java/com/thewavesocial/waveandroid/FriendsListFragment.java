@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FriendsListFragment.OnFragmentInteractionListener} interface
+ * {FriendsListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link FriendsListFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -110,7 +111,7 @@ public class FriendsListFragment extends Fragment {
                 //friendsList.setAdapter(null);
                 adapt.setUserList(refinedUserList);
                 adapt.notifyDataSetChanged();
-                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
                 searchView.clearFocus();
                 return true;
             }
@@ -120,7 +121,7 @@ public class FriendsListFragment extends Fragment {
                 List<User> refinedUserList = search(friendsUsers, newText);
                 adapt.setUserList(refinedUserList);
                 adapt.notifyDataSetChanged();
-                //friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
+                friendsList.setAdapter(new CustomAdapter(getActivity(), (FriendsListFragment)getParentFragment(), refinedUserList));
                 return true;
             }
         });
@@ -158,10 +159,10 @@ public class FriendsListFragment extends Fragment {
         User e = new User();
 
         a.setFirstName("Bobasdfasdf");
-        a.setLastName("Jonesokokokokokokokokokokokokokok");
+        a.setLastName("Jone");
         b.setFirstName("John");
         b.setLastName("Smith");
-        c.setFirstName("Dumb");
+        c.setFirstName("Jone");
         c.setLastName("Dude");
         d.setFirstName("Turn");
         d.setLastName("Up");
@@ -179,7 +180,7 @@ public class FriendsListFragment extends Fragment {
     }
 
     public List<User> search(List<User> us, String query){
-        System.out.print("query: " + query);
+        //System.out.print("query: " + query);
         if(query == ""){
             return us;
         }
