@@ -16,10 +16,12 @@
         android:label="WAVE"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FriendProfileActivity"/>
-        <activity android:name=".PartyProfileActivity"/>
-        <activity android:name=".UserProfileFragment">
+        <activity android:name=".FriendProfileActivity">
+
         </activity>
+        <activity android:name=".PartyProfileActivity"/>
+        <!--<activity android:name=".UserProfileFragment">
+        </activity> -->
         <activity android:name=".LoginActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -14,13 +14,120 @@ import java.util.List;
 import java.util.ArrayList;
 
 //dummy class to initialize CurrentUser
-public class DummyUser
+public class DummyUser extends User
 {
-    private User dummyUser;
+
     private User friend1, friend2, friend3, friend4, friend5;
     private Party party1, party2, party3, party4, party5;
+    private Context context;
 
-    public DummyUser(Context context)
+    public User getFriend1() {
+        return friend1;
+    }
+
+    public void setFriend1(User friend1) {
+        this.friend1 = friend1;
+    }
+
+    public User getFriend3() {
+        return friend3;
+    }
+
+    public void setFriend3(User friend3) {
+        this.friend3 = friend3;
+    }
+
+    public User getFriend2() {
+        return friend2;
+    }
+
+    public void setFriend2(User friend2) {
+        this.friend2 = friend2;
+    }
+
+    public User getFriend4() {
+        return friend4;
+    }
+
+    public void setFriend4(User friend4) {
+        this.friend4 = friend4;
+    }
+
+    public User getFriend5() {
+        return friend5;
+    }
+
+    public void setFriend5(User friend5) {
+        this.friend5 = friend5;
+    }
+
+    public Party getParty1() {
+        return party1;
+    }
+
+    public void setParty1(Party party1) {
+        this.party1 = party1;
+    }
+
+    public Party getParty2() {
+        return party2;
+    }
+
+    public void setParty2(Party party2) {
+        this.party2 = party2;
+    }
+
+    public Party getParty3() {
+        return party3;
+    }
+
+    public void setParty3(Party party3) {
+        this.party3 = party3;
+    }
+
+    public Party getParty4() {
+        return party4;
+    }
+
+    public void setParty4(Party party4) {
+        this.party4 = party4;
+    }
+
+    public Party getParty5() {
+        return party5;
+    }
+
+    public void setParty5(Party party5) {
+        this.party5 = party5;
+    }
+
+
+
+    public DummyUser(Context context){
+        super((long) 0,
+                "Dummy",
+                "Mario",
+                "dmario@ucsb.edu",
+                "dmario123",
+                "Cornell",
+                "Male",
+                "123 Mario Dr. Isla Vista, CA 12345",
+                Calendar.getInstance(),
+                new ArrayList<Long>(), //best friend list
+                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //party attended list
+                new ArrayList<Long>(), //party hosted list
+                new ArrayList<Long>(), //party bounced list
+                new BitmapDrawable());
+
+
+
+        setupDummy(context);
+        setupUserObjects(context);
+        setupPartyObjects();
+
+    }
+    /*public DummyUser(Context context)
     {
         dummyUser = new User((long) 0,
                 "Dummy",
@@ -38,9 +145,19 @@ public class DummyUser
                 new ArrayList<Long>(), //party bounced list
                 new BitmapDrawable());
 
+
+
         setupDummy(context);
         setupUserObjects(context);
         setupPartyObjects();
+    }*/
+
+    public List<User> getFriendsListObjects(List<Long> userIdList){
+        List<User> friendObjs = new ArrayList<User>();
+        for(long id : userIdList){
+            friendObjs.add(getFriendObject(id));
+        }
+        return friendObjs;
     }
 
     public User getFriendObject(long id)
@@ -62,6 +179,13 @@ public class DummyUser
         }
     }
 
+    public List<Party> getPartyListObjects(List<Long> partyIdList){
+        List<Party> partyObjs = new ArrayList<Party>();
+        for(long id: partyIdList){
+            partyObjs.add(getPartyObject(id));
+        }
+        return partyObjs;
+    }
     public Party getPartyObject(long id)
     {
         switch ((int) id)
@@ -84,42 +208,42 @@ public class DummyUser
     private void setupDummy(Context context)
     {
         //setup best friend list
-        dummyUser.getBirthday().set(1969, 4, 1);
-        dummyUser.getBestFriends().add((long) 1);
-        dummyUser.getBestFriends().add((long) 2);
+        this.getBirthday().set(1969, 4, 1);
+        this.getBestFriends().add((long) 1);
+        this.getBestFriends().add((long) 2);
 
         //setup friend list
-        dummyUser.getFriends().add((long) 1);
-        dummyUser.getFriends().add((long) 2);
-        dummyUser.getFriends().add((long) 3);
-        dummyUser.getFriends().add((long) 4);
-        dummyUser.getFriends().add((long) 5);
+        this.getFriends().add((long) 1);
+        this.getFriends().add((long) 2);
+        this.getFriends().add((long) 3);
+        this.getFriends().add((long) 4);
+        this.getFriends().add((long) 5);
 
         //setup party attended list
-        dummyUser.getAttended().add((long) 1);
-        dummyUser.getAttended().add((long) 2);
-        dummyUser.getAttended().add((long) 3);
-        dummyUser.getAttended().add((long) 4);
-        dummyUser.getAttended().add((long) 5);
+        this.getAttended().add((long) 1);
+        this.getAttended().add((long) 2);
+        this.getAttended().add((long) 3);
+        this.getAttended().add((long) 4);
+        this.getAttended().add((long) 5);
 
         //setup party hosted list
-        dummyUser.getHosted().add((long) 1);
-        dummyUser.getHosted().add((long) 2);
-        dummyUser.getHosted().add((long) 3);
-        dummyUser.getHosted().add((long) 4);
-        dummyUser.getHosted().add((long) 5);
+        this.getHosted().add((long) 1);
+        this.getHosted().add((long) 2);
+        this.getHosted().add((long) 3);
+        this.getHosted().add((long) 4);
+        this.getHosted().add((long) 5);
 
         //setup party bounced list
-        dummyUser.getBounced().add((long) 1);
-        dummyUser.getBounced().add((long) 2);
-        dummyUser.getBounced().add((long) 3);
-        dummyUser.getBounced().add((long) 4);
-        dummyUser.getBounced().add((long) 5);
+        this.getBounced().add((long) 1);
+        this.getBounced().add((long) 2);
+        this.getBounced().add((long) 3);
+        this.getBounced().add((long) 4);
+        this.getBounced().add((long) 5);
 
-        dummyUser.setProfilePic(new BitmapDrawable(context.getResources(),
+        this.setProfilePic(new BitmapDrawable(context.getResources(),
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
 
-        dummyUser.getBirthday().set(1720, 8, 21);
+        this.getBirthday().set(1720, 8, 21);
     }
 
     private void setupPartyObjects()
@@ -132,7 +256,7 @@ public class DummyUser
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 "1th Dummy Ave. San Diego, CA 54321",
-                dummyUser.getFriends(),
+                this.getFriends(),
                 true);
         party2 = new Party(
                 2,
@@ -142,7 +266,7 @@ public class DummyUser
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 "2th Dummy Ave. San Diego, CA 54321",
-                dummyUser.getFriends(),
+                this.getFriends(),
                 true);
         party3 = new Party(
                 3,
@@ -152,7 +276,7 @@ public class DummyUser
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 "3th Dummy Ave. San Diego, CA 54321",
-                dummyUser.getFriends(),
+                this.getFriends(),
                 true);
         party4 = new Party(
                 4,
@@ -162,7 +286,7 @@ public class DummyUser
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 "4th Dummy Ave. San Diego, CA 54321",
-                dummyUser.getFriends(),
+                this.getFriends(),
                 true);
         party5 = new Party(
                 5,
@@ -172,7 +296,7 @@ public class DummyUser
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 "5th Dummy Ave. San Diego, CA 54321",
-                dummyUser.getFriends(),
+                this.getFriends(),
                 true);
 
         party1.getStartingDateTime().set(2017, 2, 6);
@@ -281,5 +405,13 @@ public class DummyUser
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
         friend5.setProfilePic(new BitmapDrawable(context.getResources(),
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+    }
+
+    public User getDummyUser() {
+        return this;
+    }
+
+    public void setContext(Context cont){
+        context = cont;
     }
 }

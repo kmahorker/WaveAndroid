@@ -39,6 +39,7 @@ public class UserProfileFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        CurrentUser.setContext(getContext());
         user = CurrentUser.theUser;
 
         setupProfileInfo();

@@ -26,6 +26,7 @@ public class FriendProfileActivity extends AppCompatActivity
     {
         super.onCreate(bundle);
         setContentView(R.layout.friend_profile);
+        //CurrentUser.setContext(getApplicationContext());
 
         // access current friend data
         Intent intent = getIntent();
