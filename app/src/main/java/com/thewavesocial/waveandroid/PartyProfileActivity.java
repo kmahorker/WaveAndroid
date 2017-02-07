@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 
+import java.util.Calendar;
+
 public class PartyProfileActivity extends AppCompatActivity
 {
     @Override
@@ -18,10 +20,10 @@ public class PartyProfileActivity extends AppCompatActivity
         updateAddress(party.getAddress());
         updatePrice(party.getPrice());
         //updateAddressImg( Image img );
-        updateDate(party.getStartingDateTime().getDay(),
-                party.getStartingDateTime().getMonth(), party.getStartingDateTime().getDate());
-        updateTime(party.getStartingDateTime().getHours(), party.getStartingDateTime().getMinutes(),
-                party.getEndingDateTime().getHours(), party.getEndingDateTime().getMinutes());
+        updateDate(party.getStartingDateTime().get(Calendar.DAY_OF_WEEK),
+                party.getStartingDateTime().get(Calendar.MONTH), party.getStartingDateTime().get(Calendar.DATE));
+        updateTime(party.getStartingDateTime().get(Calendar.HOUR), party.getStartingDateTime().get(Calendar.MINUTE),
+                party.getEndingDateTime().get(Calendar.HOUR), party.getEndingDateTime().get(Calendar.MINUTE));
     }
 
     private void updatePartyName(String str)
