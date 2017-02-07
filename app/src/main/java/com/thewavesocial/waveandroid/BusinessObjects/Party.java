@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /*
@@ -19,8 +19,8 @@ public class Party implements Parcelable {
     private String name;
     private double price; //decimal == double?
     private String hostName;
-    private Date startingDateTime;
-    private Date endingDateTime;
+    private Calendar startingDateTime;
+    private Calendar endingDateTime;
     private String address;
     private List<Long> attendingUsers;
     private boolean isPublic;
@@ -31,25 +31,25 @@ public class Party implements Parcelable {
         name = "";
         price = 0;
         hostName = "";
-        startingDateTime = new Date();
-        endingDateTime = new Date();
+        startingDateTime = Calendar.getInstance();
+        endingDateTime = Calendar.getInstance();
         address = "";
         attendingUsers = new ArrayList<Long>();
         isPublic = false;
     }
 
     public Party(
-            //long partyID,
+            long partyID,
             String name,
             double price,
             String hostName,
-            Date startingDateTime,
-            Date endingDateTime,
+            Calendar startingDateTime,
+            Calendar endingDateTime,
             String address,
             List<Long> attendingUsers,
             boolean isPublic)
     {
-        //this.partyID = partyID;
+        this.partyID = partyID;
         this.name = name;
         this.price = price;
         this.hostName = hostName;
@@ -93,12 +93,12 @@ public class Party implements Parcelable {
         this.hostName = hostName;
     }
 
-    public void setStartingDateTime(Date dateTimeObj)
+    public void setStartingDateTime(Calendar dateTimeObj)
     {
         this.startingDateTime = dateTimeObj;
     }
 
-    public void setEndingDateTime(Date dateTimeObj)
+    public void setEndingDateTime(Calendar dateTimeObj)
     {
         this.endingDateTime = dateTimeObj;
     }
@@ -139,12 +139,12 @@ public class Party implements Parcelable {
         return hostName;
     }
 
-    public Date getStartingDateTime()
+    public Calendar getStartingDateTime()
     {
         return startingDateTime;
     }
 
-    public Date getEndingDateTime()
+    public Calendar getEndingDateTime()
     {
         return endingDateTime;
     }
@@ -176,10 +176,8 @@ public class Party implements Parcelable {
         name = in.readString();
         price = in.readDouble();
         hostName = in.readString();
-        long tmpStartingDateTime = in.readLong();
-        startingDateTime = tmpStartingDateTime != -1 ? new Date(tmpStartingDateTime) : null;
-        long tmpEndingDateTime = in.readLong();
-        endingDateTime = tmpEndingDateTime != -1 ? new Date(tmpEndingDateTime) : null;
+        startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
         address = in.readString();
         if (in.readByte() == 0x01) {
             attendingUsers = new ArrayList<Long>();
@@ -201,8 +199,8 @@ public class Party implements Parcelable {
         dest.writeString(name);
         dest.writeDouble(price);
         dest.writeString(hostName);
-        dest.writeLong(startingDateTime != null ? startingDateTime.getTime() : -1L);
-        dest.writeLong(endingDateTime != null ? endingDateTime.getTime() : -1L);
+        dest.writeValue(startingDateTime);
+        dest.writeValue(endingDateTime);
         dest.writeString(address);
         if (attendingUsers == null) {
             dest.writeByte((byte) (0x00));
