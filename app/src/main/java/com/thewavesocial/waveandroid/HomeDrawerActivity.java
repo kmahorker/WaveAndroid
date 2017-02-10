@@ -74,7 +74,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.options)
         {
-            fragment = new FriendsListFragment();
+            fragment = new OptionsFragmet();
         }
         else if (id == R.id.log_out)
         {

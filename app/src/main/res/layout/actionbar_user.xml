@@ -11,8 +11,7 @@
         android:text="Your Profile"
         android:layout_centerInParent="true"
         android:textColor="#FFF"
-        android:textSize="24sp"
-        android:layout_weight="1"/> <!--Username (Text)-->
+        android:textSize="24sp"/> <!--Username (Text)-->
 
     <ImageView
         android:id="@+id/actionbar_userprofile"
