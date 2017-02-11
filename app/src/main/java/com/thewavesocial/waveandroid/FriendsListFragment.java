@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -108,7 +109,7 @@ public class FriendsListFragment extends Fragment {
 
         final LinearLayout lin = (LinearLayout) getActivity().findViewById(R.id.LinearLayout);
 
-        ImageButton inviteFriends = (ImageButton) getActivity().findViewById(R.id.addFriendButton);
+        ImageView inviteFriends = (ImageView) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){

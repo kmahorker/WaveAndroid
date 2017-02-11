@@ -16,12 +16,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter
 {
 
     private GoogleMap mMap;
@@ -50,6 +51,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(this);
         addParty("UCSB", 34.4133, -119.8610);
     }
 
@@ -93,11 +95,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
     public void addParty(String name, double lat, double lng)
     {
         LatLng loc = new LatLng(lat, lng);
-        mMap.addMarker(new MarkerOptions()
+        Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
-                .title("Marker at " + name)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(150,150))));
-        moveMapCamera(loc);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
     }
 
     //refresh partylist
@@ -112,7 +113,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
     //move camera with specified loc
     public void moveMapCamera(LatLng loc)
     {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
     }
 
     //resize image icons
@@ -121,5 +122,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.happy_house);
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker)
+    {
+        return View.inflate(getContext(),R.layout.map_marker_layout, null );
+    }
+
+    @Override
+    public View getInfoContents(Marker marker)
+    {
+        return View.inflate(getContext(),R.layout.map_marker_layout, null );
     }
 }

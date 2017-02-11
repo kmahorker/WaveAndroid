@@ -45,7 +45,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
     }
 
     @Override
-    public Object getItem(int position)
+    public Party getItem(int position)
     {
         return partyList.get(position);
     }
@@ -90,7 +90,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(mainActivity, PartyProfileActivity.class);
-                    intent.putExtra("partyFromPartyList", getItemId(position));
+                    intent.putExtra("partyFromPartyList", getItem(position));
                     mainActivity.startActivity(intent);
                 }
             });

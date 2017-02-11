@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@color/appColor"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="PartyTitle"
+        android:textSize="20sp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host: Sam Gaucho"
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_host"
+        android:layout_below="@id/marker_title"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Location: 123 Beach Dr."
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_loc"
+        android:layout_below="@id/marker_host"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time: 09:30AM - 12:30PM"
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_time"
+        android:layout_below="@id/marker_loc"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open spot: 4"
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_spot"
+        android:layout_below="@id/marker_time"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="     Price: $5"
+        android:textSize="20sp"
+        android:layout_marginStart="5dp"
+        android:textColor="#FFF"
+        android:id="@+id/marker_price"
+        android:layout_alignBottom="@id/marker_spot"
+        android:layout_toEndOf="@id/marker_spot"/>
+
+</RelativeLayout>

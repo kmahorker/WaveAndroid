@@ -1,7 +1,9 @@
 package com.thewavesocial.waveandroid;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
@@ -10,11 +12,16 @@ import java.util.Calendar;
 
 public class PartyProfileActivity extends AppCompatActivity
 {
+    Party party;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Party party = new Party();
+        setContentView(R.layout.party_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent intent = getIntent();
+        party = intent.getExtras().getParcelable("partyFromPartyList");
+
         updatePartyName(party.getName());
         updateHostName(party.getHostName());
         updateAddress(party.getAddress());
@@ -163,5 +170,13 @@ public class PartyProfileActivity extends AppCompatActivity
                 hour = h - 12;
         }
         return hour + ":" + m + ampm;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home)
+            onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

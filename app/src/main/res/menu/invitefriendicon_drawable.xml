@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/add_friend_icon"
-        android:icon="@drawable/add_friend_icon"
+        android:icon="@drawable/add_friend_button"
         android:title="Add Friend" />
 
 </menu>

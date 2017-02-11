@@ -139,7 +139,7 @@ public class UserProfileFragment extends Fragment
     //update parties hosted
     private void updatePartiesHosted(List<Party> list)
     {
-        ListView partyListView = (ListView)getActivity().findViewById(R.id.events_attended_list);
+        ListView partyListView = (ListView)getActivity().findViewById(R.id.events_hosted_list);
         partyListView.setAdapter( new UserPartyCustomAdapter(getActivity(), userProfileFragment, list));
     }
 

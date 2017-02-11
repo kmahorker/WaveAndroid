@@ -8,20 +8,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="EDIT PROFILE"
+        android:layout_centerVertical="true"
         android:layout_centerInParent="true"
         android:textColor="#FFF"
-        android:textSize="24sp"
-        android:layout_weight="1"/> <!--Edit profile (Text)-->
+        android:textSize="24sp"/> <!--Edit profile (Text)-->
 
     <TextView
         android:id="@+id/actionbar_editsave"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="SAVE"
+        android:padding="20dp"
         android:textSize="15sp"
-        android:textColor="#FFF"
-        android:layout_centerInParent="true"
-        android:src="@drawable/notif_house"
-        android:layout_alignParentRight="true"/> <!--SAVE (Text)-->
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFF"/> <!--SAVE (Text)-->
 
 </RelativeLayout>
