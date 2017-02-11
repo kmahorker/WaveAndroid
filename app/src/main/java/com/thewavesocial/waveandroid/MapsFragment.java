@@ -24,7 +24,6 @@ import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter
 {
-
     private GoogleMap mMap;
 
     @Override

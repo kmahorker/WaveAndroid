@@ -41,8 +41,9 @@ public class UserProfileFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        CurrentUser.setContext(getContext());
-        user = CurrentUser.theUser;
+//        CurrentUser.setContext(getContext());
+//        user = CurrentUser.theUser;
+        user = new User();
 
         setupProfileInfo();
         setupActionbar();

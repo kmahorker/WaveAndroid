@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 
 public class OptionsFragmet extends Fragment
@@ -50,7 +51,7 @@ public class OptionsFragmet extends Fragment
             public void onClick(View view)
             {
                 Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
-                intent.putExtra("myProfileObj", CurrentUser.theUser);
+                intent.putExtra("myProfileObj", new User());
                 startActivity(intent);
             }
         });
