@@ -101,7 +101,10 @@ public class FriendsListFragment extends Fragment {
         //Should take Sorted List as argument
         final ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
 
-        final List<User> friendsUsers = generateTestUserList(); //CurrentUser.theUser.getFriends() //TODO testing need to replace with actual List
+        CurrentUser.setContext(getContext());
+        final List<User> friendsUsers = CurrentUser.getFriendsListObjects(CurrentUser.theUser.getFriends());
+
+        //generateTestUserList(); //CurrentUser.theUser.getFriends() //TODO testing need to replace with actual List
 
         final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
         friendsList.setAdapter(adapt);
@@ -175,7 +178,7 @@ public class FriendsListFragment extends Fragment {
     }
 
     public void showFriendProfileActivity(View view, User clickedUser){
-        Intent intent = new Intent(getActivity(), FriendProfileActivity.class);
+        Intent intent = new Intent((HomeDrawerActivity)getActivity(), FriendProfileActivity.class);
         intent.putExtra("userObj", clickedUser);
         startActivity(intent);
     }
