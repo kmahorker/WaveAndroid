@@ -1,0 +1,50 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    tools:context="com.thewavesocial.waveandroid.HostControllerFragment">
+
+    <View
+        android:id="@+id/hostControl_divider0"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"/>
+
+    <TextView
+        android:id="@+id/hostControl_createEvent_text"
+        android:text="Create an event"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:padding="30dp" />
+    
+    <View
+        android:id="@+id/hostControl_divider1"
+        android:layout_below="@id/hostControl_createEvent_text"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"/>
+
+    <TextView
+        android:id="@+id/hostControl_manageEvent_text"
+        android:layout_below="@id/hostControl_divider1"
+        android:text="Manage my events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:padding="30dp"/>
+
+    <View
+        android:id="@+id/hostControl_divider2"
+        android:layout_below="@id/hostControl_manageEvent_text"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"/>
+
+</RelativeLayout>
