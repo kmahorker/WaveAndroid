@@ -21,6 +21,7 @@ import android.widget.SearchView;
 
 import com.google.android.gms.drive.metadata.SearchableCollectionMetadataField;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.util.ArrayList;
@@ -94,20 +95,21 @@ public class FriendsListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         final FriendsListFragment fragment = this;
+        DummyUser dummy = new DummyUser(getActivity()); //TODO: FOR TESTING ONLY
 
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         //Should take Sorted List as argument
-        final ListView friendsList = (ListView) getActivity().findViewById(R.id.friendsList);
+        final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
 
-        CurrentUser.setContext(getContext());
-        final List<User> friendsUsers = CurrentUser.getFriendsListObjects(CurrentUser.theUser.getFriends());
+        //CurrentUser.setContext(getContext());
+        final List<User> friendsUsers = dummy.getFriendsListObjects(dummy.getFriends()); //CurrentUser.getFriendsListObjects(CurrentUser.theUser.getFriends());
 
         //generateTestUserList(); //CurrentUser.theUser.getFriends() //TODO testing need to replace with actual List
 
         final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
-        friendsList.setAdapter(adapt);
+        friendsListView.setAdapter(adapt);
 
 
         final LinearLayout lin = (LinearLayout) getActivity().findViewById(R.id.LinearLayout);
@@ -130,7 +132,7 @@ public class FriendsListFragment extends Fragment {
                 //friendsList.setAdapter(null);
                 //adapt.updateUserList(refinedUserList);
                 //adapt.notifyDataSetChanged();
-                friendsList.setAdapter(new CustomAdapter(getActivity(), fragment, refinedUserList));
+                friendsListView.setAdapter(new CustomAdapter(getActivity(), fragment, refinedUserList));
                 searchView.clearFocus();
                 return true;
             }
@@ -141,7 +143,7 @@ public class FriendsListFragment extends Fragment {
                 //adapt.updateUserList(refinedUserList);
                 //adapt.notifyDataSetChanged();
                 //Fragment fragment =
-                friendsList.setAdapter(new CustomAdapter(getActivity(),fragment, refinedUserList));
+                friendsListView.setAdapter(new CustomAdapter(getActivity(),fragment, refinedUserList));
 
                 return true;
             }
@@ -155,7 +157,7 @@ public class FriendsListFragment extends Fragment {
             }
         });
 
-        friendsList.setOnTouchListener(new View.OnTouchListener() {
+        friendsListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
                 searchView.clearFocus();
@@ -178,9 +180,13 @@ public class FriendsListFragment extends Fragment {
     }
 
     public void showFriendProfileActivity(View view, User clickedUser){
-        Intent intent = new Intent((HomeDrawerActivity)getActivity(), FriendProfileActivity.class);
-        intent.putExtra("userObj", clickedUser);
+        Intent intent = new Intent(getActivity(), FriendProfileActivity.class);
+//        intent.putExtra("userObj", clickedUser);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+
     }
 
     public List<User> generateTestUserList(){
