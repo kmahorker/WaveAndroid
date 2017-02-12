@@ -93,6 +93,7 @@
         android:paddingBottom="15dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="40dp"/> <!--Private (Text)-->
 
     <TextView
@@ -108,7 +109,8 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:paddingLeft="40dp"
-        android:paddingRight="40dp"/> <!--Public (Text)-->
+        android:paddingRight="40dp"
+        android:layout_marginTop="15dp"/> <!--Public (Text)-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -123,7 +125,7 @@
         android:paddingBottom="15dp"
         android:paddingLeft="52dp"
         android:paddingRight="52dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_marginStart="40dp"/> <!--Paid (Text)-->
 
     <TextView
@@ -140,7 +142,7 @@
         android:paddingBottom="15dp"
         android:paddingLeft="52dp"
         android:paddingRight="52dp"
-        android:layout_marginTop="20dp"/> <!--Free (Text)-->
+        android:layout_marginTop="5dp"/> <!--Free (Text)-->
 
     <TextView
         android:layout_width="wrap_content"
