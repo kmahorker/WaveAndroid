@@ -3,6 +3,9 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -20,8 +24,8 @@ import java.util.Calendar;
 public class EditUserProfileActivity extends AppCompatActivity
 {
     EditText edit_email, edit_school, edit_bday,edit_address;
+    ImageView profile_pic;
     User user;
-    private User birthday;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -95,6 +99,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         edit_school = (EditText) findViewById(R.id.edit_school);
         edit_bday = (EditText) findViewById(R.id.edit_bday);
         edit_address = (EditText) findViewById(R.id.edit_address);
+        profile_pic = (ImageView) findViewById(R.id.edit_profile_pic);
 
         //update text with old user info
         edit_email.setText(user.getEmail());

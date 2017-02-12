@@ -70,7 +70,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.host)
         {
-            fragment = new FriendsListFragment();
+            fragment = new HostControllerFragment();
         }
         else if (id == R.id.options)
         {

@@ -17,11 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".FriendProfileActivity">
-
         </activity>
         <activity android:name=".PartyProfileActivity"/>
-        <!--<activity android:name=".UserProfileFragment">
-        </activity> -->
+        <!--
+        <activity android:name=".UserProfileFragment">
+        </activity>
+        -->
         <activity android:name=".LoginActivity"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -52,6 +53,8 @@
         -->
         <activity android:name=".InviteFriendsActivity"/>
         <activity android:name=".EditUserProfileActivity">
+        </activity>
+        <activity android:name=".CreateEventActivity">
         </activity>
     </application>
 

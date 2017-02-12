@@ -44,7 +44,7 @@
         android:id="@+id/events_attended_text"
         android:textSize="22sp"
         android:textColor="#FFF"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/profile_pic"
         android:layout_marginStart="20dp" /> <!--events attended (text)-->
 

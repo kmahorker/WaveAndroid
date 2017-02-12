@@ -44,10 +44,10 @@ public class UserProfileFragment extends Fragment
 //        CurrentUser.setContext(getContext());
 //        user = CurrentUser.theUser;
         user = new User();
+        CurrentUser.setContext(getContext());
 
         setupProfileInfo();
         setupActionbar();
-
         updateSample();
     }
 

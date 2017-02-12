@@ -28,6 +28,7 @@ public class OptionsFragmet extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle("");
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
 
