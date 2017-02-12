@@ -13,7 +13,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 
-public class OptionsFragmet extends Fragment
+public class OptionsFragment extends Fragment
 {
     @Nullable
     @Override
