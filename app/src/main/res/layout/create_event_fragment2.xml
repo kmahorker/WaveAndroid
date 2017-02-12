@@ -4,7 +4,158 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/create_event_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.thewavesocial.waveandroid.CreateEventActivity">
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_partyname"
+        android:hint="Party Name"
+        android:textSize="30sp"
+        android:textColor="@color/appColor"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:gravity="center"/> <!--Party Name (EditText)-->
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_startingDate"
+        android:text="Starting Date"
+        android:textSize="20sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_partyname"
+        android:layout_marginStart="40dp"/> <!--Starting Date (Text)-->
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_startingTime"
+        android:text="Time"
+        android:textSize="20sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_partyname"
+        android:layout_toEndOf="@id/createEvent2_startingDate"
+        android:layout_marginStart="100dp"/> <!--Starting Time (Text)-->
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_endingDate"
+        android:text="Ending Date"
+        android:textSize="20sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_startingDate"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="40dp"/> <!--Ending Date (Text)-->
+
+    <TextView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_endingTime"
+        android:text="Time"
+        android:textSize="20sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_startingTime"
+        android:layout_toEndOf="@id/createEvent2_endingDate"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="100dp"/> <!--Ending Time (Text)-->
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_location"
+        android:text="Your party address"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@id/createEvent2_endingDate"
+        android:layout_marginTop="15dp"/> <!--Location (Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_private_public"
+        android:text="Private"
+        android:textSize="25sp"
+        android:textColor="@color/appColor"
+        android:gravity="right"
+        android:layout_below="@id/createEvent2_location"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="190dp"
+        android:padding="10dp"/> <!--Private/Public (Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_paid_free"
+        android:text="Paid - $5"
+        android:textSize="25sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_location"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="190dp"
+        android:padding="10dp"/> <!--Paid/Free (Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_male_count"
+        android:text="15 Males"
+        android:textSize="25sp"
+        android:textColor="@color/appColor"
+        android:gravity="right"
+        android:layout_below="@id/createEvent2_paid_free"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="190dp"
+        android:padding="10dp"/> <!--Male Count (Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent2_female_count"
+        android:text="20 Females"
+        android:textSize="25sp"
+        android:textColor="@color/appColor"
+        android:layout_below="@id/createEvent2_private_public"
+        android:layout_marginStart="190dp"
+        android:padding="10dp"/> <!--Female Count (Text)-->
+    
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:text="Invite Friends"
+        android:id="@+id/createEvent2_invite_friends"
+        android:textColor="@color/appColor"
+        android:textSize="22sp"
+        android:background="#FFE"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/createEvent2_male_count"/> <!--Invite Friends-->
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:id="@+id/createEvent2_add_hosts"
+        android:text="Add Hosts"
+        android:textColor="@color/appColor"
+        android:textSize="22sp"
+        android:background="#FFE"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/createEvent2_invite_friends"/> <!--Add Hosts-->
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:id="@+id/createEvent2_add_bouncers"
+        android:text="Add Bouncers"
+        android:textColor="@color/appColor"
+        android:textSize="22sp"
+        android:background="#FFE"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_below="@id/createEvent2_add_hosts"/> <!--Add Bouncers-->
 
 </RelativeLayout>

@@ -23,4 +23,5 @@
         android:layout_alignParentRight="true"
         android:onClick="FriendProfileActivity"
         android:padding="5dp"/> <!--Notif icon (Image)-->
+
 </RelativeLayout>

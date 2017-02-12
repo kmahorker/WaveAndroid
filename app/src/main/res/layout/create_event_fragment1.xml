@@ -81,7 +81,7 @@
         android:layout_marginStart="40dp"/> <!--Location (EditText)-->
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_private_text"
         android:text="Private"
@@ -89,15 +89,14 @@
         android:textSize="20sp"
         android:background="@color/appColor"
         android:layout_below="@+id/createEvent1_location_editText"
+        android:gravity="center"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:layout_marginTop="15dp"
         android:layout_marginStart="40dp"/> <!--Private (Text)-->
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_public_text"
         android:text="Public"
@@ -106,14 +105,13 @@
         android:background="#FFF"
         android:layout_below="@+id/createEvent1_location_editText"
         android:layout_toRightOf="@id/createEvent1_private_text"
+        android:gravity="center"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:layout_marginTop="15dp"/> <!--Public (Text)-->
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_paid_text"
         android:text="Paid"
@@ -121,15 +119,14 @@
         android:textSize="20sp"
         android:background="@color/appColor"
         android:layout_below="@+id/createEvent1_private_text"
+        android:gravity="center"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:paddingLeft="52dp"
-        android:paddingRight="52dp"
         android:layout_marginTop="5dp"
         android:layout_marginStart="40dp"/> <!--Paid (Text)-->
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_free_text"
         android:text="Free"
@@ -138,10 +135,9 @@
         android:background="#FFF"
         android:layout_below="@+id/createEvent1_public_text"
         android:layout_toRightOf="@id/createEvent1_paid_text"
+        android:gravity="center"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:paddingLeft="52dp"
-        android:paddingRight="52dp"
         android:layout_marginTop="5dp"/> <!--Free (Text)-->
 
     <TextView

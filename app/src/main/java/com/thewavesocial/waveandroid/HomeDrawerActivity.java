@@ -84,7 +84,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_home_drawer, fragment).commit(); //Not sure if this is right
+        fragmentManager.beginTransaction().replace(R.id.content_home_drawer, fragment).commit();
 
         return true;
     }

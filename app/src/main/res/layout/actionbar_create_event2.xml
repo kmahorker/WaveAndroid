@@ -4,7 +4,7 @@
                 android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/actionbar_createEvent1_text"
+        android:id="@+id/actionbar_createEvent2_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Create an event"
@@ -14,13 +14,15 @@
         android:textColor="#FFF"
         android:textSize="24sp"/> <!--Create an event (Text)-->
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/actionbar_createEvent1_image"
-        android:src="@drawable/forward_arrow"
-        android:layout_alignParentEnd="true"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/actionbar_createEvent2_finish"
+        android:text="FINISH"
+        android:padding="5dp"
+        android:textSize="15sp"
         android:layout_centerVertical="true"
-        android:padding="5dp"/>
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFF"/>
 
 </RelativeLayout>
