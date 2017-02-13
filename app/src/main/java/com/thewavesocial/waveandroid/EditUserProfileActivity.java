@@ -54,7 +54,7 @@ public class EditUserProfileActivity extends AppCompatActivity
     private void askToSave()
     {
         AlertDialog.Builder confirmMessage = new AlertDialog.Builder(this);
-        confirmMessage.setTitle("Delete Unsaved Data")
+        confirmMessage.setTitle("Unsaved Data")
                 .setMessage("Are you sure you want to discard the changes?")
                 .setCancelable(false)
                 .setPositiveButton("Discard", new DialogInterface.OnClickListener()
