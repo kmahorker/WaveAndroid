@@ -18,7 +18,8 @@ import java.util.List;
 
 public class FriendProfileActivity extends AppCompatActivity
 {
-    private User friend;
+    private User friend = new User(); //TODO: Remove Empty User
+    private long userID;
 
     @Override
     //initialize everything
@@ -30,7 +31,8 @@ public class FriendProfileActivity extends AppCompatActivity
 
         // access current friend data
         Intent intent = getIntent();
-        friend = intent.getExtras().getParcelable("userObj");
+        userID = intent.getExtras().getLong("userIDLong");
+        //TODO: getUserObject(long id) from database class
 
         setupFriendInfo();
         setupActionbar();
