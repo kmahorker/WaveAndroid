@@ -17,17 +17,19 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"/> <!--Date and Time (Text)-->
 
-    <EditText
+    <TextView
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_startingDate_editText"
         android:hint="Starting Date"
         android:textSize="17sp"
         android:textColor="@color/appColor"
+        android:inputType="date"
+        android:ems="10"
         android:layout_below="@id/createEvent1_dateTime_text"
-        android:layout_marginStart="40dp"/> <!--Starting Date (EditText)-->
+        android:layout_marginStart="40dp" android:paddingTop="5dp"/> <!--Starting Date (TextView)-->
 
-    <EditText
+    <TextView
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_startingTime_editText"
@@ -36,19 +38,21 @@
         android:textColor="@color/appColor"
         android:layout_toRightOf="@id/createEvent1_startingDate_editText"
         android:layout_alignBottom="@id/createEvent1_startingDate_editText"
-        android:layout_marginStart="50dp"/> <!--Starting Time (EditText)-->
+        android:layout_marginStart="50dp"/> <!--Starting Time (TextView)-->
 
-    <EditText
+    <TextView
         android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_endingDate_editText"
         android:hint="Ending Date"
         android:textSize="17sp"
         android:textColor="@color/appColor"
+        android:inputType="date"
+        android:ems="10"
         android:layout_below="@id/createEvent1_startingDate_editText"
-        android:layout_marginStart="40dp"/> <!--Ending Date (EditText)-->
+        android:layout_marginStart="40dp" android:paddingTop="5dp"/> <!--Ending Date (TextView)-->
 
-    <EditText
+    <TextView
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_endingTime_editText"
@@ -57,7 +61,7 @@
         android:textColor="@color/appColor"
         android:layout_toRightOf="@id/createEvent1_endingDate_editText"
         android:layout_alignBottom="@id/createEvent1_endingDate_editText"
-        android:layout_marginStart="50dp"/> <!--Ending Time (EditText)-->
+        android:layout_marginStart="50dp"/> <!--Ending Time (TextView)-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,7 +75,7 @@
         android:layout_marginStart="20dp"/> <!--Location (Text)-->
 
     <EditText
-        android:layout_width="300dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_location_editText"
         android:hint="Enter Party Location"
@@ -151,15 +155,27 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"/> <!--Price (Text)-->
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEvent1_dollarsign"
+        android:text="$"
+        android:textColor="@color/appColor"
+        android:textSize="17sp"
+        android:layout_below="@id/createEvent1_price_text"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="40dp"/> <!--Dollar Sign (Text)-->
+
     <EditText
-        android:layout_width="300dp"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent1_price_editText"
-        android:hint="$5.00"
+        android:hint="5.00"
         android:textSize="17sp"
+        android:inputType="numberDecimal"
         android:textColor="@color/appColor"
-        android:layout_below="@id/createEvent1_price_text"
-        android:layout_marginStart="40dp"/> <!--Price (EditText)-->
+        android:layout_toEndOf="@id/createEvent1_dollarsign"
+        android:layout_below="@id/createEvent1_price_text"/> <!--Price (EditText)-->
 
     <TextView
         android:layout_width="100dp"

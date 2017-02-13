@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 public class CreateEvent2Fragment extends Fragment
 {
     EditText partyname;
+    Activity mainActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -27,11 +30,23 @@ public class CreateEvent2Fragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mainActivity = this.getActivity();
         ((CreateEventActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((CreateEventActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((CreateEventActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_create_event2);
 
         partyname = (EditText) getActivity().findViewById(R.id.createEvent2_partyname);
+        partyname.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    UtilityClass.hideKeyboard( mainActivity );
+                }
+            }
+        });
 
         TextView finish = (TextView) getActivity().findViewById(R.id.actionbar_createEvent2_finish);
         finish.setOnClickListener(new View.OnClickListener()

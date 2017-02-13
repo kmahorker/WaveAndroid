@@ -26,17 +26,20 @@ public class EditUserProfileActivity extends AppCompatActivity
     EditText edit_email, edit_school, edit_bday,edit_address;
     ImageView profile_pic;
     User user;
+    Activity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d("query", "came to onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_profile);
+        mainActivity = this;
+
         Intent intent = getIntent();
         user = intent.getExtras().getParcelable("myProfileObj");
         updateFieldText();
         updateActionbar();
+        updateOnClicks();
     }
 
     @Override
@@ -126,6 +129,58 @@ public class EditUserProfileActivity extends AppCompatActivity
             {
                 saveData();
                 onBackPressed();
+            }
+        });
+    }
+
+    //set unfocused listeners
+    private void updateOnClicks()
+    {
+        edit_email.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    UtilityClass.hideKeyboard( mainActivity );
+                }
+            }
+        });
+
+        edit_school.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    UtilityClass.hideKeyboard( mainActivity );
+                }
+            }
+        });
+
+        edit_bday.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    UtilityClass.hideKeyboard( mainActivity );
+                }
+            }
+        });
+
+        edit_address.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus)
+            {
+                if (!hasFocus)
+                {
+                    UtilityClass.hideKeyboard( mainActivity );
+                }
             }
         });
     }
