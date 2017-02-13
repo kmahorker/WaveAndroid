@@ -129,11 +129,8 @@ public class FriendsListFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 List<User> refinedUserList = new ArrayList<User>();
                 refinedUserList.addAll(search(friendsUsers, query));
-                //friendsList.setAdapter(null);
-                //adapt.updateUserList(refinedUserList);
-                //adapt.notifyDataSetChanged();
                 friendsListView.setAdapter(new CustomAdapter(getActivity(), fragment, refinedUserList));
-                searchView.clearFocus();
+                searchView.clearFocus(); //Hide Keyboard
                 return true;
             }
 
@@ -149,6 +146,7 @@ public class FriendsListFragment extends Fragment {
             }
         });
 
+        //Hide Keyboard
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
@@ -161,9 +159,6 @@ public class FriendsListFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
                 searchView.clearFocus();
-                //if(((CustomAdapter)(friendsList.getAdapter())).getCount() == 0) {
-                    //UtilityClass.hideKeyboard(fragment.getActivity());
-                //}
                 return false;
             }
         });
@@ -175,16 +170,14 @@ public class FriendsListFragment extends Fragment {
 
     public void showInviteFriendsActivity(View view){
         Intent f_intent = new Intent(getActivity(), InviteFriendsActivity.class);
+        UtilityClass.hideKeyboard(getActivity());
         startActivity(f_intent);
 
     }
 
     public void showFriendProfileActivity(View view, User clickedUser){
         Intent intent = new Intent(getActivity(), FriendProfileActivity.class);
-//        intent.putExtra("userObj", clickedUser);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("userIDLong", clickedUser.getUserID());
         startActivity(intent);
 
     }
