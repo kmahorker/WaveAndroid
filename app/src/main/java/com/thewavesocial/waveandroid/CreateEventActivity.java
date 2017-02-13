@@ -1,10 +1,7 @@
 package com.thewavesocial.waveandroid;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
@@ -13,8 +10,9 @@ import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity
 {
-    private String loc, name;
+    private String loc, name, privatePublic, paidFree;
     private Calendar startingCalendar, endingCalendar;
+    private int manCount, femaleCount;
     private double price;
 
     @Override
@@ -28,12 +26,23 @@ public class CreateEventActivity extends AppCompatActivity
                 .addToBackStack(null).commit();
     }
 
-    public void savePartyInfo(Calendar sd, Calendar ed, String loc, double price)
+    public void savePartyInfo(Calendar sd, Calendar ed, String loc, boolean privat, boolean paid,
+                              double price, int manCount, int femaleCount)
     {
         this.startingCalendar = sd;
         this.endingCalendar = ed;
         this.loc = loc;
         this.price = price;
+        this.manCount = manCount;
+        this.femaleCount = femaleCount;
+        if ( privat )
+            this.privatePublic = "Private";
+        else
+            this.privatePublic = "Public";
+        if ( paid )
+            this.paidFree = "Paid";
+        else
+            this.paidFree = "Free";
     }
 
     public Calendar getStartingCalendar()
@@ -77,5 +86,25 @@ public class CreateEventActivity extends AppCompatActivity
         newParty.setEndingDateTime(endingCalendar);
 
         CurrentUser.theUser.getHosted().add(0, newParty.getPartyID());
+    }
+
+    public String getPrivatePublic()
+    {
+        return privatePublic;
+    }
+
+    public String getPaidFree()
+    {
+        return paidFree;
+    }
+
+    public int getFemaleCount()
+    {
+        return femaleCount;
+    }
+
+    public int getManCount()
+    {
+        return manCount;
     }
 }

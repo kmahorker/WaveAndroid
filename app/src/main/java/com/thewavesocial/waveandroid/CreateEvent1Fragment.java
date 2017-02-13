@@ -277,14 +277,14 @@ public class CreateEvent1Fragment extends Fragment
                 startCalendar.set(Calendar.YEAR, y);
                 startCalendar.set(Calendar.MONTH, m);
                 startCalendar.set(Calendar.DAY_OF_MONTH, d);
-                editStartDate.setText( ( m + 1 ) + "/" + d + "/" + y );
+                editStartDate.setText( UtilityClass.dateToString(startCalendar) );
             }
             else if (startendDateCheck == 2)
             {
                 endCalendar.set(Calendar.YEAR, y);
                 endCalendar.set(Calendar.MONTH, m);
                 endCalendar.set(Calendar.DAY_OF_MONTH, d);
-                editEndDate.setText( ( m + 1 ) + "/" + d + "/" + y );
+                editEndDate.setText( UtilityClass.dateToString(endCalendar) );
             }
         }
     };
@@ -298,13 +298,13 @@ public class CreateEvent1Fragment extends Fragment
             {
                 startCalendar.set(Calendar.HOUR, hr);
                 startCalendar.set(Calendar.MINUTE, min);
-                editStartTime.setText( hr + ":" + min );
+                editStartTime.setText( UtilityClass.timeToString( startCalendar ) );
             }
             else if (startendTimeCheck == 2)
             {
                 endCalendar.set(Calendar.HOUR, hr);
                 endCalendar.set(Calendar.MINUTE, min);
-                editEndTime.setText( hr + ":" + min );
+                editEndTime.setText( UtilityClass.timeToString( endCalendar ) );
             }
         }
     };
@@ -346,9 +346,14 @@ public class CreateEvent1Fragment extends Fragment
                 else
                 {
                     ((CreateEventActivity)getActivity())
-                            .savePartyInfo(startCalendar, endCalendar,
+                            .savePartyInfo(startCalendar,
+                                    endCalendar,
                                     editLocation.getText().toString(),
-                                    Double.parseDouble(editPrice.getText().toString()) );
+                                    privateText.getTextColors().equals(Color.WHITE),
+                                    paidText.getTextColors().equals(Color.WHITE),
+                                    Double.parseDouble(editPrice.getText().toString()),
+                                    maleNum,
+                                    femaleNum );
                     FragmentManager fragM = getActivity().getSupportFragmentManager();
                     fragM.beginTransaction()
                             .replace(R.id.createEvent_fragment_container, new CreateEvent2Fragment())
