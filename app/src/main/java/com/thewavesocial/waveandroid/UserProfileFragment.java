@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,12 +46,12 @@ public class UserProfileFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         userProfileFragment = this;
         mainActivity = (HomeDrawerActivity)getActivity();
-        user = new User();
+        user = CurrentUser.theUser;
         CurrentUser.setContext(getContext());
 
         setupProfileInfo();
         setupActionbar();
-        updateSample();
+//        updateSample();
 
         getView().setOnTouchListener(new View.OnTouchListener()
         {
@@ -70,14 +71,6 @@ public class UserProfileFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK && requestCode == 1)
         {
-            //store data to User
-            User savedUser = data.getExtras().getParcelable("savedUserInfo");
-            user.setEmail(savedUser.getEmail());
-            user.setCollege(savedUser.getCollege());
-            user.setBirthday(savedUser.getBirthday());
-            user.setAddress(savedUser.getAddress());
-            user.setProfilePic(savedUser.getProfilePic());
-
             //display data on profile
             setupActionbar();
             setupProfileInfo();
@@ -102,7 +95,6 @@ public class UserProfileFragment extends Fragment
             public void onClick(View view)
             {
                 Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
-                intent.putExtra("myProfileObj", user);
                 startActivityForResult(intent, 1);
             }
         });
@@ -118,8 +110,8 @@ public class UserProfileFragment extends Fragment
         image = (ImageView)getActivity().findViewById(R.id.profile_pic);
         image.setImageDrawable(user.getProfilePic());
 
-        //updatePartiesAttended( user.getAttended() );
-        //updatePartiesHosted( user.getHosted() );
+        updatePartiesAttended( CurrentUser.getPartyListObjects(user.getAttended()) );
+        updatePartiesHosted( CurrentUser.getPartyListObjects(user.getHosted()) );
     }
 
 //----------------------------------------------------------------------------------Other Sub-tasks
@@ -160,7 +152,7 @@ public class UserProfileFragment extends Fragment
     //Sample dummies for testing purpose
     private void updateSample()
     {
-        List<Party> sampleList = new ArrayList<Party>();
+        List<Party> sampleList = new ArrayList<>();
         sampleList.add(new Party());
         sampleList.add(new Party());
         sampleList.add(new Party());
@@ -179,7 +171,7 @@ public class UserProfileFragment extends Fragment
         sampleList.get(3).getStartingDateTime().set(2017, 5, 4);
         sampleList.get(4).getStartingDateTime().set(2017, 6, 1);
 
-        updatePartiesAttended(sampleList);
+        updatePartiesAttended( sampleList );
         updatePartiesHosted( sampleList );
 
         age.setText("Age: " + 18);

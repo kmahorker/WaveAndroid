@@ -101,8 +101,6 @@ public class DummyUser extends User
         this.party5 = party5;
     }
 
-
-
     public DummyUser(Context context){
         super((long) 0,
                 "Dummy",
@@ -127,30 +125,6 @@ public class DummyUser extends User
         setupPartyObjects();
 
     }
-    /*public DummyUser(Context context)
-    {
-        dummyUser = new User((long) 0,
-                "Dummy",
-                "Mario",
-                "dmario@ucsb.edu",
-                "dmario123",
-                "Cornell",
-                "Male",
-                "123 Mario Dr. Isla Vista, CA 12345",
-                Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new BitmapDrawable());
-
-
-
-        setupDummy(context);
-        setupUserObjects(context);
-        setupPartyObjects();
-    }*/
 
     public List<User> getFriendsListObjects(List<Long> userIdList){
         List<User> friendObjs = new ArrayList<User>();
@@ -179,19 +153,19 @@ public class DummyUser extends User
         }
     }
 
-    public List<Party> getPartyListObjects(List<Long> partyIdList){
-        List<Party> partyObjs = new ArrayList<Party>();
+    public List<Party> getPartyListObjects(List<Long> partyIdList)
+    {
+        List<Party> partyObjs = new ArrayList<>();
         for(long id: partyIdList){
             partyObjs.add(getPartyObject(id));
         }
         return partyObjs;
     }
+
     public Party getPartyObject(long id)
     {
         switch ((int) id)
         {
-            case 1:
-                return party1;
             case 2:
                 return party2;
             case 3:
@@ -240,8 +214,7 @@ public class DummyUser extends User
         this.getBounced().add((long) 4);
         this.getBounced().add((long) 5);
 
-        this.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+        this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
 
         this.getBirthday().set(1720, 8, 21);
     }

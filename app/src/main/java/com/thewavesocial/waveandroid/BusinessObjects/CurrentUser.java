@@ -9,42 +9,34 @@ import java.util.List;
 //Nothing changed
 public final class CurrentUser
 {
-    public static Context context;  //= null;
-    public static DummyUser dummy; // = new DummyUser(context);
-    public static User theUser; //= dummy; //replace with getCurrentUser from databaseAccess class
+    public static Context context;
+    public static DummyUser dummy;
+    public static User theUser;
 
-    private CurrentUser(){
+    private CurrentUser()
+    {
         context = null;
         dummy = new DummyUser(context);
         theUser = dummy;
     }
 
-    public static void setContext(Context cont){
+    public static void setContext(Context cont)
+    {
         context = cont;
         dummy = new DummyUser(context);
         theUser = dummy;
     }
 
-    //string n = CurrentUser.theUser.getFirstName();
-
-    /*public static User getTheUser()
+    public static List<User> getUsersListObjects(List<Long> userIdList)
     {
-        return theUser;
-    }
-    public static void setTheUser(User theUser)
-    {
-        CurrentUser.theUser = theUser;
-    }*/
-
-    public static List<User> getFriendsListObjects(List<Long> userIdList){
         List<User> friendObjs = new ArrayList<User>();
         for(long id : userIdList){
-            friendObjs.add(getFriendObject(id));
+            friendObjs.add(getUserObject(id));
         }
         return friendObjs;
     }
 
-    public static User getFriendObject(long id)
+    public static User getUserObject(long id)
     {
         switch ((int) id)
         {
@@ -59,17 +51,19 @@ public final class CurrentUser
             case 5:
                 return dummy.getFriend5();
             default:
-                return dummy.getFriend1();
+                return dummy;
         }
     }
 
-    public static List<Party> getPartyListObjects(List<Long> partyIdList){
+    public static List<Party> getPartyListObjects(List<Long> partyIdList)
+    {
         List<Party> partyObjs = new ArrayList<Party>();
         for(long id: partyIdList){
             partyObjs.add(getPartyObject(id));
         }
         return partyObjs;
     }
+
     public static Party getPartyObject(long id)
     {
         switch ((int) id)

@@ -57,7 +57,8 @@
         android:layout_below="@+id/events_attended_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="12dp"
-        android:scrollbarStyle="insideInset" /> <!--events attended (list)-->
+        android:scrollbarStyle="insideInset"
+        android:scrollbarFadeDuration="0" /> <!--events attended (list)-->
 
     <TextView
         android:text="Events hosted:"
@@ -79,6 +80,7 @@
         android:background="#FFF"
         android:layout_below="@+id/events_hosted_text"
         android:scrollbarStyle="insideInset"
+        android:scrollbarFadeDuration="0"
         android:layout_marginTop="12dp"
         android:layout_alignStart="@+id/events_attended_list" /> <!--events hosted (list)-->
 

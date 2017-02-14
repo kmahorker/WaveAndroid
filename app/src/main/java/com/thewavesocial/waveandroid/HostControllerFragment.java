@@ -44,7 +44,8 @@ public class HostControllerFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-
+                Intent intent = new Intent(getActivity(), ManageEventsActivity.class);
+                startActivity(intent);
             }
         });
     }

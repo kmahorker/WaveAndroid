@@ -1,21 +1,23 @@
 package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.util.Calendar;
@@ -23,20 +25,26 @@ import java.util.Calendar;
 
 public class EditUserProfileActivity extends AppCompatActivity
 {
-    EditText edit_email, edit_school, edit_bday,edit_address;
+    EditText edit_email, edit_school, edit_bday, edit_address;
+    TextView username;
     ImageView profile_pic;
+    Calendar birthday = Calendar.getInstance();
     User user;
     Activity mainActivity;
+    ViewGroup viewGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_user_profile);
+        viewGroup = (ViewGroup) findViewById(android.R.id.content).getRootView();
         mainActivity = this;
 
         Intent intent = getIntent();
-        user = intent.getExtras().getParcelable("myProfileObj");
+        user = CurrentUser.theUser;
+        CurrentUser.setContext(this);
+
         updateFieldText();
         updateActionbar();
         updateOnClicks();
@@ -84,10 +92,10 @@ public class EditUserProfileActivity extends AppCompatActivity
     {
         user.setEmail(edit_email.getText().toString());
         user.setCollege(edit_school.getText().toString());
-        setBirthday(user);
         user.setAddress(edit_address.getText().toString());
+        user.setBirthday(birthday);
+        Log.d("query", UtilityClass.dateToString(birthday));
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("savedUserInfo", user);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
@@ -103,20 +111,21 @@ public class EditUserProfileActivity extends AppCompatActivity
         edit_bday = (EditText) findViewById(R.id.edit_bday);
         edit_address = (EditText) findViewById(R.id.edit_address);
         profile_pic = (ImageView) findViewById(R.id.edit_profile_pic);
+        username = (TextView) findViewById(R.id.edit_username);
 
         //update text with old user info
         edit_email.setText(user.getEmail());
         edit_school.setText(user.getCollege());
-        edit_bday.setText(user.getBirthday().get(Calendar.MONTH)
-                + "/" + user.getBirthday().get(Calendar.DATE)
-                + "/" + user.getBirthday().get(Calendar.YEAR));
+        edit_bday.setText( UtilityClass.dateToString(user.getBirthday()) );
+        edit_bday.setFocusable(false);
         edit_address.setText(user.getAddress());
+        profile_pic.setImageDrawable(user.getProfilePic());
+        username.setText(user.getFullName());
     }
 
     //setup the actionbar + onClick for saveData
     private void updateActionbar()
     {
-        Log.d("query", "came to Actionbar");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_edit_user);
@@ -183,11 +192,39 @@ public class EditUserProfileActivity extends AppCompatActivity
                 }
             }
         });
+
+        viewGroup.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                UtilityClass.hideKeyboard(mainActivity);
+                return true;
+            }
+        });
+
+        edit_bday.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                new DatePickerDialog(mainActivity, dateListener,
+                        user.getBirthday().get(Calendar.YEAR),
+                        user.getBirthday().get(Calendar.MONTH),
+                        user.getBirthday().get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
-    public void setBirthday(User user)
+    DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener()
     {
-        //user.getBirthday().set(edit_bday.getText().toString());
-
-    }
+        @Override
+        public void onDateSet(DatePicker view, int y, int m, int d)
+        {
+            birthday.set(Calendar.YEAR, y);
+            birthday.set(Calendar.MONTH, m);
+            birthday.set(Calendar.DAY_OF_MONTH, d);
+            edit_bday.setText( UtilityClass.dateToString(birthday) );
+        }
+    };
 }

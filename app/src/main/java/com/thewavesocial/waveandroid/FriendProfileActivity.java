@@ -1,7 +1,6 @@
 package com.thewavesocial.waveandroid;
 
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,12 +12,11 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class FriendProfileActivity extends AppCompatActivity
 {
-    private User friend = new User(); //TODO: Remove Empty User
+    private User friend; //TODO: Remove Empty User
     private long userID;
 
     @Override
@@ -32,6 +30,7 @@ public class FriendProfileActivity extends AppCompatActivity
         // access current friend data
         Intent intent = getIntent();
         userID = intent.getExtras().getLong("userIDLong");
+        friend = CurrentUser.getUserObject(userID);
         //TODO: getUserObject(long id) from database class
 
         setupFriendInfo();

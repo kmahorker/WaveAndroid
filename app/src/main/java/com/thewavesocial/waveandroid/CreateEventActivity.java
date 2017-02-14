@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
+
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity
@@ -78,5 +81,18 @@ public class CreateEventActivity extends AppCompatActivity
                     }
                 })
                 .show();
+    }
+
+    public void saveToUser()
+    {
+        Party newParty = new Party();
+        // TODO: 02/13/2017 Create New Party ID
+        newParty.setPartyID(12345);
+        newParty.setName(name);
+        newParty.setAddress(location);
+        newParty.setPrice(price);
+        newParty.setStartingDateTime(startCalendar);
+        newParty.setEndingDateTime(endCalendar);
+        CurrentUser.theUser.getHosted().add(0, newParty.getPartyID());
     }
 }

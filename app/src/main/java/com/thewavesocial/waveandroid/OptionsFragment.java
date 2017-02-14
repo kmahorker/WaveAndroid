@@ -15,6 +15,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 public class OptionsFragment extends Fragment
 {
+    private User user;
     @Nullable
     @Override
     //initialize layout
@@ -31,6 +32,8 @@ public class OptionsFragment extends Fragment
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle("");
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
+        user = CurrentUser.theUser;
+        CurrentUser.setContext(getActivity());
 
         setupOnClickListeners();
     }
@@ -52,7 +55,7 @@ public class OptionsFragment extends Fragment
             public void onClick(View view)
             {
                 Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
-                intent.putExtra("myProfileObj", new User());
+                intent.putExtra("userIDLong", user.getUserID() );
                 startActivity(intent);
             }
         });

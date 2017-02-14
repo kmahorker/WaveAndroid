@@ -99,6 +99,7 @@ public class CreateEvent2Fragment extends Fragment
                 else
                 {
                     mainActivity.name = partyname.getText().toString();
+                    mainActivity.saveToUser();
                     mainActivity.getSupportFragmentManager().popBackStack();
                     mainActivity.getSupportFragmentManager().popBackStack();
                     mainActivity.onBackPressed();

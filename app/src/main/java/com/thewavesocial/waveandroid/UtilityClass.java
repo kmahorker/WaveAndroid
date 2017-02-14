@@ -26,7 +26,15 @@ public final class UtilityClass {
 
     public static String dateToString(Calendar c)
     {
-        return ( c.get(Calendar.MONTH) + 1 ) + "/" + c.get(Calendar.DATE) + "/" + c.get(Calendar.YEAR);
+        int m = c.get(Calendar.MONTH) + 1;
+        int d = c.get(Calendar.DATE);
+        String prefixM = "";
+        String prefixD = "";
+        if ( m < 10 )
+            prefixM = "0";
+        if ( d < 10 )
+            prefixD = "0";
+        return ( prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR))%100);
     }
 
     public static String timeToString(Calendar c)
