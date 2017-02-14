@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -14,10 +16,11 @@ import android.widget.TextView;
 
 public class CreateEvent2Fragment extends Fragment
 {
-    EditText partyname;
-    TextView startingDate, startingTime, endingDate, endingTime,
+    private EditText partyname;
+    private TextView startingDate, startingTime, endingDate, endingTime,
             location, paidfree, privatePublic, maleCount, femaleCount, finish;
-    Activity mainActivity;
+    private CreateEventActivity mainActivity;
+    private View mainView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -29,11 +32,27 @@ public class CreateEvent2Fragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = this.getActivity();
+        mainActivity = (CreateEventActivity)getActivity();
+        mainView = view;
 
         setupActionbar();
         setupReferences();
+        setupInitializeValues();
         setupOnClicks();
+    }
+
+    private void setupInitializeValues()
+    {
+        startingDate.setText( UtilityClass.dateToString( mainActivity.startCalendar ));
+        startingTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ));
+        endingDate.setText( UtilityClass.dateToString( mainActivity.endCalendar ));
+        endingTime.setText( UtilityClass.timeToString( mainActivity.endCalendar ));
+        location.setText( mainActivity.location );
+        privatePublic.setText( mainActivity.privatePublic );
+        paidfree.setText( mainActivity.paidFree
+                + " - $" + mainActivity.price);
+        maleCount.setText( mainActivity.maleCount + " Males" );
+        femaleCount.setText( mainActivity.femaleCount + " Females");
     }
 
     private void setupReferences()
@@ -49,17 +68,6 @@ public class CreateEvent2Fragment extends Fragment
         maleCount = (TextView) getActivity().findViewById(R.id.createEvent2_male_count);
         femaleCount = (TextView) getActivity().findViewById(R.id.createEvent2_female_count);
         finish = (TextView) getActivity().findViewById(R.id.actionbar_createEvent2_finish);
-
-        startingDate.setText( UtilityClass.dateToString( ((CreateEventActivity)getActivity()).getStartingCalendar()) );
-        endingDate.setText( UtilityClass.dateToString( ((CreateEventActivity)getActivity()).getEndingCalendar()) );
-        startingTime.setText( UtilityClass.timeToString( ((CreateEventActivity)getActivity()).getStartingCalendar()) );
-        endingTime.setText( UtilityClass.timeToString( ((CreateEventActivity)getActivity()).getStartingCalendar()) );
-        location.setText( ((CreateEventActivity)getActivity()).getLocation() );
-        privatePublic.setText( ((CreateEventActivity)getActivity()).getPrivatePublic() );
-        paidfree.setText( ((CreateEventActivity)getActivity()).getPaidFree()
-                + " - $" + ((CreateEventActivity)getActivity()).getPrice());
-        maleCount.setText( ((CreateEventActivity)getActivity()).getManCount() + " Males" );
-        femaleCount.setText( ((CreateEventActivity)getActivity()).getFemaleCount() + " Females");
     }
 
     private void setupOnClicks()
@@ -90,12 +98,21 @@ public class CreateEvent2Fragment extends Fragment
                 }
                 else
                 {
-                    ((CreateEventActivity)getActivity()).setPartyName(partyname.getText().toString());
-                    ((CreateEventActivity)getActivity()).saveToUser();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    getActivity().onBackPressed();
+                    mainActivity.name = partyname.getText().toString();
+                    mainActivity.getSupportFragmentManager().popBackStack();
+                    mainActivity.getSupportFragmentManager().popBackStack();
+                    mainActivity.onBackPressed();
                 }
+            }
+        });
+
+        mainView.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                UtilityClass.hideKeyboard(mainActivity);
+                return true;
             }
         });
     }
@@ -106,6 +123,4 @@ public class CreateEvent2Fragment extends Fragment
         ((CreateEventActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((CreateEventActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_create_event2);
     }
-
-
 }

@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -26,6 +28,7 @@ public class HomeDrawerActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_drawer_layout);
+        CurrentUser.setContext(this);
 
         setupDrawer();
         getSupportActionBar().setTitle("PLUG");

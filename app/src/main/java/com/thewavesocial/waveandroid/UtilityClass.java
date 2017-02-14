@@ -41,9 +41,14 @@ public final class UtilityClass {
             hour -= 12;
             ampm = "pm";
         }
-        if ( hour > 9 )
+        if ( hour == 0 )
+        {
+            hour = 12;
+            ampm = "am";
+        }
+        if ( hour < 10 )
             prefixH = "0";
-        if ( min > 9 )
+        if ( min < 10 )
             prefixM = "0";
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }

@@ -163,7 +163,8 @@
         android:textColor="@color/appColor"
         android:textSize="17sp"
         android:layout_below="@id/createEvent1_price_text"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="11dp"
         android:layout_marginStart="40dp"/> <!--Dollar Sign (Text)-->
 
     <EditText

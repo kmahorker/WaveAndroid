@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,8 +27,9 @@ public class UserProfileFragment extends Fragment
     private User user;
     private TextView college;
     private TextView age;
-    private final UserProfileFragment userProfileFragment = this;
-    ImageView image;
+    private ImageView image;
+    private UserProfileFragment userProfileFragment;
+    private HomeDrawerActivity mainActivity;
 
     @Override
     //get fragment layout reference
@@ -41,14 +43,24 @@ public class UserProfileFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-//        CurrentUser.setContext(getContext());
-//        user = CurrentUser.theUser;
+        userProfileFragment = this;
+        mainActivity = (HomeDrawerActivity)getActivity();
         user = new User();
         CurrentUser.setContext(getContext());
 
         setupProfileInfo();
         setupActionbar();
         updateSample();
+
+        getView().setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                UtilityClass.hideKeyboard(mainActivity);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -1,9 +1,7 @@
 package com.thewavesocial.waveandroid;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
@@ -24,13 +22,13 @@ import java.util.Calendar;
 
 public class CreateEvent1Fragment extends Fragment
 {
-    private int maleNum, femaleNum, startendDateCheck, startendTimeCheck;
-    private Calendar startCalendar, endCalendar;
-    private TextView privateText, publicText, paidText, freeText, maleCount,
-            femaleCount, editStartDate, editStartTime, editEndDate, editEndTime;
+    private TextView privateText, publicText, paidText, freeText, editMaleCount,
+            editFemaleCount, editStartDate, editStartTime, editEndDate, editEndTime, dollarSign;
     private EditText editLocation, editPrice;
     private ImageView maleMinus, malePlus, femaleMinus, femalePlus;
-    private Activity mainActivity;
+    private int startendDateCheck, startendTimeCheck;
+    private CreateEventActivity mainActivity;
+    private View mainView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -42,27 +40,34 @@ public class CreateEvent1Fragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = this.getActivity();
-
-        startCalendar = Calendar.getInstance();
-        endCalendar = Calendar.getInstance();
+        mainActivity = (CreateEventActivity)getActivity();
+        mainView = view;
 
         setupActionBar();
         setupReferences();
         setupOnClicks();
+        setupInitialValues();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
+    private void setupInitialValues()
     {
-        if (item.getItemId() == android.R.id.home)
-        {
-            if (getActivity().getSupportFragmentManager().getBackStackEntryCount() > 1)
-                getActivity().getSupportFragmentManager().popBackStack();
-            else
-                askToSave();
-        }
-        return super.onOptionsItemSelected(item);
+
+        editStartDate.setText( UtilityClass.dateToString( mainActivity.startCalendar));
+        editEndDate.setText( UtilityClass.dateToString( mainActivity.endCalendar));
+        editStartTime.setText( UtilityClass.timeToString( mainActivity.startCalendar));
+        editEndTime.setText( UtilityClass.timeToString( mainActivity.endCalendar));
+        editMaleCount.setText( mainActivity.maleCount + "");
+        editFemaleCount.setText( mainActivity.femaleCount + "");
+
+        if ( mainActivity.privatePublic.equals("Private") )
+            privateText.performClick();
+        else
+            publicText.performClick();
+
+        if ( mainActivity.paidFree.equals("Paid") )
+            paidText.performClick();
+        else
+            freeText.performClick();
     }
 
     private void setupReferences()
@@ -71,23 +76,21 @@ public class CreateEvent1Fragment extends Fragment
         editStartTime = (TextView)getActivity().findViewById(R.id.createEvent1_startingTime_editText);
         editEndDate = (TextView)getActivity().findViewById(R.id.createEvent1_endingDate_editText);
         editEndTime = (TextView)getActivity().findViewById(R.id.createEvent1_endingTime_editText);
-        editLocation = (EditText)getActivity().findViewById(R.id.createEvent1_location_editText);
-        editPrice = (EditText)getActivity().findViewById(R.id.createEvent1_price_editText);
-
         privateText = (TextView) getActivity().findViewById(R.id.createEvent1_private_text);
         publicText = (TextView) getActivity().findViewById(R.id.createEvent1_public_text);
         paidText = (TextView) getActivity().findViewById(R.id.createEvent1_paid_text);
         freeText = (TextView) getActivity().findViewById(R.id.createEvent1_free_text);
+        dollarSign = (TextView) getActivity().findViewById(R.id.createEvent1_dollarsign);
+        editMaleCount = (TextView)getActivity().findViewById(R.id.createEvent1_maleCount_text);
+        editFemaleCount = (TextView)getActivity().findViewById(R.id.createEvent1_femaleCount_text);
+
+        editLocation = (EditText)getActivity().findViewById(R.id.createEvent1_location_editText);
+        editPrice = (EditText)getActivity().findViewById(R.id.createEvent1_price_editText);
 
         maleMinus = (ImageView) getActivity().findViewById(R.id.createEvent1_maleMinus_image);
         malePlus = (ImageView) getActivity().findViewById(R.id.createEvent1_malePlus_image);
         femaleMinus = (ImageView) getActivity().findViewById(R.id.createEvent1_femaleMinus_image);
         femalePlus = (ImageView) getActivity().findViewById(R.id.createEvent1_femalePlus_image);
-
-        maleCount = (TextView)getActivity().findViewById(R.id.createEvent1_maleCount_text);
-        femaleCount = (TextView)getActivity().findViewById(R.id.createEvent1_femaleCount_text);
-        maleNum = Integer.parseInt(maleCount.getText().toString());
-        femaleNum = Integer.parseInt(femaleCount.getText().toString());
     }
 
     private void setupOnClicks()
@@ -101,6 +104,7 @@ public class CreateEvent1Fragment extends Fragment
                 privateText.setBackgroundResource(R.color.appColor);
                 publicText.setTextColor(getResources().getColor(R.color.appColor));
                 publicText.setBackgroundColor(Color.WHITE);
+                mainActivity.privatePublic = "Private";
             }
         });
 
@@ -113,6 +117,7 @@ public class CreateEvent1Fragment extends Fragment
                 publicText.setBackgroundResource(R.color.appColor);
                 privateText.setTextColor(getResources().getColor(R.color.appColor));
                 privateText.setBackgroundColor(Color.WHITE);
+                mainActivity.privatePublic = "Public";
             }
         });
 
@@ -129,6 +134,8 @@ public class CreateEvent1Fragment extends Fragment
                 editPrice.setFocusableInTouchMode(true);
                 editPrice.setClickable(true);
                 editPrice.setBackgroundColor(Color.WHITE);
+                dollarSign.setBackgroundColor(Color.WHITE);
+                mainActivity.paidFree = "Paid";
             }
         });
 
@@ -144,7 +151,10 @@ public class CreateEvent1Fragment extends Fragment
                 editPrice.setText("0.00");
                 editPrice.setFocusableInTouchMode(false);
                 editPrice.setClickable(false);
+                editPrice.clearFocus();
                 editPrice.setBackgroundColor(Color.LTGRAY);
+                dollarSign.setBackgroundColor(Color.LTGRAY);
+                mainActivity.paidFree = "Free";
             }
         });
 
@@ -153,10 +163,10 @@ public class CreateEvent1Fragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                if (maleNum > 0)
+                if (mainActivity.maleCount > 0)
                 {
-                    maleNum--;
-                    maleCount.setText(maleNum + "");
+                    mainActivity.maleCount--;
+                    editMaleCount.setText(mainActivity.maleCount + "");
                 }
             }
         });
@@ -166,8 +176,8 @@ public class CreateEvent1Fragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                maleNum++;
-                maleCount.setText(maleNum+"");
+                mainActivity.maleCount++;
+                editMaleCount.setText(mainActivity.maleCount+"");
             }
         });
 
@@ -176,10 +186,10 @@ public class CreateEvent1Fragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                if (femaleNum > 0)
+                if (mainActivity.femaleCount > 0)
                 {
-                    femaleNum--;
-                    femaleCount.setText(femaleNum + "");
+                    mainActivity.femaleCount--;
+                    editFemaleCount.setText(mainActivity.femaleCount + "");
                 }
             }
         });
@@ -189,8 +199,8 @@ public class CreateEvent1Fragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                femaleNum++;
-                femaleCount.setText(femaleNum+"");
+                mainActivity.femaleCount++;
+                editFemaleCount.setText(mainActivity.femaleCount+"");
             }
         });
 
@@ -201,9 +211,9 @@ public class CreateEvent1Fragment extends Fragment
             {
                 startendDateCheck = 1;
                 new DatePickerDialog(getContext(), dateListener,
-                        startCalendar.get(Calendar.YEAR),
-                        startCalendar.get(Calendar.MONTH),
-                        startCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        mainActivity.startCalendar.get(Calendar.YEAR),
+                        mainActivity.startCalendar.get(Calendar.MONTH),
+                        mainActivity.startCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -214,9 +224,9 @@ public class CreateEvent1Fragment extends Fragment
             {
                 startendDateCheck = 2;
                 new DatePickerDialog(getContext(), dateListener,
-                        endCalendar.get(Calendar.YEAR),
-                        endCalendar.get(Calendar.MONTH),
-                        endCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        mainActivity.endCalendar.get(Calendar.YEAR),
+                        mainActivity.endCalendar.get(Calendar.MONTH),
+                        mainActivity.endCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -227,7 +237,8 @@ public class CreateEvent1Fragment extends Fragment
             {
                 startendTimeCheck = 1;
                 new TimePickerDialog(getContext(), timeListener,
-                        startCalendar.get(Calendar.HOUR), startCalendar.get(Calendar.MINUTE), true).show();
+                        mainActivity.startCalendar.get(Calendar.HOUR),
+                        mainActivity.startCalendar.get(Calendar.MINUTE), true).show();
             }
         });
 
@@ -238,31 +249,18 @@ public class CreateEvent1Fragment extends Fragment
             {
                 startendTimeCheck = 2;
                 new TimePickerDialog(getContext(), timeListener,
-                        endCalendar.get(Calendar.HOUR), endCalendar.get(Calendar.MINUTE), true).show();
+                        mainActivity.endCalendar.get(Calendar.HOUR),
+                        mainActivity.endCalendar.get(Calendar.MINUTE), true).show();
             }
         });
 
-        editLocation.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        mainView.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
-            public void onFocusChange(View view, boolean hasFocus)
+            public boolean onTouch(View view, MotionEvent motionEvent)
             {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
-            }
-        });
-
-        editPrice.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus)
-            {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
+                UtilityClass.hideKeyboard(mainActivity);
+                return true;
             }
         });
     }
@@ -274,17 +272,17 @@ public class CreateEvent1Fragment extends Fragment
         {
             if (startendDateCheck == 1)
             {
-                startCalendar.set(Calendar.YEAR, y);
-                startCalendar.set(Calendar.MONTH, m);
-                startCalendar.set(Calendar.DAY_OF_MONTH, d);
-                editStartDate.setText( UtilityClass.dateToString(startCalendar) );
+                mainActivity.startCalendar.set(Calendar.YEAR, y);
+                mainActivity.startCalendar.set(Calendar.MONTH, m);
+                mainActivity.startCalendar.set(Calendar.DAY_OF_MONTH, d);
+                editStartDate.setText( UtilityClass.dateToString(mainActivity.startCalendar) );
             }
             else if (startendDateCheck == 2)
             {
-                endCalendar.set(Calendar.YEAR, y);
-                endCalendar.set(Calendar.MONTH, m);
-                endCalendar.set(Calendar.DAY_OF_MONTH, d);
-                editEndDate.setText( UtilityClass.dateToString(endCalendar) );
+                mainActivity.endCalendar.set(Calendar.YEAR, y);
+                mainActivity.endCalendar.set(Calendar.MONTH, m);
+                mainActivity.endCalendar.set(Calendar.DAY_OF_MONTH, d);
+                editEndDate.setText( UtilityClass.dateToString(mainActivity.endCalendar) );
             }
         }
     };
@@ -296,15 +294,15 @@ public class CreateEvent1Fragment extends Fragment
         {
             if (startendTimeCheck == 1)
             {
-                startCalendar.set(Calendar.HOUR, hr);
-                startCalendar.set(Calendar.MINUTE, min);
-                editStartTime.setText( UtilityClass.timeToString( startCalendar ) );
+                mainActivity.startCalendar.set(Calendar.HOUR, hr);
+                mainActivity.startCalendar.set(Calendar.MINUTE, min);
+                editStartTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ) );
             }
             else if (startendTimeCheck == 2)
             {
-                endCalendar.set(Calendar.HOUR, hr);
-                endCalendar.set(Calendar.MINUTE, min);
-                editEndTime.setText( UtilityClass.timeToString( endCalendar ) );
+                mainActivity.endCalendar.set(Calendar.HOUR, hr);
+                mainActivity.endCalendar.set(Calendar.MINUTE, min);
+                editEndTime.setText( UtilityClass.timeToString( mainActivity.endCalendar ) );
             }
         }
     };
@@ -332,29 +330,25 @@ public class CreateEvent1Fragment extends Fragment
                     AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
                     fieldAlert.setMessage("Please enter all the party information.")
                             .setCancelable(true)
-                            .setIcon(R.drawable.alert_symbol)
                             .show();
                 }
-                else if ( endCalendar.compareTo( startCalendar ) < 0 )
+                else if ( mainActivity.endCalendar.compareTo( mainActivity.startCalendar ) < 0 )
                 {
                     AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
                     fieldAlert.setMessage("Your ending time should come after your starting time.")
                             .setCancelable(true)
-                            .setIcon(R.drawable.alert_symbol)
+                            .show();
+                }
+                else if ( mainActivity.maleCount + mainActivity.femaleCount == 0 )
+                {
+                    AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
+                    fieldAlert.setMessage("Please specify the numbers of males and females")
+                            .setCancelable(true)
                             .show();
                 }
                 else
                 {
-                    ((CreateEventActivity)getActivity())
-                            .savePartyInfo(startCalendar,
-                                    endCalendar,
-                                    editLocation.getText().toString(),
-                                    privateText.getTextColors().equals(Color.WHITE),
-                                    paidText.getTextColors().equals(Color.WHITE),
-                                    Double.parseDouble(editPrice.getText().toString()),
-                                    maleNum,
-                                    femaleNum );
-                    FragmentManager fragM = getActivity().getSupportFragmentManager();
+                    FragmentManager fragM = mainActivity.getSupportFragmentManager();
                     fragM.beginTransaction()
                             .replace(R.id.createEvent_fragment_container, new CreateEvent2Fragment())
                             .addToBackStack(null)
@@ -362,34 +356,5 @@ public class CreateEvent1Fragment extends Fragment
                 }
             }
         });
-    }
-
-    private void askToSave()
-    {
-        AlertDialog.Builder confirmMessage = new AlertDialog.Builder(getActivity());
-        confirmMessage.setTitle("Unsaved Data")
-                .setMessage("Are you sure you want to discard the changes?")
-                .setCancelable(false)
-                .setPositiveButton("Discard", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        if (getActivity().getSupportFragmentManager().getBackStackEntryCount() == 1)
-                        {
-                            getActivity().getSupportFragmentManager().popBackStack();
-                        }
-                        getActivity().onBackPressed();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i)
-                    {
-                        //do nothing
-                    }
-                })
-                .show();
     }
 }
