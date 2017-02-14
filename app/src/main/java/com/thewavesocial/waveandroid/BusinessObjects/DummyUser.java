@@ -182,7 +182,7 @@ public class DummyUser extends User
     private void setupDummy(Context context)
     {
         //setup best friend list
-        this.getBirthday().set(1969, 4, 1);
+        this.getBirthday().set(1997, 4, 1);
         this.getBestFriends().add((long) 1);
         this.getBestFriends().add((long) 2);
 
@@ -215,8 +215,6 @@ public class DummyUser extends User
         this.getBounced().add((long) 5);
 
         this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
-
-        this.getBirthday().set(1720, 8, 21);
     }
 
     private void setupPartyObjects()

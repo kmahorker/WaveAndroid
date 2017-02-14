@@ -27,12 +27,11 @@ public class UserPartyCustomAdapter extends BaseAdapter
     public UserPartyCustomAdapter(FragmentActivity mainActivity, UserProfileFragment fragment, List<Party> partyList)
     {
         super();
-        this.partyList = new ArrayList<>();
-        this.partyList.addAll(partyList);
+        this.partyList = partyList;
+        Party p = new Party();
         this.mainActivity = mainActivity;
         this.fragment = fragment;
-        inflater = ( LayoutInflater )mainActivity.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = ( LayoutInflater )mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         type = 1;
     }
 
@@ -41,15 +40,14 @@ public class UserPartyCustomAdapter extends BaseAdapter
         super();
         this.partyList = partyList;
         this.mainActivity = activity;
-        inflater = ( LayoutInflater )mainActivity.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = ( LayoutInflater )mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         type = 2;
     }
 
     @Override
     public int getCount()
     {
-        return partyList.size();
+        return partyList.size()-1;
     }
 
     @Override
@@ -90,7 +88,6 @@ public class UserPartyCustomAdapter extends BaseAdapter
                 holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
                 holder.partydate = (TextView) layoutView.findViewById(R.id.eachManage_partydate_item);
             }
-
             holder.partyname.setText(partyList.get(position).getName());
             holder.partydate.setText( UtilityClass.dateToString(
                     partyList.get(position).getStartingDateTime()));

@@ -28,7 +28,7 @@ public class EditUserProfileActivity extends AppCompatActivity
     EditText edit_email, edit_school, edit_bday, edit_address;
     TextView username;
     ImageView profile_pic;
-    Calendar birthday = Calendar.getInstance();
+    Calendar birthday;
     User user;
     Activity mainActivity;
     ViewGroup viewGroup;
@@ -43,7 +43,6 @@ public class EditUserProfileActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         user = CurrentUser.theUser;
-        CurrentUser.setContext(this);
 
         updateFieldText();
         updateActionbar();
@@ -93,8 +92,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         user.setEmail(edit_email.getText().toString());
         user.setCollege(edit_school.getText().toString());
         user.setAddress(edit_address.getText().toString());
-        user.setBirthday(birthday);
-        Log.d("query", UtilityClass.dateToString(birthday));
+        user.getBirthday().set( birthday.get(Calendar.YEAR), birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE) );
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
@@ -116,7 +114,8 @@ public class EditUserProfileActivity extends AppCompatActivity
         //update text with old user info
         edit_email.setText(user.getEmail());
         edit_school.setText(user.getCollege());
-        edit_bday.setText( UtilityClass.dateToString(user.getBirthday()) );
+        birthday = user.getBirthday();
+        edit_bday.setText( UtilityClass.dateToString(birthday) );
         edit_bday.setFocusable(false);
         edit_address.setText(user.getAddress());
         profile_pic.setImageDrawable(user.getProfilePic());

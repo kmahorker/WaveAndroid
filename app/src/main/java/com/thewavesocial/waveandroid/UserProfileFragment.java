@@ -47,7 +47,6 @@ public class UserProfileFragment extends Fragment
         userProfileFragment = this;
         mainActivity = (HomeDrawerActivity)getActivity();
         user = CurrentUser.theUser;
-        CurrentUser.setContext(getContext());
 
         setupProfileInfo();
         setupActionbar();
