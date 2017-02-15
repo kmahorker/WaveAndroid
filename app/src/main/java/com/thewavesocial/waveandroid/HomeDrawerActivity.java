@@ -133,7 +133,7 @@ public class HomeDrawerActivity extends AppCompatActivity
     private void setupUserProfileOnClickEvents()
     {
         //get reference from navigation drawer layout
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.left_drawer);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
 

@@ -5,11 +5,17 @@ import android.graphics.BitmapFactory;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,10 +27,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
+import static android.R.attr.name;
+
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter
 {
     private GoogleMap mMap;
+    private String partyname;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -51,7 +60,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(this);
-        addParty("UCSB", 34.4133, -119.8610);
+        addParty("Super Party1", 34.4133, -119.8610);
+        addParty("Boring Party2", 34.4140, -119.8630);
+        addParty("Sad Party3", 34.4110, -119.8620);
     }
 
 //--------------------------------------------------------------------------OnViewCreated Sub-tasks
@@ -61,6 +72,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_home);
+
+        final DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        ImageView notification = (ImageView) getActivity().findViewById(R.id.notif_button);
+        notification.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
+        });
     }
 
     //setup sos and curloc buttons
@@ -93,8 +115,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     // Add a marker to UCSB and move the camera
     public void addParty(String name, double lat, double lng)
     {
+        partyname = name;
         LatLng loc = new LatLng(lat, lng);
-        Marker marker = mMap.addMarker(new MarkerOptions()
+        mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(150,150))));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float)15.0));
@@ -126,12 +149,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public View getInfoWindow(Marker marker)
     {
-        return View.inflate(getContext(),R.layout.map_marker_layout, null );
+        View view = View.inflate(getContext(),R.layout.map_marker_layout, null );
+
+        TextView title = (TextView) view.findViewById(R.id.marker_title);
+        title.setText(partyname);
+        return view;
     }
 
     @Override
     public View getInfoContents(Marker marker)
     {
-        return View.inflate(getContext(),R.layout.map_marker_layout, null );
+        View view = View.inflate(getContext(),R.layout.map_marker_layout, null );
+
+        TextView title = (TextView) view.findViewById(R.id.marker_title);
+        title.setText(partyname);
+        return view;
     }
 }

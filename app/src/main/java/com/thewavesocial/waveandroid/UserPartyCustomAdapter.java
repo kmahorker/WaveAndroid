@@ -47,7 +47,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
-        return partyList.size()-1;
+        return partyList.size();
     }
 
     @Override

@@ -51,7 +51,6 @@
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/events_attended_list"
-        android:minHeight="5dp"
         android:layout_height="120dp"
         android:background="#FFF"
         android:layout_below="@+id/events_attended_text"

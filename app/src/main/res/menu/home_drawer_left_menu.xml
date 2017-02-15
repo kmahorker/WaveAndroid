@@ -19,6 +19,9 @@
     <item android:title="">
         <menu>
             <item
+                android:id="@+id/nothing"
+                android:title=""/>
+            <item
                 android:id="@+id/options"
                 android:title="Options"/>
             <item

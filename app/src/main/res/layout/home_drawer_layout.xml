@@ -16,7 +16,7 @@
         android:layout_height="match_parent"/> <!--Actionbar settings-->
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/left_drawer"
         android:layout_width="160dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -24,7 +24,127 @@
         android:background="@color/appColor"
         android:theme="@style/DrawerStyle"
         app:headerLayout="@layout/nav_header_home_drawer"
-        app:menu="@menu/home_drawer_layout_drawer"
-        app:itemTextColor="#FFF"/> <!--Drawer settings-->
+        app:menu="@menu/home_drawer_left_menu"
+        app:itemTextColor="#FFF"/> <!--Left Drawer settings-->
+
+    <RelativeLayout
+        android:id="@+id/right_drawer"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:fitsSystemWindows="true"
+        android:theme="@style/DrawerStyle"
+        android:background="@color/appColor" >
+
+        <ImageView
+            android:id="@+id/rightDrawer_image_notifImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/notif_house"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:padding="2dp"/> <!--Notif icon (Image)-->
+
+        <TextView
+            android:id="@+id/rightDrawer_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@id/rightDrawer_image_notifImage" /> <!--Notification (Text)-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_text_friendRequests"
+            android:text="Friend Requests"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/rightDrawer_text_title"/> <!--Friend Requests (Text)-->
+
+        <View
+            android:id="@+id/rightDrawer_divider_1"
+            android:layout_below="@id/rightDrawer_text_friendRequests"
+            android:layout_width="224dp"
+            android:layout_height="1dp"
+            android:background="#FFF"
+            android:layout_marginStart="13dp"/> <!--Divider 1 (View)-->
+
+        <ListView
+            android:layout_width="214dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_list_friendRequests"
+            android:background="@color/appColor"
+            android:layout_below="@id/rightDrawer_divider_1"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/> <!--Request List (ListView)-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_text_hostings"
+            android:text="Hostings"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/rightDrawer_list_friendRequests"/> <!--Hostings (Text)-->
+
+        <View
+            android:id="@+id/rightDrawer_divider_2"
+            android:layout_below="@id/rightDrawer_text_hostings"
+            android:layout_width="224dp"
+            android:layout_height="1dp"
+            android:background="#FFF"
+            android:layout_marginStart="13dp"/> <!--Divider 2 (View)-->
+
+        <ListView
+            android:layout_width="214dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_list_hostings"
+            android:background="@color/appColor"
+            android:layout_below="@id/rightDrawer_divider_2"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/> <!--Request List (ListView)-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_text_invitations"
+            android:text="Invitations"
+            android:textSize="20dp"
+            android:textColor="#FFF"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@id/rightDrawer_list_hostings"/> <!--Invitations (Text)-->
+
+        <View
+            android:id="@+id/rightDrawer_divider_3"
+            android:layout_below="@id/rightDrawer_text_invitations"
+            android:layout_width="224dp"
+            android:layout_height="1dp"
+            android:background="#FFF"
+            android:layout_marginStart="13dp"/> <!--Divider 3 (View)-->
+
+        <ListView
+            android:layout_width="214dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/rightDrawer_list_invitations"
+            android:background="@color/appColor"
+            android:layout_below="@id/rightDrawer_divider_3"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/> <!--Invite List (ListView)-->
+
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
