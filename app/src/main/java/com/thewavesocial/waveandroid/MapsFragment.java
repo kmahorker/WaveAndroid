@@ -153,6 +153,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         TextView title = (TextView) view.findViewById(R.id.marker_title);
         title.setText(partyname);
+
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
         return view;
     }
 

@@ -98,7 +98,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(mainActivity, PartyProfileActivity.class);
-                    intent.putExtra("partyFromPartyList", getItem(position));
+                    intent.putExtra("partyIDLong", getItem(position).getPartyID());
                     mainActivity.startActivity(intent);
                 }
             });
