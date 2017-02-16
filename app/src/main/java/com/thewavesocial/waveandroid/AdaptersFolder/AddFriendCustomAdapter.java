@@ -1,12 +1,6 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.AdaptersFolder;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.FriendsFolder.InviteFriendsActivity;
+import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
 import java.util.List;

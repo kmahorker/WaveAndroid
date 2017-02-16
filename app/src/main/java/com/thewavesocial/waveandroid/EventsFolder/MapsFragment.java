@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.EventsFolder;
 
 import android.Manifest;
 import android.app.Activity;
@@ -36,6 +36,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
@@ -202,7 +205,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         ,10);
             }
         }
-        locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        else
+        {
+            locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        }
 
     }
 

@@ -1,18 +1,19 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.FriendsFolder;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.AddFriendCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;

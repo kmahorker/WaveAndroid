@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.UserFolder;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 

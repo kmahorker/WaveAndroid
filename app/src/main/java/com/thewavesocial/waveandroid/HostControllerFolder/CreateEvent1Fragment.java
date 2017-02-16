@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.HostControllerFolder;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 

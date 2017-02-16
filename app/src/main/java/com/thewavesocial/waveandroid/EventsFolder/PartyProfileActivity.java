@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.EventsFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,8 +7,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
-
-import java.util.Calendar;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 public class PartyProfileActivity extends AppCompatActivity
 {

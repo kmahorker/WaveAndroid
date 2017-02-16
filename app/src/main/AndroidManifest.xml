@@ -25,13 +25,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".FriendProfileActivity"/>
-        <activity android:name=".PartyProfileActivity"/>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".InviteFriendsActivity"/>
-        <activity android:name=".EditUserProfileActivity"/>
-        <activity android:name=".CreateEventActivity"/>
-        <activity android:name=".ManageEventsActivity"/>
+        <activity android:name=".FriendsFolder.FriendProfileActivity"/>
+        <activity android:name=".EventsFolder.PartyProfileActivity"/>
+        <activity android:name=".HomeFolder.LoginActivity"/>
+        <activity android:name=".FriendsFolder.InviteFriendsActivity"/>
+        <activity android:name=".UserFolder.EditUserProfileActivity"/>
+        <activity android:name=".HostControllerFolder.CreateEventActivity"/>
+        <activity android:name=".HostControllerFolder.ManageEventsActivity"/>
 
     </application>
 

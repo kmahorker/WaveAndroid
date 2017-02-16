@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.EventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
