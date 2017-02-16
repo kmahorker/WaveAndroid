@@ -19,18 +19,16 @@ public class PartyProfileActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.party_profile);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Intent intent = getIntent();
-        party = intent.getExtras().getParcelable("partyFromPartyList");
 
+        Intent intent = getIntent();
+        party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
         updatePartyName(party.getName());
         updateHostName(party.getHostName());
         updateAddress(party.getAddress());
         updatePrice(party.getPrice());
         //updateAddressImg( Image img );
-        updateDate(party.getStartingDateTime().get(Calendar.DAY_OF_WEEK),
-                party.getStartingDateTime().get(Calendar.MONTH), party.getStartingDateTime().get(Calendar.DATE));
-        updateTime(party.getStartingDateTime().get(Calendar.HOUR), party.getStartingDateTime().get(Calendar.MINUTE),
-                party.getEndingDateTime().get(Calendar.HOUR), party.getEndingDateTime().get(Calendar.MINUTE));
+        updateDate( UtilityClass.dateToString(party.getStartingDateTime()) );
+        updateTime( UtilityClass.timeToString(party.getStartingDateTime()) );
     }
 
     private void updatePartyName(String str)
@@ -57,16 +55,16 @@ public class PartyProfileActivity extends AppCompatActivity
         //image = img;
     }
 
-    private void updateDate(int day, int month, int date)
+    private void updateDate(String str)
     {
         TextView text = (TextView)findViewById (R.id.date_text);
-        text.setText(getWeekText(day) + ", " + getMonthText(month) + " " + date);
+        text.setText(str);
     }
 
-    private void updateTime(int sHour, int sMin, int eHour, int eMin)
+    private void updateTime(String str)
     {
         TextView text = (TextView)findViewById (R.id.time_text);
-        text.setText(getTimeView(sHour, sMin) + " - " + getTimeView(eHour, eMin));
+        text.setText(str);
     }
 
     private void updatePrice(double price)

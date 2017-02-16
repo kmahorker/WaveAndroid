@@ -31,11 +31,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/edit_username"
-        android:text="User Name"
         android:textColor="#000"
         android:textSize="35sp"
         android:layout_below="@+id/edit_profile_pic"
-        android:layout_centerHorizontal="true"/> <!--Username (Text)-->
+        android:layout_centerInParent="true"
+        android:gravity="center"/> <!--Username (Text)-->
 
     <TextView
         android:layout_width="wrap_content"
