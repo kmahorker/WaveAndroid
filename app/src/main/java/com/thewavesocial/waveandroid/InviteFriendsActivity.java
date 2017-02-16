@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.util.ArrayList;
@@ -22,16 +24,19 @@ public class InviteFriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
         updateActionbar();
+        final DummyUser us = new DummyUser(this);
         final InviteFriendsActivity currentActivity = this;
         final SearchView inviteFriendSearchBar = (SearchView) findViewById(R.id.inviteFriendSearchBar);
         final ListView addFriendsResultListView = (ListView) findViewById(R.id.resultListView);
-        FloatingActionButton plusButton = (FloatingActionButton) findViewById(R.id.addFriendButton);
+
 
         inviteFriendSearchBar.setQueryHint("Search Name");
         inviteFriendSearchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 List<User> userList = new ArrayList<User>(); //TODO: Search for users from database
+                userList.add(us);
                 addFriendsResultListView.setAdapter(new AddFriendCustomAdapter(currentActivity, userList));
                 inviteFriendSearchBar.clearFocus();
                 return false;
@@ -51,6 +56,8 @@ public class InviteFriendsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
 
     }
 
