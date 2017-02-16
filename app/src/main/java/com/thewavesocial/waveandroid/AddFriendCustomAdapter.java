@@ -58,6 +58,7 @@ public class AddFriendCustomAdapter extends BaseAdapter {
     {
         TextView tv;
         ImageView img;
+        ImageView btn;
 
     }
 
@@ -70,11 +71,12 @@ public class AddFriendCustomAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
-            Holder holder = new Holder();
+            final Holder holder = new Holder();
             View rowView;
             rowView = inflater.inflate(R.layout.add_friend_cell_layout, null);
             holder.tv = (TextView) rowView.findViewById(R.id.addFriendName);
             holder.img = (ImageView) rowView.findViewById(R.id.addFriendImage);
+            holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
             //holder.img.setImageResource(R.drawable.happy_house); //testing //TODO Change to user's image
@@ -84,6 +86,13 @@ public class AddFriendCustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
                     context.showFriendProfileActivity(v,userList.get(position));
+                }
+            });
+            holder.btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.btn.setImageResource(R.drawable.checkmark);
+                    //TODO: SEND Notification to recepient user
                 }
             });
             return rowView;

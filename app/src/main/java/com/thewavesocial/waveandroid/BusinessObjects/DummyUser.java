@@ -103,8 +103,8 @@ public class DummyUser extends User
 
     public DummyUser(Context context){
         super((long) 0,
-                "Dummy",
-                "Mario",
+                "DummyLongNAME",
+                "MarioLongNAME",
                 "dmario@ucsb.edu",
                 "dmario123",
                 "Cornell",

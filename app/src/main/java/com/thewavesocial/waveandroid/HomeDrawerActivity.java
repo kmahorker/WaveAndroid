@@ -59,7 +59,10 @@ public class HomeDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
 
-        if (id == R.id.find_events)
+        if(id == R.id.map){
+            fragment = mapFrag;
+        }
+        else if (id == R.id.find_events)
         {
             fragment = mapFrag;
         }
