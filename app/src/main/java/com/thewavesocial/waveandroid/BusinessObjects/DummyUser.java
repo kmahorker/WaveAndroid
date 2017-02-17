@@ -116,6 +116,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(),
                 new BitmapDrawable());
 
 
@@ -214,6 +215,12 @@ public class DummyUser extends User
         this.getBounced().add((long) 4);
         this.getBounced().add((long) 5);
 
+        this.getSignedUp().add((long) 1);
+        this.getSignedUp().add((long) 2);
+        this.getSignedUp().add((long) 3);
+        this.getSignedUp().add((long) 4);
+        this.getSignedUp().add((long) 5);
+        
         this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
     }
 
@@ -299,6 +306,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(),
                 new BitmapDrawable());
         friend2 = new User((long) 2,
                 "Sad",
@@ -314,6 +322,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(),
                 new BitmapDrawable());
         friend3 = new User((long) 3,
                 "Boring",
@@ -329,6 +338,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(),
                 new BitmapDrawable());
         friend4 = new User((long) 4,
                 "Angry",
@@ -344,6 +354,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(),
                 new BitmapDrawable());
         friend5 = new User((long) 5,
                 "Lit",
@@ -358,7 +369,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //friend list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
+                new ArrayList<Long>(), //party bounced list,
+                new ArrayList<Long>(),
                 new BitmapDrawable());
         friend1.getBirthday().set(1997, 1, 2);
         friend2.getBirthday().set(1998, 2, 3);

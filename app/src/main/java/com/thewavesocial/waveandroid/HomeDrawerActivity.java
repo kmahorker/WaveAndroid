@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.EventsFolder.MyEventsFragment;
 import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.HomeFolder.OptionsFragment;
 import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment;

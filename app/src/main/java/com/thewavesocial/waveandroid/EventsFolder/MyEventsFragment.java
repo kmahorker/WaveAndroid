@@ -1,6 +1,6 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.EventsFolder;
 
-import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -27,7 +32,6 @@ public class MyEventsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -73,9 +77,13 @@ public class MyEventsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        MyEventsFragment thisFragment = this;
+        DummyUser dummyUser = new DummyUser(getActivity());
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
+        List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getSignedUp()); //TODO: Get Parties from User Object from database
         ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
+        myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));
 
     }
 
@@ -92,5 +100,11 @@ public class MyEventsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void showPartyProfilePage(Party clickedParty){
+        Intent intent = new Intent(getActivity(), PartyProfileActivity.class);
+        intent.putExtra("partyIDLong", clickedParty.getPartyID());
+        startActivity(intent);
     }
 }
