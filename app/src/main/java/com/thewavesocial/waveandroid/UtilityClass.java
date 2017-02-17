@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 public final class UtilityClass
 {
-    private static LatLng loc = new LatLng(34.411104, -119.8425998);
+    private static LatLng loc = null, mapLoc = null;
     private UtilityClass(){
         //Add Needed
     }
@@ -72,5 +72,15 @@ public final class UtilityClass
     public static void updateUserLocation( LatLng loc1 )
     {
         loc = loc1;
+    }
+
+    public static LatLng getMapLocation()
+    {
+        return mapLoc;
+    }
+
+    public static void updateMapLocation( LatLng loc1 )
+    {
+        mapLoc = loc1;
     }
 }

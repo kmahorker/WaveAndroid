@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
 import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 

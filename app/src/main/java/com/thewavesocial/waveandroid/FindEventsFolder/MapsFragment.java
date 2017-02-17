@@ -29,8 +29,10 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -44,7 +46,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowClickListener, LocationListener
+        GoogleMap.OnInfoWindowClickListener
 {
     private List<Long> partyList;
     private Party curParty;
@@ -75,6 +77,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
         mapFragment.getMapAsync(this);
         locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        cur_loc_marker = null;
     }
 
     @Override
@@ -84,12 +87,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mMap = googleMap;
         mMap.setInfoWindowAdapter(this);
         mMap.setOnInfoWindowClickListener(this);
-        updateUserLoc();
+        updateUserLoc(1);
 
         addParties(googleMap, partyList);
     }
 
-//----------------------------------------------------------------------------------Party Functions
+    @Override
+    public void onDetach()
+    {
+        try
+        {
+            Log.d("You're", "in");
+            UtilityClass.updateMapLocation(mMap.getCameraPosition().target);
+        }
+        catch (RuntimeException e)
+        {
+            Log.d("Runtime Exception", "updateMap");
+        }
+        super.onDetach();
+    }
+
+    //----------------------------------------------------------------------------------Party Functions
 
     // Add a marker to UCSB and move the camera
     public void addParty(long partyID, double lat, double lng)
@@ -142,7 +160,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public View getInfoWindow(Marker marker)
     {
         if ( marker.getTag() == null )
+        {
+            int size = (int)((Math.random()+2)) * 250;
+            Log.d("Wow", size + "");
+            cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
             return null;
+        }
         View view = View.inflate(getContext(), R.layout.map_marker_layout, null);
         curParty = CurrentUser.getPartyObject((long) marker.getTag());
 
@@ -167,7 +190,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public View getInfoContents(Marker marker)
     {
         if ( marker.getTag() == null )
+        {
+            int size = (int)((Math.random()*2+1)) * 250;
+            Log.d("Wow", size + "");
+            cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
             return null;
+        }
         View view = View.inflate(getContext(), R.layout.map_marker_layout, null);
         curParty = CurrentUser.getPartyObject((long) marker.getTag());
 
@@ -190,7 +218,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
 //--------------------------------------------------------------------------------------GPS Methods
 
-    public void updateUserLoc()
+    public void updateUserLoc(int key)
     {
         if ( ActivityCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -208,63 +236,45 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         else
         {
-            locManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            LatLng loc = new LatLng( location.getLatitude(), location.getLongitude());
+            UtilityClass.updateUserLocation( loc );
+            if ( key == 1 )
+            {
+                if ( UtilityClass.getMapLocation() != null )
+                {
+                    Log.d("Location", UtilityClass.getUserLocation() + " " + UtilityClass.getMapLocation());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getMapLocation(), (float) 15.0));
+                }
+                else
+                {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
+                }
+                cur_loc_marker = mMap.addMarker(new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, 150, 150)))
+                        .position(UtilityClass.getUserLocation()));
+            }
+            else
+            {
+                moveMapCamera(loc);
+            }
         }
-
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    public void onRequestPermissionsResult(int requestCode, @NonNull
+            String[] permissions, @NonNull int[] grantResults)
     {
         switch (requestCode)
         {
             case 10:
-                updateUserLoc();
+                updateUserLoc(0);
                 break;
             default:
                 break;
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location)
-    {
-        LatLng loc = new LatLng( location.getLatitude(), location.getLongitude());
-        UtilityClass.updateUserLocation( loc );
-
-        moveMapCamera(loc);
-        if ( cur_loc_marker == null )
-        {
-            cur_loc_marker = mMap.addMarker( new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, 150, 150 )))
-                    .position(loc));
-        }
-        else
-        {
-            cur_loc_marker.setPosition(loc);
-            cur_loc_marker.setVisible(true);
-        }
-    }
-
-    @Override
-    public void onProviderDisabled(String s)
-    {
-        Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(i);
-    }
-
-    @Override //not used
-    public void onStatusChanged(String s, int i, Bundle bundle)
-    {
-
-    }
-
-    @Override //not used
-    public void onProviderEnabled(String s)
-    {
-
-    }
 
 //-----------------------------------------------------------------------------------Setup Methods
 
@@ -306,7 +316,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             @Override
             public void onClick(View view)
             {
-                updateUserLoc();
+                updateUserLoc(0);
             }
         });
     }
