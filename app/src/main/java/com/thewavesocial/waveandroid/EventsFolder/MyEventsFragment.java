@@ -79,6 +79,7 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         MyEventsFragment thisFragment = this;
         DummyUser dummyUser = new DummyUser(getActivity());
+        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
         List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getSignedUp()); //TODO: Get Parties from User Object from database
