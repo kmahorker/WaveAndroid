@@ -91,6 +91,7 @@ public class MyEventsCustomAdapter extends BaseAdapter {
                     // TODO Not sure if this is right imp
                     // FriendsListActivity f = new FriendsListActivity();
                     //fragment.showFriendProfileActivity(v, partyList.get(position));
+                    fragment.showPartyProfilePage(partyList.get(position));
                     //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
                 }
             });

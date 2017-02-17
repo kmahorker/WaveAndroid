@@ -220,7 +220,7 @@ public class DummyUser extends User
         this.getSignedUp().add((long) 3);
         this.getSignedUp().add((long) 4);
         this.getSignedUp().add((long) 5);
-        
+
         this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
     }
 
