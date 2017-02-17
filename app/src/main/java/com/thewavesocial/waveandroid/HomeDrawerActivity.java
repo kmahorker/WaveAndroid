@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.EventsFolder.MyEventsFragment;
 import com.thewavesocial.waveandroid.HomeFolder.OptionsFragment;
 import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.FindEventsFolder.MapsFragment;
@@ -73,7 +74,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.my_events)
         {
-            fragment = new FriendsListFragment();
+            fragment = new MyEventsFragment();
         }
         else if (id == R.id.friends)
         {

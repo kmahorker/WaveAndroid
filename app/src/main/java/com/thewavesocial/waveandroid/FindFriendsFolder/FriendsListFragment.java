@@ -180,7 +180,7 @@ public class FriendsListFragment extends Fragment {
 
     public List<User> generateTestUserList(){
         List<User> userList = new ArrayList<User>();
-        //User a = new User("Bob", "Jones", "bj@k.com", "password", "UCSB", "Male", new Date(51215), userList, userList, userList);
+        //User a = new User("Bob", "Jones", "bj@k.com", "password", "UCSB", "Male", new Date(51215), partyList, partyList, partyList);
         User a = new User();
         User b = new User();
         User c = new User();

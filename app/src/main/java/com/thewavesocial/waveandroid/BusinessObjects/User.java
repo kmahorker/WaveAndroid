@@ -34,6 +34,7 @@ public class User implements Parcelable {
     private List<Long> attended;
     private List<Long> hosted;
     private List<Long> bounced;
+    private List<Long> signedUp;
     private BitmapDrawable profilePic;
 
 
@@ -53,6 +54,7 @@ public class User implements Parcelable {
         attended = new ArrayList<Long>();
         hosted = new ArrayList<Long>();
         bounced = new ArrayList<Long>();
+        signedUp = new ArrayList<Long>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
@@ -70,6 +72,7 @@ public class User implements Parcelable {
                 List<Long> attended,
                 List<Long> hosted,
                 List<Long> bounced,
+                List<Long> signedUp,
                 BitmapDrawable profilePic)
     {
         this.userID = userID;
@@ -86,6 +89,7 @@ public class User implements Parcelable {
         this.attended = attended;
         this.hosted = hosted;
         this.bounced = bounced;
+        this.signedUp = signedUp;
         this.profilePic = profilePic;
     }
 
@@ -212,6 +216,10 @@ public class User implements Parcelable {
         this.bounced = bounced;
     }
 
+    public void setSignedUp(List<Long> signedUp) {
+        this.signedUp = signedUp;
+    }
+
     public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
 
     //Getter Block
@@ -284,6 +292,12 @@ public class User implements Parcelable {
     {
         return bounced;
     }
+
+
+    public List<Long> getSignedUp() {
+        return signedUp;
+    }
+
 
     public BitmapDrawable getProfilePic() { return profilePic; }
 

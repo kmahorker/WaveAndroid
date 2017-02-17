@@ -50,8 +50,8 @@
 //    }
 //
 //    public List<User> generateTestUserList(){
-//        List<User> userList = new ArrayList<User>();
-//        //User a = new User("Bob", "Jones", "bj@k.com", "password", "UCSB", "Male", new Date(51215), userList, userList, userList);
+//        List<User> partyList = new ArrayList<User>();
+//        //User a = new User("Bob", "Jones", "bj@k.com", "password", "UCSB", "Male", new Date(51215), partyList, partyList, partyList);
 //        User a = new User();
 //        User b = new User();
 //        User c = new User();
@@ -69,13 +69,13 @@
 //        e.setFirstName("Kau");
 //        e.setLastName("Mah");
 //
-//        userList.add(a);
-//        userList.add(b);
-//        userList.add(c);
-//        userList.add(d);
-//        userList.add(e);
+//        partyList.add(a);
+//        partyList.add(b);
+//        partyList.add(c);
+//        partyList.add(d);
+//        partyList.add(e);
 //
-//        return userList;
+//        return partyList;
 //
 //    }
 //}

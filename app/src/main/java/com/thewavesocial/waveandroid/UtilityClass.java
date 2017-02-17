@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
