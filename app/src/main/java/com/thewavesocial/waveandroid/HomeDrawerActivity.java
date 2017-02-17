@@ -68,7 +68,7 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.my_events)
         {
-            fragment = new FriendsListFragment();
+            fragment = new MyEventsFragment();
         }
         else if (id == R.id.friends)
         {

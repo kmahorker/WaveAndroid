@@ -1,12 +1,7 @@
 package com.thewavesocial.waveandroid;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +9,28 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
  * Created by Kaushik on 2/4/2017.
  */
 
-public class CustomAdapter extends BaseAdapter {
+public class MyEventsCustomAdapter extends BaseAdapter {
     String [] result;
     FragmentActivity context;
     int [] imageId;
-    List<User> userList = new ArrayList<User>();;
-    FriendsListFragment fragment;
+    List<Party> partyList = new ArrayList<Party>();;
+    MyEventsFragment fragment;
     private static LayoutInflater inflater=null;
 
-    public CustomAdapter(FragmentActivity mainActivity, FriendsListFragment fragment, List<User> userList) {
+    public MyEventsCustomAdapter(FragmentActivity mainActivity, MyEventsFragment fragment, List<Party> partyList) {
         super();
-        this.userList.addAll(userList);
+        this.partyList.addAll(partyList);
         //this.partyList.addAll(partyList);
         //result = friendsNamesList;
         context = mainActivity;
@@ -44,12 +41,12 @@ public class CustomAdapter extends BaseAdapter {
     }
     @Override
     public int getCount() {
-        return userList.size();
+        return partyList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return userList.get(position);
+        return partyList.get(position);
     }
 
     @Override
@@ -59,17 +56,18 @@ public class CustomAdapter extends BaseAdapter {
 
     public class Holder
     {
-        TextView tv;
-        ImageView img;
+        TextView tvName;
+        TextView tvDate;
+        TextView tvDistance;
     }
 
     /*public void setUserList(List<User> user){
         this.partyList = user;
     }*/
 
-    public void updateUserList(List<User> user){
-        userList.clear();
-        userList.addAll(user);
+    public void updateUserList(List<Party> party){
+        partyList.clear();
+        partyList.addAll(party);
         this.notifyDataSetChanged();
     }
     @Override
@@ -77,20 +75,22 @@ public class CustomAdapter extends BaseAdapter {
         if(convertView == null) {
             Holder holder = new Holder();
             View rowView;
-            rowView = inflater.inflate(R.layout.friends_list_cell_layout, null);
-            holder.tv = (TextView) rowView.findViewById(R.id.friendName);
-            holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
+            rowView = inflater.inflate(R.layout.my_events_cell_layout, null);
+            holder.tvName = (TextView) rowView.findViewById(R.id.partyName);
+            holder.tvDate = (TextView) rowView.findViewById(R.id.partyDate);
+            holder.tvDistance = (TextView) rowView.findViewById(R.id.distance);
             //holder.tv.setText("Name"); //Testing
-            holder.tv.setText(userList.get(position).getFullName());
-            //holder.img.setImageResource(R.drawable.happy_house); //testing //TODO Change to user's image
-            holder.img.setImageDrawable(userList.get(position).getProfilePic()); //TODO Double check this imp
+            holder.tvName.setText(partyList.get(position).getName());
+            Calendar cal =  partyList.get(position).getStartingDateTime();
+            holder.tvDate.setText(UtilityClass.dateToString(cal));
+            holder.tvDistance.setText("distHere"); //TODO: Add real distance function
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO Not sure if this is right imp
-                   // FriendsListActivity f = new FriendsListActivity();
-                    fragment.showFriendProfileActivity(v, userList.get(position));
-                   //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
+                    // FriendsListActivity f = new FriendsListActivity();
+                    //fragment.showFriendProfileActivity(v, partyList.get(position));
+                    //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
                 }
             });
             return rowView;

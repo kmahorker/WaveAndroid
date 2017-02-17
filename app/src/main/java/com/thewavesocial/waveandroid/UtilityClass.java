@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import java.util.Calendar;
 
 /**
