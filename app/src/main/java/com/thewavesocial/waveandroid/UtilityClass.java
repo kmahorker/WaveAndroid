@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +37,8 @@ public final class UtilityClass {
             prefixM = "0";
         if ( d < 10 )
             prefixD = "0";
-        return ( prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR))%100);
+        Log.d("test", m + " " + d + " ");
+        return ( prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR)+"").substring(2));
     }
 
     public static String timeToString(Calendar c)

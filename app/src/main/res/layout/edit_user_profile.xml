@@ -5,7 +5,7 @@
     android:id="@+id/edit_user_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewavesocial.waveandroid.EditUserProfileActivity">
+    tools:context="com.thewavesocial.waveandroid.UserFolder.EditUserProfileActivity">
 
     <ImageView
         android:layout_width="120dp"
@@ -31,11 +31,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/edit_username"
-        android:text="User Name"
         android:textColor="#000"
         android:textSize="35sp"
         android:layout_below="@+id/edit_profile_pic"
-        android:layout_centerHorizontal="true"/> <!--Username (Text)-->
+        android:layout_centerInParent="true"
+        android:gravity="center"/> <!--Username (Text)-->
 
     <TextView
         android:layout_width="wrap_content"

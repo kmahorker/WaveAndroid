@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.FriendsFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.R;
 
 import java.util.Calendar;
 import java.util.List;

@@ -29,7 +29,7 @@
 
     <RelativeLayout
         android:id="@+id/right_drawer"
-        android:layout_width="250dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:fitsSystemWindows="true"
@@ -72,7 +72,7 @@
         <View
             android:id="@+id/rightDrawer_divider_1"
             android:layout_below="@id/rightDrawer_text_friendRequests"
-            android:layout_width="224dp"
+            android:layout_width="254dp"
             android:layout_height="1dp"
             android:background="#FFF"
             android:layout_marginStart="13dp"/> <!--Divider 1 (View)-->
@@ -101,7 +101,7 @@
         <View
             android:id="@+id/rightDrawer_divider_2"
             android:layout_below="@id/rightDrawer_text_hostings"
-            android:layout_width="224dp"
+            android:layout_width="254dp"
             android:layout_height="1dp"
             android:background="#FFF"
             android:layout_marginStart="13dp"/> <!--Divider 2 (View)-->
@@ -130,7 +130,7 @@
         <View
             android:id="@+id/rightDrawer_divider_3"
             android:layout_below="@id/rightDrawer_text_invitations"
-            android:layout_width="224dp"
+            android:layout_width="254dp"
             android:layout_height="1dp"
             android:background="#FFF"
             android:layout_marginStart="13dp"/> <!--Divider 3 (View)-->

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF"
-    tools:context="com.thewavesocial.waveandroid.HostControllerFragment">
+    tools:context="com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment">
 
     <View
         android:id="@+id/hostControl_divider0"

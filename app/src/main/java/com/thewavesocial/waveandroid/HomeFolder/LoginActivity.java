@@ -1,10 +1,12 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.thewavesocial.waveandroid.R;
 
 public class LoginActivity extends AppCompatActivity
 {

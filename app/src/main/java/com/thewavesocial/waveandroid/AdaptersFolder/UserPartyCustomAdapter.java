@@ -1,19 +1,20 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.EventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
+import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class UserPartyCustomAdapter extends BaseAdapter
@@ -98,7 +99,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
                 public void onClick(View v)
                 {
                     Intent intent = new Intent(mainActivity, PartyProfileActivity.class);
-                    intent.putExtra("partyFromPartyList", getItem(position));
+                    intent.putExtra("partyIDLong", getItem(position).getPartyID());
                     mainActivity.startActivity(intent);
                 }
             });
