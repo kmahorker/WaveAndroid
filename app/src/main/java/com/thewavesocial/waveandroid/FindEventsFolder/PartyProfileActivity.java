@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.EventsFolder;
+package com.thewavesocial.waveandroid.FindEventsFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

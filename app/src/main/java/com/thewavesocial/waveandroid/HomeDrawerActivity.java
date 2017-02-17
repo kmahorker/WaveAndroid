@@ -15,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.HomeFolder.OptionsFragment;
 import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment;
-import com.thewavesocial.waveandroid.EventsFolder.MapsFragment;
+import com.thewavesocial.waveandroid.FindEventsFolder.MapsFragment;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 
 public class HomeDrawerActivity extends AppCompatActivity

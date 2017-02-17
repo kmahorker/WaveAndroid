@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.EventsFolder;
+package com.thewavesocial.waveandroid.FindEventsFolder;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.location.LocationListener;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -230,8 +231,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onLocationChanged(Location location)
     {
         LatLng loc = new LatLng( location.getLatitude(), location.getLongitude());
-        moveMapCamera(loc);
+        UtilityClass.updateUserLocation( loc );
 
+        moveMapCamera(loc);
         if ( cur_loc_marker == null )
         {
             cur_loc_marker = mMap.addMarker( new MarkerOptions()
@@ -239,7 +241,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     .position(loc));
         }
         else
+        {
             cur_loc_marker.setPosition(loc);
+            cur_loc_marker.setVisible(true);
+        }
     }
 
     @Override

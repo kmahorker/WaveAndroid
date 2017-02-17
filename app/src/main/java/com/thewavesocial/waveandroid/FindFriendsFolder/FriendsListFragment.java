@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.FriendsFolder;
+package com.thewavesocial.waveandroid.FindFriendsFolder;
 
 import android.content.Intent;
 import android.os.Bundle;

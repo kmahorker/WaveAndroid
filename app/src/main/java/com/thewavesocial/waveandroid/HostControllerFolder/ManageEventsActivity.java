@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.ManagePartyCustomAdapter;
 import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
@@ -48,7 +49,7 @@ public class ManageEventsActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query)
             {
                 List<Party> newPartyList = search(partyList, query);
-                manageListView.setAdapter(new UserPartyCustomAdapter(mainActivity, newPartyList));
+                manageListView.setAdapter(new ManagePartyCustomAdapter(mainActivity, newPartyList));
                 searchView.clearFocus();
                 return true;
             }
@@ -57,7 +58,7 @@ public class ManageEventsActivity extends AppCompatActivity
             public boolean onQueryTextChange(String query)
             {
                 List<Party> newPartyList = search(partyList, query);
-                manageListView.setAdapter(new UserPartyCustomAdapter(mainActivity, newPartyList));
+                manageListView.setAdapter(new ManagePartyCustomAdapter(mainActivity, newPartyList));
                 return true;
             }
         });
@@ -90,7 +91,7 @@ public class ManageEventsActivity extends AppCompatActivity
         searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
         partyList = ((DummyUser)dummy).getPartyListObjects(dummy.getHosted());
         CurrentUser.setContext(this);
-        manageListView.setAdapter(new UserPartyCustomAdapter(this, partyList));
+        manageListView.setAdapter(new ManagePartyCustomAdapter(this, partyList));
     }
 
     private void setupActionbar()

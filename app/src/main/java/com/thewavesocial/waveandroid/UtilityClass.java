@@ -5,14 +5,17 @@ import android.content.Context;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 
 /**
  * Created by Kaushik on 2/5/2017.
  */
 
-public final class UtilityClass {
-
+public final class UtilityClass
+{
+    private static LatLng loc = new LatLng(34.411104, -119.8425998);
     private UtilityClass(){
         //Add Needed
     }
@@ -35,7 +38,6 @@ public final class UtilityClass {
             prefixM = "0";
         if ( d < 10 )
             prefixD = "0";
-        Log.d("test", m + " " + d + " ");
         return ( prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR)+"").substring(2));
     }
 
@@ -61,5 +63,15 @@ public final class UtilityClass {
         if ( min < 10 )
             prefixM = "0";
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
+    }
+
+    public static LatLng getUserLocation()
+    {
+        return loc;
+    }
+
+    public static void updateUserLocation( LatLng loc1 )
+    {
+        loc = loc1;
     }
 }
