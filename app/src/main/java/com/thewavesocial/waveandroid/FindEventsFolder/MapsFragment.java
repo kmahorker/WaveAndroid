@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -43,6 +46,7 @@ import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
@@ -110,9 +114,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     //----------------------------------------------------------------------------------Party Functions
 
     // Add a marker to UCSB and move the camera
-    public void addParty(long partyID, double lat, double lng)
+    public void addParty(long partyID, LatLng loc)
     {
-        LatLng loc = new LatLng(lat, lng);
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house ,150, 150))));
@@ -122,13 +125,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     //add partylist
     public void addParties(GoogleMap googleMap, List<Long> partyIDs)
     {
-        double lat = 34.4133;
-        double lng = -119.8610;
         for (long party : partyIDs)
         {
-            addParty(party, lat, lng);
-            lat += 0.001;
-            lng += 0.001;
+            addParty(party, getLocationFromAddress( CurrentUser.getPartyObject(party).getAddress() ));
         }
     }
 
@@ -275,6 +274,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    public LatLng getLocationFromAddress(String strAddress)
+    {
+        Geocoder coder = new Geocoder(getActivity());
+        List<Address> address;
+        LatLng p1 = null;
+
+        try
+        {
+            address = coder.getFromLocationName(strAddress,1);
+            for ( int i = 0; i < 5 && address.size()==0; i++ )
+            {
+                address = coder.getFromLocationName("strAddress", 1);
+            }
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(),location.getLongitude());
+        }
+        catch (Exception e)
+        {
+            Log.d("Sorry", e.getMessage());
+        }
+        return p1;
+    }
 
 //-----------------------------------------------------------------------------------Setup Methods
 

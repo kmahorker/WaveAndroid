@@ -20,7 +20,7 @@
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/profile_sample"/> <!--Drawer Profile Pic (Image)-->
+        android:src="@drawable/happy_house"/> <!--Drawer Profile Pic (Image)-->
 
     <TextView
         android:id="@+id/home_user_name"
@@ -28,9 +28,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Melvin Zaid"
+        android:text="You"
         android:textSize="20sp"
         android:layout_below="@id/home_user_profile"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/> <!--Drawer Username (Text)-->
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:lines="1"/> <!--Drawer Username (Text)-->
 
 </LinearLayout>

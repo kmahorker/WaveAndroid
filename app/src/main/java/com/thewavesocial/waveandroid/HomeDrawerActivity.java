@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -148,6 +149,7 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         //onClick for username
         TextView homeUsername = (TextView) headerView.findViewById(R.id.home_user_name);
+        homeUsername.setText( CurrentUser.theUser.getFullName() );
         homeUsername.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -159,6 +161,7 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         //onClick for user profile pic
         ImageView homeUserProfile = (ImageView) headerView.findViewById(R.id.home_user_profile);
+        homeUserProfile.setImageDrawable( CurrentUser.theUser.getProfilePic() );
         homeUserProfile.setOnClickListener(new View.OnClickListener()
         {
             @Override

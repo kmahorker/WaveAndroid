@@ -21,86 +21,6 @@ public class DummyUser extends User
     private Party party1, party2, party3, party4, party5;
     private Context context;
 
-    public User getFriend1() {
-        return friend1;
-    }
-
-    public void setFriend1(User friend1) {
-        this.friend1 = friend1;
-    }
-
-    public User getFriend3() {
-        return friend3;
-    }
-
-    public void setFriend3(User friend3) {
-        this.friend3 = friend3;
-    }
-
-    public User getFriend2() {
-        return friend2;
-    }
-
-    public void setFriend2(User friend2) {
-        this.friend2 = friend2;
-    }
-
-    public User getFriend4() {
-        return friend4;
-    }
-
-    public void setFriend4(User friend4) {
-        this.friend4 = friend4;
-    }
-
-    public User getFriend5() {
-        return friend5;
-    }
-
-    public void setFriend5(User friend5) {
-        this.friend5 = friend5;
-    }
-
-    public Party getParty1() {
-        return party1;
-    }
-
-    public void setParty1(Party party1) {
-        this.party1 = party1;
-    }
-
-    public Party getParty2() {
-        return party2;
-    }
-
-    public void setParty2(Party party2) {
-        this.party2 = party2;
-    }
-
-    public Party getParty3() {
-        return party3;
-    }
-
-    public void setParty3(Party party3) {
-        this.party3 = party3;
-    }
-
-    public Party getParty4() {
-        return party4;
-    }
-
-    public void setParty4(Party party4) {
-        this.party4 = party4;
-    }
-
-    public Party getParty5() {
-        return party5;
-    }
-
-    public void setParty5(Party party5) {
-        this.party5 = party5;
-    }
-
     public DummyUser(Context context){
         super((long) 0,
                 "DummyLongNAME",
@@ -109,7 +29,7 @@ public class DummyUser extends User
                 "dmario123",
                 "Cornell",
                 "Male",
-                "123 Mario Dr. Isla Vista, CA 12345",
+                "Pardall Gardens, Isla Vista, CA 93117",
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -233,7 +153,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "1th Dummy Ave. San Diego, CA 54321",
+                "6612 Sueno Rd Goleta, CA 93117",
                 this.getFriends(),
                 true);
         party2 = new Party(
@@ -243,7 +163,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "2th Dummy Ave. San Diego, CA 54321",
+                "6555 Segovia Rd Goleta, CA 93117",
                 this.getFriends(),
                 true);
         party3 = new Party(
@@ -253,7 +173,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "3th Dummy Ave. San Diego, CA 54321",
+                "6650 Picasso Rd, Goleta, CA 93117",
                 this.getFriends(),
                 true);
         party4 = new Party(
@@ -263,7 +183,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "4th Dummy Ave. San Diego, CA 54321",
+                "895 Camino Del Sur Goleta, CA 93117",
                 this.getFriends(),
                 true);
         party5 = new Party(
@@ -273,7 +193,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "5th Dummy Ave. San Diego, CA 54321",
+                "6628 Pasado Rd Goleta, CA 93117",
                 this.getFriends(),
                 true);
 
@@ -396,5 +316,86 @@ public class DummyUser extends User
 
     public void setContext(Context cont){
         context = cont;
+    }
+
+
+    public User getFriend1() {
+        return friend1;
+    }
+
+    public void setFriend1(User friend1) {
+        this.friend1 = friend1;
+    }
+
+    public User getFriend3() {
+        return friend3;
+    }
+
+    public void setFriend3(User friend3) {
+        this.friend3 = friend3;
+    }
+
+    public User getFriend2() {
+        return friend2;
+    }
+
+    public void setFriend2(User friend2) {
+        this.friend2 = friend2;
+    }
+
+    public User getFriend4() {
+        return friend4;
+    }
+
+    public void setFriend4(User friend4) {
+        this.friend4 = friend4;
+    }
+
+    public User getFriend5() {
+        return friend5;
+    }
+
+    public void setFriend5(User friend5) {
+        this.friend5 = friend5;
+    }
+
+    public Party getParty1() {
+        return party1;
+    }
+
+    public void setParty1(Party party1) {
+        this.party1 = party1;
+    }
+
+    public Party getParty2() {
+        return party2;
+    }
+
+    public void setParty2(Party party2) {
+        this.party2 = party2;
+    }
+
+    public Party getParty3() {
+        return party3;
+    }
+
+    public void setParty3(Party party3) {
+        this.party3 = party3;
+    }
+
+    public Party getParty4() {
+        return party4;
+    }
+
+    public void setParty4(Party party4) {
+        this.party4 = party4;
+    }
+
+    public Party getParty5() {
+        return party5;
+    }
+
+    public void setParty5(Party party5) {
+        this.party5 = party5;
     }
 }

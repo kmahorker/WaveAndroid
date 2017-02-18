@@ -89,6 +89,7 @@ public class ManageEventsActivity extends AppCompatActivity
         dummy = CurrentUser.theUser;
         manageListView = (ListView) findViewById(R.id.manageEvents_listview);
         searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
+        searchView.setIconifiedByDefault(false);
         partyList = ((DummyUser)dummy).getPartyListObjects(dummy.getHosted());
         CurrentUser.setContext(this);
         manageListView.setAdapter(new ManagePartyCustomAdapter(this, partyList));

@@ -13,12 +13,10 @@
         android:label="WAVE"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
+        <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
-        <activity
-            android:name=".HomeDrawerActivity"
+        <activity android:name=".HomeDrawerActivity"
             android:label="@string/title_activity_home_drawer"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

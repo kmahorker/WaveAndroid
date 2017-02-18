@@ -146,54 +146,6 @@ public class EditUserProfileActivity extends AppCompatActivity
     //set unfocused listeners
     private void updateOnClicks()
     {
-        edit_email.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus)
-            {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
-            }
-        });
-
-        edit_school.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus)
-            {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
-            }
-        });
-
-        edit_bday.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus)
-            {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
-            }
-        });
-
-        edit_address.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus)
-            {
-                if (!hasFocus)
-                {
-                    UtilityClass.hideKeyboard( mainActivity );
-                }
-            }
-        });
-
         viewGroup.setOnTouchListener(new View.OnTouchListener()
         {
             @Override

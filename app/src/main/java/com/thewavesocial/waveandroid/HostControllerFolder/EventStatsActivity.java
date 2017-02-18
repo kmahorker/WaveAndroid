@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.HostControllerFolder;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -41,6 +42,14 @@ public class EventStatsActivity extends AppCompatActivity
 
     private void setupActionbar()
     {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if ( item.getItemId() == android.R.id.home )
+            onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

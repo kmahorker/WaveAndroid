@@ -351,6 +351,8 @@ public class CreateEvent1Fragment extends Fragment
                 }
                 else
                 {
+                    mainActivity.location = editLocation.getText().toString();
+                    mainActivity.price = Double.parseDouble(editPrice.getText().toString());
                     FragmentManager fragM = mainActivity.getSupportFragmentManager();
                     fragM.beginTransaction()
                             .replace(R.id.createEvent_fragment_container, new CreateEvent2Fragment())
