@@ -59,21 +59,23 @@
         android:layout_below="@id/eventStats_myBouncers"
         android:layout_marginTop="30dp"/> <!--People (Text)-->
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/eventStats_bouncerlist"
         android:layout_below="@+id/eventStats_hostlist"
-        android:layout_toEndOf="@+id/eventStats_myBouncers" android:layout_marginStart="18dp"
-        android:layout_marginTop="25dp" android:layout_height="30dp"/> <!--Bouncer list (Grid)-->
+        android:layout_toEndOf="@+id/eventStats_myBouncers"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="40dp"/> <!--Bouncer list (Grid)-->
 
-    <GridView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/eventStats_hostlist"
         android:layout_below="@+id/eventStats_checkedIn"
         android:layout_toEndOf="@+id/eventStats_myHosts"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="25dp"
         android:layout_alignStart="@id/eventStats_bouncerlist"
-        android:layout_height="30dp"/> <!--Host list (Grid)-->
+        android:layout_height="40dp"/> <!--Host list (Grid)-->
     
     <GridView
         android:layout_width="match_parent"

@@ -2,11 +2,14 @@ package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -64,6 +67,8 @@ public final class UtilityClass
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }
 
+//------------------------------------------------------------------------------------Map Functions
+
     public static LatLng getUserLocation()
     {
         return loc;
@@ -82,5 +87,28 @@ public final class UtilityClass
     public static void updateMapLocation( LatLng loc1 )
     {
         mapLoc = loc1;
+    }
+
+    public static LatLng getLocationFromAddress( Activity activity, String strAddress)
+    {
+        Geocoder coder = new Geocoder(activity);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try
+        {
+            address = coder.getFromLocationName(strAddress,1);
+            for ( int i = 0; i < 3 && address.size()==0; i++ )
+            {
+                address = coder.getFromLocationName("strAddress", 1);
+            }
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(),location.getLongitude());
+        }
+        catch (Exception e)
+        {
+            Log.d("Sorry", e.getMessage());
+        }
+        return p1;
     }
 }

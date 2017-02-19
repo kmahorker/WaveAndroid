@@ -4,12 +4,10 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
-import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class DummyUser extends User
                 "dmario123",
                 "Cornell",
                 "Male",
-                "Pardall Gardens, Isla Vista, CA 93117",
+                new MapAddress("Pardall Gardens, Isla Vista, CA 93117", new LatLng(34.413331,-119.854490)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -153,7 +151,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "6612 Sueno Rd Goleta, CA 93117",
+                new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 this.getFriends(),
                 true);
         party2 = new Party(
@@ -163,7 +161,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "6555 Segovia Rd Goleta, CA 93117",
+                new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 this.getFriends(),
                 true);
         party3 = new Party(
@@ -173,7 +171,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "6650 Picasso Rd, Goleta, CA 93117",
+                new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 this.getFriends(),
                 true);
         party4 = new Party(
@@ -183,7 +181,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "895 Camino Del Sur Goleta, CA 93117",
+                new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 this.getFriends(),
                 true);
         party5 = new Party(
@@ -193,7 +191,7 @@ public class DummyUser extends User
                 "Super Mario",
                 Calendar.getInstance(),
                 Calendar.getInstance(),
-                "6628 Pasado Rd Goleta, CA 93117",
+                new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 this.getFriends(),
                 true);
 
@@ -219,7 +217,7 @@ public class DummyUser extends User
                 "happy1",
                 "MIT",
                 "Female",
-                "1 Mario Dr. Isla Vista, CA 12345",
+                new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -235,7 +233,7 @@ public class DummyUser extends User
                 "sad2",
                 "Cornell",
                 "Female",
-                "2 Mario Dr. Isla Vista, CA 12345",
+                new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -251,7 +249,7 @@ public class DummyUser extends User
                 "boring3",
                 "UCB",
                 "Male",
-                "3 Mario Dr. Isla Vista, CA 12345",
+                new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -267,7 +265,7 @@ public class DummyUser extends User
                 "angry4",
                 "UCSD",
                 "Male",
-                "4 Mario Dr. Isla Vista, CA 12345",
+                new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list
@@ -283,7 +281,7 @@ public class DummyUser extends User
                 "lit5",
                 "UCSB",
                 "Other",
-                "5 Mario Dr. Isla Vista, CA 12345",
+                new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //friend list

@@ -26,7 +26,7 @@ public class User implements Parcelable {
     private String password;
     private String college;
     private String gender;
-    private String address;
+    private MapAddress mapAddress;
     private Calendar birthday;
     private List<Long> bestFriends;
     private List<Long> friends;
@@ -48,7 +48,7 @@ public class User implements Parcelable {
         password = "";
         college = "";
         gender = "";
-        address = "";
+        mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<Long>();
         attended = new ArrayList<Long>();
@@ -65,7 +65,7 @@ public class User implements Parcelable {
                 String password,
                 String college,
                 String gender,
-                String address,
+                MapAddress mapAddress,
                 Calendar birthday,
                 List<Long> friends,
                 List<Long> bestFriends,
@@ -82,7 +82,7 @@ public class User implements Parcelable {
         this.password = password;
         this.college = college;
         this.gender = gender;
-        this.address = address;
+        this.mapAddress = mapAddress;
         this.birthday = Calendar.getInstance();
         this.friends = friends;
         this.bestFriends = bestFriends;
@@ -181,9 +181,9 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
-    public void setAddress(String address)
+    public void setMapAddress(MapAddress mapAddress)
     {
-        this.address = address;
+        this.mapAddress = mapAddress;
     }
 
     public void setBirthday(Calendar birthday)
@@ -258,9 +258,9 @@ public class User implements Parcelable {
         return gender;
     }
 
-    public String getAddress()
+    public MapAddress getMapAddress()
     {
-        return address;
+        return mapAddress;
     }
 
     public Calendar getBirthday()
@@ -311,7 +311,7 @@ public class User implements Parcelable {
         password = in.readString();
         college = in.readString();
         gender = in.readString();
-        address = in.readString();
+        //mapAddress = in.readString();
         birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
             bestFriends = new ArrayList<Long>();
@@ -361,7 +361,7 @@ public class User implements Parcelable {
         dest.writeString(password);
         dest.writeString(college);
         dest.writeString(gender);
-        dest.writeString(address);
+        //dest.writeString(mapAddress);
         dest.writeValue(birthday);
         if (bestFriends == null) {
             dest.writeByte((byte) (0x00));

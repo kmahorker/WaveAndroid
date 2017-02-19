@@ -115,7 +115,7 @@
         android:textColor="@color/appColor"
         android:layout_marginTop="10dp"
         android:layout_marginStart="35dp"
-        android:layout_below="@id/edit_bday"/> <!--Address (Text)-->
+        android:layout_below="@id/edit_bday"/> <!--MapAddress (Text)-->
 
     <EditText
         android:layout_width="match_parent"
@@ -128,6 +128,6 @@
         android:layout_marginRight="50dp"
         android:layout_marginStart="50dp"
         android:layout_below="@id/edit_address_text"
-        android:inputType="text"/> <!--Address Input (Edit)-->
+        android:inputType="text"/> <!--MapAddress Input (Edit)-->
 
 </RelativeLayout>

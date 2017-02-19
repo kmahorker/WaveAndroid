@@ -6,15 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 
 public class CreateEventActivity extends AppCompatActivity
 {
-    public String location, name, privatePublic, paidFree;
+    public String name, privatePublic, paidFree;
+    public MapAddress location;
     public Calendar startCalendar, endCalendar;
     public int maleCount, femaleCount;
     public double price;
@@ -31,7 +34,7 @@ public class CreateEventActivity extends AppCompatActivity
                 .replace(R.id.createEvent_fragment_container, new CreateEvent1Fragment())
                 .addToBackStack(null).commit();
 
-        location = "";
+        location = null;
         name = "";
         privatePublic = "Private";
         paidFree = "Paid";
@@ -92,7 +95,7 @@ public class CreateEventActivity extends AppCompatActivity
         // TODO: 02/13/2017 Create New Party ID
         newParty.setPartyID(12345);
         newParty.setName(name);
-        newParty.setAddress(location);
+        newParty.setMapAddress( location );
         newParty.setPrice(price);
         newParty.setStartingDateTime(startCalendar);
         newParty.setEndingDateTime(endCalendar);

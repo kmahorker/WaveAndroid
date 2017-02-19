@@ -3,13 +3,22 @@ package com.thewavesocial.waveandroid.HostControllerFolder;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.StatsFriendCustomAdapter;
+import com.thewavesocial.waveandroid.AdaptersFolder.StatsHostBouncerCustomAdapter;
+import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventStatsActivity extends AppCompatActivity
 {
@@ -31,13 +40,25 @@ public class EventStatsActivity extends AppCompatActivity
     {
         TextView earnedText = (TextView) findViewById(R.id.eventStats_earning);
         TextView attendedText = (TextView) findViewById(R.id.eventStats_checkedIn);
-        GridView hostlist = (GridView) findViewById(R.id.eventStats_hostlist);
-        GridView bouncerlist = (GridView) findViewById(R.id.eventStats_bouncerlist);
+        RecyclerView hostlist = (RecyclerView) findViewById(R.id.eventStats_hostlist);
+        RecyclerView bouncerlist = (RecyclerView) findViewById(R.id.eventStats_bouncerlist);
         GridView peoplelist = (GridView) findViewById(R.id.eventStats_peoplelist);
 
         earnedText.setText("Amount earned     $" + party.getPrice()*party.getAttendingUsers().size());
         attendedText.setText("# of people checked in: " + party.getAttendingUsers().size());
+        List<User> sample = new ArrayList();
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
 
+        LinearLayoutManager layoutManagerHost= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManagerBounce= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+        hostlist.setLayoutManager( layoutManagerHost );
+        bouncerlist.setLayoutManager( layoutManagerBounce );
+
+        hostlist.setAdapter( new StatsHostBouncerCustomAdapter(this, sample ));
+        bouncerlist.setAdapter( new StatsHostBouncerCustomAdapter(this, sample));
+        peoplelist.setAdapter( new StatsFriendCustomAdapter(this, sample));
     }
 
     private void setupActionbar()

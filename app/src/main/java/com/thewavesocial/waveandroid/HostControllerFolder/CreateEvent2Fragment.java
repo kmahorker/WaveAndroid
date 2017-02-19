@@ -48,10 +48,9 @@ public class CreateEvent2Fragment extends Fragment
         startingTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ));
         endingDate.setText( UtilityClass.dateToString( mainActivity.endCalendar ));
         endingTime.setText( UtilityClass.timeToString( mainActivity.endCalendar ));
-        location.setText( mainActivity.location );
+        location.setText( mainActivity.location.getAddress_string() );
         privatePublic.setText( mainActivity.privatePublic );
-        paidfree.setText( mainActivity.paidFree
-                + " - $" + mainActivity.price);
+        paidfree.setText( mainActivity.paidFree + " - $" + mainActivity.price);
         maleCount.setText( mainActivity.maleCount + " Males" );
         femaleCount.setText( mainActivity.femaleCount + " Females");
     }

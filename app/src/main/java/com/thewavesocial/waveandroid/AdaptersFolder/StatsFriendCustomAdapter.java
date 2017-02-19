@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.FindFriendsFolder.InviteFriendsActivity;
+import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -18,17 +22,18 @@ import java.util.List;
 
 public class StatsFriendCustomAdapter extends BaseAdapter
 {
-    InviteFriendsActivity context;
-    List<User> userList = new ArrayList<>();
+    private EventStatsActivity mainActivity;
+    private List<User> userList = new ArrayList<>();
     private static LayoutInflater inflater;
 
-    public StatsFriendCustomAdapter(InviteFriendsActivity mainActivity, List<User> userList)
+    public StatsFriendCustomAdapter(EventStatsActivity mainActivity, List<User> userList)
     {
         super();
         this.userList = userList;
-        context = mainActivity;
-        inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mainActivity = mainActivity;
+        inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
+
     @Override
     public int getCount()
     {
@@ -58,15 +63,17 @@ public class StatsFriendCustomAdapter extends BaseAdapter
         if(convertView == null)
         {
             final Holder holder = new Holder();
-            View rowView = inflater.inflate(R.layout.add_friend_cell_layout, null);
-            holder.img = (ImageView) rowView.findViewById(R.id.addFriendImage);
+            View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
+            holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
             holder.img.setImageDrawable(userList.get(position).getProfilePic());
             rowView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    context.showFriendProfileActivity(v,userList.get(position));
+                    Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                    intent.putExtra("userIDLong", ((User)getItem(position)).getUserID());
+                    mainActivity.startActivity(intent);
                 }
             });
             return rowView;

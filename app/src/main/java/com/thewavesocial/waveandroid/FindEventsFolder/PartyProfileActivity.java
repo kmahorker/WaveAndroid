@@ -24,7 +24,7 @@ public class PartyProfileActivity extends AppCompatActivity
         party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
         updatePartyName(party.getName());
         updateHostName(party.getHostName());
-        updateAddress(party.getAddress());
+        updateAddress(party.getMapAddress().getAddress_string());
         updatePrice(party.getPrice());
         //updateAddressImg( Image img );
         updateDate( UtilityClass.dateToString(party.getStartingDateTime()) );

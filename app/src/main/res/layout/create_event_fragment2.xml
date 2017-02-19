@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/createEvent2_location"
-        android:text="Your party address"
+        android:text="Your party mapAddress"
         android:textColor="@color/appColor"
         android:textSize="20sp"
         android:gravity="center"

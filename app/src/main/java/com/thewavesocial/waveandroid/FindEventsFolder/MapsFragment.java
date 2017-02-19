@@ -7,19 +7,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.location.LocationListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,14 +27,11 @@ import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.barcode.Barcode;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -46,7 +39,6 @@ import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
@@ -127,7 +119,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         for (long party : partyIDs)
         {
-            addParty(party, getLocationFromAddress( CurrentUser.getPartyObject(party).getAddress() ));
+            LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
+            if ( loc != null )
+                addParty(party, loc );
         }
     }
 
@@ -177,7 +171,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         title.setText(curParty.getName());
         host.setText("Host: " + curParty.getHostName());
-        loc.setText("Location: " + curParty.getAddress());
+        loc.setText("Location: " + curParty.getMapAddress());
         time.setText("Time: " + UtilityClass.timeToString(curParty.getStartingDateTime()) + " - " +
                 UtilityClass.timeToString(curParty.getEndingDateTime()));
         spot.setText("Spot: " + "Not implemented");
@@ -207,7 +201,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         title.setText(curParty.getName());
         host.setText("Host: " + curParty.getHostName());
-        loc.setText("Location: " + curParty.getAddress());
+        loc.setText("Location: " + curParty.getMapAddress());
         time.setText("Time: " + UtilityClass.timeToString(curParty.getStartingDateTime()) + " - " +
                 UtilityClass.timeToString(curParty.getEndingDateTime()));
         spot.setText("Spot: " + "Not implemented");
@@ -272,29 +266,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             default:
                 break;
         }
-    }
-
-    public LatLng getLocationFromAddress(String strAddress)
-    {
-        Geocoder coder = new Geocoder(getActivity());
-        List<Address> address;
-        LatLng p1 = null;
-
-        try
-        {
-            address = coder.getFromLocationName(strAddress,1);
-            for ( int i = 0; i < 5 && address.size()==0; i++ )
-            {
-                address = coder.getFromLocationName("strAddress", 1);
-            }
-            Address location = address.get(0);
-            p1 = new LatLng(location.getLatitude(),location.getLongitude());
-        }
-        catch (Exception e)
-        {
-            Log.d("Sorry", e.getMessage());
-        }
-        return p1;
     }
 
 //-----------------------------------------------------------------------------------Setup Methods

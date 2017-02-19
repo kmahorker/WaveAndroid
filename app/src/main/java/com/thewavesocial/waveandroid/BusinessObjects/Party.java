@@ -21,7 +21,7 @@ public class Party implements Parcelable {
     private String hostName;
     private Calendar startingDateTime;
     private Calendar endingDateTime;
-    private String address;
+    private MapAddress mapAddress;
     private List<Long> attendingUsers;
     private boolean isPublic;
 
@@ -33,7 +33,7 @@ public class Party implements Parcelable {
         hostName = "";
         startingDateTime = Calendar.getInstance();
         endingDateTime = Calendar.getInstance();
-        address = "";
+        mapAddress = new MapAddress();
         attendingUsers = new ArrayList<Long>();
         isPublic = false;
     }
@@ -45,7 +45,7 @@ public class Party implements Parcelable {
             String hostName,
             Calendar startingDateTime,
             Calendar endingDateTime,
-            String address,
+            MapAddress mapAddress,
             List<Long> attendingUsers,
             boolean isPublic)
     {
@@ -55,7 +55,7 @@ public class Party implements Parcelable {
         this.hostName = hostName;
         this.startingDateTime = startingDateTime;
         this.endingDateTime = endingDateTime;
-        this.address = address;
+        this.mapAddress = mapAddress;
         this.attendingUsers = attendingUsers;
         this.isPublic = isPublic;
     }
@@ -103,9 +103,9 @@ public class Party implements Parcelable {
         this.endingDateTime = dateTimeObj;
     }
 
-    public void setAddress(String address)
+    public void setMapAddress(MapAddress mapAddress)
     {
-        this.address = address;
+        this.mapAddress = mapAddress;
     }
 
     public void setAttendingUsers(List<Long> attendingUsers)
@@ -149,9 +149,9 @@ public class Party implements Parcelable {
         return endingDateTime;
     }
 
-    public String getAddress()
+    public MapAddress getMapAddress()
     {
-        return address;
+        return mapAddress;
     }
 
     public List<Long> getAttendingUsers()
@@ -178,7 +178,7 @@ public class Party implements Parcelable {
         hostName = in.readString();
         startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
         endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
-        address = in.readString();
+        //mapAddress = in.readString();
         if (in.readByte() == 0x01) {
             attendingUsers = new ArrayList<Long>();
             in.readList(attendingUsers, Long.class.getClassLoader());
@@ -201,7 +201,7 @@ public class Party implements Parcelable {
         dest.writeString(hostName);
         dest.writeValue(startingDateTime);
         dest.writeValue(endingDateTime);
-        dest.writeString(address);
+        //dest.writeString(mapAddress);
         if (attendingUsers == null) {
             dest.writeByte((byte) (0x00));
         } else {

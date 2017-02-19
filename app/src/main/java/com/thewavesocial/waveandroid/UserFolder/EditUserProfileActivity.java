@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
@@ -91,13 +92,26 @@ public class EditUserProfileActivity extends AppCompatActivity
     //send new data back to user info
     private void saveData()
     {
-        user.setEmail(edit_email.getText().toString());
-        user.setCollege(edit_school.getText().toString());
-        user.setAddress(edit_address.getText().toString());
-        user.getBirthday().set( birthday.get(Calendar.YEAR), birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE) );
-        Intent resultIntent = new Intent();
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        LatLng latlng = UtilityClass.getLocationFromAddress( this, edit_address.getText().toString());
+        if ( latlng == null )
+        {
+            AlertDialog.Builder fieldAlert = new AlertDialog.Builder(this);
+            fieldAlert.setMessage("Please enter a valid address.")
+                    .setCancelable(true)
+                    .show();
+        }
+        else
+        {
+            user.setEmail(edit_email.getText().toString());
+            user.setCollege(edit_school.getText().toString());
+            user.getMapAddress().setAddress_string(edit_address.getText().toString());
+            user.getMapAddress().setAddress_latlng(latlng);
+            user.getBirthday().set(birthday.get(Calendar.YEAR), birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE));
+            Intent resultIntent = new Intent();
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+            onBackPressed();
+        }
     }
 
 //------------------------------------------------------------------------------ OnCreate Sub-tasks
@@ -119,7 +133,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         birthday = user.getBirthday();
         edit_bday.setText( UtilityClass.dateToString(birthday) );
         edit_bday.setFocusable(false);
-        edit_address.setText(user.getAddress());
+        edit_address.setText(user.getMapAddress().getAddress_string());
         profile_pic.setImageDrawable(user.getProfilePic());
         username.setText(user.getFullName());
     }
@@ -138,7 +152,6 @@ public class EditUserProfileActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 saveData();
-                onBackPressed();
             }
         });
     }
