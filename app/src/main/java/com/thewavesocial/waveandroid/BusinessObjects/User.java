@@ -9,7 +9,9 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /*
  * Things I did during file translation:
@@ -35,9 +37,8 @@ public class User implements Parcelable {
     private List<Long> hosted;
     private List<Long> bounced;
     private List<Long> signedUp;
+    private Queue<Notification> notifications;
     private BitmapDrawable profilePic;
-
-
 
     public User()
     {
@@ -55,6 +56,7 @@ public class User implements Parcelable {
         hosted = new ArrayList<Long>();
         bounced = new ArrayList<Long>();
         signedUp = new ArrayList<Long>();
+        notifications = new LinkedList<>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
@@ -73,6 +75,7 @@ public class User implements Parcelable {
                 List<Long> hosted,
                 List<Long> bounced,
                 List<Long> signedUp,
+                Queue<Notification> notifications,
                 BitmapDrawable profilePic)
     {
         this.userID = userID;
@@ -90,6 +93,7 @@ public class User implements Parcelable {
         this.hosted = hosted;
         this.bounced = bounced;
         this.signedUp = signedUp;
+        this.notifications = notifications;
         this.profilePic = profilePic;
     }
 
@@ -409,4 +413,14 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
+    public Queue<Notification> getNotifications()
+    {
+        return notifications;
+    }
+
+    public void setNotifications(Queue<Notification> notifications)
+    {
+        this.notifications = notifications;
+    }
 }

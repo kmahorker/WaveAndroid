@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -35,14 +36,30 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
-
-
 
         setupDummy(context);
         setupUserObjects(context);
         setupPartyObjects();
+        setupNotifications();
+    }
 
+    private void setupNotifications()
+    {
+        this.getNotifications().add( new Notification( "Jason W. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+        this.getNotifications().add( new Notification( "Weit S. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+        this.getNotifications().add( new Notification( "Hello A. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+        this.getNotifications().add( new Notification( "WAWAW J. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+        this.getNotifications().add( new Notification( "WEKODSJDKJEWEWE W. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+
+        this.getNotifications().add( new Notification( "Jason W. wants you to host a party.", this.getParty1().getPartyID() ,Notification.type2HostingRequests ) );
+        this.getNotifications().add( new Notification( "LOL X. wants you to host a party.", this.getParty2().getPartyID() ,Notification.type2HostingRequests ) );
+        this.getNotifications().add( new Notification( "Heia D. wants you to host a party.", this.getParty3().getPartyID() ,Notification.type2HostingRequests ) );
+
+        this.getNotifications().add( new Notification( "SSS O. invited you to Get Wild!", this.getUserID() ,Notification.type3InviteRequests ) );
+        this.getNotifications().add( new Notification( "LOL L. invited you to Get Wow!", this.getUserID() ,Notification.type3InviteRequests ) );
+        this.getNotifications().add( new Notification( "John D. invited you to Get Crazy!", this.getUserID() ,Notification.type3InviteRequests ) );
     }
 
     public List<User> getFriendsListObjects(List<Long> userIdList){
@@ -152,7 +169,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
-                this.getFriends(),
+                this.getFriends(), this.getFriends(), this.getFriends(),
                 true);
         party2 = new Party(
                 2,
@@ -162,7 +179,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
-                this.getFriends(),
+                this.getFriends(), this.getFriends(), this.getFriends(),
                 true);
         party3 = new Party(
                 3,
@@ -172,7 +189,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
-                this.getFriends(),
+                this.getFriends(), this.getFriends(), this.getFriends(),
                 true);
         party4 = new Party(
                 4,
@@ -182,7 +199,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
-                this.getFriends(),
+                this.getFriends(), this.getFriends(), this.getFriends(),
                 true);
         party5 = new Party(
                 5,
@@ -192,7 +209,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
-                this.getFriends(),
+                this.getFriends(), this.getFriends(), this.getFriends(),
                 true);
 
         party1.getStartingDateTime().set(2017, 2, 6);
@@ -225,6 +242,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
         friend2 = new User((long) 2,
                 "Sad",
@@ -241,6 +259,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
         friend3 = new User((long) 3,
                 "Boring",
@@ -257,6 +276,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
         friend4 = new User((long) 4,
                 "Angry",
@@ -273,6 +293,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
         friend5 = new User((long) 5,
                 "Lit",
@@ -289,6 +310,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list,
                 new ArrayList<Long>(),
+                new LinkedList(), //notifications
                 new BitmapDrawable());
         friend1.getBirthday().set(1997, 1, 2);
         friend2.getBirthday().set(1998, 2, 3);

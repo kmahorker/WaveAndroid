@@ -46,7 +46,8 @@ public class EventStatsActivity extends AppCompatActivity
 
         earnedText.setText("Amount earned     $" + party.getPrice()*party.getAttendingUsers().size());
         attendedText.setText("# of people checked in: " + party.getAttendingUsers().size());
-        List<User> sample = new ArrayList();
+
+        List<User> sample = new ArrayList(); //added friend list 3 times for testing purpose
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));

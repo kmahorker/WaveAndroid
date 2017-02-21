@@ -1,9 +1,10 @@
 package com.thewavesocial.waveandroid;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,10 +13,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.NotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.EventsFolder.MyEventsFragment;
 import com.thewavesocial.waveandroid.HomeFolder.OptionsFragment;
@@ -23,11 +28,19 @@ import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment
 import com.thewavesocial.waveandroid.FindEventsFolder.MapsFragment;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private HomeDrawerActivity h = this;
     private Fragment mapFrag;
+    private List<Notification> friendRequests, hostRequests, inviteRequests;
+    private NotificationCustomAdapter friendAdapter, hostAdapter, inviteAdapter;
+    private ListView friendRequestList, hostRequestList, inviteRequestList;
+    private TextView drawerNotifCountText;
+    private int notifCount;
 
     @Override
     //initialize everything
@@ -37,9 +50,8 @@ public class HomeDrawerActivity extends AppCompatActivity
         setContentView(R.layout.home_drawer_layout);
         CurrentUser.setContext(this);
 
-        setupDrawer();
-        getSupportActionBar().setTitle("PLUG");
         setupMapFragment();
+        setupLeftDrawer();
         setupUserProfileOnClickEvents();
     }
 
@@ -51,6 +63,10 @@ public class HomeDrawerActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
+            for ( Notification n : friendRequests )
+            {
+                Log.d("Check Requests", n.getMessage());
+            }
         }
         else
         {
@@ -105,7 +121,7 @@ public class HomeDrawerActivity extends AppCompatActivity
 //-------------------------------------------------------------------------------OnCreate Sub-tasks
 
     //initialize drawer layout
-    private void setupDrawer()
+    private void setupLeftDrawer()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,6 +145,49 @@ public class HomeDrawerActivity extends AppCompatActivity
         };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    public void setupRightDrawer()
+    {
+        drawerNotifCountText = (TextView) findViewById(R.id.rightDrawer_text_notifCount);
+        friendRequestList = (ListView) findViewById(R.id.rightDrawer_list_friendRequests);
+        hostRequestList = (ListView) findViewById(R.id.rightDrawer_list_hostings);
+        inviteRequestList = (ListView) findViewById(R.id.rightDrawer_list_invitations);
+
+        friendRequests = new ArrayList<>();
+        hostRequests = new ArrayList<>();
+        inviteRequests = new ArrayList<>();
+        //Queue<Notification> generalRequests = new LinkedList<>();
+
+        for ( Notification notif : CurrentUser.theUser.getNotifications() )
+        {
+            if ( notif.getRequestType() == Notification.type1FriendRequests )
+            {
+                friendRequests.add( notif );
+            }
+            else if ( notif.getRequestType() == Notification.type2HostingRequests )
+            {
+                hostRequests.add( notif );
+            }
+            else if ( notif.getRequestType() == Notification.type3InviteRequests )
+            {
+                inviteRequests.add( notif );
+            }
+//            else if ( notif.getRequestType() == Notification.type0GeneralRequests )
+//            {
+//                generalRequests.add( notif );
+//            }
+        }
+        inviteAdapter = new NotificationCustomAdapter( this, inviteRequests );
+        friendAdapter = new NotificationCustomAdapter( this, friendRequests );
+        hostAdapter = new NotificationCustomAdapter( this, hostRequests );
+
+        friendRequestList.setAdapter( friendAdapter);
+        hostRequestList.setAdapter( hostAdapter );
+        inviteRequestList.setAdapter( inviteAdapter );
+        notifCount = friendRequests.size() + hostRequests.size() + inviteRequests.size();
+        ((MapsFragment)mapFrag).notifCountText.setText(notifCount + "");
+        drawerNotifCountText.setText(notifCount + "");
     }
 
     //initialize map view
@@ -183,5 +242,29 @@ public class HomeDrawerActivity extends AppCompatActivity
         Fragment fragment = new UserProfileFragment();
         FragmentManager fragmentM = getSupportFragmentManager();
         fragmentM.beginTransaction().replace(R.id.content_home_drawer, fragment).commit();
+    }
+
+    public void removePosition(int position, int requestType)
+    {
+        if ( requestType == Notification.type1FriendRequests )
+        {
+            friendRequests.remove(position);
+            friendAdapter = new NotificationCustomAdapter(this, friendRequests);
+            friendRequestList.setAdapter( friendAdapter );
+        }
+        else if ( requestType == Notification.type2HostingRequests )
+        {
+            hostRequests.remove(position);
+            hostAdapter = new NotificationCustomAdapter(this, hostRequests);
+            hostRequestList.setAdapter( hostAdapter );
+        }
+        else if ( requestType == Notification.type3InviteRequests )
+        {
+            inviteRequests.remove(position);
+            inviteAdapter = new NotificationCustomAdapter(this, inviteRequests);
+            inviteRequestList.setAdapter( inviteAdapter );
+        }
+        ((MapsFragment)mapFrag).notifCountText.setText( --notifCount  + "" );
+        drawerNotifCountText.setText( notifCount + "");
     }
 }

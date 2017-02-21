@@ -3,6 +3,8 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -22,6 +24,8 @@ public class Party implements Parcelable {
     private Calendar startingDateTime;
     private Calendar endingDateTime;
     private MapAddress mapAddress;
+    private List<Long> hostingUsers;
+    private List<Long> bouncingUsers;
     private List<Long> attendingUsers;
     private boolean isPublic;
 
@@ -46,6 +50,8 @@ public class Party implements Parcelable {
             Calendar startingDateTime,
             Calendar endingDateTime,
             MapAddress mapAddress,
+            List<Long> hostingUsers,
+            List<Long> bouncingUsers,
             List<Long> attendingUsers,
             boolean isPublic)
     {
@@ -56,6 +62,8 @@ public class Party implements Parcelable {
         this.startingDateTime = startingDateTime;
         this.endingDateTime = endingDateTime;
         this.mapAddress = mapAddress;
+        this.hostingUsers = hostingUsers;
+        this.bouncingUsers = bouncingUsers;
         this.attendingUsers = attendingUsers;
         this.isPublic = isPublic;
     }
@@ -108,6 +116,16 @@ public class Party implements Parcelable {
         this.mapAddress = mapAddress;
     }
 
+    public void setHostingUsers(List<Long> hostingUsers)
+    {
+        this.hostingUsers = hostingUsers;
+    }
+
+    public void setBouncingUsers(List<Long> bouncingUsers)
+    {
+        this.bouncingUsers = bouncingUsers;
+    }
+
     public void setAttendingUsers(List<Long> attendingUsers)
     {
         this.attendingUsers = attendingUsers;
@@ -152,6 +170,16 @@ public class Party implements Parcelable {
     public MapAddress getMapAddress()
     {
         return mapAddress;
+    }
+
+    public List<Long> getHostingUsers()
+    {
+        return hostingUsers;
+    }
+
+    public List<Long> getBouncingUsers()
+    {
+        return bouncingUsers;
     }
 
     public List<Long> getAttendingUsers()
@@ -223,4 +251,6 @@ public class Party implements Parcelable {
             return new Party[size];
         }
     };
+
+
 }

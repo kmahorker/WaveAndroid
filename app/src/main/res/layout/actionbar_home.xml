@@ -7,12 +7,27 @@
         android:id="@+id/home_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Plug"
+        android:text="PLUG"
         android:paddingRight="50dp"
         android:layout_centerInParent="true"
         android:textColor="#FFF"
         android:textSize="24sp"
         android:layout_weight="1"/> <!--App name (Text)-->
+
+    <TextView
+        android:id="@+id/home_notif_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFF"
+        android:text="25"
+        android:textSize="12sp"
+        android:layout_alignLeft="@+id/notif_button"
+        android:layout_alignTop="@+id/notif_button"
+        android:layout_alignRight="@+id/notif_button"
+        android:layout_alignBottom="@+id/notif_button"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="2dp"
+        android:gravity="center"/> <!--App name (Text)-->
 
     <ImageView
         android:id="@+id/notif_button"
