@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HomeFolder;
+package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.R;
 
-public class LoginActivity extends AppCompatActivity
+public class LoginActivityOld extends AppCompatActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_layout);
+        setContentView(R.layout.login_layout_old);
 
         Button loginButton = (Button) findViewById(R.id.button1);
         TextView forgotPasswordButton = (TextView) findViewById(R.id.button2);

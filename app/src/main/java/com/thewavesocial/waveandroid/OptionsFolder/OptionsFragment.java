@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HomeFolder;
+package com.thewavesocial.waveandroid.OptionsFolder;
 
 import android.content.Intent;
 import android.os.Bundle;

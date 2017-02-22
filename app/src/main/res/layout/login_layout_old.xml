@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:text="Or"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+            android:layout_above="@+id/autoCompleteTextView1"
+            android:layout_marginBottom="16dp"
+            android:layout_centerHorizontal="true"
+        android:id="@+id/textView1" />
+    <TextView
+        android:text="Forgot your password?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/autoCompleteTextView2"
+        android:layout_below="@+id/autoCompleteTextView2"
+        android:textIsSelectable="true"
+        android:layout_marginLeft="4dp"
+        android:id="@+id/button2" />
+    <Button
+        android:text="Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/autoCompleteTextView2"
+        android:layout_marginTop="16dp"
+        android:id="@+id/button1" />
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="8dp"
+        android:hint="Email"
+        android:id="@+id/autoCompleteTextView1" />
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/autoCompleteTextView1"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:hint="Password"
+        android:password="true"
+        android:id="@+id/autoCompleteTextView2" />
+    <Button
+        android:text="Login with Facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/textView1"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/button3" />
+    <Button
+        android:text="Sign Up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-7dp"
+        android:layout_marginLeft="-7dp"
+        android:layout_marginRight="-7dp"
+        android:id="@+id/button5" />
+</RelativeLayout>

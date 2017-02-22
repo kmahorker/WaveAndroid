@@ -1,67 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal">
+
     <TextView
-        android:text="Or"
-        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-            android:layout_above="@+id/autoCompleteTextView1"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true"
-        android:id="@+id/textView1" />
+        android:id="@+id/login_text_login"
+        android:text="Log in with email                     "
+        android:textSize="22dp"
+        android:textColor="#FFF"
+        android:layout_marginTop="100dp"/> <!-- Login Text-->
+
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:id="@+id/login_edittext_email"
+        android:hint="dmario@ucsb.edu"
+        android:inputType="textEmailAddress"
+        android:background="#b9ffffff"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"/>  <!-- Login Field-->
+
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:id="@+id/login_edittext_password"
+        android:hint="dmario123"
+        android:inputType="textPassword"
+        android:background="#b9ffffff"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"/> <!-- Password Field-->
+
     <TextView
-        android:text="Forgot your password?"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/autoCompleteTextView2"
-        android:layout_below="@+id/autoCompleteTextView2"
-        android:textIsSelectable="true"
-        android:layout_marginLeft="4dp"
-        android:id="@+id/button2" />
-    <Button
-        android:text="Login"
+        android:id="@+id/login_text_forgotpassword"
+        android:text="Forgot your password?             "
+        android:textSize="18sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="5dp"/> <!-- Forgot Password-->
+
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="60dp"
+        android:id="@+id/login_button"
+        android:src="@drawable/login_button"
+        android:layout_marginTop="30dp"/> <!-- Login Button-->
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/autoCompleteTextView2"
-        android:layout_marginTop="16dp"
-        android:id="@+id/button1" />
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="8dp"
-        android:hint="Email"
-        android:id="@+id/autoCompleteTextView1" />
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/autoCompleteTextView1"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:hint="Password"
-        android:password="true"
-        android:id="@+id/autoCompleteTextView2" />
-    <Button
-        android:text="Login with Facebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/textView1"
-        android:layout_marginBottom="16dp"
-        android:id="@+id/button3" />
-    <Button
-        android:text="Sign Up"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-7dp"
-        android:layout_marginLeft="-7dp"
-        android:layout_marginRight="-7dp"
-        android:id="@+id/button5" />
-</RelativeLayout>
+        android:id="@+id/login_text_signup"
+        android:text="Don't have an account? Sign up here"
+        android:textSize="15sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="50dp"/>
+
+</LinearLayout>
