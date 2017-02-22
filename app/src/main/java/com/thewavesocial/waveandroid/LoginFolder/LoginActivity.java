@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 public class LoginActivity extends AppCompatActivity
 {
     private TextView loginText, forgotPassText, signupText;
-    private ImageView loginButton;
+    private Button loginButton;
     private EditText emailField, passField;
 
     private ViewGroup viewGroup;
@@ -57,7 +58,8 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                // TODO: 02/21/2017 Forgot password screen
+                Intent intent = new Intent( mainActivity, ForgotPasswordActivity.class );
+                startActivity(intent);
             }
         });
 
@@ -114,8 +116,11 @@ public class LoginActivity extends AppCompatActivity
         loginText = (TextView) findViewById(R.id.login_text_login);
         forgotPassText = (TextView) findViewById(R.id.login_text_forgotpassword);
         signupText = (TextView) findViewById(R.id.login_text_signup);
-        loginButton = (ImageView) findViewById(R.id.login_button);
+        loginButton = (Button) findViewById(R.id.login_button);
         emailField = (EditText) findViewById(R.id.login_edittext_email);
         passField = (EditText) findViewById(R.id.login_edittext_password);
+
+        emailField.setText("dmario@ucsb.edu");
+        passField.setText("dmario123");
     }
 }

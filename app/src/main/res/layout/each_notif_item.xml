@@ -16,8 +16,8 @@
 
     <ImageView
         android:id="@+id/eachNotif_deny_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/deny_button"
         android:gravity="center_vertical"
         android:layout_marginEnd="5dp"
@@ -25,8 +25,8 @@
 
     <ImageView
         android:id="@+id/eachNotif_accept_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@drawable/accept_button"
         android:gravity="center_vertical"
         android:layout_marginEnd="5dp"
