@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/forgot_password_layout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/appColor"
+    android:gravity="center_horizontal"
+    tools:context="com.thewavesocial.waveandroid.LoginFolder.ForgotPasswordActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup2_text_createPass"
+        android:text="Create password"
+        android:textSize="17sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="40dp"
+        android:layout_gravity="left"/> <!-- Create Password Text-->
+
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:id="@+id/signup2_editttext_createPass"
+        android:inputType="textPassword"
+        android:background="#b9ffffff"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"/>  <!-- Create Password Field-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup2_text_mustContain"
+        android:text="Must contain 8 characters"
+        android:textSize="14sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="40dp"
+        android:layout_gravity="right"/> <!-- Must contain Text-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup2_text_confirmPass"
+        android:text="Confirm password                                 "
+        android:textSize="17sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_gravity="left"/> <!-- Confirm Password Text-->
+
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:id="@+id/signup2_editttext_confirmPass"
+        android:inputType="textPassword"
+        android:background="#b9ffffff"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"/>  <!-- Confirm Password Field-->
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/signup2_button_next"
+        android:layout_marginTop="30dp"
+        android:text="Next"
+        android:textColor="#FFF"
+        android:textSize="25sp"
+        android:background="@drawable/round_button"/> <!-- Next Button-->
+
+</LinearLayout>

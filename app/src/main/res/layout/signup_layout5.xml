@@ -1,0 +1,41 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appColor"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup5_text_profilepic"
+        android:layout_centerHorizontal="true"
+        android:text="Add Profile Picture"
+        android:textSize="35sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="100dp"/> <!--Add Profile Pic (Text)-->
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/signup5_button_addpic"
+        android:layout_marginTop="30dp"
+        android:text="+"
+        android:textColor="#FFF"
+        android:textSize="70sp"
+        android:background="@drawable/round_button"
+        android:layout_centerHorizontal="true"/> <!-- Male Button-->
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/signup5_button_next"
+        android:layout_marginTop="30dp"
+        android:text="Next"
+        android:textColor="#FFF"
+        android:textSize="25sp"
+        android:background="@drawable/round_button"/> <!-- Next Button-->
+
+</LinearLayout>

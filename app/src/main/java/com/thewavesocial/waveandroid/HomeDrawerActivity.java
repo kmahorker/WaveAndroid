@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,6 +22,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.EventsFolder.MyEventsFragment;
+import com.thewavesocial.waveandroid.LoginFolder.LoginActivity;
 import com.thewavesocial.waveandroid.OptionsFolder.OptionsFragment;
 import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.FindEventsFolder.MapsFragment;
@@ -105,7 +107,9 @@ public class HomeDrawerActivity extends AppCompatActivity
         }
         else if (id == R.id.log_out)
         {
-            fragment = new FriendsListFragment();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
