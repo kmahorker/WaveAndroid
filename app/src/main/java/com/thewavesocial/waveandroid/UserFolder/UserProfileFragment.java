@@ -110,7 +110,8 @@ public class UserProfileFragment extends Fragment
         age = (TextView)getActivity().findViewById(R.id.user_age);
         age.setText("Age: " + computeAge(user.getBirthday()));
         image = (ImageView)getActivity().findViewById(R.id.profile_pic);
-        image.setImageDrawable(user.getProfilePic());
+        image.setImageDrawable( UtilityClass.convertRoundImage(getResources(),
+                user.getProfilePic().getBitmap()));
 
         updatePartiesAttended( CurrentUser.getPartyListObjects(user.getAttended()) );
         updatePartiesHosted( CurrentUser.getPartyListObjects(user.getHosted()) );

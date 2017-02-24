@@ -1,6 +1,8 @@
 package com.thewavesocial.waveandroid.FindFriendsFolder;
 
 import android.content.Intent;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 import java.util.List;
@@ -65,7 +68,8 @@ public class FriendProfileActivity extends AppCompatActivity
         ImageView image = (ImageView)findViewById(R.id.profile_pic);
 
         username.setText("College: " + friend.getCollege());
-        image.setImageDrawable(friend.getProfilePic());
+        image.setImageDrawable(UtilityClass.convertRoundImage(getResources(),
+                friend.getProfilePic().getBitmap()));
 
         updateAge(friend.getBirthday());
         updatePartiesAttended(friend.getAttended());

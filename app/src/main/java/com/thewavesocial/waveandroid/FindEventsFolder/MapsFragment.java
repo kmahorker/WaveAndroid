@@ -15,6 +15,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -96,7 +98,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     {
         try
         {
-            Log.d("You're", "in");
             UtilityClass.updateMapLocation(mMap.getCameraPosition().target);
         }
         catch (RuntimeException e)
@@ -239,15 +240,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             {
                 if ( UtilityClass.getMapLocation() != null )
                 {
-                    Log.d("Location", UtilityClass.getUserLocation() + " " + UtilityClass.getMapLocation());
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getMapLocation(), (float) 15.0));
                 }
                 else
                 {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
                 }
+
                 cur_loc_marker = mMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, 150, 150)))
+                        .icon(BitmapDescriptorFactory.fromBitmap(UtilityClass.convertRoundImage(mainActivity.getResources(),
+                                CurrentUser.theUser.getProfilePic().getBitmap()).getBitmap()))
                         .position(UtilityClass.getUserLocation()));
             }
             else

@@ -16,6 +16,7 @@ import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.FindFriendsFolder.InviteFriendsActivity;
 import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,8 @@ public class StatsFriendCustomAdapter extends BaseAdapter
             final Holder holder = new Holder();
             View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
             holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
-            holder.img.setImageDrawable(userList.get(position).getProfilePic());
+            holder.img.setImageDrawable(UtilityClass.convertRoundImage(mainActivity.getResources(),
+                    userList.get(position).getProfilePic().getBitmap()));
             rowView.setOnClickListener(new View.OnClickListener()
             {
                 @Override

@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,24 +20,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 
 
 public class EditUserProfileActivity extends AppCompatActivity
 {
-    EditText edit_email, edit_school, edit_bday, edit_address;
-    TextView username;
-    ImageView profile_pic;
-    Calendar birthday;
-    User user;
-    Activity mainActivity;
-    ViewGroup viewGroup;
+    private EditText edit_email, edit_school, edit_bday, edit_address;
+    private TextView username, edit_pic;
+    private ImageView profile_pic;
+    private Calendar birthday;
+    private User user;
+    private Activity mainActivity;
+    private ViewGroup viewGroup;
+    private final static int EDIT_PROFILEPIC_INTENT_ID = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,8 +50,6 @@ public class EditUserProfileActivity extends AppCompatActivity
         setContentView(R.layout.edit_user_profile);
         viewGroup = (ViewGroup) findViewById(android.R.id.content).getRootView();
         mainActivity = this;
-
-        Intent intent = getIntent();
         user = CurrentUser.theUser;
 
         updateFieldText();
@@ -92,26 +97,26 @@ public class EditUserProfileActivity extends AppCompatActivity
     //send new data back to user info
     private void saveData()
     {
-        LatLng latlng = UtilityClass.getLocationFromAddress( this, edit_address.getText().toString());
-        if ( latlng == null )
-        {
-            AlertDialog.Builder fieldAlert = new AlertDialog.Builder(this);
-            fieldAlert.setMessage("Please enter a valid address.")
-                    .setCancelable(true)
-                    .show();
-        }
-        else
-        {
+//        LatLng latlng = UtilityClass.getLocationFromAddress( this, edit_address.getText().toString());
+//        if ( latlng == null )
+//        {
+//            AlertDialog.Builder fieldAlert = new AlertDialog.Builder(this);
+//            fieldAlert.setMessage("Please enter a valid address.")
+//                    .setCancelable(true)
+//                    .show();
+//        }
+//        else
+//        {
             user.setEmail(edit_email.getText().toString());
             user.setCollege(edit_school.getText().toString());
             user.getMapAddress().setAddress_string(edit_address.getText().toString());
-            user.getMapAddress().setAddress_latlng(latlng);
+            //user.getMapAddress().setAddress_latlng(latlng);
             user.getBirthday().set(birthday.get(Calendar.YEAR), birthday.get(Calendar.MONTH), birthday.get(Calendar.DATE));
             Intent resultIntent = new Intent();
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
             onBackPressed();
-        }
+//        }
     }
 
 //------------------------------------------------------------------------------ OnCreate Sub-tasks
@@ -125,6 +130,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         edit_bday = (EditText) findViewById(R.id.edit_bday);
         edit_address = (EditText) findViewById(R.id.edit_address);
         profile_pic = (ImageView) findViewById(R.id.edit_profile_pic);
+        edit_pic = (TextView) findViewById(R.id.edit_profile_pic_button);
         username = (TextView) findViewById(R.id.edit_username);
 
         //update text with old user info
@@ -134,7 +140,8 @@ public class EditUserProfileActivity extends AppCompatActivity
         edit_bday.setText( UtilityClass.dateToString(birthday) );
         edit_bday.setFocusable(false);
         edit_address.setText(user.getMapAddress().getAddress_string());
-        profile_pic.setImageDrawable(user.getProfilePic());
+        profile_pic.setImageDrawable( UtilityClass.convertRoundImage(getResources(),
+                user.getProfilePic().getBitmap()));
         username.setText(user.getFullName());
     }
 
@@ -180,6 +187,17 @@ public class EditUserProfileActivity extends AppCompatActivity
                         user.getBirthday().get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+        edit_pic.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, EDIT_PROFILEPIC_INTENT_ID);
+            }
+        });
     }
 
     DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener()
@@ -193,4 +211,28 @@ public class EditUserProfileActivity extends AppCompatActivity
             edit_bday.setText( UtilityClass.dateToString(birthday) );
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        //http://stackoverflow.com/questions/9107900/how-to-upload-image-from-gallery-in-android
+        if(requestCode==EDIT_PROFILEPIC_INTENT_ID && resultCode == Activity.RESULT_OK)
+        {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try
+            {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                profile_pic.setImageDrawable( UtilityClass.convertRoundImage(getResources(), bitmap) );
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 }

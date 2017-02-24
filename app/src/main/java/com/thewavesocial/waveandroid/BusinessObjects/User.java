@@ -28,6 +28,7 @@ public class User implements Parcelable {
     private String password;
     private String college;
     private String gender;
+    private long phone;
     private MapAddress mapAddress;
     private Calendar birthday;
     private List<Long> bestFriends;
@@ -49,6 +50,7 @@ public class User implements Parcelable {
         password = "";
         college = "";
         gender = "";
+        phone = 0;
         mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<Long>();
@@ -67,6 +69,7 @@ public class User implements Parcelable {
                 String password,
                 String college,
                 String gender,
+                long phone,
                 MapAddress mapAddress,
                 Calendar birthday,
                 List<Long> friends,
@@ -85,6 +88,7 @@ public class User implements Parcelable {
         this.password = password;
         this.college = college;
         this.gender = gender;
+        this.phone = phone;
         this.mapAddress = mapAddress;
         this.birthday = Calendar.getInstance();
         this.friends = friends;
@@ -422,5 +426,15 @@ public class User implements Parcelable {
     public void setNotifications(Queue<Notification> notifications)
     {
         this.notifications = notifications;
+    }
+
+    public long getPhone()
+    {
+        return phone;
+    }
+
+    public void setPhone(long phone)
+    {
+        this.phone = phone;
     }
 }

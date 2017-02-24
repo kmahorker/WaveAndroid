@@ -20,7 +20,8 @@ public class DummyUser extends User
     private Party party1, party2, party3, party4, party5;
     private Context context;
 
-    public DummyUser(Context context){
+    public DummyUser(Context context)
+    {
         super((long) 0,
                 "DummyLongNAME",
                 "MarioLongNAME",
@@ -28,6 +29,7 @@ public class DummyUser extends User
                 "dmario123",
                 "Cornell",
                 "Male",
+                0000000000,
                 new MapAddress("Pardall Gardens, Isla Vista, CA 93117", new LatLng(34.413331,-119.854490)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -62,7 +64,8 @@ public class DummyUser extends User
         this.getNotifications().add( new Notification( "John D. invited you to Get Crazy!", this.getUserID() ,Notification.type3InviteRequests ) );
     }
 
-    public List<User> getFriendsListObjects(List<Long> userIdList){
+    public List<User> getFriendsListObjects(List<Long> userIdList)
+    {
         List<User> friendObjs = new ArrayList<User>();
         for(long id : userIdList){
             friendObjs.add(getFriendObject(id));
@@ -234,6 +237,7 @@ public class DummyUser extends User
                 "happy1",
                 "MIT",
                 "Female",
+                0000000000,
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -251,6 +255,7 @@ public class DummyUser extends User
                 "sad2",
                 "Cornell",
                 "Female",
+                0000000000,
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -268,6 +273,7 @@ public class DummyUser extends User
                 "boring3",
                 "UCB",
                 "Male",
+                0000000000,
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -285,6 +291,7 @@ public class DummyUser extends User
                 "angry4",
                 "UCSD",
                 "Male",
+                0000000000,
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -302,6 +309,7 @@ public class DummyUser extends User
                 "lit5",
                 "UCSB",
                 "Other",
+                0000000000,
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
@@ -337,7 +345,6 @@ public class DummyUser extends User
     public void setContext(Context cont){
         context = cont;
     }
-
 
     public User getFriend1() {
         return friend1;

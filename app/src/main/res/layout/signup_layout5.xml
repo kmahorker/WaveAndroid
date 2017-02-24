@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/appColor"
     android:gravity="center_horizontal"
+    android:scrollbars="vertical"
     android:orientation="vertical">
 
     <TextView
@@ -17,12 +18,15 @@
         android:textColor="#FFF"
         android:layout_marginTop="100dp"/> <!--Add Profile Pic (Text)-->
 
-    <Button
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="180dp"
+        android:maxHeight="180dp"
+        android:adjustViewBounds="true"
         android:id="@+id/signup5_button_addpic"
         android:layout_marginTop="30dp"
-        android:text="+"
+        android:src="@drawable/add_picture_button"
         android:textColor="#FFF"
         android:textSize="70sp"
         android:background="@drawable/round_button"

@@ -14,6 +14,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,8 @@ public class StatsHostBouncerCustomAdapter extends RecyclerView.Adapter<StatsHos
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-        holder.imgView.setImageDrawable(userList.get(position).getProfilePic());
+        holder.imgView.setImageDrawable(UtilityClass.convertRoundImage(mainActivity.getResources(),
+                userList.get(position).getProfilePic().getBitmap()));
         holder.imgView.setOnClickListener(new View.OnClickListener()
         {
             @Override

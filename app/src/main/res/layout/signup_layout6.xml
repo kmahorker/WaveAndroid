@@ -87,6 +87,7 @@
             android:layout_height="40dp"
             android:id="@+id/signup6_edittext_friendphone"
             android:background="#b9ffffff"
+            android:inputType="number"
             android:paddingLeft="10dp"/> <!-- Friend Phone (EditText)-->
 
     </LinearLayout>

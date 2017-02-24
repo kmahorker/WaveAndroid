@@ -2,20 +2,29 @@ package com.thewavesocial.waveandroid.LoginFolder;
 
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 
 public class SignupFragment extends Fragment
@@ -23,6 +32,7 @@ public class SignupFragment extends Fragment
     private int fragNum;
     private View view;
     private SignupActivity mainActivity;
+    public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 
     public SignupFragment()
     {
@@ -137,9 +147,12 @@ public class SignupFragment extends Fragment
         final EditText year = (EditText) view.findViewById(R.id.signup3_edittext_year);
         final Button nextButton = (Button) view.findViewById(R.id.signup3_button_next);
 
-        month.setText( mainActivity.birthday.get(Calendar.MONTH) + "" );
-        date.setText( mainActivity.birthday.get(Calendar.DATE) + "" );
-        year.setText( mainActivity.birthday.get(Calendar.YEAR) + "" );
+        if ( mainActivity.birthday == Calendar.getInstance() )
+        {
+            month.setText(mainActivity.birthday.get(Calendar.MONTH) + "");
+            date.setText(mainActivity.birthday.get(Calendar.DATE) + "");
+            year.setText(mainActivity.birthday.get(Calendar.YEAR) + "");
+        }
 
         nextButton.setOnClickListener(new View.OnClickListener()
         {
@@ -148,9 +161,14 @@ public class SignupFragment extends Fragment
             {
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-                mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
-                        Integer.parseInt(month.getText().toString()),
-                        Integer.parseInt(date.getText().toString()));
+
+                if ( !year.getText().toString().equals("") && !month.getText().toString().equals("") &&
+                        !date.getText().toString().equals("") )
+                {
+                    mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
+                            Integer.parseInt(month.getText().toString()),
+                            Integer.parseInt(date.getText().toString()));
+                }
             }
         });
 
@@ -160,9 +178,13 @@ public class SignupFragment extends Fragment
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
-                        Integer.parseInt(month.getText().toString()),
-                        Integer.parseInt(date.getText().toString()));
+                if ( year.getText().toString().equals("") && month.getText().toString().equals("") &&
+                        date.getText().toString().equals("") )
+                {
+                    mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
+                            Integer.parseInt(month.getText().toString()),
+                            Integer.parseInt(date.getText().toString()));
+                }
                 return true;
             }
         });
@@ -221,8 +243,19 @@ public class SignupFragment extends Fragment
 
     private void setupReferences5()
     {
-        final Button profilepic = (Button) view.findViewById(R.id.signup5_button_addpic);
+        final ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
         final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
+
+        profilepic.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, ADD_PROFILEPIC_INTENT_ID);
+            }
+        });
 
         nextButton.setOnClickListener(new View.OnClickListener()
         {
@@ -259,8 +292,9 @@ public class SignupFragment extends Fragment
             {
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
-                mainActivity.friendphone = friendphone.getText().toString();
-                mainActivity.saveUserDate();
+                if ( !friendphone.getText().toString().equals("") )
+                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
+                mainActivity.saveUserData();
                 mainActivity.finish();
             }
         });
@@ -272,10 +306,35 @@ public class SignupFragment extends Fragment
             {
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
-                mainActivity.friendphone = friendphone.getText().toString();
+                if ( !friendphone.getText().toString().equals("") )
+                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
                 return true;
             }
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        //http://stackoverflow.com/questions/9107900/how-to-upload-image-from-gallery-in-android
+        if(requestCode==ADD_PROFILEPIC_INTENT_ID && resultCode == Activity.RESULT_OK)
+        {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try
+            {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+                ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
+                profilepic.setImageDrawable( UtilityClass.convertRoundImage(getResources(), bitmap) );
+            }
+            catch (FileNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 }

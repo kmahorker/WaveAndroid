@@ -28,6 +28,11 @@ public final class CurrentUser
         theUser = dummy;
     }
 
+    public static void setTheUser( User theUser )
+    {
+        CurrentUser.theUser = theUser;
+    }
+
     public static List<User> getUsersListObjects(List<Long> userIdList)
     {
         List<User> friendObjs = new ArrayList<User>();

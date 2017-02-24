@@ -6,13 +6,13 @@
     android:background="@color/appColor">
 
     <ImageView
-    android:layout_width="120dp"
-    android:id="@+id/profile_pic"
-    android:background="#000"
-    android:layout_below="@+id/user_name"
-    android:layout_alignStart="@+id/events_attended_list"
-    android:layout_marginStart="50dp"
-    android:layout_marginTop="20dp" android:layout_height="120dp"/> <!-- profile picture-->
+        android:layout_width="120dp"
+        android:id="@+id/profile_pic"
+        android:layout_below="@+id/user_name"
+        android:layout_alignStart="@+id/events_attended_list"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="120dp"/> <!-- profile picture-->
 
     <TextView
         android:text="College: UCSB"

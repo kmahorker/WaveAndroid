@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -222,7 +224,8 @@ public class HomeDrawerActivity extends AppCompatActivity
 
         //onClick for user profile pic
         ImageView homeUserProfile = (ImageView) headerView.findViewById(R.id.home_user_profile);
-        homeUserProfile.setImageDrawable( CurrentUser.theUser.getProfilePic() );
+        homeUserProfile.setImageDrawable( UtilityClass.convertRoundImage(getResources(),
+                CurrentUser.theUser.getProfilePic().getBitmap()) );
         homeUserProfile.setOnClickListener(new View.OnClickListener()
         {
             @Override
