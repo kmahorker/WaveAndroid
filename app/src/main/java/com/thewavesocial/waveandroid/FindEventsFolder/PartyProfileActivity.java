@@ -1,173 +1,121 @@
 package com.thewavesocial.waveandroid.FindEventsFolder;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.AdaptersFolder.StatsHostBouncerCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 public class PartyProfileActivity extends AppCompatActivity
 {
-    Party party;
+    private Party party;
+    private TextView partyname, hostname, datetime, location;
+    private Button getinButton;
+    private RecyclerView attendingFriends;
+    private ImageView streetview;
+    private PartyProfileActivity mainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.party_profile);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mainActivity = this;
 
         Intent intent = getIntent();
         party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
-        updatePartyName(party.getName());
-        updateHostName(party.getHostName());
-        updateAddress(party.getMapAddress().getAddress_string());
-        updatePrice(party.getPrice());
-        //updateAddressImg( Image img );
-        updateDate( UtilityClass.dateToString(party.getStartingDateTime()) );
-        updateTime( UtilityClass.timeToString(party.getStartingDateTime()) );
+
+        setupActionbar();
+        setupReferences();
+        setupOnClicks();
     }
 
-    private void updatePartyName(String str)
+    private void setupOnClicks()
     {
-        TextView text = (TextView)findViewById (R.id.party_name);
-        text.setText(str);
-    }
-
-    private void updateHostName(String str)
-    {
-        TextView text = (TextView)findViewById (R.id.host_name);
-        text.setText(str);
-    }
-
-    private void updateAddress(String str)
-    {
-        TextView text = (TextView)findViewById (R.id.location_text);
-        text.setText("Location: " + str);
-    }
-
-    private void updateAddressImg(Object img)
-    {
-        //ImageView image = FindViewById<ImageView>(Resource.Id.location_image);
-        //image = img;
-    }
-
-    private void updateDate(String str)
-    {
-        TextView text = (TextView)findViewById (R.id.date_text);
-        text.setText(str);
-    }
-
-    private void updateTime(String str)
-    {
-        TextView text = (TextView)findViewById (R.id.time_text);
-        text.setText(str);
-    }
-
-    private void updatePrice(double price)
-    {
-        TextView text = (TextView)findViewById (R.id.price_text);
-        if (price == 0.0)
-            text.setText("Price: FREE");
-        else
-            text.setText("Price: " + price);
-    }
-
-    private String getMonthText(int i)
-    {
-        String month = "";
-        switch (i)
+        getinButton.setOnClickListener(new View.OnClickListener()
         {
-            case 1:
-                month = "Jan";
-                break;
-            case 2:
-                month = "Feb";
-                break;
-            case 3:
-                month = "Mar";
-                break;
-            case 4:
-                month = "Apr";
-                break;
-            case 5:
-                month = "May";
-                break;
-            case 6:
-                month = "Jun";
-                break;
-            case 7:
-                month = "Jul";
-                break;
-            case 8:
-                month = "Aug";
-                break;
-            case 9:
-                month = "Sep";
-                break;
-            case 10:
-                month = "Oct";
-                break;
-            case 11:
-                month = "Nov";
-                break;
-            case 12:
-                month = "Dec";
-                break;
-            default:
-                month = "Undefined";
-                break;
-        }
-        return month;
+            @Override
+            public void onClick(View view)
+            {
+                // TODO: 02/24/2017 Need to implement
+            }
+        });
+
+        hostname.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+//                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+//                intent.putExtra("userIDLong", party.getHost().getUserID());
+//                mainActivity.startActivity(intent);
+                // TODO: 02/24/2017 Change hostname to host user object
+            }
+        });
     }
 
-    private String getWeekText(int i)
+    private void setupReferences()
     {
-        String week = "";
-        switch (i)
+        partyname = (TextView) findViewById(R.id.partyprofile_text_partyname);
+        hostname = (TextView) findViewById(R.id.partyprofile_text_hostname);
+        datetime = (TextView) findViewById(R.id.partyprofile_text_datetime);
+        location = (TextView) findViewById(R.id.partyprofile_text_location);
+        getinButton = (Button) findViewById(R.id.partyprofile_button_getin);
+        attendingFriends = (RecyclerView) findViewById(R.id.partyprofile_listview_attendees);
+        streetview = (ImageView) findViewById(R.id.partyprofile_image_streetview);
+
+        List<User> sample = new ArrayList(); //added friend list 3 times for testing purpose
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+
+        LinearLayoutManager layoutManagerAttendees=
+                new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
+        attendingFriends.setLayoutManager( layoutManagerAttendees );
+        attendingFriends.setAdapter( new PartyAttendeesCustomAdapter(this, sample));
+
+        try
         {
-            case 1:
-                week = "Monday";
-                break;
-            case 2:
-                week = "Tuesday";
-                break;
-            case 3:
-                week = "Wednesday";
-                break;
-            case 4:
-                week = "Thursday";
-                break;
-            case 5:
-                week = "Friday";
-                break;
-            case 6:
-                week = "Saturday";
-                break;
-            case 7:
-                week = "Sunday";
-                break;
-            default:
-                week = "Undefined";
-                break;
+            //http://stackoverflow.com/questions/27024965/how-to-display-a-streetview-preview
+            String imageUrl = "https://maps.googleapis.com/maps/api/streetview?"
+                    + "size=370x70" + "&" + "location="
+                    + party.getMapAddress().getAddress_latlng().latitude + ","
+                    + party.getMapAddress().getAddress_latlng().longitude + "&"
+                    + "key=" + getString(R.string.google_maps_key);
+
+            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
+            streetview.setImageBitmap(bitmap);
         }
-        return week;
+        catch (Exception e)
+        {
+            Log.d("Network", "You are offline...");
+        }
     }
 
-    private String getTimeView(int h, int m)
+    private void setupActionbar()
     {
-        String ampm = "AM";
-        int hour = h;
-        if (h >= 12)
-        {
-            ampm = "PM";
-            if (h > 12)
-                hour = h - 12;
-        }
-        return hour + ":" + m + ampm;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

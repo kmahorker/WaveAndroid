@@ -1,103 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@color/appColor"
+    android:gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#2F4F4F">
-    <TextView
-        android:text="Host: "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/party_name"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="39dp"
-        android:id="@+id/host_text"
-        android:textSize="30sp"
-        android:textColor="#FFF" />
-    <TextView
-        android:text="Party Host"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/host_name"
-        android:textSize="30sp"
-        android:textColor="#FFF"
-        android:layout_alignBaseline="@+id/host_text"
-        android:layout_alignBottom="@+id/host_text"
-        android:layout_toEndOf="@+id/host_pic" />
-    <TextView
-        android:text="Part Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/party_name"
-        android:textSize="30sp"
-        android:textColor="#FFF"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-    <TextView
-        android:text="Location: 123 Magic Dr."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/location_text"
-        android:textSize="30sp"
-        android:textColor="#FFF"
-        android:layout_below="@+id/host_pic"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp" />
+    android:layout_height="match_parent">
+
     <ImageView
-        android:layout_width="300dp"
-        android:src="@android:color/holo_orange_dark"
-        android:id="@+id/location_image"
+        android:layout_width="370dp"
         android:layout_height="70dp"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/location_text"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/partyprofile_image_streetview"
+        android:background="#FFF"/>
+
     <TextView
-        android:text="9:00 PM - 11:00 PM"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/time_text"
-        android:textSize="30sp"
+        android:id="@+id/partyprofile_text_partyname"
+        android:text="Super Party!"
+        android:textSize="35dp"
         android:textColor="#FFF"
-        android:layout_below="@+id/date_text"
-        android:layout_centerHorizontal="true" />
-    <TextView
-        android:text="Monday, Dec 5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:id="@+id/date_text"
-        android:textSize="30sp"
-        android:textColor="#FFF"
-        android:layout_below="@+id/location_image"
-        android:layout_centerHorizontal="true" />
-    <TextView
-        android:text="Price: FREE"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/time_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:id="@+id/price_text"
-        android:textSize="30sp"
-        android:textColor="#FFF" />
+        android:gravity="center"
+        android:lines = "1"
+        android:ellipsize="end"
+        android:padding="10dp"/>
+
     <Button
-        android:text="GET MY CODE"
-        android:id="@+id/get_my_code_button"
-        android:textSize="20sp"
         android:layout_width="200dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/partyprofile_button_getin"
+        android:background="@drawable/round_button"
+        android:text="$5 GET IN!"
+        android:textColor="#FFF"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:padding="10dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/partyprofile_text_hostname"
+        android:text="Host: Samesong Banana"
+        android:textSize="23dp"
+        android:gravity="center"
+        android:textColor="#000"
         android:background="#FFF"
-        android:layout_below="@+id/price_text"
-        android:layout_alignStart="@+id/date_text" />
-    <ImageView
-        android:id="@+id/host_pic"
-        android:layout_width="60dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/party_name"
-        android:layout_toEndOf="@+id/host_text" />
-</RelativeLayout>
+        android:layout_marginTop="20dp"
+        android:padding="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/partyprofile_text_datetime"
+        android:text="Monday, Feb 2, 2017 9:00PM - 2:00PM"
+        android:textSize="23dp"
+        android:gravity="center"
+        android:textColor="#000"
+        android:background="#FFF"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/partyprofile_text_location"
+        android:text="Location: 123 Candy Rd. Santa Barbara CA 12345"
+        android:textSize="23sp"
+        android:gravity="center"
+        android:textColor="#000"
+        android:background="#FFF"
+        android:paddingTop="20dp"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+        android:paddingBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/partyprofile_text_attendees"
+        android:text="Friends that are going"
+        android:textSize="17dp"
+        android:textColor="#000"
+        android:background="#FFF"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/partyprofile_listview_attendees"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:background="#FFF"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF"/>
+
+</LinearLayout>

@@ -326,7 +326,7 @@ public class CreateEvent1Fragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                LatLng latlng = UtilityClass.getLocationFromAddress(getActivity(), editLocation.getText().toString());
+                //LatLng latlng = UtilityClass.getLocationFromAddress(getActivity(), editLocation.getText().toString());
                 if ( editStartDate.getText().toString().isEmpty() ||
                         editStartTime.getText().toString().isEmpty() ||
                         editEndDate.getText().toString().isEmpty() ||
@@ -353,18 +353,18 @@ public class CreateEvent1Fragment extends Fragment
                             .setCancelable(true)
                             .show();
                 }
-                else if ( latlng == null )
-                {
-                    AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
-                    fieldAlert.setMessage("Please specify a valid address.")
-                            .setCancelable(true)
-                            .show();
-                    Log.d("Nope", "Invalid");
-                }
+//                else if ( latlng == null )
+//                {
+//                    AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
+//                    fieldAlert.setMessage("Please specify a valid address.")
+//                            .setCancelable(true)
+//                            .show();
+//                    Log.d("Nope", "Invalid");
+//                }
                 else
                 {
-                    Log.d("Cool", latlng.toString() + " " + editLocation.getText().toString());
-                    mainActivity.location = new MapAddress( editLocation.getText().toString(), latlng );
+//                    Log.d("Cool", latlng.toString() + " " + editLocation.getText().toString());
+//                    mainActivity.location = new MapAddress( editLocation.getText().toString(), latlng );
                     mainActivity.price = Double.parseDouble(editPrice.getText().toString());
                     FragmentManager fragM = mainActivity.getSupportFragmentManager();
                     fragM.beginTransaction()
