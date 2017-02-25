@@ -12,7 +12,8 @@
         android:layout_width="370dp"
         android:layout_height="70dp"
         android:id="@+id/partyprofile_image_streetview"
-        android:background="#FFF"/>
+        android:src="@drawable/party_sample"
+        android:background="#000"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -82,7 +83,6 @@
         android:text="Friends that are going"
         android:textSize="17dp"
         android:textColor="#000"
-        android:background="#FFF"
         android:paddingStart="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"/>
@@ -93,12 +93,11 @@
         android:id="@+id/partyprofile_listview_attendees"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="5dp"
-        android:background="#FFF"/>
+        android:paddingTop="5dp"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFF"/>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#FFF"/>-->
 
 </LinearLayout>

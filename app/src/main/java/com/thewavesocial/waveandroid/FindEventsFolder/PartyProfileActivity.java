@@ -1,13 +1,10 @@
 package com.thewavesocial.waveandroid.FindEventsFolder;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,15 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.StatsHostBouncerCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
-import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,22 +85,22 @@ public class PartyProfileActivity extends AppCompatActivity
         attendingFriends.setLayoutManager( layoutManagerAttendees );
         attendingFriends.setAdapter( new PartyAttendeesCustomAdapter(this, sample));
 
-        try
-        {
-            //http://stackoverflow.com/questions/27024965/how-to-display-a-streetview-preview
-            String imageUrl = "https://maps.googleapis.com/maps/api/streetview?"
-                    + "size=370x70" + "&" + "location="
-                    + party.getMapAddress().getAddress_latlng().latitude + ","
-                    + party.getMapAddress().getAddress_latlng().longitude + "&"
-                    + "key=" + getString(R.string.google_maps_key);
-
-            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
-            streetview.setImageBitmap(bitmap);
-        }
-        catch (Exception e)
-        {
-            Log.d("Network", "You are offline...");
-        }
+//        try
+//        {
+//            //http://stackoverflow.com/questions/27024965/how-to-display-a-streetview-preview
+//            String imageUrl = "https://maps.googleapis.com/maps/api/streetview?"
+//                    + "size=370x70" + "&" + "location="
+//                    + party.getMapAddress().getAddress_latlng().latitude + ","
+//                    + party.getMapAddress().getAddress_latlng().longitude + "&"
+//                    + "key=" + getString(R.string.google_maps_key);
+//
+//            Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
+//            streetview.setImageBitmap(bitmap);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
     }
 
     private void setupActionbar()

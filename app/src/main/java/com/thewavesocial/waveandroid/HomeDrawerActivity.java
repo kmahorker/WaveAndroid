@@ -50,7 +50,8 @@ public class HomeDrawerActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_drawer_layout);
-        CurrentUser.setContext(this);
+        if ( CurrentUser.theUser == null )
+            CurrentUser.setContext(this);
 
         setupMapFragment();
         setupLeftDrawer();

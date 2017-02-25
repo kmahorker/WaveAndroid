@@ -1,11 +1,63 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/signup_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="480dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/appColor"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot1"
+            android:src="@drawable/hollow_dot"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot2"
+            android:src="@drawable/solid_dot"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot3"
+            android:src="@drawable/solid_dot"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot4"
+            android:src="@drawable/solid_dot"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot5"
+            android:src="@drawable/solid_dot"
+            android:layout_margin="5dp"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/signup_dot6"
+            android:src="@drawable/solid_dot"
+            android:layout_margin="5dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -233,29 +233,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         else
         {
-            Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            LatLng loc = new LatLng( location.getLatitude(), location.getLongitude());
-            UtilityClass.updateUserLocation( loc );
-            if ( key == 1 )
-            {
-                if ( UtilityClass.getMapLocation() != null )
+                Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+                UtilityClass.updateUserLocation(loc);
+                if (key == 1)
                 {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getMapLocation(), (float) 15.0));
-                }
-                else
-                {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
-                }
+                    if (UtilityClass.getMapLocation() != null)
+                    {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getMapLocation(), (float) 15.0));
+                    } else
+                    {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
+                    }
 
-                cur_loc_marker = mMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(UtilityClass.convertRoundImage(mainActivity.getResources(),
-                                CurrentUser.theUser.getProfilePic().getBitmap()).getBitmap()))
-                        .position(UtilityClass.getUserLocation()));
-            }
-            else
-            {
-                moveMapCamera(loc);
-            }
+                    cur_loc_marker = mMap.addMarker(new MarkerOptions()
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon ,150, 150)))
+                            .position(UtilityClass.getUserLocation()));
+                } else
+                {
+                    moveMapCamera(loc);
+                }
         }
     }
 

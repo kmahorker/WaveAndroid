@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -124,7 +125,7 @@ public class SignupFragment extends Fragment
             {
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-                mainActivity.email = newPassField.getText().toString();
+                mainActivity.password = newPassField.getText().toString();
             }
         });
 
@@ -134,7 +135,7 @@ public class SignupFragment extends Fragment
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                mainActivity.email = newPassField.getText().toString();
+                mainActivity.password = newPassField.getText().toString();
                 return true;
             }
         });
@@ -178,13 +179,14 @@ public class SignupFragment extends Fragment
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                if ( year.getText().toString().equals("") && month.getText().toString().equals("") &&
-                        date.getText().toString().equals("") )
+                if ( !year.getText().toString().equals("") && !month.getText().toString().equals("") &&
+                        !date.getText().toString().equals("") )
                 {
                     mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
                             Integer.parseInt(month.getText().toString()),
                             Integer.parseInt(date.getText().toString()));
                 }
+                Log.d("Year", year.getText() + " " + mainActivity.birthday.get(Calendar.YEAR));
                 return true;
             }
         });
@@ -246,6 +248,11 @@ public class SignupFragment extends Fragment
         final ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
         final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
 
+        if ( mainActivity.profilePic != null )
+        {
+            profilepic.setImageDrawable(mainActivity.profilePic);
+        }
+
         profilepic.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -295,7 +302,6 @@ public class SignupFragment extends Fragment
                 if ( !friendphone.getText().toString().equals("") )
                     mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
                 mainActivity.saveUserData();
-                mainActivity.finish();
             }
         });
 
@@ -326,6 +332,7 @@ public class SignupFragment extends Fragment
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                 ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
                 profilepic.setImageDrawable( UtilityClass.convertRoundImage(getResources(), bitmap) );
+                mainActivity.profilePic = new BitmapDrawable(bitmap);
             }
             catch (FileNotFoundException e)
             {

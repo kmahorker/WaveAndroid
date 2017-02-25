@@ -35,6 +35,7 @@ public class ManageEventsActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_events_layout);
+        UtilityClass.hideKeyboard(this);
 
         setupActionbar();
         setupReferences();
