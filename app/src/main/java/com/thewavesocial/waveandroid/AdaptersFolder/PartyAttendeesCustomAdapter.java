@@ -3,14 +3,13 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
 import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -19,13 +18,13 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsHostBouncerCustomAdapter extends RecyclerView.Adapter<StatsHostBouncerCustomAdapter.ViewHolder>
+public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAttendeesCustomAdapter.ViewHolder>
 {
-    private EventStatsActivity mainActivity;
+    private PartyProfileActivity mainActivity;
     private List<User> userList = new ArrayList<>();
     private static LayoutInflater inflater;
 
-    public StatsHostBouncerCustomAdapter(EventStatsActivity mainActivity, List<User> userList)
+    public PartyAttendeesCustomAdapter(PartyProfileActivity mainActivity, List<User> userList)
     {
         super();
         this.userList = userList;

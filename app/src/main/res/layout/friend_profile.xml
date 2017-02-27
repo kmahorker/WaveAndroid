@@ -8,7 +8,6 @@
     <ImageView
         android:layout_width="120dp"
         android:id="@+id/profile_pic"
-        android:background="#000"
         android:layout_below="@+id/user_name"
         android:layout_alignStart="@+id/events_attended_list"
         android:layout_marginStart="50dp"

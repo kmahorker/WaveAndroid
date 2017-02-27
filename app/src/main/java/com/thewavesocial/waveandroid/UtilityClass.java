@@ -2,8 +2,12 @@ package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.maps.model.LatLng;
@@ -65,6 +69,16 @@ public final class UtilityClass
         if ( min < 10 )
             prefixM = "0";
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
+    }
+
+    public static RoundedBitmapDrawable convertRoundImage(Resources res, Bitmap bitmap)
+    {
+        //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
+        RoundedBitmapDrawable dr =
+                RoundedBitmapDrawableFactory.create(res,
+                        bitmap);
+        dr.setCornerRadius(100);
+        return dr;
     }
 
 //------------------------------------------------------------------------------------Map Functions

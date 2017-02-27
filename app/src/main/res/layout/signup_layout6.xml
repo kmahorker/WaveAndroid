@@ -1,0 +1,105 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appColor"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup6_text_bestFriendTitle"
+        android:layout_centerHorizontal="true"
+        android:text="Choose Best Friend"
+        android:textSize="35sp"
+        android:textColor="#FFF"
+        android:layout_marginTop="30dp"/> <!--Choose Best Friend Title(Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup6_text_bestFriendContent1"
+        android:layout_centerHorizontal="true"
+        android:text="Choose one person you trust to help you in emergency situations."
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="#FFF"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"/> <!--Choose Best Friend Content1(Text)-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signup6_text_bestFriendContent2"
+        android:layout_centerHorizontal="true"
+        android:text="This person will be notified when you hold the SOS button for 3 seconds."
+        android:gravity="center"
+        android:textSize="25sp"
+        android:textColor="#FFF"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="10dp"/> <!--Choose Best Friend Content1(Text)-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signup6_text_friendname"
+            android:text="Name:     "
+            android:textColor="#FFF"
+            android:textSize="30sp"/> <!-- Friend Name (Text)-->
+
+        <EditText
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:id="@+id/signup6_edittext_friendname"
+            android:background="#b9ffffff"
+            android:paddingLeft="10dp"/> <!-- Friend Name (EditText)-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/signup6_text_friendphone"
+            android:text="Phone:     "
+            android:textColor="#FFF"
+            android:textSize="30sp"/> <!-- Friend Phone (Text)-->
+
+        <EditText
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:id="@+id/signup6_edittext_friendphone"
+            android:background="#b9ffffff"
+            android:inputType="number"
+            android:paddingLeft="10dp"/> <!-- Friend Phone (EditText)-->
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:id="@+id/signup6_button_finish"
+        android:layout_marginTop="30dp"
+        android:text="Finish"
+        android:textColor="#FFF"
+        android:textSize="25sp"
+        android:background="@drawable/round_button"/> <!-- Finish Button-->
+
+</LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:background="@color/appColor"
+                android:background="@drawable/round_shape"
                 android:paddingTop="5dp"
                 android:paddingBottom="10dp"
                 android:paddingEnd="10dp"

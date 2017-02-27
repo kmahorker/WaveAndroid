@@ -58,7 +58,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view)
                     {
-                        if ( newPass.getText().equals(confirmPass.getText()) )
+                        if ( newPass.getText().toString().equals(confirmPass.getText().toString()) )
                         {
                             onBackPressed();
                         }

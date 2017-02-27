@@ -7,6 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:scrollbars="vertical"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbarFadeDuration="0"
     android:background="@color/appColor"
     tools:openDrawer="start">
 
@@ -96,15 +99,14 @@
 
         <ListView
             android:layout_width="284dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"
             android:id="@+id/rightDrawer_list_friendRequests"
             android:background="@color/appColor"
             android:layout_below="@id/rightDrawer_divider_1"
             android:layout_marginStart="13dp"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbarFadeDuration="0"/> <!--Request List (ListView)-->
+            android:layout_marginBottom="20dp"/> <!--Request List (ListView)-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,15 +129,14 @@
 
         <ListView
             android:layout_width="284dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"
             android:id="@+id/rightDrawer_list_hostings"
             android:background="@color/appColor"
             android:layout_below="@id/rightDrawer_divider_2"
             android:layout_marginStart="13dp"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbarFadeDuration="0"/> <!--Request List (ListView)-->
+            android:layout_marginBottom="20dp"/> <!--Request List (ListView)-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -158,15 +159,14 @@
 
         <ListView
             android:layout_width="284dp"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="120dp"
             android:id="@+id/rightDrawer_list_invitations"
             android:background="@color/appColor"
             android:layout_below="@id/rightDrawer_divider_3"
             android:layout_marginStart="13dp"
             android:layout_marginTop="15dp"
-            android:layout_marginBottom="20dp"
-            android:scrollbarStyle="outsideOverlay"
-            android:scrollbarFadeDuration="0"/> <!--Invite List (ListView)-->
+            android:layout_marginBottom="20dp"/> <!--Invite List (ListView)-->
 
     </RelativeLayout>
 

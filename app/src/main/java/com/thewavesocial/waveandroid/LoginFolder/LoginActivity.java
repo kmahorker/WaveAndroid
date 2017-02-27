@@ -68,7 +68,8 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                // TODO: 02/21/2017 Sign up screen
+                Intent intent = new Intent( mainActivity, SignupActivity.class );
+                startActivity(intent);
             }
         });
 
@@ -85,6 +86,7 @@ public class LoginActivity extends AppCompatActivity
                     {
                         Intent intent = new Intent(mainActivity, HomeDrawerActivity.class);
                         startActivity(intent);
+                        finish();
                         // TODO: 02/21/2017 Reset CurrentUser info
                     }
                     else
