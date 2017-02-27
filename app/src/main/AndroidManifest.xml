@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.thewavesocial.waveandroid">
+    package="com.thewavesocial.waveandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,26 +15,27 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
-        <activity android:name=".LoginFolder.LoginActivity"/>
-        <activity android:name=".HomeDrawerActivity"
+        <activity android:name=".LoginFolder.LoginActivity" />
+        <activity
+            android:name=".HomeDrawerActivity"
             android:label="@string/title_activity_home_drawer"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".FindFriendsFolder.FriendProfileActivity"/>
-        <activity android:name=".FindEventsFolder.PartyProfileActivity"/>
-        <activity android:name=".LoginFolder.LoginActivityOld"/>
-        <activity android:name=".FindFriendsFolder.InviteFriendsActivity"/>
-        <activity android:name=".UserFolder.EditUserProfileActivity"/>
-        <activity android:name=".HostControllerFolder.CreateEventActivity"/>
-        <activity android:name=".HostControllerFolder.ManageEventsActivity"/>
-        <activity android:name=".HostControllerFolder.EventStatsActivity"/>
-        <activity android:name=".LoginFolder.ForgotPasswordActivity"/>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".FindFriendsFolder.FriendProfileActivity" />
+        <activity android:name=".FindEventsFolder.PartyProfileActivity" />
+        <activity android:name=".LoginFolder.LoginActivityOld" />
+        <activity android:name=".FindFriendsFolder.InviteFriendsActivity" />
+        <activity android:name=".UserFolder.EditUserProfileActivity" />
+        <activity android:name=".HostControllerFolder.CreateEventActivity" />
+        <activity android:name=".HostControllerFolder.ManageEventsActivity" />
+        <activity android:name=".HostControllerFolder.EventStatsActivity" />
+        <activity android:name=".LoginFolder.ForgotPasswordActivity" />
         <activity android:name=".LoginFolder.StartupActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
