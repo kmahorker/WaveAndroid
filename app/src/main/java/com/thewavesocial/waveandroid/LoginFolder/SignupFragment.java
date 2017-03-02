@@ -148,7 +148,7 @@ public class SignupFragment extends Fragment
         final EditText year = (EditText) view.findViewById(R.id.signup3_edittext_year);
         final Button nextButton = (Button) view.findViewById(R.id.signup3_button_next);
 
-        if ( mainActivity.birthday == Calendar.getInstance() )
+        if ( mainActivity.birthday != Calendar.getInstance() )
         {
             month.setText(mainActivity.birthday.get(Calendar.MONTH) + "");
             date.setText(mainActivity.birthday.get(Calendar.DATE) + "");

@@ -91,10 +91,7 @@ public class CreateEvent2Fragment extends Fragment
             {
                 if (partyname.getText().toString().isEmpty())
                 {
-                    AlertDialog.Builder fieldAlert = new AlertDialog.Builder(getActivity());
-                    fieldAlert.setMessage("Please specify your party name.")
-                            .setCancelable(true)
-                            .show();
+                    UtilityClass.displayAlertMessage(mainActivity, "Please specify your party name.", true);
                 }
                 else
                 {

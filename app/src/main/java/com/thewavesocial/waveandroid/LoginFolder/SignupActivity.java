@@ -31,8 +31,8 @@ public class SignupActivity extends FragmentActivity
     private PagerAdapter mPagerAdapter;
     private ImageView dot1, dot2, dot3, dot4, dot5, dot6;
     public ViewPager mPager;
-    public String email = "", password = "", gender = "", friendname = "";
-    public long friendphone = 0;
+    public String name = "", email = "", password = "", gender = "", friendname = "";
+    public long friendphone = 0, userID;
     public Calendar birthday;
     public BitmapDrawable profilePic;
 
@@ -42,7 +42,24 @@ public class SignupActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_viewpager_layout);
 
-        birthday = Calendar.getInstance();
+        Intent intent = getIntent();
+        userID = Long.parseLong(intent.getExtras().getString("userIDLong"));
+        name = intent.getExtras().getString("userName");
+        email = intent.getExtras().getString("userEmail");
+        gender = intent.getExtras().getString("userGender");
+
+        try
+        {
+            birthday = Calendar.getInstance();
+            birthday.set(Integer.parseInt(intent.getExtras().getString("userBirthday").substring(8)),
+                    Integer.parseInt(intent.getExtras().getString("userBirthday").substring(0, 2)),
+                    Integer.parseInt(intent.getExtras().getString("userBirthday").substring(3, 5)));
+        }
+        catch(Exception e)
+        {
+            birthday = Calendar.getInstance();
+            e.printStackTrace();
+        }
 
         mPager = (ViewPager) findViewById(R.id.signup_viewpager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());

@@ -8,6 +8,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.maps.model.LatLng;
@@ -79,6 +80,14 @@ public final class UtilityClass
                         bitmap);
         dr.setCornerRadius(100);
         return dr;
+    }
+
+    public static void displayAlertMessage( Activity activity, String message, boolean cancelable )
+    {
+        AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
+        fieldAlert.setMessage(message)
+                .setCancelable(cancelable)
+                .show();
     }
 
 //------------------------------------------------------------------------------------Map Functions
