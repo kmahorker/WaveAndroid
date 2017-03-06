@@ -1,11 +1,12 @@
-package com.thewavesocial.waveandroid.LoginFolder;
+package com.thewavesocial.waveandroid;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
-import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.LoginFolder.LoginActivity;
 
 public class StartupActivity extends AppCompatActivity
 {
@@ -22,6 +23,7 @@ public class StartupActivity extends AppCompatActivity
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Log.d("Yes", "We're In!");
                 Intent intent = new Intent(StartupActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();

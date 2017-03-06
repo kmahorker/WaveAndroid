@@ -35,10 +35,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.text.Text;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -50,7 +50,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 {
     private List<Long> partyList;
     private Party curParty;
-    private Activity mainActivity;
+    private HomeActivity mainActivity;
 
     private GoogleMap mMap;
     private LocationManager locManager;
@@ -67,12 +67,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = getActivity();
+        mainActivity = (HomeActivity)getActivity();
         User user = CurrentUser.theUser;
         partyList = user.getAttended();
 
         setupFloatingButtons();
-        setupActionbar();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
@@ -293,29 +292,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view)
             {
                 updateUserLoc(0);
-            }
-        });
-    }
-
-
-    //actionbar settings
-    private void setupActionbar()
-    {
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_home);
-
-        final DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        notifCountText = (TextView) getActivity().findViewById(R.id.home_notif_count);
-
-        ((HomeDrawerActivity)getActivity()).setupRightDrawer();
-
-        ImageView notification = (ImageView) getActivity().findViewById(R.id.notif_button);
-        notification.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                drawer.openDrawer(Gravity.RIGHT);
             }
         });
     }

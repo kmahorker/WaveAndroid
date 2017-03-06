@@ -1,9 +1,9 @@
 <resources xmlns:android="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/appColor</item>
+        <item name="colorPrimary">#FFF</item>
         <item name="colorPrimaryDark">@color/appColor</item>
-        <item name="colorAccent">@color/appColor</item>
+        <item name="colorAccent">#FFF</item>
         <!--<item name="android:homeAsUpIndicator" >@drawable/back_arrow</item>-->
     </style>
 

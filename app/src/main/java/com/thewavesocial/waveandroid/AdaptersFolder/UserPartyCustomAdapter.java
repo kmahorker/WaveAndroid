@@ -72,7 +72,6 @@ public class UserPartyCustomAdapter extends BaseAdapter
             holder.partyname.setText(partyList.get(position).getName());
             holder.partydate.setText( UtilityClass.dateToString(
                     partyList.get(position).getStartingDateTime()));
-            Log.d("User", holder.partyname.getText().toString());
 
             layoutView.setOnClickListener(new View.OnClickListener()
             {

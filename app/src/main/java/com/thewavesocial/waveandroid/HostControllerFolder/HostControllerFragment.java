@@ -8,14 +8,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 
 
 public class HostControllerFragment extends Fragment
 {
+    private HomeActivity mainActivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -26,8 +29,7 @@ public class HostControllerFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
+        mainActivity = (HomeActivity) getActivity();
 
         TextView createEventText = (TextView) getActivity().findViewById(R.id.hostControl_createEvent_text);
         TextView manageEventText = (TextView) getActivity().findViewById(R.id.hostControl_manageEvent_text);
@@ -52,4 +54,6 @@ public class HostControllerFragment extends Fragment
             }
         });
     }
+
+
 }
