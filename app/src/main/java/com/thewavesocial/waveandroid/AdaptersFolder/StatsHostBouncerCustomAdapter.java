@@ -3,16 +3,14 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
-import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
+import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

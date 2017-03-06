@@ -76,7 +76,7 @@ public class MyEventsCustomAdapter extends BaseAdapter {
         if(convertView == null) {
             Holder holder = new Holder();
             View rowView;
-            rowView = inflater.inflate(R.layout.my_events_cell_layout, null);
+            rowView = inflater.inflate(R.layout.each_event_item, null);
             holder.tvName = (TextView) rowView.findViewById(R.id.partyName);
             holder.tvDate = (TextView) rowView.findViewById(R.id.partyDate);
             holder.tvDistance = (TextView) rowView.findViewById(R.id.distance);

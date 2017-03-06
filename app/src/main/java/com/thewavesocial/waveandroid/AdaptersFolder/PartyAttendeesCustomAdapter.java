@@ -9,9 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
-import com.thewavesocial.waveandroid.FindFriendsFolder.FriendProfileActivity;
-import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
+import com.thewavesocial.waveandroid.EventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

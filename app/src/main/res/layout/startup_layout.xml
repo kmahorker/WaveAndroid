@@ -11,7 +11,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.thewavesocial.waveandroid.StartupActivity">
+    tools:context="com.thewavesocial.waveandroid.LoginFolder.StartupActivity">
 
     <ImageView
         android:layout_width="250dp"

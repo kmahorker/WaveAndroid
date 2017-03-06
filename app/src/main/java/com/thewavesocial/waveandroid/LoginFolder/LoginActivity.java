@@ -19,7 +19,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
             {
                 //login
-                Intent intentLogin = new Intent(mainActivity, HomeDrawerActivity.class);
+                Intent intentLogin = new Intent(mainActivity, HomeActivity.class);
                 intentLogin.putExtra("userIDLong", json.getString("id"));
                 startActivity(intentLogin);
                 finish();
@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity
                 {
                     if (pass.equals("dmario123"))
                     {
-                        Intent intent = new Intent(mainActivity, HomeDrawerActivity.class);
+                        Intent intent = new Intent(mainActivity, HomeActivity.class);
                         startActivity(intent);
                         finish();
                         // TODO: 02/21/2017 Reset CurrentUser info

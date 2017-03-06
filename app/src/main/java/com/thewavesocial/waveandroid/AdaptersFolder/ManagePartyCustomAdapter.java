@@ -11,8 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
-import com.thewavesocial.waveandroid.HostControllerFolder.EventStatsActivity;
+import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

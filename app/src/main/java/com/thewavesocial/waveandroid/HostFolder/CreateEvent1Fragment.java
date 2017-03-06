@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HostControllerFolder;
+package com.thewavesocial.waveandroid.HostFolder;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

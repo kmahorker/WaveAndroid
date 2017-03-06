@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.FindEventsFolder;
+package com.thewavesocial.waveandroid.EventsFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +30,7 @@ public class PartyProfileActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.party_profile);
+        setContentView(R.layout.profile_party);
         mainActivity = this;
 
         Intent intent = getIntent();

@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="15dp">
+    android:id="@+id/home_mapsView_relativeLayout">
+
     <fragment
         android:id="@+id/maps_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/home_mapsView_separator"
         class="com.google.android.gms.maps.SupportMapFragment">
-
         <ImageView
             android:id="@+id/sos_button"
             android:layout_width="55dp"
@@ -18,7 +19,6 @@
             android:layout_marginBottom="130dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/sos_button"/> <!--SOS button (Image)-->
-
         <ImageView
             android:id="@+id/cur_loc_button"
             android:layout_width="55dp"
@@ -27,6 +27,22 @@
             android:layout_marginBottom="70dp"
             android:layout_marginRight="10dp"
             android:src="@drawable/compass"/> <!--CurLoc Button (Image)-->
-
     </fragment>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFF"
+        android:layout_below="@+id/home_mapsView_separator" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/home_mapsView_separator"
+        android:background="#daa8a8"
+        android:padding="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_centerVertical="true"/>
+
 </RelativeLayout>

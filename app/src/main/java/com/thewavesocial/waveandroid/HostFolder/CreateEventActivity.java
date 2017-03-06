@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HostControllerFolder;
+package com.thewavesocial.waveandroid.HostFolder;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -10,7 +10,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 

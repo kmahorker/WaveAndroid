@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -75,7 +75,7 @@ public class CustomAdapter extends BaseAdapter {
         if(convertView == null) {
             Holder holder = new Holder();
             View rowView;
-            rowView = inflater.inflate(R.layout.friends_list_cell_layout, null);
+            rowView = inflater.inflate(R.layout.each_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.friendName);
             holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
             //holder.tv.setText("Name"); //Testing

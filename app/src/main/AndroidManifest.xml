@@ -18,20 +18,15 @@
             android:value="@string/google_maps_key"/>
 
         <activity android:name=".LoginFolder.LoginActivity"/>
-        <activity
-            android:name=".HomeDrawerActivity"
-            android:label="@string/title_activity_home_drawer"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".FindFriendsFolder.FriendProfileActivity"/>
-        <activity android:name=".FindEventsFolder.PartyProfileActivity"/>
-        <activity android:name=".LoginFolder.LoginActivityOld"/>
-        <activity android:name=".FindFriendsFolder.InviteFriendsActivity"/>
+        <activity android:name=".FriendsFolder.FriendProfileActivity"/>
+        <activity android:name=".EventsFolder.PartyProfileActivity"/>
+        <activity android:name=".FriendsFolder.InviteFriendsActivity"/>
         <activity android:name=".UserFolder.EditUserProfileActivity"/>
-        <activity android:name=".HostControllerFolder.CreateEventActivity"/>
-        <activity android:name=".HostControllerFolder.ManageEventsActivity"/>
-        <activity android:name=".HostControllerFolder.EventStatsActivity"/>
+        <activity android:name=".HostFolder.CreateEventActivity"/>
+        <activity android:name=".HostFolder.ManageEventsActivity"/>
+        <activity android:name=".HostFolder.EventStatsActivity"/>
         <activity android:name=".LoginFolder.ForgotPasswordActivity"/>
-        <activity android:name=".StartupActivity"></activity>
+        <activity android:name=".LoginFolder.StartupActivity"></activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UserFolder.EditUserProfileActivity;
 
@@ -32,9 +32,9 @@ public class OptionsFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setTitle("");
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
+        ((HomeActivity)getActivity()).getSupportActionBar().setTitle("");
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
         user = CurrentUser.theUser;
         CurrentUser.setContext(getActivity());
 

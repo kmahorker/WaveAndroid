@@ -1,7 +1,6 @@
-package com.thewavesocial.waveandroid.FindEventsFolder;
+package com.thewavesocial.waveandroid.EventsFolder;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,16 +14,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,28 +35,27 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeActivity;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowClickListener
+        GoogleMap.OnInfoWindowClickListener, View.OnTouchListener
 {
     private List<Long> partyList;
     private Party curParty;
     private HomeActivity mainActivity;
+    private int yDelta;
 
     private GoogleMap mMap;
     private LocationManager locManager;
     private Marker cur_loc_marker;
-    public TextView notifCountText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.home_maps_layout, container, false);
+        return inflater.inflate(R.layout.home_maps_view, container, false);
     }
 
     @Override
@@ -78,6 +73,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapFragment.getMapAsync(this);
         locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         cur_loc_marker = null;
+
+        getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
     }
 
     @Override
@@ -162,7 +159,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
             return null;
         }
-        View view = View.inflate(getContext(), R.layout.map_marker_layout, null);
+        View view = View.inflate(getContext(), R.layout.home_maps_marker, null);
         curParty = CurrentUser.getPartyObject((long) marker.getTag());
 
         TextView title = (TextView) view.findViewById(R.id.marker_title);
@@ -192,7 +189,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
             return null;
         }
-        View view = View.inflate(getContext(), R.layout.map_marker_layout, null);
+        View view = View.inflate(getContext(), R.layout.home_maps_marker, null);
         curParty = CurrentUser.getPartyObject((long) marker.getTag());
 
         TextView title = (TextView) view.findViewById(R.id.marker_title);
@@ -294,5 +291,34 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 updateUserLoc(0);
             }
         });
+    }
+
+    @Override
+    //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
+    public boolean onTouch(View view, MotionEvent event)
+    {
+        final int y = (int) event.getRawY();
+        switch (event.getAction() & MotionEvent.ACTION_MASK)
+        {
+            case MotionEvent.ACTION_DOWN:
+                RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                yDelta = y - layoutParams1.bottomMargin;
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams2.bottomMargin = (y - yDelta);
+                layoutParams2.topMargin = -layoutParams2.bottomMargin;
+                view.setLayoutParams(layoutParams2);
+                view.animate().translationY(y - yDelta).setDuration(0);
+                break;
+        }
+        getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
+        return true;
     }
 }

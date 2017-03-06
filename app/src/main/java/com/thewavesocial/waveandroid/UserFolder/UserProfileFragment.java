@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,11 +18,9 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeActivity;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class UserProfileFragment extends Fragment
     //get fragment layout reference
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.user_profile, container, false);
+        return inflater.inflate(R.layout.profile_user, container, false);
     }
 
     @Override

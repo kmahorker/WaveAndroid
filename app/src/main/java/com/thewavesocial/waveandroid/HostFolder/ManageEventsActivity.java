@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HostControllerFolder;
+package com.thewavesocial.waveandroid.HostFolder;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +9,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.ManagePartyCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
@@ -34,7 +33,7 @@ public class ManageEventsActivity extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.manage_events_layout);
+        setContentView(R.layout.host_event_list);
         UtilityClass.hideKeyboard(this);
 
         setupActionbar();

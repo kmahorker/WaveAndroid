@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class NotificationCustomAdapter extends BaseAdapter
     private List<Notification> notifList;
     private static LayoutInflater inflater;
 
-    public NotificationCustomAdapter(HomeDrawerActivity mainActivity, List<Notification> notifList)
+    public NotificationCustomAdapter(Activity mainActivity, List<Notification> notifList)
     {
         super();
         this.notifList = new ArrayList<>();
@@ -86,7 +85,7 @@ public class NotificationCustomAdapter extends BaseAdapter
                         CurrentUser.getPartyObject(notifList.get(position).getSenderID())
                                 .getHostingUsers().add( CurrentUser.theUser.getUserID() );
                     }
-                    ((HomeDrawerActivity)mainActivity).removePosition(position, notifList.get(position).getRequestType());
+//                    ((HomeDrawerActivity)mainActivity).removePosition(position, notifList.get(position).getRequestType());
                 }
             });
 
@@ -95,7 +94,7 @@ public class NotificationCustomAdapter extends BaseAdapter
                 @Override
                 public void onClick(View view)
                 {
-                    ((HomeDrawerActivity)mainActivity).removePosition(position, notifList.get(position).getRequestType());
+//                    ((HomeDrawerActivity)mainActivity).removePosition(position, notifList.get(position).getRequestType());
                 }
             });
             return layoutView;

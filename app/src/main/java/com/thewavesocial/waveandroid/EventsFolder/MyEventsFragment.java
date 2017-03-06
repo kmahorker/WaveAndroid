@@ -12,8 +12,7 @@ import android.widget.ListView;
 import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.FindEventsFolder.PartyProfileActivity;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class MyEventsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_events, container, false);
+        return inflater.inflate(R.layout.list_events_find, container, false);
     }
 
     @Override
@@ -80,9 +79,9 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         MyEventsFragment thisFragment = this;
         DummyUser dummyUser = new DummyUser(getActivity());
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeDrawerActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
         List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getSignedUp()); //TODO: Get Parties from User Object from database
         ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
         myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));

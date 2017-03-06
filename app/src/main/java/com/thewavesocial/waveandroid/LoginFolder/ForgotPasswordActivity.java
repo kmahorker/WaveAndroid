@@ -23,7 +23,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.forgot_password_layout1);
+        setContentView(R.layout.forgot_password_fragment1);
         viewGroup = (ViewGroup) findViewById(android.R.id.content).getRootView();
         mainActivity = this;
         setupActionbar();
@@ -48,7 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                mainActivity.setContentView(R.layout.forgot_password_layout2);
+                mainActivity.setContentView(R.layout.forgot_password_fragment2);
                 newPass = (EditText) findViewById(R.id.forgotPassword2_editttext_createPass);
                 confirmPass = (EditText) findViewById(R.id.forgotPassword2_editttext_confirmPass);
                 createButton = (Button) findViewById(R.id.forgotPassword2_button_create);

@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.HostControllerFolder;
+package com.thewavesocial.waveandroid.HostFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.StatsFriendCustomAdapter;
 import com.thewavesocial.waveandroid.AdaptersFolder.StatsHostBouncerCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -27,7 +26,7 @@ public class EventStatsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.event_stats_layout);
+        setContentView(R.layout.host_event_stats);
 
         Intent intent = getIntent();
         party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));

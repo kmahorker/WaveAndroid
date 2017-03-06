@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid;
+package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -6,11 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.thewavesocial.waveandroid.LoginFolder.LoginActivity;
+import com.thewavesocial.waveandroid.R;
 
 public class StartupActivity extends AppCompatActivity
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -30,6 +29,4 @@ public class StartupActivity extends AppCompatActivity
             }
         }, DELAY);
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.FindFriendsFolder;
+package com.thewavesocial.waveandroid.FriendsFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +23,7 @@ public class InviteFriendsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invite_friends);
+        setContentView(R.layout.list_friends_invite);
         updateActionbar();
         final DummyUser us = new DummyUser(this);
         final InviteFriendsActivity currentActivity = this;

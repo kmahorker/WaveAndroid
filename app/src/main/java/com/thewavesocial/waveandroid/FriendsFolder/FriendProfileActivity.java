@@ -1,8 +1,6 @@
-package com.thewavesocial.waveandroid.FindFriendsFolder;
+package com.thewavesocial.waveandroid.FriendsFolder;
 
 import android.content.Intent;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -28,7 +26,7 @@ public class FriendProfileActivity extends AppCompatActivity
     protected void onCreate(Bundle bundle)
     {
         super.onCreate(bundle);
-        setContentView(R.layout.friend_profile);
+        setContentView(R.layout.profile_friend);
         //CurrentUser.setContext(getApplicationContext());
 
         // access current friend data

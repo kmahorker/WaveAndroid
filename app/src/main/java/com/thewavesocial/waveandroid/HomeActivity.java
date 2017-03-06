@@ -1,13 +1,11 @@
 package com.thewavesocial.waveandroid;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.FindEventsFolder.MapsFragment;
-import com.thewavesocial.waveandroid.HostControllerFolder.HostControllerFragment;
-import com.thewavesocial.waveandroid.LoginFolder.SignupFragment;
+import com.thewavesocial.waveandroid.EventsFolder.MapsFragment;
+import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 
 public class HomeActivity extends AppCompatActivity
@@ -30,7 +27,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_activity_home);
+        setContentView(R.layout.home_activity);
         CurrentUser.setContext(this);
         setupMapActionbar();
 

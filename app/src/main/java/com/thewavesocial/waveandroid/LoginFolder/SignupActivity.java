@@ -1,7 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -11,14 +10,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.HomeDrawerActivity;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -158,7 +155,7 @@ public class SignupActivity extends FragmentActivity
 
             CurrentUser.setTheUser(user);
 
-            Intent intent = new Intent(this, HomeDrawerActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
 
             finish();

@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FindFriendsFolder.FriendsListFragment;
-import com.thewavesocial.waveandroid.FindFriendsFolder.InviteFriendsActivity;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.FriendsFolder.InviteFriendsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -71,7 +71,7 @@ public class AddFriendCustomAdapter extends BaseAdapter {
         if(convertView == null) {
             final Holder holder = new Holder();
             View rowView;
-            rowView = inflater.inflate(R.layout.add_friend_cell_layout, null);
+            rowView = inflater.inflate(R.layout.each_add_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.addFriendName);
             holder.img = (ImageView) rowView.findViewById(R.id.addFriendImage);
             holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
