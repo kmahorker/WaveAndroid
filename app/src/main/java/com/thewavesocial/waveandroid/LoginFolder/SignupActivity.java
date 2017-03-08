@@ -145,6 +145,7 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<Long>(), //best friend list
                     new ArrayList<Long>(), //followers list
                     new ArrayList<Long>(), //following list
+                    new ArrayList<Long>(), //attending list
                     new ArrayList<Long>(), //party attended list
                     new ArrayList<Long>(), //party hosted list
                     new ArrayList<Long>(), //party bounced list

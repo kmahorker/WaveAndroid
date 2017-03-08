@@ -3,29 +3,48 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical">
+    android:background="@drawable/round_corner"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/eachManage_partyname_item"
-        android:text="Party Name"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="50dp"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:textColor="#000000"
-        android:lines="1"
-        android:ellipsize="end" />
+    <ImageView
+        android:id="@+id/eachManage_partyEmoji_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:src="@drawable/plug_icon"/>
 
-    <TextView
-        android:id="@+id/eachManage_partydate_item"
-        android:text="12/5"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="vertical"
         android:gravity="center_vertical"
-        android:layout_height="100dp"
-        android:layout_marginEnd="15dp"
-        android:layout_alignParentEnd="true"
-        android:textSize="20sp"
-        android:textColor="#000000" />
+        android:layout_marginRight="30dp"
+        android:layout_toEndOf="@id/eachManage_partyEmoji_icon">
+
+        <TextView
+            android:id="@+id/eachManage_partyname_item"
+            android:text="Party Nameeeeeeeeeeeeeeee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
+            android:textColor="#77abff"
+            android:lines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/eachManage_partyInfo_item"
+            android:text="12 days 58 going"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:textSize="20sp"
+            android:textColor="#979797" />
+
+    </LinearLayout>
 
 </RelativeLayout>

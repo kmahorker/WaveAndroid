@@ -42,21 +42,21 @@ public class MyEventsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param partyList List of parties user is attending
-     * @return A new instance of fragment MyEventsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MyEventsFragment newInstance(ArrayList<Party> partyList) {
-        MyEventsFragment fragment = new MyEventsFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM1, partyList);
-        fragment.setArguments(args);
-        return fragment;
-    }
+//    /**
+//     * Use this factory method to create a new instance of
+//     * this fragment using the provided parameters.
+//     *
+//     * @param partyList List of parties user is attending
+//     * @return A new instance of fragment MyEventsFragment.
+//     */
+//    // TODO: Rename and change types and number of parameters
+//    public static MyEventsFragment newInstance(ArrayList<Party> partyList) {
+//        MyEventsFragment fragment = new MyEventsFragment();
+//        Bundle args = new Bundle();
+//        args.putParcelableArrayList(ARG_PARAM1, partyList);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
    /* @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class MyEventsFragment extends Fragment {
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
-        List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getSignedUp()); //TODO: Get Parties from User Object from database
+        List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getAttending()); //TODO: Get Parties from User Object from database
         ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
         myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));
 

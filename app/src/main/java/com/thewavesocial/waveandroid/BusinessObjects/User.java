@@ -2,16 +2,12 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 //import android.media.Image;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /*
  * Things I did during file translation:
@@ -37,10 +33,11 @@ public class User
     private List<Long> followers;
     private List<Long> following;
     //Below contain list of PartyIDs
+    private List<Long> hosting;
     private List<Long> attended;
     private List<Long> hosted;
     private List<Long> bounced;
-    private List<Long> signedUp;
+    private List<Long> attending;
     private List<Notification> notifications;
     private BitmapDrawable profilePic;
 
@@ -59,10 +56,11 @@ public class User
         bestFriends = new ArrayList<Long>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
+        hosting = new ArrayList<>();
         attended = new ArrayList<Long>();
         hosted = new ArrayList<Long>();
         bounced = new ArrayList<Long>();
-        signedUp = new ArrayList<Long>();
+        attending = new ArrayList<Long>();
         notifications = new LinkedList<>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
@@ -80,10 +78,10 @@ public class User
                 List<Long> followers,
                 List<Long> following,
                 List<Long> bestFriends,
-                List<Long> attended,
+                List<Long> hosting, List<Long> attended,
                 List<Long> hosted,
                 List<Long> bounced,
-                List<Long> signedUp,
+                List<Long> attending,
                 List<Notification> notifications,
                 BitmapDrawable profilePic)
     {
@@ -100,10 +98,11 @@ public class User
         this.followers = followers;
         this.following = following;
         this.bestFriends = bestFriends;
+        this.hosting = hosting;
         this.attended = attended;
         this.hosted = hosted;
         this.bounced = bounced;
-        this.signedUp = signedUp;
+        this.attending = attending;
         this.notifications = notifications;
         this.profilePic = profilePic;
     }
@@ -174,8 +173,8 @@ public class User
         this.bounced = bounced;
     }
 
-    public void setSignedUp(List<Long> signedUp) {
-        this.signedUp = signedUp;
+    public void setAttending(List<Long> attending) {
+        this.attending = attending;
     }
 
     public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
@@ -247,9 +246,9 @@ public class User
     }
 
 
-    public List<Long> getSignedUp()
+    public List<Long> getAttending()
     {
-        return signedUp;
+        return attending;
     }
 
     public BitmapDrawable getProfilePic()

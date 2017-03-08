@@ -35,6 +35,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending,
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -44,7 +45,7 @@ public class DummyUser extends User
 
         setupDummy(context);
         setupUserObjects(context);
-        setupPartyObjects();
+        setupPartyObjects(context);
         setupNotifications();
     }
 
@@ -164,16 +165,16 @@ public class DummyUser extends User
         this.getBounced().add((long) 4);
         this.getBounced().add((long) 5);
 
-        this.getSignedUp().add((long) 1);
-        this.getSignedUp().add((long) 2);
-        this.getSignedUp().add((long) 3);
-        this.getSignedUp().add((long) 4);
-        this.getSignedUp().add((long) 5);
+        this.getAttending().add((long) 1);
+        this.getAttending().add((long) 2);
+        this.getAttending().add((long) 3);
+        this.getAttending().add((long) 4);
+        this.getAttending().add((long) 5);
 
         this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
     }
 
-    private void setupPartyObjects()
+    private void setupPartyObjects(Context context)
     {
         party1 = new Party(
                 1,
@@ -184,7 +185,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true);
+                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
         party2 = new Party(
                 2,
                 "Super Party 2",
@@ -194,7 +195,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true);
+                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
         party3 = new Party(
                 3,
                 "Super Party 3",
@@ -204,7 +205,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true);
+                true, null );
         party4 = new Party(
                 4,
                 "Super Party 4 LongName for layout TESTING Text wrapping Multiple Lines Longer Event Here",
@@ -214,7 +215,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true);
+                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.checkmark)));
         party5 = new Party(
                 5,
                 "Super Party 5",
@@ -224,7 +225,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true);
+                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
 
         party1.getStartingDateTime().set(2017, 2, 6);
         party2.getStartingDateTime().set(2017, 3, 7);
@@ -254,6 +255,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -273,6 +275,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -292,6 +295,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -311,6 +315,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -330,6 +335,7 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
                 new ArrayList<Long>(), //following list
+                new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list,

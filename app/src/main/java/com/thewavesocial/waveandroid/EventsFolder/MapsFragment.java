@@ -75,6 +75,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         cur_loc_marker = null;
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
+
+        view.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                UtilityClass.hideKeyboard(mainActivity);
+                return true;
+            }
+        });
     }
 
     @Override
@@ -300,28 +310,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
     public boolean onTouch(View view, MotionEvent event)
     {
-        final int y = (int) event.getRawY();
-        switch (event.getAction() & MotionEvent.ACTION_MASK)
+        int y = (int) event.getRawY();
+        if ( y < 1730 && y > 320 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
         {
-            case MotionEvent.ACTION_DOWN:
-                RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                yDelta = y - layoutParams1.bottomMargin;
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                break;
-            case MotionEvent.ACTION_POINTER_UP:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                layoutParams2.bottomMargin = (y - yDelta);
-                layoutParams2.topMargin = -layoutParams2.bottomMargin;
-                view.setLayoutParams(layoutParams2);
-                view.animate().translationY(y - yDelta).setDuration(0);
-                break;
+            switch (event.getAction() & MotionEvent.ACTION_MASK)
+            {
+                case MotionEvent.ACTION_DOWN:
+                    RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                    yDelta = y - layoutParams1.bottomMargin;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                    Log.d("1", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
+
+                    layoutParams2.bottomMargin = (y - yDelta);
+                    Log.d("2", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
+
+                    layoutParams2.topMargin = -layoutParams2.bottomMargin;
+                    Log.d("3", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
+
+                    view.setLayoutParams(layoutParams2);
+                    Log.d("4", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
+
+                    view.animate().translationY(y - yDelta).setDuration(0);
+                    break;
+            }
+            getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
         }
-        getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
         return true;
     }
 }

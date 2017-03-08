@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/friend_profile_layout"
-    android:background="#e1e2e2">
+    android:background="@color/backgroundColor">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/user_profile_pic"
         android:background="@drawable/round_shape"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"/> <!-- profile picture-->
 
     <TextView
@@ -22,7 +22,7 @@
         android:textColor="#000"
         android:gravity="center"
         android:layout_below="@id/user_profile_pic"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="15dp"
         android:lines="1"
@@ -35,7 +35,8 @@
         android:text="Followers"
         android:textColor="#000"
         android:gravity="center"
-        android:layout_marginLeft="30dp"
+        android:textSize="15dp"
+        android:layout_marginLeft="35dp"
         android:layout_marginTop="35dp"
         android:layout_toEndOf="@id/user_profile_pic"/> <!--Followers Text-->
 
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/user_following_text"
         android:text="Following"
+        android:textSize="15dp"
         android:textColor="#000"
         android:gravity="center"
         android:layout_marginLeft="50dp"
@@ -57,6 +59,7 @@
         android:text="250"
         android:gravity="center"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/round_shape"
         android:layout_alignLeft="@id/user_followers_text"
         android:layout_toEndOf="@id/user_profile_pic"
@@ -69,6 +72,7 @@
         android:text="250"
         android:gravity="center"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/round_shape"
         android:layout_alignLeft="@id/user_following_text"
         android:layout_toEndOf="@id/user_followers_count"
@@ -76,7 +80,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="280dp"
         android:id="@+id/user_notification_list"
         android:layout_centerHorizontal="true"
         android:background="#FFF"

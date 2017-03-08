@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#00ffffff"
     android:id="@+id/home_mapsView_relativeLayout">
 
     <fragment
@@ -29,21 +30,37 @@
             android:src="@drawable/compass"/> <!--CurLoc Button (Image)-->
     </fragment>
 
-    <View
+    <RelativeLayout
         android:id="@+id/home_mapsView_searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFF"
-        android:layout_below="@+id/home_mapsView_separator" />
+        android:layout_below="@+id/home_mapsView_separator">
 
-    <View
+        <SearchView
+            android:id="@+id/home_mapsView_searchbar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:queryHint="Search for an event or person"
+            android:background="@drawable/round_corner_grey"
+            android:iconifiedByDefault="false" />
+
+    </RelativeLayout>
+
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="30dp"
         android:id="@+id/home_mapsView_separator"
-        android:background="#daa8a8"
-        android:padding="15dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:background="@drawable/round_corner_top"
+        android:gravity="center"
+        android:src="@color/backgroundColor"
+        android:paddingRight="150dp"
+        android:paddingLeft="150dp"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
         android:layout_centerVertical="true"/>
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,7 +20,7 @@ import java.util.List;
 
 import static android.os.Build.ID;
 
-public class UserNotificationCustomAdapter extends ArrayAdapter
+public class UserNotificationCustomAdapter extends BaseAdapter
 {
     private Activity mainActivity ;
     private List<Notification> notifList;
@@ -27,7 +28,7 @@ public class UserNotificationCustomAdapter extends ArrayAdapter
 
     public UserNotificationCustomAdapter(Activity mainActivity, List<Notification> notifList)
     {
-        super(mainActivity, R.layout.each_notif_item, notifList);
+        super();
         this.notifList = notifList;
         this.mainActivity = mainActivity;
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
