@@ -33,12 +33,13 @@ public class DummyUser extends User
                 new MapAddress("Pardall Gardens, Isla Vista, CA 93117", new LatLng(34.413331,-119.854490)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications
                 new BitmapDrawable());
 
         setupDummy(context);
@@ -49,19 +50,19 @@ public class DummyUser extends User
 
     private void setupNotifications()
     {
-        this.getNotifications().add( new Notification( "Jason W. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
-        this.getNotifications().add( new Notification( "Weit S. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
-        this.getNotifications().add( new Notification( "Hello A. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
-        this.getNotifications().add( new Notification( "WAWAW J. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
-        this.getNotifications().add( new Notification( "WEKODSJDKJEWEWE W. sent a friend request.", this.getUserID() ,Notification.type1FriendRequests ) );
+        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend4().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend5().getUserID(), Notification.type1FollowingNotice ) );
 
-        this.getNotifications().add( new Notification( "Jason W. wants you to host a party.", this.getParty1().getPartyID() ,Notification.type2HostingRequests ) );
-        this.getNotifications().add( new Notification( "LOL X. wants you to host a party.", this.getParty2().getPartyID() ,Notification.type2HostingRequests ) );
-        this.getNotifications().add( new Notification( "Heia D. wants you to host a party.", this.getParty3().getPartyID() ,Notification.type2HostingRequests ) );
+        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type2HostingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type2HostingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type2HostingNotice ) );
 
-        this.getNotifications().add( new Notification( "SSS O. invited you to Get Wild!", this.getUserID() ,Notification.type3InviteRequests ) );
-        this.getNotifications().add( new Notification( "LOL L. invited you to Get Wow!", this.getUserID() ,Notification.type3InviteRequests ) );
-        this.getNotifications().add( new Notification( "John D. invited you to Get Crazy!", this.getUserID() ,Notification.type3InviteRequests ) );
+        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type3AttendingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type3AttendingNotice ) );
+        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type3AttendingNotice ) );
     }
 
     public List<User> getFriendsListObjects(List<Long> userIdList)
@@ -125,12 +126,22 @@ public class DummyUser extends User
         this.getBestFriends().add((long) 1);
         this.getBestFriends().add((long) 2);
 
-        //setup friend list
-        this.getFriends().add((long) 1);
-        this.getFriends().add((long) 2);
-        this.getFriends().add((long) 3);
-        this.getFriends().add((long) 4);
-        this.getFriends().add((long) 5);
+        //setup followers list
+        this.getFollowers().add((long) 1);
+        this.getFollowers().add((long) 2);
+        this.getFollowers().add((long) 3);
+        this.getFollowers().add((long) 4);
+        this.getFollowers().add((long) 5);
+        this.getFollowers().add((long) 1);
+        this.getFollowers().add((long) 2);
+        this.getFollowers().add((long) 3);
+
+        //setup following list
+        this.getFollowing().add((long) 1);
+        this.getFollowing().add((long) 2);
+        this.getFollowing().add((long) 3);
+        this.getFollowing().add((long) 4);
+        this.getFollowing().add((long) 5);
 
         //setup party attended list
         this.getAttended().add((long) 1);
@@ -172,7 +183,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
-                this.getFriends(), this.getFriends(), this.getFriends(),
+                this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true);
         party2 = new Party(
                 2,
@@ -182,7 +193,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
-                this.getFriends(), this.getFriends(), this.getFriends(),
+                this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true);
         party3 = new Party(
                 3,
@@ -192,7 +203,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
-                this.getFriends(), this.getFriends(), this.getFriends(),
+                this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true);
         party4 = new Party(
                 4,
@@ -202,7 +213,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
-                this.getFriends(), this.getFriends(), this.getFriends(),
+                this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true);
         party5 = new Party(
                 5,
@@ -212,7 +223,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 Calendar.getInstance(),
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
-                this.getFriends(), this.getFriends(), this.getFriends(),
+                this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true);
 
         party1.getStartingDateTime().set(2017, 2, 6);
@@ -241,7 +252,8 @@ public class DummyUser extends User
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -259,7 +271,8 @@ public class DummyUser extends User
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -277,7 +290,8 @@ public class DummyUser extends User
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -295,7 +309,8 @@ public class DummyUser extends User
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
@@ -313,7 +328,8 @@ public class DummyUser extends User
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //friend list
+                new ArrayList<Long>(), //follower list
+                new ArrayList<Long>(), //following list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list,
@@ -338,7 +354,8 @@ public class DummyUser extends User
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
     }
 
-    public User getDummyUser() {
+    public User getDummyUser()
+    {
         return this;
     }
 

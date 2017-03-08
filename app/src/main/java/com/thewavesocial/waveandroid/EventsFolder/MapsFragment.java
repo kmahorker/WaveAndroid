@@ -229,7 +229,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
         else
         {
-                Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if ( location != null )
+            {
                 LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
                 UtilityClass.updateUserLocation(loc);
                 if (key == 1)
@@ -243,12 +245,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     }
 
                     cur_loc_marker = mMap.addMarker(new MarkerOptions()
-                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon ,150, 150)))
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon, 150, 150)))
                             .position(UtilityClass.getUserLocation()));
                 } else
                 {
                     moveMapCamera(loc);
                 }
+            }
         }
     }
 

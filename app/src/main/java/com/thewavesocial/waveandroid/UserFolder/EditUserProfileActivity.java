@@ -137,7 +137,7 @@ public class EditUserProfileActivity extends AppCompatActivity
         edit_bday.setText( UtilityClass.dateToString(birthday) );
         edit_bday.setFocusable(false);
         edit_address.setText(user.getMapAddress().getAddress_string());
-        profile_pic.setImageDrawable( UtilityClass.convertRoundImage(getResources(),
+        profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(),
                 user.getProfilePic().getBitmap()));
         username.setText(user.getFullName());
     }
@@ -220,7 +220,7 @@ public class EditUserProfileActivity extends AppCompatActivity
             try
             {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                profile_pic.setImageDrawable( UtilityClass.convertRoundImage(getResources(), bitmap) );
+                profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(), bitmap) );
             }
             catch (FileNotFoundException e)
             {

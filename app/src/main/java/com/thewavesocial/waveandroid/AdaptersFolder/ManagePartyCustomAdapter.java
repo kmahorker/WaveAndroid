@@ -58,33 +58,35 @@ public class ManagePartyCustomAdapter extends BaseAdapter
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
+        final Holder holder;
+        View layoutView = convertView;
         if(convertView == null)
         {
-            Holder holder = new Holder();
-
-            View layoutView = inflater.inflate(R.layout.each_manageevent_item, null);
-            holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
-            holder.partydate = (TextView) layoutView.findViewById(R.id.eachManage_partydate_item);
-            holder.partyname.setText(partyList.get(position).getName());
-            holder.partydate.setText( UtilityClass.dateToString(
-                    partyList.get(position).getStartingDateTime()));
-            Log.d("Manage", holder.partyname.getText().toString());
-
-            layoutView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    Intent intent = new Intent(mainActivity, EventStatsActivity.class);
-                    intent.putExtra("partyIDLong", getItem(position).getPartyID());
-                    mainActivity.startActivity(intent);
-                }
-            });
-            return layoutView;
+            layoutView = inflater.inflate(R.layout.each_manageevent_item, null);
+            holder = new Holder();
+            layoutView.setTag(holder);
         }
         else
         {
-            return convertView;
+            holder = (Holder) layoutView.getTag();
         }
+
+        holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
+        holder.partydate = (TextView) layoutView.findViewById(R.id.eachManage_partydate_item);
+        holder.partyname.setText(partyList.get(position).getName());
+        holder.partydate.setText( UtilityClass.dateToString(
+                partyList.get(position).getStartingDateTime()));
+
+        layoutView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                intent.putExtra("partyIDLong", getItem(position).getPartyID());
+                mainActivity.startActivity(intent);
+            }
+        });
+        return layoutView;
     }
 }

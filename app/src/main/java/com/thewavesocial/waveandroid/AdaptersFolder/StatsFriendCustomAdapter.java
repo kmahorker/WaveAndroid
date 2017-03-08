@@ -62,7 +62,7 @@ public class StatsFriendCustomAdapter extends BaseAdapter
             final Holder holder = new Holder();
             View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
             holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
-            holder.img.setImageDrawable(UtilityClass.convertRoundImage(mainActivity.getResources(),
+            holder.img.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
                     userList.get(position).getProfilePic().getBitmap()));
             rowView.setOnClickListener(new View.OnClickListener()
             {

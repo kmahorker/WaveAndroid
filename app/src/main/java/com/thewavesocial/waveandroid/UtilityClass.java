@@ -29,7 +29,8 @@ public final class UtilityClass
 
     public static void hideKeyboard(Activity activity)
     {
-        if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
+        if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null)
+        {
             InputMethodManager imm = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(activity.getWindow().getDecorView().getWindowToken(), 0);
         }
@@ -72,17 +73,17 @@ public final class UtilityClass
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }
 
-    public static RoundedBitmapDrawable convertRoundImage(Resources res, Bitmap bitmap)
+    public static RoundedBitmapDrawable toRoundImage(Resources res, Bitmap bitmap)
     {
         //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
         RoundedBitmapDrawable dr =
                 RoundedBitmapDrawableFactory.create(res,
                         bitmap);
-        dr.setCornerRadius(100);
+        dr.setCircular(true);
         return dr;
     }
 
-    public static void displayAlertMessage( Activity activity, String message, boolean cancelable )
+    public static void printAlertMessage(Activity activity, String message, boolean cancelable )
     {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)

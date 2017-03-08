@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.UserFolder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,23 +14,26 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class UserProfileFragment extends Fragment
 {
     private User user;
-    private TextView college;
-    private TextView age;
-    private ImageView image;
+    private TextView username_textview, followers_textview, following_textview;
+    private ListView notification_listview;
+    private ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
     private HomeActivity mainActivity;
 
@@ -79,16 +83,19 @@ public class UserProfileFragment extends Fragment
     //initialize user information
     private void setupProfileInfo()
     {
-        college = (TextView)getActivity().findViewById(R.id.user_college);
-        college.setText("College: " + user.getCollege());
-        age = (TextView)getActivity().findViewById(R.id.user_age);
-        age.setText("Age: " + computeAge(user.getBirthday()));
-        image = (ImageView)getActivity().findViewById(R.id.profile_pic);
-        image.setImageDrawable( UtilityClass.convertRoundImage(getResources(),
-                user.getProfilePic().getBitmap()));
+        followers_textview = (TextView) mainActivity.findViewById(R.id.user_followers_count);
+        following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
+        username_textview = (TextView) mainActivity.findViewById(R.id.user_name);
+        profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
+        notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
 
-        updatePartiesAttended( CurrentUser.getPartyListObjects(user.getAttended()) );
-        updatePartiesHosted( CurrentUser.getPartyListObjects(user.getHosted()) );
+        followers_textview.setText( CurrentUser.theUser.getFollowers().size() + "" );
+        following_textview.setText( CurrentUser.theUser.getFollowing().size() + "" );
+        username_textview.setText( CurrentUser.theUser.getFullName() );
+        profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(),
+                CurrentUser.theUser.getProfilePic().getBitmap()));
+        notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
+                CurrentUser.theUser.getNotifications()));
     }
 
 //----------------------------------------------------------------------------------Other Sub-tasks
@@ -110,19 +117,5 @@ public class UserProfileFragment extends Fragment
             return year - byear;
         else
             return year - byear - 1;
-    }
-
-    //update parties attended
-    private void updatePartiesAttended(List<Party> list)
-    {
-        ListView partyListView = (ListView)getActivity().findViewById(R.id.events_attended_list);
-        partyListView.setAdapter( new UserPartyCustomAdapter(getActivity(), userProfileFragment, list));
-    }
-
-    //update parties hosted
-    private void updatePartiesHosted(List<Party> list)
-    {
-        ListView partyListView = (ListView)getActivity().findViewById(R.id.events_hosted_list);
-        partyListView.setAdapter( new UserPartyCustomAdapter(getActivity(), userProfileFragment, list));
     }
 }

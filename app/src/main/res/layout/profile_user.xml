@@ -3,83 +3,86 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/friend_profile_layout"
-    android:background="@color/appColor">
+    android:background="#e1e2e2">
 
     <ImageView
-        android:layout_width="120dp"
-        android:id="@+id/profile_pic"
-        android:layout_below="@+id/user_name"
-        android:layout_alignStart="@+id/events_attended_list"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_height="120dp"/> <!-- profile picture-->
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/user_profile_pic"
+        android:background="@drawable/round_shape"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"/> <!-- profile picture-->
 
     <TextView
-        android:text="College: UCSB"
-        android:layout_width="wrap_content"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:id="@+id/user_college"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_toRightOf="@+id/profile_pic"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp"/> <!--college (text)-->
+        android:id="@+id/user_name"
+        android:text="Wei Tung Chen"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:gravity="center"
+        android:layout_below="@id/user_profile_pic"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        android:lines="1"
+        android:ellipsize="end"/> <!-- User name -->
 
     <TextView
-        android:text="Age: 19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/user_age"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@+id/user_college"
-        android:layout_toEndOf="@+id/profile_pic" /> <!--age (text)-->
+        android:id="@+id/user_followers_text"
+        android:text="Followers"
+        android:textColor="#000"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_toEndOf="@id/user_profile_pic"/> <!--Followers Text-->
 
     <TextView
-        android:text="Events attended:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/events_attended_text"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_marginTop="30dp"
-        android:layout_below="@+id/profile_pic"
-        android:layout_marginStart="20dp" /> <!--events attended (text)-->
+        android:id="@+id/user_following_text"
+        android:text="Following"
+        android:textColor="#000"
+        android:gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="35dp"
+        android:layout_toEndOf="@id/user_followers_text"/> <!--Following Text-->
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/user_followers_count"
+        android:text="250"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_shape"
+        android:layout_alignLeft="@id/user_followers_text"
+        android:layout_toEndOf="@id/user_profile_pic"
+        android:layout_below="@id/user_followers_text"/> <!--Followers Count-->
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/user_following_count"
+        android:text="250"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/round_shape"
+        android:layout_alignLeft="@id/user_following_text"
+        android:layout_toEndOf="@id/user_followers_count"
+        android:layout_below="@id/user_following_text"/> <!--Following Count-->
 
     <ListView
         android:layout_width="match_parent"
-        android:id="@+id/events_attended_list"
-        android:layout_height="120dp"
-        android:background="#FFF"
-        android:layout_below="@+id/events_attended_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:scrollbarStyle="insideInset"
-        android:scrollbarFadeDuration="0" /> <!--events attended (list)-->
-
-    <TextView
-        android:text="Events hosted:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/events_hosted_text"
-        android:textSize="22sp"
-        android:textColor="#FFF"
-        android:layout_below="@+id/events_attended_list"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="20dp" /> <!--events hosted (text)-->
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:id="@+id/events_hosted_list"
+        android:layout_height="match_parent"
+        android:id="@+id/user_notification_list"
         android:layout_centerHorizontal="true"
         android:background="#FFF"
-        android:layout_below="@+id/events_hosted_text"
         android:scrollbarStyle="insideInset"
         android:scrollbarFadeDuration="0"
-        android:layout_marginTop="12dp"
-        android:layout_alignStart="@+id/events_attended_list" /> <!--events hosted (list)-->
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/user_name"/> <!--notifications(list)-->
 
 </RelativeLayout>

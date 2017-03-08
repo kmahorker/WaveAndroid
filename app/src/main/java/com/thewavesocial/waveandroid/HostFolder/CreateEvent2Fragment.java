@@ -90,7 +90,7 @@ public class CreateEvent2Fragment extends Fragment
             {
                 if (partyname.getText().toString().isEmpty())
                 {
-                    UtilityClass.displayAlertMessage(mainActivity, "Please specify your party name.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Please specify your party name.", true);
                 }
                 else
                 {

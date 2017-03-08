@@ -54,7 +54,7 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-        holder.imgView.setImageDrawable(UtilityClass.convertRoundImage(mainActivity.getResources(),
+        holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
                 userList.get(position).getProfilePic().getBitmap()));
         holder.imgView.setOnClickListener(new View.OnClickListener()
         {

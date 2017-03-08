@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity
             if ( Integer.parseInt(json.getString("age_range").substring(
                     json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 18 )
             {
-                UtilityClass.displayAlertMessage(this, "Sorry. This app is limited to 18+ (College Students) only.", true);
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 18+ (College Students) only.", true);
                 return;
             }
             else
@@ -183,12 +183,12 @@ public class LoginActivity extends AppCompatActivity
                     }
                     else
                     {
-                        UtilityClass.displayAlertMessage(mainActivity, "Incorrect Password. Please try again.", true);
+                        UtilityClass.printAlertMessage(mainActivity, "Incorrect Password. Please try again.", true);
                     }
                 }
                 else
                 {
-                    UtilityClass.displayAlertMessage(mainActivity, "Unrecognized Email. Please create an account.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Unrecognized Email. Please create an account.", true);
                 }
             }
         });

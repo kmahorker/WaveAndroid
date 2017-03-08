@@ -7,9 +7,9 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 public class Notification
 {
     public static final int type0GeneralRequests = 0;
-    public static final int type1FriendRequests = 1;
-    public static final int type2HostingRequests = 2;
-    public static final int type3InviteRequests = 3;
+    public static final int type1FollowingNotice = 1;
+    public static final int type2HostingNotice = 2;
+    public static final int type3AttendingNotice = 3;
     private String message;
     private int requestType;
     private long senderID;
@@ -20,9 +20,24 @@ public class Notification
         requestType = 0;
     }
 
-    public Notification( String message, long senderID, int requestType )
+    public Notification( long senderID, int requestType )
     {
-        this.message = message;
+        if ( requestType == type1FollowingNotice )
+        {
+            message = "started following you.";
+        }
+        else if ( requestType == type2HostingNotice )
+        {
+            message = "is hosting a party.";
+        }
+        else if ( requestType == type3AttendingNotice )
+        {
+            message = "is going to a party near you.";
+        }
+        else
+        {
+            message = "No Content";
+        }
         this.requestType = requestType;
         this.senderID = senderID;
     }

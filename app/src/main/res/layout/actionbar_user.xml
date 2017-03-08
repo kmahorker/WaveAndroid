@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/actionbar_user_image_plug"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/plug_icon"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
@@ -21,6 +21,6 @@
         android:text="Social"
         android:layout_centerInParent="true"
         android:textColor="@color/appColor"
-        android:textSize="24sp"/> <!--Username (Text)-->
+        android:textSize="18sp"/> <!--Username (Text)-->
 
 </RelativeLayout>

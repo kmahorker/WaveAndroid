@@ -35,7 +35,7 @@ public class FriendsListFragment extends Fragment
     {
         FriendsListFragment fragment = new FriendsListFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM1, friendsList);
+        //args.putParcelableArrayList(ARG_PARAM1, friendsList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +58,7 @@ public class FriendsListFragment extends Fragment
         ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
-        final List<User> friendsUsers = dummy.getFriendsListObjects(dummy.getFriends());
+        final List<User> friendsUsers = dummy.getFriendsListObjects(dummy.getFollowers());
         final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
         friendsListView.setAdapter(adapt);
 

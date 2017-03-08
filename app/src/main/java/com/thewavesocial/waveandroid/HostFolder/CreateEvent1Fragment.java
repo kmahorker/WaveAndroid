@@ -330,15 +330,15 @@ public class CreateEvent1Fragment extends Fragment
                         editLocation.getText().toString().isEmpty() ||
                         editPrice.getText().toString().isEmpty() )
                 {
-                    UtilityClass.displayAlertMessage(mainActivity, "Please enter all the party information.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Please enter all the party information.", true);
                 }
                 else if ( mainActivity.endCalendar.compareTo( mainActivity.startCalendar ) < 0 )
                 {
-                    UtilityClass.displayAlertMessage(mainActivity, "Your ending time should come after your starting time.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Your ending time should come after your starting time.", true);
                 }
                 else if ( mainActivity.maleCount + mainActivity.femaleCount == 0 )
                 {
-                    UtilityClass.displayAlertMessage(mainActivity, "Please specify the numbers of males and females", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Please specify the numbers of males and females", true);
                 }
 //                else if ( latlng == null )
 //                {
@@ -346,7 +346,7 @@ public class CreateEvent1Fragment extends Fragment
 //                    fieldAlert.setMessage("Please specify a valid address.")
 //                            .setCancelable(true)
 //                            .show();
-//                UtilityClass.displayAlertMessage(mainActivity, "Please specify a valid address.", true);
+//                UtilityClass.printAlertMessage(mainActivity, "Please specify a valid address.", true);
 //                    Log.d("Nope", "Invalid");
 //                }
                 else

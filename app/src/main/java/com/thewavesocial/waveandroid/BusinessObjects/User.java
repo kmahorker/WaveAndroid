@@ -20,7 +20,9 @@ import java.util.Queue;
  * 3. Changed DateTime to Date
  * - Wei Tung
  */
-public class User implements Parcelable {
+//public class User implements Parcelable
+public class User
+{
     private long userID;
     private String firstName;
     private String lastName;
@@ -32,13 +34,14 @@ public class User implements Parcelable {
     private MapAddress mapAddress;
     private Calendar birthday;
     private List<Long> bestFriends;
-    private List<Long> friends;
+    private List<Long> followers;
+    private List<Long> following;
     //Below contain list of PartyIDs
     private List<Long> attended;
     private List<Long> hosted;
     private List<Long> bounced;
     private List<Long> signedUp;
-    private Queue<Notification> notifications;
+    private List<Notification> notifications;
     private BitmapDrawable profilePic;
 
     public User()
@@ -54,6 +57,8 @@ public class User implements Parcelable {
         mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<Long>();
+        followers = new ArrayList<>();
+        following = new ArrayList<>();
         attended = new ArrayList<Long>();
         hosted = new ArrayList<Long>();
         bounced = new ArrayList<Long>();
@@ -72,13 +77,14 @@ public class User implements Parcelable {
                 long phone,
                 MapAddress mapAddress,
                 Calendar birthday,
-                List<Long> friends,
+                List<Long> followers,
+                List<Long> following,
                 List<Long> bestFriends,
                 List<Long> attended,
                 List<Long> hosted,
                 List<Long> bounced,
                 List<Long> signedUp,
-                Queue<Notification> notifications,
+                List<Notification> notifications,
                 BitmapDrawable profilePic)
     {
         this.userID = userID;
@@ -90,8 +96,9 @@ public class User implements Parcelable {
         this.gender = gender;
         this.phone = phone;
         this.mapAddress = mapAddress;
-        this.birthday = Calendar.getInstance();
-        this.friends = friends;
+        this.birthday = birthday;
+        this.followers = followers;
+        this.following = following;
         this.bestFriends = bestFriends;
         this.attended = attended;
         this.hosted = hosted;
@@ -99,58 +106,6 @@ public class User implements Parcelable {
         this.signedUp = signedUp;
         this.notifications = notifications;
         this.profilePic = profilePic;
-    }
-
-    //Deleting Block
-    public boolean removeFriend(long friendIDToRemove)
-    {
-        return friends.remove(friendIDToRemove);
-    }
-
-    public boolean removeBestFriend(long bestFriendIDToRemove)
-    {
-
-        return bestFriends.remove(bestFriendIDToRemove);
-    }
-
-    public boolean removeAttended(long attendedIDToRemove)
-    {
-        return attended.remove(attendedIDToRemove);
-    }
-
-    public boolean removeHosted(long hostedIDToRemove)
-    {
-        return hosted.remove(hostedIDToRemove);
-    }
-
-    public boolean removeBounced(long bouncedIDToRemove)
-    {
-        return bounced.remove(bouncedIDToRemove);
-    }
-
-    //Adding Block
-    public void addFriend(long friendID)
-    {
-        this.friends.add(friendID);
-    }
-    public void addBestFriend(long bestFriendID)
-    {
-        this.bestFriends.add(bestFriendID);
-    }
-
-    public void addAttended(long attendedPartyID)
-    {
-        this.attended.add(attendedPartyID);
-    }
-
-    public void addHosted(long hostedPartyID)
-    {
-        this.hosted.add(hostedPartyID);
-    }
-
-    public void addBounced(long bouncedPartyID)
-    {
-        this.bounced.add(bouncedPartyID);
     }
 
     //Setter Block
@@ -197,11 +152,6 @@ public class User implements Parcelable {
     public void setBirthday(Calendar birthday)
     {
         this.birthday = Calendar.getInstance();
-    }
-
-    public void setFriends(List<Long> friends)
-    {
-        this.friends = friends;
     }
 
     public void setBestFriends(List<Long> bestFriends)
@@ -276,11 +226,6 @@ public class User implements Parcelable {
         return birthday;
     }
 
-    public List<Long> getFriends()
-    {
-        return friends;
-    }
-
     public List<Long> getBestFriends()
     {
         return bestFriends;
@@ -302,128 +247,23 @@ public class User implements Parcelable {
     }
 
 
-    public List<Long> getSignedUp() {
+    public List<Long> getSignedUp()
+    {
         return signedUp;
     }
 
-
-    public BitmapDrawable getProfilePic() { return profilePic; }
-
-    //http://www.parcelabler.com/
-    //Allows putExtra(String, Parcelable Obj)
-    protected User(Parcel in) {
-        userID = in.readLong();
-        firstName = in.readString();
-        lastName = in.readString();
-        email = in.readString();
-        password = in.readString();
-        college = in.readString();
-        gender = in.readString();
-        //mapAddress = in.readString();
-        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
-        if (in.readByte() == 0x01) {
-            bestFriends = new ArrayList<Long>();
-            in.readList(bestFriends, Long.class.getClassLoader());
-        } else {
-            bestFriends = null;
-        }
-        if (in.readByte() == 0x01) {
-            friends = new ArrayList<Long>();
-            in.readList(friends, Long.class.getClassLoader());
-        } else {
-            friends = null;
-        }
-        if (in.readByte() == 0x01) {
-            attended = new ArrayList<Long>();
-            in.readList(attended, Long.class.getClassLoader());
-        } else {
-            attended = null;
-        }
-        if (in.readByte() == 0x01) {
-            hosted = new ArrayList<Long>();
-            in.readList(hosted, Long.class.getClassLoader());
-        } else {
-            hosted = null;
-        }
-        if (in.readByte() == 0x01) {
-            bounced = new ArrayList<Long>();
-            in.readList(bounced, Long.class.getClassLoader());
-        } else {
-            bounced = null;
-        }
-        Bitmap bitmap = (Bitmap)in.readParcelable(getClass().getClassLoader());
-        profilePic = new BitmapDrawable(bitmap);
+    public BitmapDrawable getProfilePic()
+    {
+        return profilePic;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(userID);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(email);
-        dest.writeString(password);
-        dest.writeString(college);
-        dest.writeString(gender);
-        //dest.writeString(mapAddress);
-        dest.writeValue(birthday);
-        if (bestFriends == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(bestFriends);
-        }
-        if (friends == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(friends);
-        }
-        if (attended == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(attended);
-        }
-        if (hosted == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(hosted);
-        }
-        if (bounced == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(bounced);
-        }
-        Bitmap bitmap = profilePic.getBitmap();
-        dest.writeParcelable(bitmap, flags);
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    public Queue<Notification> getNotifications()
+    public List<Notification> getNotifications()
     {
         return notifications;
     }
 
-    public void setNotifications(Queue<Notification> notifications)
+    public void setNotifications(List<Notification> notifications)
     {
         this.notifications = notifications;
     }
@@ -437,4 +277,133 @@ public class User implements Parcelable {
     {
         this.phone = phone;
     }
+
+    public List<Long> getFollowers()
+    {
+        return followers;
+    }
+
+    public void setFollowers(List<Long> followers)
+    {
+        this.followers = followers;
+    }
+
+    public List<Long> getFollowing()
+    {
+        return following;
+    }
+
+    public void setFollowing(List<Long> following)
+    {
+        this.following = following;
+    }
+
+    //    //http://www.parcelabler.com/
+//    //Allows putExtra(String, Parcelable Obj)
+//    protected User(Parcel in) {
+//        userID = in.readLong();
+//        firstName = in.readString();
+//        lastName = in.readString();
+//        email = in.readString();
+//        password = in.readString();
+//        college = in.readString();
+//        gender = in.readString();
+//        //mapAddress = in.readString();
+//        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
+//        if (in.readByte() == 0x01) {
+//            bestFriends = new ArrayList<Long>();
+//            in.readList(bestFriends, Long.class.getClassLoader());
+//        } else {
+//            bestFriends = null;
+//        }
+//        if (in.readByte() == 0x01) {
+//            followers = new ArrayList<Long>();
+//            in.readList(followers, Long.class.getClassLoader());
+//        } else {
+//            followers = null;
+//        }
+//        if (in.readByte() == 0x01) {
+//            attended = new ArrayList<Long>();
+//            in.readList(attended, Long.class.getClassLoader());
+//        } else {
+//            attended = null;
+//        }
+//        if (in.readByte() == 0x01) {
+//            hosted = new ArrayList<Long>();
+//            in.readList(hosted, Long.class.getClassLoader());
+//        } else {
+//            hosted = null;
+//        }
+//        if (in.readByte() == 0x01) {
+//            bounced = new ArrayList<Long>();
+//            in.readList(bounced, Long.class.getClassLoader());
+//        } else {
+//            bounced = null;
+//        }
+//        Bitmap bitmap = (Bitmap)in.readParcelable(getClass().getClassLoader());
+//        profilePic = new BitmapDrawable(bitmap);
+//    }
+//
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeLong(userID);
+//        dest.writeString(firstName);
+//        dest.writeString(lastName);
+//        dest.writeString(email);
+//        dest.writeString(password);
+//        dest.writeString(college);
+//        dest.writeString(gender);
+//        //dest.writeString(mapAddress);
+//        dest.writeValue(birthday);
+//        if (bestFriends == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(bestFriends);
+//        }
+//        if (followers == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(followers);
+//        }
+//        if (attended == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(attended);
+//        }
+//        if (hosted == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(hosted);
+//        }
+//        if (bounced == null) {
+//            dest.writeByte((byte) (0x00));
+//        } else {
+//            dest.writeByte((byte) (0x01));
+//            dest.writeList(bounced);
+//        }
+//        Bitmap bitmap = profilePic.getBitmap();
+//        dest.writeParcelable(bitmap, flags);
+//    }
+//
+//    @SuppressWarnings("unused")
+//    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+//        @Override
+//        public User createFromParcel(Parcel in) {
+//            return new User(in);
+//        }
+//
+//        @Override
+//        public User[] newArray(int size) {
+//            return new User[size];
+//        }
+//    };
 }

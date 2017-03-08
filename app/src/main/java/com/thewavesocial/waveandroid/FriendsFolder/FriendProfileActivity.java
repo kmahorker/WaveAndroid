@@ -66,7 +66,7 @@ public class FriendProfileActivity extends AppCompatActivity
         ImageView image = (ImageView)findViewById(R.id.profile_pic);
 
         username.setText("College: " + friend.getCollege());
-        image.setImageDrawable(UtilityClass.convertRoundImage(getResources(),
+        image.setImageDrawable(UtilityClass.toRoundImage(getResources(),
                 friend.getProfilePic().getBitmap()));
 
         updateAge(friend.getBirthday());

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:background="@drawable/round_shape"
+                android:background="@drawable/round_corner"
                 android:paddingTop="5dp"
                 android:paddingBottom="10dp"
                 android:paddingEnd="10dp"
@@ -14,7 +14,7 @@
         android:text="PartyTitle"
         android:gravity="center"
         android:textSize="20sp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_title"/> <!--Party Title-->
 
     <TextView
@@ -23,7 +23,7 @@
         android:text="Host: Sam Gaucho"
         android:textSize="20sp"
         android:layout_marginStart="5dp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_host"
         android:layout_below="@id/marker_title"/> <!--Host -->
 
@@ -33,7 +33,7 @@
         android:text="Location: 123 Beach Dr."
         android:textSize="20sp"
         android:layout_marginStart="5dp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_loc"
         android:layout_below="@id/marker_host"
         android:lines="1"
@@ -45,7 +45,7 @@
         android:text="Time: 09:30AM - 12:30PM"
         android:textSize="20sp"
         android:layout_marginStart="5dp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_time"
         android:layout_below="@id/marker_loc"
         android:lines="1"
@@ -57,7 +57,7 @@
         android:text="Open spot: 4"
         android:textSize="20sp"
         android:layout_marginStart="5dp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_spot"
         android:layout_below="@id/marker_time"
         android:lines="1"
@@ -69,7 +69,7 @@
         android:text="     Price: $5"
         android:textSize="20sp"
         android:layout_marginStart="5dp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:id="@+id/marker_price"
         android:layout_alignBottom="@id/marker_spot"
         android:layout_toEndOf="@id/marker_spot"
