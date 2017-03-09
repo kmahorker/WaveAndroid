@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.EventsFolder.MyEventsFragment;
+import com.thewavesocial.waveandroid.SearchFolder.MyEventsFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

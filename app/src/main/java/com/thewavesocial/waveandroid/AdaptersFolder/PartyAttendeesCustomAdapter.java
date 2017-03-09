@@ -6,10 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.EventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.SearchFolder.PartyProfileFragment;
 import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -19,11 +22,11 @@ import java.util.List;
 
 public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAttendeesCustomAdapter.ViewHolder>
 {
-    private PartyProfileActivity mainActivity;
+    private HomeActivity mainActivity;
     private List<User> userList = new ArrayList<>();
     private static LayoutInflater inflater;
 
-    public PartyAttendeesCustomAdapter(PartyProfileActivity mainActivity, List<User> userList)
+    public PartyAttendeesCustomAdapter(HomeActivity mainActivity, List<User> userList)
     {
         super();
         this.userList = userList;

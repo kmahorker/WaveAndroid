@@ -208,7 +208,7 @@ public class DummyUser extends User
                 true, null );
         party4 = new Party(
                 4,
-                "Super Party 4 LongName for layout TESTING Text wrapping Multiple Lines Longer Event Here",
+                "Super Party 4 LongName for layout TESTING Text wrapping Multiple Lines Longer Event Here Making It Longer!",
                 50,
                 "Super Mario",
                 Calendar.getInstance(),

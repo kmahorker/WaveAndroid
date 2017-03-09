@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.EventsFolder.PartyProfileActivity;
+import com.thewavesocial.waveandroid.SearchFolder.PartyProfileFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -77,7 +77,7 @@ public class UserPartyCustomAdapter extends BaseAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    Intent intent = new Intent(mainActivity, PartyProfileActivity.class);
+                    Intent intent = new Intent(mainActivity, PartyProfileFragment.class);
                     intent.putExtra("partyIDLong", getItem(position).getPartyID());
                     mainActivity.startActivity(intent);
                 }

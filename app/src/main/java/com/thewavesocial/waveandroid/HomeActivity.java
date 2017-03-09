@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.EventsFolder.MapsFragment;
+import com.thewavesocial.waveandroid.SearchFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 

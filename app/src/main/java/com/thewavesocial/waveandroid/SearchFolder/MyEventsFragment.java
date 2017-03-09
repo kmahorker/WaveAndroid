@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.EventsFolder;
+package com.thewavesocial.waveandroid.SearchFolder;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -15,7 +15,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -104,7 +103,7 @@ public class MyEventsFragment extends Fragment {
     }
 
     public void showPartyProfilePage(Party clickedParty){
-        Intent intent = new Intent(getActivity(), PartyProfileActivity.class);
+        Intent intent = new Intent(getActivity(), PartyProfileFragment.class);
         intent.putExtra("partyIDLong", clickedParty.getPartyID());
         startActivity(intent);
     }

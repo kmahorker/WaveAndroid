@@ -25,7 +25,7 @@
         </activity>
         <activity android:name=".LoginFolder.SignupActivity" />
         <activity android:name=".FriendsFolder.FriendProfileActivity"/>
-       <!--- <activity android:name=".EventsFolder.PartyProfileActivity"/> -->
+       <!--- <activity android:name=".EventsFolder.PartyProfileFragment"/> -->
         <activity android:name=".FriendsFolder.InviteFriendsActivity"/>
         <activity android:name=".UserFolder.EditUserProfileActivity"/>
         <activity android:name=".HostFolder.CreateEventActivity"/>

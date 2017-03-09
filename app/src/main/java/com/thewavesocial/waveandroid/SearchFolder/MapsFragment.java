@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.EventsFolder;
+package com.thewavesocial.waveandroid.SearchFolder;
 
 import android.Manifest;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -40,8 +42,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter,
-        GoogleMap.OnInfoWindowClickListener, View.OnTouchListener
+public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener
 {
     private List<Long> partyList;
     private Party curParty;
@@ -67,15 +69,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         partyList = user.getAttended();
 
         setupFloatingButtons();
-
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
-        mapFragment.getMapAsync(this);
-        locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        cur_loc_marker = null;
+        setupMapElements();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
-
         view.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -87,13 +83,35 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         });
     }
 
+    private void openPartyProfile(long partyID )
+    {
+        Fragment fragment = new PartyProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong("partyIDLong", partyID);
+        fragment.setArguments(bundle);
+
+        FragmentManager fm = mainActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
+        transaction.commit();
+    }
+
+    private void setupMapElements()
+    {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
+        mapFragment.getMapAsync(this);
+        locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        cur_loc_marker = null;
+    }
+
     @Override
     //triggered when map is ready
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-        mMap.setInfoWindowAdapter(this);
-        mMap.setOnInfoWindowClickListener(this);
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
         updateUserLoc(1);
 
         addParties(googleMap, partyList);
@@ -152,71 +170,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker)
+    public boolean onMarkerClick(Marker marker)
     {
-        Intent intent = new Intent(mainActivity, PartyProfileActivity.class);
-        intent.putExtra("partyIDLong", (long) marker.getTag());
-        mainActivity.startActivity(intent);
-    }
-
-    @Override
-    public View getInfoWindow(Marker marker)
-    {
+        UtilityClass.hideKeyboard(mainActivity);
         if ( marker.getTag() == null )
         {
-            int size = (int)((Math.random()+2)) * 250;
-            Log.d("Wow", size + "");
-            cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
-            return null;
+            mainActivity.mPager.setCurrentItem(mainActivity.mPager.getCurrentItem()+1);
         }
-        View view = View.inflate(getContext(), R.layout.home_maps_marker, null);
-        curParty = CurrentUser.getPartyObject((long) marker.getTag());
-
-        TextView title = (TextView) view.findViewById(R.id.marker_title);
-        TextView host = (TextView) view.findViewById(R.id.marker_host);
-        TextView loc = (TextView) view.findViewById(R.id.marker_loc);
-        TextView time = (TextView) view.findViewById(R.id.marker_time);
-        TextView spot = (TextView) view.findViewById(R.id.marker_spot);
-        TextView price = (TextView) view.findViewById(R.id.marker_price);
-
-        title.setText(curParty.getName());
-        host.setText("Host: " + curParty.getHostName());
-        loc.setText("Location: " + curParty.getMapAddress().getAddress_string());
-        time.setText("Time: " + UtilityClass.timeToString(curParty.getStartingDateTime()) + " - " +
-                UtilityClass.timeToString(curParty.getEndingDateTime()));
-        spot.setText("Spot: " + "Not implemented");
-        price.setText("   Price: $" + curParty.getPrice());
-        return view;
+        else
+        {
+            openPartyProfile((long) marker.getTag());
+        }
+        return true;
     }
 
+
     @Override
-    public View getInfoContents(Marker marker)
+    public void onMapClick(LatLng latLng)
     {
-        if ( marker.getTag() == null )
-        {
-            int size = (int)((Math.random()*2+1)) * 250;
-            Log.d("Wow", size + "");
-            cur_loc_marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.profile_sample, size, size)));
-            return null;
-        }
-        View view = View.inflate(getContext(), R.layout.home_maps_marker, null);
-        curParty = CurrentUser.getPartyObject((long) marker.getTag());
-
-        TextView title = (TextView) view.findViewById(R.id.marker_title);
-        TextView host = (TextView) view.findViewById(R.id.marker_host);
-        TextView loc = (TextView) view.findViewById(R.id.marker_loc);
-        TextView time = (TextView) view.findViewById(R.id.marker_time);
-        TextView spot = (TextView) view.findViewById(R.id.marker_spot);
-        TextView price = (TextView) view.findViewById(R.id.marker_price);
-
-        title.setText(curParty.getName());
-        host.setText("Host: " + curParty.getHostName());
-        loc.setText("Location: " + curParty.getMapAddress().getAddress_string());
-        time.setText("Time: " + UtilityClass.timeToString(curParty.getStartingDateTime()) + " - " +
-                UtilityClass.timeToString(curParty.getEndingDateTime()));
-        spot.setText("Spot: " + "Not implemented");
-        price.setText("   Price: $" + curParty.getPrice());
-        return view;
+        UtilityClass.hideKeyboard(mainActivity);
     }
 
 //--------------------------------------------------------------------------------------GPS Methods
@@ -311,7 +283,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public boolean onTouch(View view, MotionEvent event)
     {
         int y = (int) event.getRawY();
-        if ( y < 1730 && y > 320 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
+        if ( y < 1000 )
+        {
+            PartyProfileFragment.updateAttendeeImages();
+        }
+        if ( y < 1730 && y > 350 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
         {
             switch (event.getAction() & MotionEvent.ACTION_MASK)
             {
@@ -343,6 +319,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             }
             getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
         }
+        UtilityClass.hideKeyboard(mainActivity);
         return true;
     }
 }
