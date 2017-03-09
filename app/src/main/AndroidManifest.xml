@@ -17,9 +17,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
 
-        <activity android:name=".LoginFolder.LoginActivity"/>
+        <activity android:name=".LoginFolder.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".LoginFolder.SignupActivity" />
         <activity android:name=".FriendsFolder.FriendProfileActivity"/>
-        <activity android:name=".EventsFolder.PartyProfileActivity"/>
+       <!--- <activity android:name=".EventsFolder.PartyProfileActivity"/> -->
         <activity android:name=".FriendsFolder.InviteFriendsActivity"/>
         <activity android:name=".UserFolder.EditUserProfileActivity"/>
         <activity android:name=".HostFolder.CreateEventActivity"/>
@@ -34,10 +40,7 @@
 
         <activity android:name=".HomeActivity"
                   android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
     </application>
 
