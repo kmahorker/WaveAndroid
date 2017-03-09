@@ -283,7 +283,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public boolean onTouch(View view, MotionEvent event)
     {
         int y = (int) event.getRawY();
-        if ( y < 1000 )
+        if ( y < 1157 )
         {
             PartyProfileFragment.updateAttendeeImages();
         }

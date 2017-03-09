@@ -86,6 +86,7 @@ public class PartyProfileFragment extends Fragment
         hostname = (TextView) mainActivity.findViewById(R.id.partyprofile_host);
         datetime = (TextView) mainActivity.findViewById(R.id.partyprofile_time);
         location = (TextView) mainActivity.findViewById(R.id.partyprofile_location);
+        price = (TextView) mainActivity.findViewById(R.id.partyprofile_price);
         goButton = (Button) mainActivity.findViewById(R.id.partyprofile_go_button);
         attendingFriends = (RecyclerView) mainActivity.findViewById(R.id.partyprofile_attendee_list);
         hostedEvents = (ListView) mainActivity.findViewById(R.id.partyprofile_eventsHosted_list);
@@ -95,6 +96,7 @@ public class PartyProfileFragment extends Fragment
         datetime.setText(UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
                         UtilityClass.timeToString(party.getEndingDateTime()));
         location.setText(party.getMapAddress().getAddress_string());
+        price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList(); //added friend list 3 times for testing purpose
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));

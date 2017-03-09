@@ -135,4 +135,16 @@ public final class UtilityClass
         }
         return p1;
     }
+
+    public static String priceToString(double price)
+    {
+        if ( (int)price == price )
+        {
+            return "$" + (int)price;
+        }
+        else
+        {
+            return "$" + price;
+        }
+    }
 }

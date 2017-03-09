@@ -64,8 +64,7 @@
         android:layout_toEndOf="@id/partyprofile_location_label"
         android:layout_below="@id/partyprofile_host"
         android:layout_marginTop="5dp"
-        android:lines = "1"
-        android:ellipsize="end"/> <!--Location Name-->
+        android:lines = "1"/> <!--Location Name-->
 
     <TextView
         android:id="@+id/partyprofile_time_label"
