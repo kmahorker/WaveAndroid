@@ -78,6 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
+                dragSeparator( mapHeight-180, 0 );
                 return true;
             }
         });
@@ -90,7 +91,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             {
                 myMapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 mapHeight = myMapLayout.getHeight();
-                dragSeparator( myMapLayout.getHeight()/2-180, 0 );
+                dragSeparator( mapHeight-180, 0 );
             }
         });
     }
@@ -181,6 +182,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public void onMapClick(LatLng latLng)
     {
         UtilityClass.hideKeyboard(mainActivity);
+        dragSeparator( mapHeight-180, 0 );
     }
 
     public void updateUserLoc(int key)
@@ -275,7 +277,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if ( y < UtilityClass.getScreenHeight(mainActivity)-180 && y > 350
+        if ( y < UtilityClass.getScreenHeight(mainActivity)-180
+                && y > UtilityClass.getScreenHeight(mainActivity) - mapHeight + 30
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
         {
             switch (event.getAction() & MotionEvent.ACTION_MASK)
@@ -292,6 +295,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             }
         }
         UtilityClass.hideKeyboard(mainActivity);
+        dragSeparator( mapHeight-180, 0 );
         return true;
     }
 
