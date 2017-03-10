@@ -136,7 +136,7 @@
         android:text="Friends that are also going"
         android:textColor="#8e8e8e"
         android:textSize="17sp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/partyprofile_price_label"/> <!--Attendee Label-->
 
     <android.support.v7.widget.RecyclerView
@@ -154,7 +154,7 @@
         android:text="Events Hosted"
         android:textColor="#8e8e8e"
         android:textSize="17sp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/partyprofile_attendee_list"/> <!--Hosted Label-->
 
     <ListView

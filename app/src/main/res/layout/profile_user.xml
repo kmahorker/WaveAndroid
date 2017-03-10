@@ -60,7 +60,7 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/round_shape"
+        android:background="@drawable/round_shape_shadow"
         android:layout_alignLeft="@id/user_followers_text"
         android:layout_toEndOf="@id/user_profile_pic"
         android:layout_below="@id/user_followers_text"/> <!--Followers Count-->
@@ -73,7 +73,7 @@
         android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:background="@drawable/round_shape"
+        android:background="@drawable/round_shape_shadow"
         android:layout_alignLeft="@id/user_following_text"
         android:layout_toEndOf="@id/user_followers_count"
         android:layout_below="@id/user_following_text"/> <!--Following Count-->

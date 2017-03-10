@@ -26,6 +26,7 @@
         android:padding="10dp"
         android:dividerHeight="10dp"
         android:divider="@color/backgroundColor"
+        android:scrollbarStyle="outsideOverlay"
         android:layout_below="@id/home_hostView_view_extraSpace"
         android:layout_above="@id/home_hostView_image_createEvent"/>
 

@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:background="@color/appColor"
+    android:background="#FFF"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
@@ -19,7 +19,7 @@
         android:id="@+id/login_edittext_email"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:background="#b9ffffff"
+        android:background="@drawable/round_corner"
         android:layout_marginTop="15dp"
         android:paddingLeft="10dp"/>  <!-- Login Field-->
 
@@ -29,7 +29,7 @@
         android:id="@+id/login_edittext_password"
         android:hint="Password"
         android:inputType="textPassword"
-        android:background="#b9ffffff"
+        android:background="@drawable/round_corner"
         android:layout_marginTop="15dp"
         android:paddingLeft="10dp"/> <!-- Password Field-->
 
@@ -39,7 +39,7 @@
         android:id="@+id/login_text_forgotpassword"
         android:text="Forgot your password?"
         android:textSize="18sp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:layout_marginLeft="40dp"
         android:padding="5dp"
         android:layout_gravity="left"/> <!-- Forgot Password-->
@@ -50,7 +50,7 @@
         android:id="@+id/login_button"
         android:layout_marginTop="10dp"
         android:text="Log In"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:textSize="25sp"
         android:background="@drawable/round_button"/> <!-- Login Button-->
 
@@ -75,7 +75,7 @@
         android:id="@+id/login_text_signup"
         android:text="Don't have an account? Sign up here"
         android:textSize="15sp"
-        android:textColor="#FFF"
+        android:textColor="#000"
         android:padding="10dp"
         android:layout_marginTop="50dp"/> <!-- Sign up-->
 

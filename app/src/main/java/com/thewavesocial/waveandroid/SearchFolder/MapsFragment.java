@@ -2,7 +2,6 @@ package com.thewavesocial.waveandroid.SearchFolder;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,9 +20,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,6 +48,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     private Party curParty;
     private HomeActivity mainActivity;
     private int yDelta;
+    private int mapHeight;
 
     private GoogleMap mMap;
     private LocationManager locManager;
@@ -67,13 +67,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mainActivity = (HomeActivity)getActivity();
         User user = CurrentUser.theUser;
         partyList = user.getAttended();
+        Log.d("Size", UtilityClass.getScreenHeight(mainActivity)+"");
 
         setupFloatingButtons();
         setupMapElements();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
-        view.setOnTouchListener(new View.OnTouchListener()
-        {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
@@ -81,19 +81,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 return true;
             }
         });
-    }
-
-    private void openPartyProfile(long partyID )
-    {
-        Fragment fragment = new PartyProfileFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong("partyIDLong", partyID);
-        fragment.setArguments(bundle);
-
-        FragmentManager fm = mainActivity.getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
-        transaction.commit();
+        final View myMapLayout = getActivity().findViewById(R.id.home_mapsView_relativeLayout);
+        myMapLayout.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
+        {
+            @Override
+            public void onGlobalLayout()
+            {
+                myMapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mapHeight = myMapLayout.getHeight();
+                dragSeparator( myMapLayout.getHeight()/2-180, 0 );
+            }
+        });
     }
 
     private void setupMapElements()
@@ -131,8 +130,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         super.onDetach();
     }
 
-    //----------------------------------------------------------------------------------Party Functions
-
     // Add a marker to UCSB and move the camera
     public void addParty(long partyID, LatLng loc)
     {
@@ -153,8 +150,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         }
     }
 
-//------------------------------------------------------------------------------------Map Functions
-
     //move camera with specified loc
     public void moveMapCamera(LatLng loc)
     {
@@ -173,25 +168,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public boolean onMarkerClick(Marker marker)
     {
         UtilityClass.hideKeyboard(mainActivity);
-        if ( marker.getTag() == null )
-        {
-            mainActivity.mPager.setCurrentItem(mainActivity.mPager.getCurrentItem()+1);
-        }
-        else
+        if ( marker.getTag() != null )
         {
             openPartyProfile((long) marker.getTag());
+            dragSeparator( 185, 0 );
         }
+        moveMapCamera(marker.getPosition());
         return true;
     }
-
 
     @Override
     public void onMapClick(LatLng latLng)
     {
         UtilityClass.hideKeyboard(mainActivity);
     }
-
-//--------------------------------------------------------------------------------------GPS Methods
 
     public void updateUserLoc(int key)
     {
@@ -251,8 +241,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         }
     }
 
-//-----------------------------------------------------------------------------------Setup Methods
-
     //setup sos and curloc buttons
     private void setupFloatingButtons()
     {
@@ -287,7 +275,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if ( y < 1730 && y > 350 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
+        if ( y < UtilityClass.getScreenHeight(mainActivity)-180 && y > 350
+                && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused())
         {
             switch (event.getAction() & MotionEvent.ACTION_MASK)
             {
@@ -297,29 +286,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
-                case MotionEvent.ACTION_POINTER_DOWN:
-                    break;
-                case MotionEvent.ACTION_POINTER_UP:
-                    break;
                 case MotionEvent.ACTION_MOVE:
-                    RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    Log.d("1", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
-
-                    layoutParams2.bottomMargin = (y - yDelta);
-                    Log.d("2", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
-
-                    layoutParams2.topMargin = -layoutParams2.bottomMargin;
-                    Log.d("3", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
-
-                    view.setLayoutParams(layoutParams2);
-                    Log.d("4", layoutParams2.topMargin + ", " + layoutParams2.bottomMargin + ", " + y + ", " + yDelta);
-
-                    view.animate().translationY(y - yDelta).setDuration(0);
+                    dragSeparator(y-yDelta, 0);
                     break;
             }
-            getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
         }
         UtilityClass.hideKeyboard(mainActivity);
         return true;
+    }
+
+    private void dragSeparator(int distance, int duration)
+    {
+        // TODO: 03/09/2017 Think about adding other views inside drag bar
+        Log.d("Distance", distance+"");
+        View separator = getActivity().findViewById(R.id.home_mapsView_separator);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();
+        layoutParams.bottomMargin = distance;
+        layoutParams.topMargin = -distance;
+        separator.setLayoutParams(layoutParams);
+
+        separator.animate().translationY(distance).setDuration(duration);
+        getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
+    }
+
+    private void openPartyProfile(long partyID )
+    {
+        Fragment fragment = new PartyProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong("partyIDLong", partyID);
+        fragment.setArguments(bundle);
+
+        FragmentManager fm = mainActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
+        transaction.commit();
     }
 }

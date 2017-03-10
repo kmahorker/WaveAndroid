@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Social"
         android:layout_centerInParent="true"
-        android:textColor="@color/appColor"
+        android:textColor="#000"
         android:textSize="18sp"/> <!--Username (Text)-->
 
 </RelativeLayout>
