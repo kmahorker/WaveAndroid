@@ -32,6 +32,7 @@ public class FriendsListFragment extends Fragment
     }
 
     public static FriendsListFragment newInstance(ArrayList<User> friendsList)
+
     {
         FriendsListFragment fragment = new FriendsListFragment();
         Bundle args = new Bundle();
@@ -39,7 +40,6 @@ public class FriendsListFragment extends Fragment
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
