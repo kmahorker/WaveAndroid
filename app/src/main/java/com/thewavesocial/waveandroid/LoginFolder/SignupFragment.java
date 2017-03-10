@@ -165,7 +165,7 @@ public class SignupFragment extends Fragment
 
 
         //dateDisplay = (fragment.getArguments().getParcelable("editText"));
-        birthdayDisplay.setText("" + month + "/" + day + "/" + year);
+        birthdayDisplay.setText("" + (month+1) + "/" + day + "/" + year);
 
         birthdayDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,9 +186,9 @@ public class SignupFragment extends Fragment
                 int month = birthdayDatePickerDialogFragment.getMonth();
                 int year = birthdayDatePickerDialogFragment.getYear();
 
-                mainActivity.birthday.set(year, month, day);
+                mainActivity.birthday.set(year, month+1, day);
 
-                Log.d("birthday", month + "-" + day + "-" + year);
+                Log.d("birthday", month+1 + "-" + day + "-" + year);
             }
         });
 

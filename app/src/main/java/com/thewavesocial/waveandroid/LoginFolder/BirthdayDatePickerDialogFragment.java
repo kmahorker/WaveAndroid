@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -44,7 +45,7 @@ public class BirthdayDatePickerDialogFragment extends DialogFragment implements 
         fragment.setDay(c.get(Calendar.DAY_OF_MONTH));
 
         //dateDisplay = (fragment.getArguments().getParcelable("editText"));
-        fragment.getDateDisplay().setText("" + fragment.getMonth() + "/" + fragment.getDay() + "/" + fragment.getYear());
+        fragment.getDateDisplay().setText("" + (fragment.getMonth() + 1) + "/" + fragment.getDay() + "/" + fragment.getYear());
         return fragment;
     }
 
@@ -59,14 +60,14 @@ public class BirthdayDatePickerDialogFragment extends DialogFragment implements 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), android.R.style.Theme_Holo_Dialog, this, year, month, day);
+        return new DatePickerDialog(getActivity(), R.style.BirthdayDatePickerDialogTheme, this, year, month, day);
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         this.day = day;
         this.month = month;
         this.year = year;
-        dateDisplay.setText("" + month + "/" + day + "/" + year);
+        dateDisplay.setText("" + (month+1) + "/" + day + "/" + year);
     }
 
     @Override
