@@ -2,12 +2,15 @@ package com.thewavesocial.waveandroid.LoginFolder;
 
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +18,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+
+import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -140,53 +147,55 @@ public class SignupFragment extends Fragment
 
     private void setupReferences3()
     {
-        final EditText month = (EditText) view.findViewById(R.id.signup3_edittext_month);
-        final EditText date = (EditText) view.findViewById(R.id.signup3_edittext_date);
-        final EditText year = (EditText) view.findViewById(R.id.signup3_edittext_year);
-        final Button nextButton = (Button) view.findViewById(R.id.signup3_button_next);
 
-        if ( mainActivity.birthday != Calendar.getInstance() )
-        {
-            month.setText(mainActivity.birthday.get(Calendar.MONTH) + "");
-            date.setText(mainActivity.birthday.get(Calendar.DATE) + "");
-            year.setText(mainActivity.birthday.get(Calendar.YEAR) + "");
-        }
+        final Button nextButton = (Button) view.findViewById(R.id.signup3_button_next);
+        final Calendar c = Calendar.getInstance();
+        final TextView birthdayDisplay = (TextView) view.findViewById(R.id.birthdayLabel);
+
+        final BirthdayDatePickerDialogFragment birthdayDatePickerDialogFragment = BirthdayDatePickerDialogFragment.newInstance(birthdayDisplay);
+        final int today_month = c.get(Calendar.MONTH);
+        final int today_date = c.get(Calendar.DAY_OF_MONTH);
+        final int today_year = c.get(Calendar.YEAR);
+
+
+        //Initial birthday values
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+
+        //dateDisplay = (fragment.getArguments().getParcelable("editText"));
+        birthdayDisplay.setText("" + (month+1) + "/" + day + "/" + year);
+
+        birthdayDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(birthdayDatePickerDialogFragment);
+            }
+        });
 
         nextButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                UtilityClass.hideKeyboard(mainActivity);
+
                 mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
 
-                if ( !year.getText().toString().equals("") && !month.getText().toString().equals("") &&
-                        !date.getText().toString().equals("") )
-                {
-                    mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
-                            Integer.parseInt(month.getText().toString()),
-                            Integer.parseInt(date.getText().toString()));
-                }
+                int day = birthdayDatePickerDialogFragment.getDay();
+                int month = birthdayDatePickerDialogFragment.getMonth();
+                int year = birthdayDatePickerDialogFragment.getYear();
+
+                mainActivity.birthday.set(year, month+1, day);
+
+                Log.d("birthday", month+1 + "-" + day + "-" + year);
             }
         });
 
-        view.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent)
-            {
-                UtilityClass.hideKeyboard(mainActivity);
-                if ( !year.getText().toString().equals("") && !month.getText().toString().equals("") &&
-                        !date.getText().toString().equals("") )
-                {
-                    mainActivity.birthday.set(Integer.parseInt(year.getText().toString()),
-                            Integer.parseInt(month.getText().toString()),
-                            Integer.parseInt(date.getText().toString()));
-                }
-                Log.d("Year", year.getText() + " " + mainActivity.birthday.get(Calendar.YEAR));
-                return true;
-            }
-        });
+    }
+
+    public void showDatePickerDialog(BirthdayDatePickerDialogFragment newFragment) {
+        ((DialogFragment)newFragment).show(getFragmentManager(), "birthdayDatePicker");
     }
 
     private void setupReferences4()
@@ -342,3 +351,4 @@ public class SignupFragment extends Fragment
         }
     }
 }
+

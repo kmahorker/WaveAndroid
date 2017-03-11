@@ -18,10 +18,10 @@
             android:value="@string/google_maps_key"/>
 
         <activity android:name=".LoginFolder.LoginActivity">
-           <!-- <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter> -->
+            </intent-filter>
         </activity>
         <activity android:name=".LoginFolder.SignupActivity" />
         <activity android:name=".FriendsFolder.FriendProfileActivity"/>
@@ -40,11 +40,11 @@
 
         <activity android:name=".HomeActivity"
                   android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-    </application>
+            <!--       <intent-filter>
+                       <action android:name="android.intent.action.MAIN"/>
+                       <category android:name="android.intent.category.LAUNCHER"/>
+                   </intent-filter> -->
+               </activity>
+           </application>
 
-</manifest>
+       </manifest>

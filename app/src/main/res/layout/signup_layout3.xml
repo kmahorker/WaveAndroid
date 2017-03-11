@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,69 +7,40 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/signup3_text_birthday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/signup3_text_birthday"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
         android:text="Birthday"
-        android:textSize="35sp"
+        android:textAlignment="center"
         android:textColor="#FFF"
-        android:layout_marginTop="100dp"/> <!--Birthday (Text)-->
+        android:textSize="35sp" /> <!--Birthday (Text)-->
 
-    <EditText
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:id="@+id/signup3_edittext_month"
-        android:hint="MM"
-        android:textSize="35dp"
-        android:gravity="center"
-        android:inputType="number"
-        android:maxLength="2"
-        android:background="#b9ffffff"
+    <TextView
+        android:id="@+id/birthdayLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="50dp"
-        android:layout_below="@id/signup3_text_birthday"/>  <!-- Month (EditText)-->
-
-    <EditText
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:id="@+id/signup3_edittext_date"
-        android:hint="DD"
-        android:textSize="35dp"
-        android:gravity="center"
-        android:inputType="number"
-        android:maxLength="2"
-        android:background="#b9ffffff"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@id/signup3_edittext_month"
-        android:layout_below="@id/signup3_text_birthday"/>  <!-- Date (EditText)-->
-
-    <EditText
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:id="@+id/signup3_edittext_year"
-        android:hint="YY"
-        android:textSize="35dp"
-        android:gravity="center"
-        android:inputType="number"
-        android:maxLength="2"
-        android:background="#b9ffffff"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@id/signup3_edittext_date"
-        android:layout_below="@id/signup3_text_birthday"/>  <!-- Year (EditText)-->
+        android:textSize = "28sp"
+        android:textAlignment="center"
+        android:textColor="#ffff"/>
 
     <Button
         android:layout_width="200dp"
         android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
         android:id="@+id/signup3_button_next"
         android:layout_marginTop="30dp"
         android:text="Next"
         android:textColor="#FFF"
         android:textSize="25sp"
-        android:background="@drawable/round_button"
-        android:layout_below="@id/signup3_edittext_month"
-        android:layout_centerHorizontal="true"/> <!-- Next Button-->
+        android:background="@drawable/round_button"/>
+        <!-- android:layout_below="@id/signup3_edittext_month" -->
 
-</RelativeLayout>
+
+    <!-- Next Button-->
+
+</LinearLayout>
