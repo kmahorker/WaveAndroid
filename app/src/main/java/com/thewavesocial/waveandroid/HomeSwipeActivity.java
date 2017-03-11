@@ -17,7 +17,7 @@ import com.thewavesocial.waveandroid.SearchFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 
-public class HomeActivity extends AppCompatActivity
+public class HomeSwipeActivity extends AppCompatActivity
 {
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity
         setupMapActionbar();
 
         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-        mPagerAdapter = new HomeActivity.ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new HomeSwipeActivity.ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());

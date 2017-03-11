@@ -15,7 +15,7 @@ import android.widget.SearchView;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.AdaptersFolder.CustomAdapter;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -54,8 +54,8 @@ public class FriendsListFragment extends Fragment
         final FriendsListFragment fragment = this;
         DummyUser dummy = new DummyUser(getActivity()); //TODO: FOR TESTING ONLY
 
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
+        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
         final List<User> friendsUsers = dummy.getFriendsListObjects(dummy.getFollowers());

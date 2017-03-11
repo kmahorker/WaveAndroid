@@ -5,4 +5,6 @@
     <color name="colorAccent">#F06060</color>
     <color name="appColor">#f80881</color>
     <color name="backgroundColor">#ececf2</color>
+    <color name="white">#FFF</color>
+    <color name="black">#FFF</color>
 </resources>

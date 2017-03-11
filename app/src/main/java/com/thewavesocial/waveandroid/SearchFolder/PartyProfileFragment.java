@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -34,7 +34,7 @@ public class PartyProfileFragment extends Fragment
     private Button goButton;
     private static RecyclerView attendingFriends;
     private ListView hostedEvents;
-    private static HomeActivity mainActivity;
+    private static HomeSwipeActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -46,7 +46,7 @@ public class PartyProfileFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mainActivity = (HomeActivity)getActivity();
+        mainActivity = (HomeSwipeActivity)getActivity();
 
         party = CurrentUser.getPartyObject(getArguments().getLong("partyIDLong"));
 

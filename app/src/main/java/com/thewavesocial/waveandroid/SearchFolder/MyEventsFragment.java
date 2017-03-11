@@ -12,7 +12,7 @@ import android.widget.ListView;
 import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.List;
@@ -78,9 +78,9 @@ public class MyEventsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         MyEventsFragment thisFragment = this;
         DummyUser dummyUser = new DummyUser(getActivity());
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((HomeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
+        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
         List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getAttending()); //TODO: Get Parties from User Object from database
         ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
         myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));

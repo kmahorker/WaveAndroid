@@ -1,0 +1,42 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/searchView_events_button"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:text="Events"
+            android:textSize="@dimen/button_text_normal"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_corner_red_edge"/>
+
+        <TextView
+            android:id="@+id/searchView_people_button"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:text="People"
+            android:textSize="@dimen/button_text_normal"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_corner_red"
+            android:layout_toEndOf="@id/searchView_events_button"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/searchView_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

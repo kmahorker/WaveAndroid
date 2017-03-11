@@ -2,7 +2,6 @@ package com.thewavesocial.waveandroid.UserFolder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -15,18 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.Notification;
-import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class UserProfileFragment extends Fragment
 {
@@ -35,7 +29,7 @@ public class UserProfileFragment extends Fragment
     private ListView notification_listview;
     private ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
-    private HomeActivity mainActivity;
+    private HomeSwipeActivity mainActivity;
 
     @Override
     //get fragment layout reference
@@ -50,7 +44,7 @@ public class UserProfileFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
         userProfileFragment = this;
-        mainActivity = (HomeActivity)getActivity();
+        mainActivity = (HomeSwipeActivity)getActivity();
         user = CurrentUser.theUser;
 
         setupProfileInfo();
