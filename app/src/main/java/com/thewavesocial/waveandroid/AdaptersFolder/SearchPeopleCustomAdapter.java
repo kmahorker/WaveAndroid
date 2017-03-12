@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.internal.Utility;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
@@ -92,6 +93,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                 intent.putExtra("userIDLong", user.getUserID());
                 mainActivity.startActivity(intent);
+            }
+        });
+
+        layoutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
             }
         });
 

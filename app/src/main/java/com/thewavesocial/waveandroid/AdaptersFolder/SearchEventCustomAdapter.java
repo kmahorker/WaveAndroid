@@ -93,6 +93,13 @@ public class SearchEventCustomAdapter extends BaseAdapter
             }
         });
 
+        layoutView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+            }
+        });
+
         return layoutView;
     }
 }
