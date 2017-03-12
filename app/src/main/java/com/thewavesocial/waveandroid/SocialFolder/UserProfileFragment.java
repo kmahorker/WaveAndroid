@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.UserFolder;
+package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Intent;

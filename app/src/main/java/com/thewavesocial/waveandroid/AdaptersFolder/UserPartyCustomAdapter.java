@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.SearchFolder.PartyProfileFragment;
+import com.thewavesocial.waveandroid.HomeFolder.PartyProfileFragment;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
+import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;

@@ -13,9 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.SearchFolder.MapsFragment;
+import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
-import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
+import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
 public class HomeSwipeActivity extends AppCompatActivity
 {

@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.SearchFolder;
+package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -40,22 +43,21 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener
 {
-    private List<Long> partyList;
-    private Party curParty;
     private static HomeSwipeActivity mainActivity;
-    private int yDelta;
-    public static int mapHeight, separatorHeight, searchBarHeight;
-    private SearchView searchbar;
-
-    private GoogleMap mMap;
     private LocationManager locManager;
     private Marker cur_loc_marker;
+    private List<Long> partyList;
+    private GoogleMap mMap;
+    private LatLng loc;
+
+    public static int mapHeight, separatorHeight, searchBarHeight;
+    private SearchView searchbar;
+    private int yDelta;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,8 +69,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("In", "Map Fragment");
-
         mainActivity = (HomeSwipeActivity)getActivity();
         User user = CurrentUser.theUser;
         partyList = user.getAttended();
@@ -76,8 +76,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupFloatingButtons();
         setupMapElements();
         setupHeightVariables();
-
-        searchbar = (SearchView) view.findViewById(R.id.home_mapsView_searchbar);
+        setupSearchbar();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -88,26 +87,38 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 return true;
             }
         });
+    }
 
-        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
-        {
-            @Override
-            public boolean onClose()
-            {
-                dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
-                return false;
-            }
-        });
-        searchbar.setOnClickListener(new View.OnClickListener()
+    private void setupFloatingButtons()
+    {
+        ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
+        sos_button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                searchbar.setIconified(false);
-                dragSeparator(30 - mapHeight/2, 0);
-                openSearchView();
+                checkSOSMessagePermission();
             }
         });
+
+        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
+        cur_loc_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                updateUserLoc(0);
+            }
+        });
+    }
+
+    private void setupMapElements()
+    {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
+        mapFragment.getMapAsync(this);
+        locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        cur_loc_marker = null;
     }
 
     private void setupHeightVariables()
@@ -150,26 +161,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 });
     }
 
-    private void setupMapElements()
+    private void setupSearchbar()
     {
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
-        mapFragment.getMapAsync(this);
-        locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        cur_loc_marker = null;
+        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
+
+        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
+                return false;
+            }
+        });
+
+        searchbar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                searchbar.setIconified(false);
+                dragSeparator(30 - mapHeight/2, 0);
+                openSearchView();
+            }
+        });
     }
 
-    @Override
-    //triggered when map is ready
-    public void onMapReady(GoogleMap googleMap)
-    {
-        mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnMapClickListener(this);
-        updateUserLoc(1);
-
-        addParties(googleMap, partyList);
-    }
+//----------------------------------------------------------------------------------------------Map
 
     @Override
     public void onDetach()
@@ -185,38 +203,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         super.onDetach();
     }
 
-    // Add a marker to UCSB and move the camera
-    public void addParty(long partyID, LatLng loc)
+    @Override
+    public void onMapReady(GoogleMap googleMap)
     {
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(loc)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house ,150, 150))));
-        marker.setTag(partyID);
-    }
+        mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
+        updateUserLoc(1);
 
-    //add partylist
-    public void addParties(GoogleMap googleMap, List<Long> partyIDs)
-    {
-        for (long party : partyIDs)
-        {
-            LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
-            if ( loc != null )
-                addParty(party, loc );
-        }
-    }
-
-    //move camera with specified loc
-    public void moveMapCamera(LatLng loc)
-    {
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
-    }
-
-    //resize image icons
-    public Bitmap resizeMapIcons(int res, int width, int height)
-    {
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
+        addParties(googleMap, partyList);
     }
 
     @Override
@@ -259,7 +254,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         else
         {
             Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            LatLng loc;
             if ( location != null )
             {
                 loc = new LatLng(location.getLatitude(), location.getLongitude());
@@ -289,49 +283,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull
-            String[] permissions, @NonNull int[] grantResults)
+    public void addParty(long partyID, LatLng loc)
     {
-        switch (requestCode)
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(loc)
+                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house ,150, 150))));
+        marker.setTag(partyID);
+    }
+
+    public void addParties(GoogleMap googleMap, List<Long> partyIDs)
+    {
+        for (long party : partyIDs)
         {
-            case 10:
-                updateUserLoc(0);
-                break;
-            default:
-                break;
+            LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
+            if ( loc != null )
+                addParty(party, loc );
         }
     }
 
-    //setup sos and curloc buttons
-    private void setupFloatingButtons()
+    public void moveMapCamera(LatLng loc)
     {
-        ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        sos_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "SOSSSSSSSSSSSSS!!!!!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
-        cur_loc_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                updateUserLoc(0);
-            }
-        });
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
     }
 
+    public Bitmap resizeMapIcons(int res, int width, int height)
+    {
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
+    }
+
+//-------------------------------------------------------------------------------------------Search
+
     @Override
-    //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
     public boolean onTouch(View view, MotionEvent event)
     {
+        //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
         int y = (int) event.getRawY();
         if ( y < 1157 )
         {
@@ -372,6 +359,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mainActivity.findViewById(R.id.home_mapsView_relativeLayout).invalidate();
     }
 
+    public static void openSearchView()
+    {
+        Fragment fragment = new SearchFragment();
+
+        FragmentManager fm = mainActivity.getSupportFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
+        transaction.commit();
+    }
+
     private void openPartyProfile(long partyID )
     {
         Fragment fragment = new PartyProfileFragment();
@@ -385,13 +382,56 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         transaction.commit();
     }
 
-    public static void openSearchView()
-    {
-        Fragment fragment = new SearchFragment();
+//----------------------------------------------------------------------------------------------SOS
 
-        FragmentManager fm = mainActivity.getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
-        transaction.commit();
+    private void checkSOSMessagePermission()
+    {
+        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS))
+            {
+                ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
+            }
+            else
+            {
+                sendSOSMessage();
+            }
+        }
+        else
+        {
+            sendSOSMessage();
+        }
+    }
+
+    private void sendSOSMessage()
+    {
+        String phone = "6692254467";
+        String name = "Wei Tung Chen";
+        SmsManager sManager = SmsManager.getDefault();
+        sManager.sendTextMessage(
+                phone, null,
+                "Help me, " + name.substring(0, name.lastIndexOf(' '))
+                        + "!\n\nI'm drunk. LOL.. My last known location is ("
+                        + loc.latitude + ", " + loc.longitude
+                        + ")\n\n-Sent from ThePlugSocial Emergency Alert.",
+                null, null);
+        Toast.makeText(mainActivity, "Message Sent!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case 10:
+                updateUserLoc(0);
+                break;
+            case 20:
+                sendSOSMessage();
+            default:
+                break;
+        }
     }
 }

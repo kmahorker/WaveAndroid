@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.SearchFolder;
+package com.thewavesocial.waveandroid.HomeFolder;
 
 
 import android.os.Bundle;
@@ -12,10 +12,8 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.SearchEventCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.SearchPeopleCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 

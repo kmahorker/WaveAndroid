@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.SearchFolder;
+package com.thewavesocial.waveandroid.HomeFolder;
 
 
 import android.os.Bundle;

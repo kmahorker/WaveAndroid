@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.OptionsFolder;
+package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UserFolder.EditUserProfileActivity;
 
 
 public class OptionsFragment extends Fragment
