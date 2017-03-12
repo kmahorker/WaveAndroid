@@ -185,6 +185,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 openSearchView();
             }
         });
+
+        searchbar.setOnSearchClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                dragSeparator(30 - mapHeight/2, 0);
+                openSearchView();
+            }
+        });
     }
 
 //----------------------------------------------------------------------------------------------Map

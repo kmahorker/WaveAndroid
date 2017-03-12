@@ -22,6 +22,7 @@ public class HomeSwipeActivity extends AppCompatActivity
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
+    private HomeSwipeActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,6 +30,7 @@ public class HomeSwipeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         CurrentUser.setContext(this);
+        mainActivity = this;
         setupMapActionbar();
 
         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
@@ -114,6 +116,7 @@ public class HomeSwipeActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 mPager.setCurrentItem( mPager.getCurrentItem() - 1 );
+                UtilityClass.hideKeyboard(mainActivity);
             }
         });
 
@@ -123,6 +126,7 @@ public class HomeSwipeActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 mPager.setCurrentItem( mPager.getCurrentItem() + 1 );
+                UtilityClass.hideKeyboard(mainActivity);
             }
         });
     }

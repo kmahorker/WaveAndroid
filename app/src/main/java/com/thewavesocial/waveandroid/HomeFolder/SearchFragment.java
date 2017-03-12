@@ -12,13 +12,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFragment extends Fragment
 {
+    private HomeSwipeActivity mainActivity;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -36,6 +40,7 @@ public class SearchFragment extends Fragment
     {
         final TextView searchEventButton = (TextView) getActivity().findViewById(R.id.searchView_events_button);
         final TextView searchPeopleButton = (TextView) getActivity().findViewById(R.id.searchView_people_button);
+        mainActivity = (HomeSwipeActivity) getActivity();
 
         openSearchEvent();
         searchEventButton.setOnClickListener(new View.OnClickListener()
@@ -48,6 +53,7 @@ public class SearchFragment extends Fragment
                 searchEventButton.setTextColor(getResources().getColor(R.color.white));
                 searchPeopleButton.setTextColor(getResources().getColor(R.color.appColor));
                 openSearchEvent();
+                UtilityClass.hideKeyboard(mainActivity);
             }
         });
 
@@ -61,6 +67,7 @@ public class SearchFragment extends Fragment
                 searchPeopleButton.setTextColor(getResources().getColor(R.color.white));
                 searchEventButton.setTextColor(getResources().getColor(R.color.appColor));
                 openSearchPeople();
+                UtilityClass.hideKeyboard(mainActivity);
             }
         });
     }
