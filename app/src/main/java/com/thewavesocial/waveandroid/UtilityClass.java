@@ -77,9 +77,7 @@ public final class UtilityClass
     public static RoundedBitmapDrawable toRoundImage(Resources res, Bitmap bitmap)
     {
         //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
-        RoundedBitmapDrawable dr =
-                RoundedBitmapDrawableFactory.create(res,
-                        bitmap);
+        RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(res, bitmap);
         dr.setCircular(true);
         return dr;
     }

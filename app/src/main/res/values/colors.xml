@@ -3,8 +3,8 @@
     <color name="colorPrimary">#F06060</color>
     <color name="colorPrimaryDark">#F06060</color>
     <color name="colorAccent">#F06060</color>
-    <color name="appColor">#f80881</color>
-    <color name="backgroundColor">#ececf2</color>
+    <color name="appColor">#F90680</color>
+    <color name="backgroundColor">#EFEFF4</color>
     <color name="white">#FFF</color>
     <color name="black">#FFF</color>
 </resources>

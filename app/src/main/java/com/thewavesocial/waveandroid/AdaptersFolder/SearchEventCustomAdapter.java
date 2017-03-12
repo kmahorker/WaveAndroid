@@ -10,23 +10,25 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.SearchFolder.PartyProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
-public class SearchPeopleCustomAdapter extends BaseAdapter
+public class SearchEventCustomAdapter extends BaseAdapter
 {
     private Activity mainActivity ;
-    private List<User> userList;
+    private List<Party> partyList;
     private static LayoutInflater inflater;
 
-    public SearchPeopleCustomAdapter(Activity mainActivity, List<User> userList)
+    public SearchEventCustomAdapter(Activity mainActivity, List<Party> partyList)
     {
         super();
-        this.userList = userList;
+        this.partyList = partyList;
         this.mainActivity = mainActivity;
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -34,13 +36,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter
     @Override
     public int getCount()
     {
-        return userList.size();
+        return partyList.size();
     }
 
     @Override
-    public User getItem(int position)
+    public Party getItem(int position)
     {
-        return userList.get(position);
+        return partyList.get(position);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter
     {
         ImageView image;
         TextView name;
-        TextView follow;
+        TextView go;
     }
 
     @Override
@@ -63,7 +65,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter
         View layoutView = convertView;
         if(convertView == null)
         {
-            layoutView = inflater.inflate(R.layout.each_searchpeople_item, null);
+            layoutView = inflater.inflate(R.layout.each_searchevent_item, null);
             holder = new Holder();
             layoutView.setTag(holder);
         }
@@ -72,26 +74,26 @@ public class SearchPeopleCustomAdapter extends BaseAdapter
             holder = (Holder) layoutView.getTag();
         }
 
-        final User user = userList.get(position);
+        final Party party = partyList.get(position);
 
-        holder.image = (ImageView) layoutView.findViewById(R.id.eachSearchPeople_image);
-        holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
-        holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
+        holder.image = (ImageView) layoutView.findViewById(R.id.eachSearchEvent_image);
+        holder.name = (TextView) layoutView.findViewById(R.id.eachSearchEvent_name);
+        holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
-        if ( user.getProfilePic() != null )
+        if ( party.getPartyEmoji() != null )
         {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    user.getProfilePic().getBitmap()));
+            holder.image.setImageDrawable(UtilityClass.toRoundImage(
+                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
-        holder.name.setText( user.getFullName() );
-        holder.follow.setOnClickListener(new View.OnClickListener()
+        holder.name.setText( party.getName() );
+        holder.go.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", user.getUserID());
-                mainActivity.startActivity(intent);
+//                Intent intent = new Intent(mainActivity, PartyProfileFragment.class);
+//                intent.putExtra("partyIDLong", party.getPartyID());
+//                mainActivity.startActivity(intent);
             }
         });
 

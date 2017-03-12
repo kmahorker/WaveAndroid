@@ -4,7 +4,8 @@
         <item name="colorPrimary">#FFF</item>
         <item name="colorPrimaryDark">@color/appColor</item>
         <item name="colorAccent">#FFF</item>
-        <!--<item name="android:homeAsUpIndicator" >@drawable/back_arrow</item>-->
+        <item name="android:textViewStyle">@style/SFTextViewStyle</item>
+        <item name="android:buttonStyle">@style/SFButtonStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,6 +18,14 @@
 
     <style name="DrawerStyle">
         <item name="android:textSize">18sp</item><!-- text size in menu-->
+    </style>
+
+    <style name="SFTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SFButtonStyle" parent="android:Widget.Button">
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
 </resources>

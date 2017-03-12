@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,7 @@ public class SearchFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("In", "Search Fragment");
-        //setupReferences();
+        setupReferences();
     }
 
     private void setupReferences()
@@ -40,6 +40,7 @@ public class SearchFragment extends Fragment
         final TextView searchEventButton = (TextView) getActivity().findViewById(R.id.searchView_events_button);
         final TextView searchPeopleButton = (TextView) getActivity().findViewById(R.id.searchView_people_button);
 
+        openSearchEvent();
         searchEventButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -73,7 +74,7 @@ public class SearchFragment extends Fragment
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
+        transaction.replace(R.id.searchView_list_container, fragment);
         transaction.commit();
     }
 
@@ -83,7 +84,7 @@ public class SearchFragment extends Fragment
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
+        transaction.replace(R.id.searchView_list_container, fragment);
         transaction.commit();
     }
 

@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
@@ -31,6 +32,7 @@ public class PartyProfileFragment extends Fragment
     private static Party party;
     private static List<User> sample;
     private TextView partyname, hostname, datetime, location, price;
+    private SearchView searchbar;
     private Button goButton;
     private static RecyclerView attendingFriends;
     private ListView hostedEvents;
@@ -76,10 +78,32 @@ public class PartyProfileFragment extends Fragment
                 // TODO: 02/24/2017 Change hostname to host user object
             }
         });
+
+        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                MapsFragment.dragSeparator( MapsFragment.mapHeight/2-(MapsFragment.searchBarHeight+MapsFragment.separatorHeight), 0 );
+                return false;
+            }
+        });
+
+        searchbar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                searchbar.setIconified(false);
+                MapsFragment.dragSeparator(30 - MapsFragment.mapHeight/2, 0);
+                MapsFragment.openSearchView();
+            }
+        });
     }
 
     private void setupReferences()
     {
+        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         partyname = (TextView) mainActivity.findViewById(R.id.partyprofile_text_partyname);
         hostname = (TextView) mainActivity.findViewById(R.id.partyprofile_host);
         datetime = (TextView) mainActivity.findViewById(R.id.partyprofile_time);

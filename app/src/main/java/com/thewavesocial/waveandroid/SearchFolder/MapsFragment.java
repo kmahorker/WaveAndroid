@@ -15,7 +15,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -48,9 +48,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 {
     private List<Long> partyList;
     private Party curParty;
-    private HomeSwipeActivity mainActivity;
+    private static HomeSwipeActivity mainActivity;
     private int yDelta;
-    private int mapHeight, separatorHeight, searchBarHeight;
+    public static int mapHeight, separatorHeight, searchBarHeight;
+    private SearchView searchbar;
 
     private GoogleMap mMap;
     private LocationManager locManager;
@@ -71,11 +72,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mainActivity = (HomeSwipeActivity)getActivity();
         User user = CurrentUser.theUser;
         partyList = user.getAttended();
-        Log.d("Size", UtilityClass.getScreenHeight(mainActivity)+"");
 
         setupFloatingButtons();
         setupMapElements();
         setupHeightVariables();
+
+        searchbar = (SearchView) view.findViewById(R.id.home_mapsView_searchbar);
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -83,22 +85,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
                 return true;
             }
         });
 
-//        View relative = getActivity().findViewById(R.id.home_mapsView_draggupView);
-
-        SearchView searchbar = (SearchView)view.findViewById(R.id.home_mapsView_searchbar);
-//        searchbar.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-////                openSearchView();
-//            }
-//        });
+        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
+        {
+            @Override
+            public boolean onClose()
+            {
+                dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
+                return false;
+            }
+        });
+        searchbar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                searchbar.setIconified(false);
+                dragSeparator(30 - mapHeight/2, 0);
+                openSearchView();
+            }
+        });
     }
 
     private void setupHeightVariables()
@@ -217,7 +226,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if ( marker.getTag() != null )
         {
             openPartyProfile((long) marker.getTag());
-            dragSeparator( 185, 0 );
+            searchbar.setIconified(true);
+            dragSeparator( 80, 0 );
         }
         moveMapCamera(marker.getPosition());
         return true;
@@ -227,7 +237,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public void onMapClick(LatLng latLng)
     {
         UtilityClass.hideKeyboard(mainActivity);
-        dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
+        searchbar.setIconified(true);
     }
 
     public void updateUserLoc(int key)
@@ -343,18 +353,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         return true;
     }
 
-    private void dragSeparator(int distance, int duration)
+    public static void dragSeparator(int distance, int duration)
     {
         // TODO: 03/09/2017 Think about adding other views inside drag bar
         Log.d("Distance", distance+"");
-        View separator = getActivity().findViewById(R.id.home_mapsView_separator);
+        View separator = mainActivity.findViewById(R.id.home_mapsView_separator);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();
         layoutParams.bottomMargin = distance;
         layoutParams.topMargin = -distance;
         separator.setLayoutParams(layoutParams);
 
         separator.animate().translationY(distance).setDuration(duration);
-        getActivity().findViewById(R.id.home_mapsView_relativeLayout).invalidate();
+        mainActivity.findViewById(R.id.home_mapsView_relativeLayout).invalidate();
     }
 
     private void openPartyProfile(long partyID )
@@ -370,9 +380,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         transaction.commit();
     }
 
-    private void openSearchView()
+    public static void openSearchView()
     {
-        Fragment fragment = new SearchPeopleFragment();
+        Fragment fragment = new SearchFragment();
 
         FragmentManager fm = mainActivity.getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
