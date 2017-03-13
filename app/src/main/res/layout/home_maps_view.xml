@@ -28,7 +28,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
             android:gravity="center"
-
+            android:iconifiedByDefault="false"
+            android:clickable="true"
             android:queryHint="Search for an event or person"
             android:background="@drawable/round_corner_grey" />
 

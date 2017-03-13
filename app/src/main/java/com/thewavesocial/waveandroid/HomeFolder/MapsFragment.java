@@ -9,6 +9,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +59,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     public static int mapHeight, separatorHeight, searchBarHeight;
     private SearchView searchbar;
+    private EditText editText;
     private int yDelta;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -84,7 +88,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                searchbar.setIconified(true);
+                //searchbar.setIconified(true);
+                //searchbar.clearFocus();
+                editText.setCursorVisible(false);
                 return true;
             }
         });
@@ -165,14 +171,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
         searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
+        searchbar.setFocusable(true);
+        //searchbar.clearFocus();
+        int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        editText = (EditText) searchbar.findViewById(id);
+        editText.setCursorVisible(false);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dragSeparator(30 - mapHeight/2, 0);
+                openSearchView();
+                editText.setCursorVisible(true);
+            }
+        });
+
 
         searchbar.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                searchbar.setIconified(false);
+                //searchbar.setIconified(false);
+                //searchbar.requestFocus();
+                dragSeparator(30 - mapHeight/2, 0);
                 openSearchView();
+                editText.setCursorVisible(true);
             }
         });
 
@@ -183,6 +206,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             {
                 dragSeparator(30 - mapHeight/2, 0);
                 openSearchView();
+                editText.setCursorVisible(true);
             }
         });
     }
@@ -221,7 +245,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if ( marker.getTag() != null )
         {
             openPartyProfile((long) marker.getTag());
-            searchbar.setIconified(true);
+            //searchbar.setIconified(true);
+            //searchbar.clearFocus();
+            editText.setCursorVisible(false);
             dragSeparator( 80, 0 );
         }
         moveMapCamera(marker.getPosition());
@@ -232,7 +258,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public void onMapClick(LatLng latLng)
     {
         UtilityClass.hideKeyboard(mainActivity);
-        searchbar.setIconified(true);
+        editText.setCursorVisible(false);
+        //searchbar.setIconified(true);
+//        searchbar.clearFocus();
     }
 
     public void updateUserLoc(int key)
@@ -320,7 +348,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     {
         //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
         int y = (int) event.getRawY();
-        searchbar.setIconified(true);
+        editText.setCursorVisible(false);
+        //searchbar.setIconified(true);
+//        searchbar.clearFocus();
+        editText.setCursorVisible(false);
         if ( y < 1157 )
         {
             PartyProfileFragment.updateAttendeeImages();
