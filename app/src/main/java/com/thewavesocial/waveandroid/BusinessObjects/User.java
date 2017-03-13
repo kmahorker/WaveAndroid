@@ -38,7 +38,8 @@ public class User
     private List<Long> hosted;
     private List<Long> bounced;
     private List<Long> attending;
-    private List<Notification> notifications;
+    private List<Notification> notifications1;
+    private List<Notification> notifications2;
     private BitmapDrawable profilePic;
 
     public User()
@@ -61,7 +62,8 @@ public class User
         hosted = new ArrayList<Long>();
         bounced = new ArrayList<Long>();
         attending = new ArrayList<Long>();
-        notifications = new LinkedList<>();
+        notifications1 = new ArrayList<>();
+        notifications2 = new ArrayList<>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
@@ -82,7 +84,8 @@ public class User
                 List<Long> hosted,
                 List<Long> bounced,
                 List<Long> attending,
-                List<Notification> notifications,
+                List<Notification> notifications1,
+                List<Notification> notifications2,
                 BitmapDrawable profilePic)
     {
         this.userID = userID;
@@ -103,7 +106,8 @@ public class User
         this.hosted = hosted;
         this.bounced = bounced;
         this.attending = attending;
-        this.notifications = notifications;
+        this.notifications1 = notifications1;
+        this.notifications2 = notifications2;
         this.profilePic = profilePic;
     }
 
@@ -256,15 +260,24 @@ public class User
         return profilePic;
     }
 
-
-    public List<Notification> getNotifications()
+    public List<Notification> getNotifications1()
     {
-        return notifications;
+        return notifications1;
     }
 
-    public void setNotifications(List<Notification> notifications)
+    public void setNotifications1(List<Notification> notifications1)
     {
-        this.notifications = notifications;
+        this.notifications1 = notifications1;
+    }
+
+    public List<Notification> getNotifications2()
+    {
+        return notifications2;
+    }
+
+    public void setNotifications2(List<Notification> notifications2)
+    {
+        this.notifications2 = notifications2;
     }
 
     public long getPhone()

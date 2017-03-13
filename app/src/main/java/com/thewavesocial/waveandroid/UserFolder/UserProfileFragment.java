@@ -31,7 +31,7 @@ import java.util.List;
 public class UserProfileFragment extends Fragment
 {
     private User user;
-    private TextView username_textview, followers_textview, following_textview;
+    private TextView followers_textview, following_textview;
     private ListView notification_listview;
     private ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
@@ -85,17 +85,19 @@ public class UserProfileFragment extends Fragment
     {
         followers_textview = (TextView) mainActivity.findViewById(R.id.user_followers_count);
         following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
-        username_textview = (TextView) mainActivity.findViewById(R.id.user_name);
         profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
         notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
 
-        followers_textview.setText( CurrentUser.theUser.getFollowers().size() + "" );
-        following_textview.setText( CurrentUser.theUser.getFollowing().size() + "" );
-        username_textview.setText( CurrentUser.theUser.getFullName() );
-        profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(),
-                CurrentUser.theUser.getProfilePic().getBitmap()));
+        followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
+        following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
+
+        if (CurrentUser.theUser.getProfilePic() != null)
+        {
+            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+                    CurrentUser.theUser.getProfilePic().getBitmap()));
+        }
         notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
-                CurrentUser.theUser.getNotifications()));
+                CurrentUser.theUser.getNotifications1()));
     }
 
 //----------------------------------------------------------------------------------Other Sub-tasks

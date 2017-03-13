@@ -2,10 +2,10 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,12 +13,11 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
-
-import static android.os.Build.ID;
 
 public class UserNotificationCustomAdapter extends BaseAdapter
 {
@@ -67,7 +66,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter
         View layoutView = convertView;
         if(convertView == null)
         {
-            layoutView = inflater.inflate(R.layout.each_notif_item, null);
+            layoutView = inflater.inflate(R.layout.each_usernotif_item, null);
             holder = new Holder();
             layoutView.setTag(holder);
         }
@@ -76,25 +75,52 @@ public class UserNotificationCustomAdapter extends BaseAdapter
             holder = (Holder) layoutView.getTag();
         }
 
-        User sender = CurrentUser.getUserObject(getItem(position).getSenderID());
+        final User sender = CurrentUser.getUserObject(getItem(position).getSenderID());
 
         holder.senderImage = (ImageView) layoutView.findViewById(R.id.eachNotif_senderPhoto);
         holder.sender = (TextView) layoutView.findViewById(R.id.eachNotif_sender);
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
-        holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
-                mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+        if ( sender.getProfilePic() != null )
+        {
+            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
+                    mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+        }
         holder.sender.setText(sender.getFirstName());
         holder.notifmessage.setText(getItem(position).getMessage());
         holder.timeAgo.setText("28m");
+
+        holder.senderImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                intent.putExtra("userIDLong", sender.getUserID());
+                mainActivity.startActivity(intent);
+            }
+        });
+
+        holder.sender.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                intent.putExtra("userIDLong", sender.getUserID());
+                mainActivity.startActivity(intent);
+            }
+        });
 
         holder.notifmessage.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                UtilityClass.printAlertMessage(mainActivity, getItem(position).getMessage() + ", " + position, true);
+                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                intent.putExtra("userIDLong", sender.getUserID());
+                mainActivity.startActivity(intent);
             }
         });
 

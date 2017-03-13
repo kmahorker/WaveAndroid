@@ -4,13 +4,19 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
+import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
@@ -18,8 +24,13 @@ import java.util.List;
 
 public class FriendProfileActivity extends AppCompatActivity
 {
-    private User friend; //TODO: Remove Empty User
+    private User friend;
     private long userID;
+    private TextView followers_textview, following_textview, follow_button;
+    private ListView notification_listview;
+    private ImageView profilepic_imageview;
+    private UserProfileFragment userProfileFragment;
+    private FriendProfileActivity mainActivity;
 
     @Override
     //initialize everything
@@ -27,6 +38,7 @@ public class FriendProfileActivity extends AppCompatActivity
     {
         super.onCreate(bundle);
         setContentView(R.layout.profile_friend);
+        mainActivity = this;
         //CurrentUser.setContext(getApplicationContext());
 
         // access current friend data
@@ -35,7 +47,7 @@ public class FriendProfileActivity extends AppCompatActivity
         friend = CurrentUser.getUserObject(userID);
         //TODO: getUserObject(long id) from database class
 
-        setupFriendInfo();
+        setupProfileInfo();
         setupActionbar();
     }
 
@@ -59,57 +71,50 @@ public class FriendProfileActivity extends AppCompatActivity
         getSupportActionBar().setTitle(friend.getFirstName() + " " + friend.getLastName());
     }
 
-    //initialize friend data
-    private void setupFriendInfo()
+    //initialize user information
+    private void setupProfileInfo()
     {
-        TextView username = (TextView)findViewById(R.id.user_college);
-        ImageView image = (ImageView)findViewById(R.id.profile_pic);
+        followers_textview = (TextView) mainActivity.findViewById(R.id.friend_followers_count);
+        following_textview = (TextView) mainActivity.findViewById(R.id.friend_following_count);
+        profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.friend_profile_pic);
+        notification_listview = (ListView) mainActivity.findViewById(R.id.friend_notification_list);
+        follow_button = (TextView) mainActivity.findViewById(R.id.friend_follow_button);
 
-        username.setText("College: " + friend.getCollege());
-        image.setImageDrawable(UtilityClass.toRoundImage(getResources(),
-                friend.getProfilePic().getBitmap()));
-
-        updateAge(friend.getBirthday());
-        updatePartiesAttended(friend.getAttended());
-        updatePartiesHosted(friend.getHosted());
-    }
-
-//----------------------------------------------------------------------------------Other Sub-tasks
-
-    //update friend age
-    private int updateAge(Calendar birth)
-    {
-        Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.get(Calendar.YEAR), bmonth = birth.get(Calendar.MONTH), bday = birth.get(Calendar.DATE);
-        if (month == bmonth)
+        followers_textview.setText( friend.getFollowers().size() + "\nfollowers" );
+        following_textview.setText( friend.getFollowing().size() + "\nfollowing" );
+        if ( friend.getProfilePic() != null )
         {
-            if (day < bday)
-                return year - byear - 1;
-            else
-                return year - byear;
+            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+                    friend.getProfilePic().getBitmap()));
         }
-        else if (month > bmonth)
-            return year - byear;
+        notification_listview.setAdapter( new FriendNotificationCustomAdapter(mainActivity,
+                friend.getNotifications2()));
+
+        if ( CurrentUser.theUser.getFollowing().contains(userID) )
+        {
+            follow_button.setText("following");
+        }
         else
-            return year - byear - 1;
-    }
+        {
+            follow_button.setText("follow");
+        }
 
-    //update parties attended
-    private void updatePartiesAttended(List<Long> list)
-    {
-        Long[] parties = list.toArray(new Long[list.size()]);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.each_party_item, parties);
-        ListView listView = (ListView)findViewById(R.id.events_attended_list);
-        listView.setAdapter(arrayAdapter);
-    }
-
-    //update parties hosted
-    private void updatePartiesHosted(List<Long> list)
-    {
-        Long[] parties = list.toArray(new Long[list.size()]);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.each_party_item, parties);
-        ListView listView = (ListView)findViewById(R.id.events_hosted_list);
-        listView.setAdapter(arrayAdapter);
+        follow_button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if ( follow_button.getText().equals("following") )
+                {
+                    CurrentUser.theUser.getFollowing().remove(userID);
+                    follow_button.setText("follow");
+                }
+                else
+                {
+                    CurrentUser.theUser.getFollowing().add(userID);
+                    follow_button.setText("following");
+                }
+            }
+        });
     }
 }
