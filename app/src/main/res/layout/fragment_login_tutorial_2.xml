@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewavesocial.waveandroid.LoginFolder.LoginTutorialFragment"
-    >
+    tools:context="com.thewavesocial.waveandroid.LoginFolder.LoginTutorialFragment">
 
 
     <LinearLayout
@@ -13,37 +12,38 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/tutorialBigImage"
+            android:id="@+id/tutorialBigImage_2"
             android:layout_width="match_parent"
             android:layout_height="261dp"
-            android:layout_marginBottom="81dp"
+            android:layout_marginBottom="70dp"
             app:srcCompat="@drawable/plug_icon"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginLeft="43dp"
             android:layout_marginRight="43dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/tutorialIcon"
+                android:id="@+id/tutorialIcon_2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginTop="11dp"
                 android:layout_weight="0.1"
-                app:srcCompat="@drawable/tutorial_find_button" />
+                app:srcCompat="@drawable/tutorial_search_icon" />
 
             <TextView
-                android:id="@+id/tutorialLargeText"
+                android:id="@+id/tutorialLargeText_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:lineSpacingExtra="5dp"
                 android:maxLines="3"
-                android:text="Find Parties Near You"
+                android:text="Search for a friend or an event"
                 android:textColor="#000000"
                 android:textSize="25dp" />
 
@@ -51,7 +51,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tutorialDescription"
+            android:id="@+id/tutorialDescription_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="43dp"
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:lineSpacingExtra="5dp"
             android:maxLines="5"
-            android:text="Just tap on a house icon to check it out. You can see who's going to an event and when and where it's going down."
+            android:text="Use the Search Box to find and follow a friend. Tap on the Events box to find events happening near you."
             android:textColor="#8E8E93"
             android:textSize="16dp" />
 

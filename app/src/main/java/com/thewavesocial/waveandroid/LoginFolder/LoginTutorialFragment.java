@@ -1,109 +1,125 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginTutorialFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LoginTutorialFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+
 public class LoginTutorialFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
+    private int fragNum;
+    private View view;
+    private LoginTutorialActivity mainActivity;
+    private ImageView largeTutorialImage, tutorialIcon;
+    private TextView tutorialLargeText, tutorialDescription;
+    public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 
     public LoginTutorialFragment() {
-        // Required empty public constructor
+       fragNum = 1;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LoginTutorialFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LoginTutorialFragment newInstance(String param1, String param2) {
-        LoginTutorialFragment fragment = new LoginTutorialFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public LoginTutorialFragment(int fragNum) {
+        this.fragNum = fragNum;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+       // view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+
+      //  view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+        if (fragNum == 1) {
+            //changeInfo1();
+            view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+            //setupReferences();
+
+        } else if (fragNum == 2) {
+           // setupReferences();
+            //changeInfo2();
+            view = inflater.inflate(R.layout.fragment_login_tutorial_2, container, false);
+            //setupReferences2();
+
+
+        } else if (fragNum == 3) {
+            //setupReferences();
+            //changeInfo3();
+            view = inflater.inflate(R.layout.fragment_login_tutorial_3, container, false);
+
         }
+        //view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_tutorial, container, false);
-    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+    //Unused Methods
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+//    private void setupReferences(){
+//        largeTutorialImage = (ImageView)mainActivity.findViewById(R.id.tutorialBigImage);
+//        tutorialIcon = (ImageView)mainActivity.findViewById(R.id.tutorialIcon);
+//        tutorialLargeText = (TextView)mainActivity.findViewById(R.id.tutorialLargeText);
+//        tutorialDescription = (TextView)mainActivity.findViewById(R.id.tutorialDescription);
+//    }
+//
+//    private void changeInfo1(){
+//        tutorialIcon.setImageResource(R.drawable.tutorial_find_button);
+//        tutorialLargeText.setText("Find Parties Near You");
+//        tutorialDescription.setText("Just tap on a house icon to check it out. You can see who's going " +
+//                "to an event and when it's going down.");
+//
+//
+//    }
+//
+//    private void changeInfo2(){
+//        tutorialIcon.setImageResource(R.drawable.tutorial_search_icon);
+//        tutorialLargeText.setText("Search for a friend or an event");
+//        tutorialDescription.setText("Use the Search Box to find and follow a friend. Tap on the Events " +
+//                "box to find events happening near you.");
+//
+//    }
+//
+//    private void changeInfo3(){
+//        tutorialIcon.setImageResource(R.drawable.tutorial_host_icon);
+//        tutorialLargeText.setText("Host parties and invite friends");
+//        tutorialDescription.setText("Just tap on a house icon to see who's going to a party" +
+//                " and when it's getting shut down");
+//    }
+//
+//    public ImageView getLargeTutorialImage() {
+//        return largeTutorialImage;
+//    }
+//
+//    public void setLargeTutorialImage(int largeTutorialImage) {
+//        this.largeTutorialImage.setImageResource(largeTutorialImage);
+//    }
+//
+//    public ImageView getTutorialIcon() {
+//        return tutorialIcon;
+//    }
+//
+//    public void setTutorialIcon(int tutorialIcon) {
+//        this.tutorialIcon.setImageResource(tutorialIcon);
+//    }
+//
+//    public TextView getTutorialLargeText() {
+//        return tutorialLargeText;
+//    }
+//
+//    public void setTutorialLargeText(String tutorialLargeText) {
+//        this.tutorialLargeText.setText(tutorialLargeText);
+//    }
+//
+//    public TextView getTutorialDescription() {
+//        return tutorialDescription;
+//    }
+//
+//    public void setTutorialDescription(String tutorialDescription) {
+//        this.tutorialDescription.setText(tutorialDescription);
+//    }
 }
