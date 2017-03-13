@@ -84,6 +84,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
+                searchbar.setIconified(true);
                 return true;
             }
         });
@@ -123,8 +124,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupHeightVariables()
     {
-
-
         final View separator = getActivity().findViewById(R.id.home_mapsView_separator);
         separator.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
         {
@@ -163,17 +162,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupSearchbar()
     {
-        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
 
-        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
-        {
-            @Override
-            public boolean onClose()
-            {
-                dragSeparator( mapHeight/2-(searchBarHeight+separatorHeight), 0 );
-                return false;
-            }
-        });
+
+        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
 
         searchbar.setOnClickListener(new View.OnClickListener()
         {
@@ -181,7 +172,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public void onClick(View view)
             {
                 searchbar.setIconified(false);
-                dragSeparator(30 - mapHeight/2, 0);
                 openSearchView();
             }
         });
@@ -330,6 +320,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     {
         //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
         int y = (int) event.getRawY();
+        searchbar.setIconified(true);
         if ( y < 1157 )
         {
             PartyProfileFragment.updateAttendeeImages();

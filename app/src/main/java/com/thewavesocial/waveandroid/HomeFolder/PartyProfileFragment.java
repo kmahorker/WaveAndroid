@@ -79,16 +79,6 @@ public class PartyProfileFragment extends Fragment
             }
         });
 
-        searchbar.setOnCloseListener(new SearchView.OnCloseListener()
-        {
-            @Override
-            public boolean onClose()
-            {
-                MapsFragment.dragSeparator( MapsFragment.mapHeight/2-(MapsFragment.searchBarHeight+MapsFragment.separatorHeight), 0 );
-                return false;
-            }
-        });
-
         searchbar.setOnClickListener(new View.OnClickListener()
         {
             @Override
