@@ -109,14 +109,15 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 dot3.setImageResource(R.drawable.pink_hollow_dot);
                 break;
             case 2:
+                dot1.setImageResource(R.drawable.pink_hollow_dot);
                 dot2.setImageResource(R.drawable.pink_full_dot);
                 dot3.setImageResource(R.drawable.pink_hollow_dot);
-                dot1.setImageResource(R.drawable.pink_hollow_dot);
+
                 break;
             case 3:
-                dot3.setImageResource(R.drawable.pink_full_dot);
-                dot2.setImageResource(R.drawable.pink_hollow_dot);
                 dot1.setImageResource(R.drawable.pink_hollow_dot);
+                dot2.setImageResource(R.drawable.pink_hollow_dot);
+                dot3.setImageResource(R.drawable.pink_full_dot);
                 break;
         }
     }
