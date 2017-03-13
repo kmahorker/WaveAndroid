@@ -2,10 +2,9 @@ package com.thewavesocial.waveandroid.UserFolder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,21 +14,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserPartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.Notification;
-import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class UserProfileFragment extends Fragment
 {
+
+    public enum PopupPage {
+        FOLLOWERS,
+        FOLLOWING
+        ;
+    }
+
     private User user;
     private TextView username_textview, followers_textview, following_textview;
     private ListView notification_listview;
@@ -71,7 +72,7 @@ public class UserProfileFragment extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK && requestCode == 1)
+        if (resultCode == Activity.RESULT_OK && requestCode == 1)
         {
             //display data on profile
             setupProfileInfo();
@@ -84,7 +85,20 @@ public class UserProfileFragment extends Fragment
     private void setupProfileInfo()
     {
         followers_textview = (TextView) mainActivity.findViewById(R.id.user_followers_count);
+        followers_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(PopupPage.FOLLOWERS);
+            }
+        });
         following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
+        following_textview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup(PopupPage.FOLLOWING);
+            }
+        });
+
         username_textview = (TextView) mainActivity.findViewById(R.id.user_name);
         profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
         notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
@@ -96,6 +110,17 @@ public class UserProfileFragment extends Fragment
                 CurrentUser.theUser.getProfilePic().getBitmap()));
         notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
                 CurrentUser.theUser.getNotifications()));
+    }
+
+    private void showPopup(PopupPage popup) {
+        switch (popup) {
+            case FOLLOWERS:
+            case FOLLOWING:
+                Intent intent = new Intent(mainActivity, FollowActivity.class);
+                intent.putExtra(FollowActivity.FOLLOW_POPUP_TYPE_ARG, popup.name());
+                mainActivity.startActivity(intent);
+                break;
+        }
     }
 
 //----------------------------------------------------------------------------------Other Sub-tasks

@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity
         setupMapActionbar();
 
         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-        mPagerAdapter = new HomeActivity.ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
