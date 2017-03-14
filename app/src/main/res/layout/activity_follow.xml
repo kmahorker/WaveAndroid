@@ -5,11 +5,12 @@
     android:background="@color/white_solid"
     >
 
-    <android.support.v7.widget.SearchView
+    <SearchView
         android:id="@+id/sf_follow_search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:iconifiedByDefault="false"
         />
 
     <ListView

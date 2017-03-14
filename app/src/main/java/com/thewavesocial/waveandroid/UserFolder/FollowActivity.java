@@ -1,11 +1,11 @@
 package com.thewavesocial.waveandroid.UserFolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
@@ -33,6 +34,7 @@ public class FollowActivity extends AppCompatActivity {
 
     public static final String FOLLOW_POPUP_TYPE_ARG = "FOLLOW_POPUP_TYPE_ARG";
 
+    private Activity followActivity = this;
     private UserProfileFragment.PopupPage pageType;
 
     private TextView title;
@@ -118,6 +120,12 @@ public class FollowActivity extends AppCompatActivity {
             if (v == null) {
                 LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.follow_user_row, null);
+                v.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UtilityClass.hideKeyboard(followActivity);
+                    }
+                });
             }
             final User user = getItem(position);
             if (user != null) {
