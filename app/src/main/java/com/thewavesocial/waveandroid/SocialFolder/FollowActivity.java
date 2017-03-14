@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.UserFolder;
+package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Context;
@@ -74,19 +74,18 @@ public class FollowActivity extends AppCompatActivity {
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
         List<User> follows = new ArrayList<>();
         if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            for (Long userId: CurrentUser.theUser.getFollowers()) {
+            for (Long userId : CurrentUser.theUser.getFollowers()) {
                 follows.add(CurrentUser.getUserObject(userId));
             }
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            for (Long userId: CurrentUser.theUser.getFollowing()) {
+            for (Long userId : CurrentUser.theUser.getFollowing()) {
                 follows.add(CurrentUser.getUserObject(userId));
             }
         }
         followUsersList.setAdapter(new FollowersAdapter(this, R.layout.follow_user_row, follows));
     }
 
-    public void setupFollowActionbar()
-    {
+    public void setupFollowActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_follow);
 
@@ -166,7 +165,6 @@ public class FollowActivity extends AppCompatActivity {
             return v;
         }
     }
-
 
 
 }

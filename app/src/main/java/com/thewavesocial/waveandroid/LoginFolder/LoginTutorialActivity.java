@@ -27,7 +27,7 @@ import com.facebook.login.LoginResult;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -198,7 +198,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private void processJSONObject(JSONObject json)
     {
         System.out.println(json);
-        Intent intentLogin = new Intent(mainActivity, HomeActivity.class);
+        Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
         try
         {
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database

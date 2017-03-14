@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FriendsFolder.FriendsListFragment;
-import com.thewavesocial.waveandroid.FriendsFolder.InviteFriendsActivity;
+import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
+import com.thewavesocial.waveandroid.SocialFolder.InviteFriendsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 

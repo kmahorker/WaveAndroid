@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.FriendsFolder;
+package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -74,7 +74,6 @@ public class InviteFriendsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Add Friends");
         //getSupportActionBar().setDisplayShowCustomEnabled(true);
         //getSupportActionBar().setCustomView();
-
     }
 
     @Override

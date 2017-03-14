@@ -80,8 +80,11 @@ public class UserNotificationCustomAdapter extends BaseAdapter
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
-        holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
-                mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+        if ( sender.getProfilePic() != null )
+        {
+            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
+                    mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+        }
         holder.sender.setText(sender.getFirstName());
         holder.notifmessage.setText(getItem(position).getMessage());
         holder.timeAgo.setText("28m");
