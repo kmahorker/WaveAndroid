@@ -1,0 +1,68 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thewavesocial.waveandroid.LoginFolder.LoginTutorialFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tutorialBigImage_3"
+            android:layout_width="match_parent"
+            android:layout_height="261dp"
+            android:layout_marginBottom="70dp"
+            app:srcCompat="@drawable/plug_icon"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="43dp"
+            android:layout_marginRight="43dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/tutorialIcon_3"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="11dp"
+                android:layout_weight="0.1"
+                app:srcCompat="@drawable/tutorial_host_icon" />
+
+            <TextView
+                android:id="@+id/tutorialLargeText_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:lineSpacingExtra="5dp"
+                android:maxLines="3"
+                android:text="Host parties and invite friends"
+                android:textColor="#000000"
+                android:textSize="25dp" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tutorialDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="43dp"
+            android:layout_marginRight="43dp"
+            android:layout_weight="1"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="5"
+            android:text="Just tap on a house icon to see who's going to a party and when it's getting shut down"
+            android:textColor="#8E8E93"
+            android:textSize="16dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

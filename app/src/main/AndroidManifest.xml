@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.thewavesocial.waveandroid">
+    package="com.thewavesocial.waveandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,37 +15,43 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
         <activity android:name=".LoginFolder.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".LoginFolder.SignupActivity" />
-        <activity android:name=".FriendsFolder.FriendProfileActivity"/>
-       <!--- <activity android:name=".EventsFolder.PartyProfileFragment"/> -->
-        <activity android:name=".FriendsFolder.InviteFriendsActivity"/>
-        <activity android:name=".UserFolder.EditUserProfileActivity"/>
-        <activity android:name=".HostFolder.CreateEventActivity"/>
-        <activity android:name=".HostFolder.ManageEventsActivity"/>
-        <activity android:name=".HostFolder.EventStatsActivity"/>
-        <activity android:name=".LoginFolder.ForgotPasswordActivity"/>
-        <activity android:name=".LoginFolder.StartupActivity"></activity>
-        <activity android:name=".UserFolder.FollowActivity"></activity>
+        <activity android:name=".FriendsFolder.FriendProfileActivity" />
+        <!-- - <activity android:name=".EventsFolder.PartyProfileFragment"/> -->
+        <activity android:name=".FriendsFolder.InviteFriendsActivity" />
+        <activity android:name=".UserFolder.EditUserProfileActivity" />
+        <activity android:name=".HostFolder.CreateEventActivity" />
+        <activity android:name=".HostFolder.ManageEventsActivity" />
+        <activity android:name=".HostFolder.EventStatsActivity" />
+        <activity android:name=".LoginFolder.ForgotPasswordActivity" />
+        <activity android:name=".LoginFolder.StartupActivity" />
+        <activity android:name=".UserFolder.FollowActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
-        <activity android:name=".HomeActivity"
-                  android:windowSoftInputMode="adjustPan">
-            <!--       <intent-filter>
+        <activity
+            android:name=".HomeActivity"
+            android:windowSoftInputMode="adjustPan">
+
+            <!--
+                       <intent-filter>
                        <action android:name="android.intent.action.MAIN"/>
                        <category android:name="android.intent.category.LAUNCHER"/>
-                   </intent-filter> -->
-               </activity>
-           </application>
+                   </intent-filter>
+            -->
+        </activity>
+        <activity android:name=".LoginFolder.LoginTutorialActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 
-       </manifest>
+</manifest>
