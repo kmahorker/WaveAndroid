@@ -63,7 +63,7 @@
         android:background="@drawable/round_shape_shadow"
         android:layout_alignLeft="@id/user_followers_text"
         android:layout_toEndOf="@id/user_profile_pic"
-        android:layout_below="@id/user_followers_text"/> <!--Followers Count-->
+        android:layout_below="@id/user_followers_text" /> <!--Followers Count-->
 
     <TextView
         android:layout_width="50dp"

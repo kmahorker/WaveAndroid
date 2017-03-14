@@ -8,11 +8,11 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -85,15 +85,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         final View myMapLayout = getActivity().findViewById(R.id.home_mapsView_relativeLayout);
         myMapLayout.getViewTreeObserver()
                 .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-        {
-            @Override
-            public void onGlobalLayout()
-            {
-                myMapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                mapHeight = myMapLayout.getHeight();
-                dragSeparator( mapHeight-180, 0 );
-            }
-        });
+                {
+                    @Override
+                    public void onGlobalLayout()
+                    {
+                        myMapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        mapHeight = myMapLayout.getHeight();
+                        dragSeparator( mapHeight-180, 0 );
+                    }
+                });
     }
 
     private void setupMapElements()

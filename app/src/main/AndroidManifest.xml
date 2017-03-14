@@ -29,6 +29,7 @@
         <activity android:name=".HostFolder.EventStatsActivity" />
         <activity android:name=".LoginFolder.ForgotPasswordActivity" />
         <activity android:name=".LoginFolder.StartupActivity" />
+        <activity android:name=".UserFolder.FollowActivity" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
