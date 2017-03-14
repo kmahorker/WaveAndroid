@@ -74,7 +74,6 @@ public class InviteFriendsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Add Friends");
         //getSupportActionBar().setDisplayShowCustomEnabled(true);
         //getSupportActionBar().setCustomView();
-
     }
 
     @Override

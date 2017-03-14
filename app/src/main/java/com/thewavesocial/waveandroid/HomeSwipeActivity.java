@@ -17,16 +17,14 @@ import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
-public class HomeSwipeActivity extends AppCompatActivity
-{
+public class HomeSwipeActivity extends AppCompatActivity {
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
     private HomeSwipeActivity mainActivity;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         CurrentUser.setContext(this);
@@ -34,24 +32,20 @@ public class HomeSwipeActivity extends AppCompatActivity
         setupMapActionbar();
 
         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-        mPagerAdapter = new HomeSwipeActivity.ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter
-    {
-        public ScreenSlidePagerAdapter(FragmentManager fm)
-        {
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position)
-        {
-            switch( position )
-            {
+        public Fragment getItem(int position) {
+            switch (position) {
                 case 0:
                     return new HostControllerFragment();
                 case 1:
@@ -62,27 +56,22 @@ public class HomeSwipeActivity extends AppCompatActivity
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return NUM_PAGES;
         }
     }
 
-    private class ScreenSlideChangeListener implements ViewPager.OnPageChangeListener
-    {
+    private class ScreenSlideChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-        {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
         }
 
         @Override
-        public void onPageSelected(int position)
-        {
-            Log.d("Position", position+"");
-            switch(position)
-            {
+        public void onPageSelected(int position) {
+            Log.d("Position", position + "");
+            switch (position) {
                 case 0:
                     setupHostActionbar();
                     break;
@@ -96,69 +85,57 @@ public class HomeSwipeActivity extends AppCompatActivity
         }
 
         @Override
-        public void onPageScrollStateChanged(int state)
-        {
+        public void onPageScrollStateChanged(int state) {
 
         }
     }
 
     //actionbar settings
-    public void setupMapActionbar()
-    {
+    public void setupMapActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_activity_home);
         TextView hostText = (TextView) findViewById(R.id.actionbar_activity_home_text_host);
         TextView socialText = (TextView) findViewById(R.id.actionbar_activity_home_text_social);
 
-        hostText.setOnClickListener(new View.OnClickListener()
-        {
+        hostText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                mPager.setCurrentItem( mPager.getCurrentItem() - 1 );
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
                 UtilityClass.hideKeyboard(mainActivity);
             }
         });
 
-        socialText.setOnClickListener(new View.OnClickListener()
-        {
+        socialText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                mPager.setCurrentItem( mPager.getCurrentItem() + 1 );
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
                 UtilityClass.hideKeyboard(mainActivity);
             }
         });
     }
 
-    public void setupHostActionbar()
-    {
+    public void setupHostActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
 
         ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_host_image_plug);
-        plug_icon.setOnClickListener(new View.OnClickListener()
-        {
+        plug_icon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                mPager.setCurrentItem(mPager.getCurrentItem()+1);
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
             }
         });
     }
 
-    public void setupUserActionbar()
-    {
+    public void setupUserActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_user);
 
         ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_user_image_plug);
-        plug_icon.setOnClickListener(new View.OnClickListener()
-        {
+        plug_icon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             }
         });
     }

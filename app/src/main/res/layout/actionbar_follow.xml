@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white_solid">
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/ib_follow_go_back"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="left|center_vertical"-->
+    <!--android:background="@drawable/back_arrow"-->
+    <!--/>-->
+    <TextView
+        android:id="@+id/ib_follow_go_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:textColor="@color/pink_solid"
+        android:text="Back"
+        />
+
+    <TextView
+        android:id="@+id/tv_follow_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/black_solid"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/ib_follow_options"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="right|center_vertical"-->
+    <!--android:background="@drawable/solid_dot"-->
+    <!--/>-->
+
+    <TextView
+        android:id="@+id/ib_follow_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:text="Options"
+        android:textColor="@color/pink_solid"
+        />
+
+</FrameLayout>

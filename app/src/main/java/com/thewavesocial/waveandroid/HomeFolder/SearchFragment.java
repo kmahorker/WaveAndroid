@@ -40,7 +40,7 @@ public class SearchFragment extends Fragment {
             public void onClick(View view) {
                 searchEventButton.setBackgroundResource(R.drawable.round_corner_red);
                 searchPeopleButton.setBackgroundResource(R.drawable.round_corner_red_edge);
-                searchEventButton.setTextColor(getResources().getColor(R.color.white));
+                searchEventButton.setTextColor(getResources().getColor(R.color.white_solid));
                 searchPeopleButton.setTextColor(getResources().getColor(R.color.appColor));
                 openSearchEvent();
                 UtilityClass.hideKeyboard(mainActivity);
@@ -52,7 +52,7 @@ public class SearchFragment extends Fragment {
             public void onClick(View view) {
                 searchPeopleButton.setBackgroundResource(R.drawable.round_corner_red);
                 searchEventButton.setBackgroundResource(R.drawable.round_corner_red_edge);
-                searchPeopleButton.setTextColor(getResources().getColor(R.color.white));
+                searchPeopleButton.setTextColor(getResources().getColor(R.color.white_solid));
                 searchEventButton.setTextColor(getResources().getColor(R.color.appColor));
                 openSearchPeople();
                 UtilityClass.hideKeyboard(mainActivity);

@@ -15,25 +15,23 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
 
-public class OptionsFragment extends Fragment
-{
+public class OptionsFragment extends Fragment {
     private User user;
+
     @Nullable
     @Override
     //initialize layout
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.options_layout, container, false);
     }
 
     @Override
     //initialize everything
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setTitle("");
-        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
+        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setTitle("");
+        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
         user = CurrentUser.theUser;
         CurrentUser.setContext(getActivity());
 
@@ -41,8 +39,7 @@ public class OptionsFragment extends Fragment
     }
 
     //set all option onClick events
-    private void setupOnClickListeners()
-    {
+    private void setupOnClickListeners() {
         TextView edit_profile = (TextView) getActivity().findViewById(R.id.options_editprofile_text);
         TextView set_bff = (TextView) getActivity().findViewById(R.id.options_setBestFriend_text);
         TextView change_pswd = (TextView) getActivity().findViewById(R.id.options_changePassword_text);
@@ -51,67 +48,53 @@ public class OptionsFragment extends Fragment
         TextView privacy = (TextView) getActivity().findViewById(R.id.options_privacyPolicy_text);
         final TextView terms_service = (TextView) getActivity().findViewById(R.id.options_termsOfService_text);
 
-        edit_profile.setOnClickListener(new View.OnClickListener()
-        {
+        edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditUserProfileActivity.class);
-                intent.putExtra("userIDLong", user.getUserID() );
+                intent.putExtra("userIDLong", user.getUserID());
                 startActivity(intent);
             }
         });
 
-        set_bff.setOnClickListener(new View.OnClickListener()
-        {
+        set_bff.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017  
             }
         });
 
-        change_pswd.setOnClickListener(new View.OnClickListener()
-        {
+        change_pswd.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017  
             }
         });
 
-        push_notif.setOnClickListener(new View.OnClickListener()
-        {
+        push_notif.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017  
             }
         });
 
-        manage_pay.setOnClickListener(new View.OnClickListener()
-        {
+        manage_pay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017  
             }
         });
 
-        privacy.setOnClickListener(new View.OnClickListener()
-        {
+        privacy.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017  
             }
         });
 
-        terms_service.setOnClickListener(new View.OnClickListener()
-        {
+        terms_service.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // TODO: 02/10/2017
             }
         });

@@ -22,12 +22,10 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsListFragment extends Fragment
-{
+public class FriendsListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
 
-    public FriendsListFragment()
-    {
+    public FriendsListFragment() {
 
     }
 
@@ -40,22 +38,21 @@ public class FriendsListFragment extends Fragment
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.list_friends, container, false);
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final FriendsListFragment fragment = this;
         DummyUser dummy = new DummyUser(getActivity()); //TODO: FOR TESTING ONLY
 
-        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
+        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
         final List<User> friendsUsers = dummy.getFriendsListObjects(dummy.getFollowers());
@@ -63,19 +60,16 @@ public class FriendsListFragment extends Fragment
         friendsListView.setAdapter(adapt);
 
         ImageView inviteFriends = (ImageView) getActivity().findViewById(R.id.addFriendButton);
-        inviteFriends.setOnClickListener(new View.OnClickListener()
-        {
+        inviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 showInviteFriendsActivity(v);
             }
         });
 
         final SearchView searchView = (SearchView) getActivity().findViewById(R.id.searchView);
         searchView.setQueryHint("Search Friends Name");
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener()
-        {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 List<User> refinedUserList = new ArrayList<>();
@@ -86,80 +80,63 @@ public class FriendsListFragment extends Fragment
             }
 
             @Override
-            public boolean onQueryTextChange(String newText)
-            {
+            public boolean onQueryTextChange(String newText) {
                 List<User> refinedUserList = search(friendsUsers, newText);
-                friendsListView.setAdapter(new CustomAdapter(getActivity(),fragment, refinedUserList));
+                friendsListView.setAdapter(new CustomAdapter(getActivity(), fragment, refinedUserList));
 
                 return true;
             }
         });
 
         //Hide Keyboard
-        view.setOnTouchListener(new View.OnTouchListener()
-        {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent ev)
-            {
+            public boolean onTouch(View v, MotionEvent ev) {
                 UtilityClass.hideKeyboard(fragment.getActivity());
                 return true;
             }
         });
 
-        friendsListView.setOnTouchListener(new View.OnTouchListener()
-        {
+        friendsListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent ev)
-            {
+            public boolean onTouch(View v, MotionEvent ev) {
                 searchView.clearFocus();
                 return false;
             }
         });
     }
 
-    public void showInviteFriendsActivity(View view)
-    {
+    public void showInviteFriendsActivity(View view) {
         Intent f_intent = new Intent(getActivity(), InviteFriendsActivity.class);
         UtilityClass.hideKeyboard(getActivity());
         startActivity(f_intent);
     }
 
-    public void showFriendProfileActivity(View view, User clickedUser)
-    {
+    public void showFriendProfileActivity(View view, User clickedUser) {
         Intent intent = new Intent(getActivity(), FriendProfileActivity.class);
         intent.putExtra("userIDLong", clickedUser.getUserID());
         startActivity(intent);
     }
 
-    public List<User> search(List<User> us, String query)
-    {
-        if(query == "")
-        {
+    public List<User> search(List<User> us, String query) {
+        if (query == "") {
             return us;
         }
         List<User> users = new ArrayList<>();
-        for(User u : us)
-        {
-            if((u.getFirstName().matches("(?i:" + query + ".*)")))
-            {
-                Log.d("V","  firstName: " + u.getFirstName());
-                Log.d("V","    bool: " + u.getFirstName().contains(query));
+        for (User u : us) {
+            if ((u.getFirstName().matches("(?i:" + query + ".*)"))) {
+                Log.d("V", "  firstName: " + u.getFirstName());
+                Log.d("V", "    bool: " + u.getFirstName().contains(query));
+                users.add(u);
+            } else if (u.getLastName().matches("(?i:" + query + ".*)")) {
+                Log.d("V", "  lastName: " + u.getLastName());
+                Log.d("V", "    bool: " + u.getLastName().contains(query));
+                users.add(u);
+            } else if (u.getFullName().matches("(?i:" + query + ".*)")) {
                 users.add(u);
             }
-
-            else if(u.getLastName().matches("(?i:" + query + ".*)"))
-            {
-                Log.d("V","  lastName: " + u.getLastName());
-                Log.d("V","    bool: " + u.getLastName().contains(query));
-                users.add(u);
-            }
-            else if(u.getFullName().matches("(?i:" + query + ".*)"))
-            {
-                users.add(u);
-            }
-            for(User check: users)
-            {
-                Log.d("V","    " + check.getFirstName());
+            for (User check : users) {
+                Log.d("V", "    " + check.getFirstName());
             }
         }
         return users;
