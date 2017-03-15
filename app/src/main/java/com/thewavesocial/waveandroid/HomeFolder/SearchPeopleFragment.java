@@ -36,7 +36,8 @@ public class SearchPeopleFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
-        final List<User> userList = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing());
+        final List<User> userList = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers());
+        // TODO: 03/14/2017 Change get followers to database users
 
         peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
                 searchPeople(userList, searchbar.getQuery().toString())));
@@ -47,7 +48,6 @@ public class SearchPeopleFragment extends Fragment {
                         searchPeople(userList, query)));
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,

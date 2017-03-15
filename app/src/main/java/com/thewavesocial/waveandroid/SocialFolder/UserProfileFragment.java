@@ -103,6 +103,7 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+
     private void showPopup(PopupPage popup) {
         switch (popup) {
             case FOLLOWERS:
@@ -112,23 +113,5 @@ public class UserProfileFragment extends Fragment {
                 mainActivity.startActivity(intent);
                 break;
         }
-    }
-
-//----------------------------------------------------------------------------------Other Sub-tasks
-
-    //compute age based on birthday: need fixed
-    private int computeAge(Calendar birth) {
-        Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.get(Calendar.YEAR), bmonth = birth.get(Calendar.MONTH), bday = birth.get(Calendar.DATE);
-        if (month == bmonth) {
-            if (day < bday)
-                return year - byear - 1;
-            else
-                return year - byear;
-        } else if (month > bmonth)
-            return year - byear;
-        else
-            return year - byear - 1;
     }
 }

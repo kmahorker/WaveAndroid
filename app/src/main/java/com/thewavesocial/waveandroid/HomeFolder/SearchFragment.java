@@ -38,10 +38,8 @@ public class SearchFragment extends Fragment {
         searchEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchEventButton.setBackgroundResource(R.drawable.round_corner_red);
-                searchPeopleButton.setBackgroundResource(R.drawable.round_corner_red_edge);
-                searchEventButton.setTextColor(getResources().getColor(R.color.white_solid));
-                searchPeopleButton.setTextColor(getResources().getColor(R.color.appColor));
+                changeButton(searchEventButton, R.color.white_solid, R.drawable.round_corner_red);
+                changeButton(searchPeopleButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 openSearchEvent();
                 UtilityClass.hideKeyboard(mainActivity);
                 MapsFragment.searchOpened = true;
@@ -50,15 +48,19 @@ public class SearchFragment extends Fragment {
         searchPeopleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchPeopleButton.setBackgroundResource(R.drawable.round_corner_red);
-                searchEventButton.setBackgroundResource(R.drawable.round_corner_red_edge);
-                searchPeopleButton.setTextColor(getResources().getColor(R.color.white_solid));
-                searchEventButton.setTextColor(getResources().getColor(R.color.appColor));
+                changeButton(searchPeopleButton, R.color.white_solid, R.drawable.round_corner_red);
+                changeButton(searchEventButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 openSearchPeople();
                 UtilityClass.hideKeyboard(mainActivity);
                 MapsFragment.searchOpened = true;
             }
         });
+    }
+
+
+    private void changeButton(TextView view, int textColor, int backgroundColor) {
+        view.setTextColor(mainActivity.getResources().getColor(textColor));
+        view.setBackgroundResource(backgroundColor);
     }
 
 

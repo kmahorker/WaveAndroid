@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,54 +54,62 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     //initialize actionbar
     private void setupActionbar() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(friend.getFirstName() + " " + friend.getLastName());
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_friend);
+
+        TextView title = (TextView) findViewById(R.id.friend_name);
+        TextView back = (TextView) findViewById(R.id.friend_back_button);
+
+        title.setText(friend.getFullName());
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     //initialize user information
-    private void setupProfileInfo()
-    {
+    private void setupProfileInfo() {
         followers_textview = (TextView) mainActivity.findViewById(R.id.friend_followers_count);
         following_textview = (TextView) mainActivity.findViewById(R.id.friend_following_count);
         profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.friend_profile_pic);
         notification_listview = (ListView) mainActivity.findViewById(R.id.friend_notification_list);
         follow_button = (TextView) mainActivity.findViewById(R.id.friend_follow_button);
 
-        followers_textview.setText( friend.getFollowers().size() + "\nfollowers" );
-        following_textview.setText( friend.getFollowing().size() + "\nfollowing" );
-        if ( friend.getProfilePic() != null )
-        {
+        followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
+        following_textview.setText(friend.getFollowing().size() + "\nfollowing");
+        if (friend.getProfilePic() != null) {
             profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
                     friend.getProfilePic().getBitmap()));
         }
-        notification_listview.setAdapter( new FriendNotificationCustomAdapter(mainActivity,
+        notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
                 friend.getNotifications2()));
 
-        if ( CurrentUser.theUser.getFollowing().contains(userID) )
-        {
-            follow_button.setText("following");
-        }
-        else
-        {
-            follow_button.setText("follow");
+        if (!CurrentUser.theUser.getFollowing().contains(userID)) {
+            changeButton("follow", R.color.appColor, R.drawable.round_corner_red_edge);
+        } else {
+            changeButton("following", R.color.white_solid, R.drawable.round_corner_red);
         }
 
-        follow_button.setOnClickListener(new View.OnClickListener()
-        {
+        follow_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if ( follow_button.getText().equals("following") )
-                {
+            public void onClick(View view) {
+                if (follow_button.getText().equals("following")) {
                     CurrentUser.theUser.getFollowing().remove(userID);
-                    follow_button.setText("follow");
-                }
-                else
-                {
+                    changeButton("follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                } else {
                     CurrentUser.theUser.getFollowing().add(userID);
-                    follow_button.setText("following");
+                    changeButton("following", R.color.white_solid, R.drawable.round_corner_red);
                 }
             }
         });
+    }
+
+
+    private void changeButton(String text, int textColor, int backgroundColor) {
+        follow_button.setText(text);
+        follow_button.setTextColor(mainActivity.getResources().getColor(textColor));
+        follow_button.setBackgroundResource(backgroundColor);
     }
 }
