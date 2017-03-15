@@ -280,6 +280,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                             new ArrayList<Long>(), //bounced
                             new ArrayList<Long>(), //attending
                             new ArrayList<Notification>(),
+                            new ArrayList<Notification>(),
                             profilePic);
                 } catch (IOException e) {
                     e.printStackTrace();

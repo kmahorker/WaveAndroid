@@ -73,15 +73,12 @@ public class FollowActivity extends AppCompatActivity {
 
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
         List<User> follows = new ArrayList<>();
-        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            for (Long userId : CurrentUser.theUser.getFollowers()) {
-                follows.add(CurrentUser.getUserObject(userId));
-            }
-        } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            for (Long userId : CurrentUser.theUser.getFollowing()) {
-                follows.add(CurrentUser.getUserObject(userId));
-            }
-        }
+
+        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) //Changed to getUsersListObjects()
+            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowers() );
+        else if (pageType == UserProfileFragment.PopupPage.FOLLOWING)
+            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowing() );
+
         followUsersList.setAdapter(new FollowersAdapter(this, R.layout.follow_user_row, follows));
     }
 
@@ -103,8 +100,6 @@ public class FollowActivity extends AppCompatActivity {
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
             title.setText(getString(R.string.following));
         }
-
-
     }
 
     private class FollowersAdapter extends ArrayAdapter<User> {
@@ -165,6 +160,4 @@ public class FollowActivity extends AppCompatActivity {
             return v;
         }
     }
-
-
 }

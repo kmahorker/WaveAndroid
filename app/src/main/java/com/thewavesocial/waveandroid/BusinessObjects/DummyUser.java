@@ -40,30 +40,48 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new ArrayList<Notification>(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
 
         setupDummy(context);
         setupUserObjects(context);
         setupPartyObjects(context);
-        setupNotifications();
+        setupNotifications1();
     }
 
-    private void setupNotifications()
+    private void setupNotifications1()
     {
-        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type1FollowingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type1FollowingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type1FollowingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend4().getUserID(), Notification.type1FollowingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend5().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend4().getUserID(), Notification.type1FollowingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend5().getUserID(), Notification.type1FollowingNotice ) );
 
-        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type2HostingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type2HostingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type2HostingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type2HostingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type2HostingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type2HostingNotice ) );
 
-        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type3AttendingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type3AttendingNotice ) );
-        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type3AttendingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type3AttendingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type3AttendingNotice ) );
+        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type3AttendingNotice ) );
+    }
+
+    private void setupFriendNotifications2(User friend)
+    {
+        friend.getNotifications2().add( new Notification( this.getFriend1().getUserID(), Notification.type4FriendFollowingNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend2().getUserID(), Notification.type4FriendFollowingNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend3().getUserID(), Notification.type5FriendHostingNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend4().getUserID(), Notification.type5FriendHostingNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend5().getUserID(), Notification.type6FriendHostedNotice ) );
+
+        friend.getNotifications2().add( new Notification( this.getFriend1().getUserID(), Notification.type6FriendHostedNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend2().getUserID(), Notification.type6FriendHostedNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend3().getUserID(), Notification.type7FriendAttendingNotice ) );
+
+        friend.getNotifications2().add( new Notification( this.getFriend1().getUserID(), Notification.type7FriendAttendingNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend2().getUserID(), Notification.type8FriendAttendedNotice ) );
+        friend.getNotifications2().add( new Notification( this.getFriend3().getUserID(), Notification.type8FriendAttendedNotice ) );
     }
 
     public List<User> getFriendsListObjects(List<Long> userIdList)
@@ -260,7 +278,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
         friend2 = new User((long) 2,
                 "Sad",
@@ -280,7 +299,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
         friend3 = new User((long) 3,
                 "Boring",
@@ -300,7 +320,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
         friend4 = new User((long) 4,
                 "Angry",
@@ -320,7 +341,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
         friend5 = new User((long) 5,
                 "Lit",
@@ -340,7 +362,8 @@ public class DummyUser extends User
                 new ArrayList<Long>(), //party hosted list
                 new ArrayList<Long>(), //party bounced list,
                 new ArrayList<Long>(),
-                new LinkedList(), //notifications
+                new ArrayList<Notification>(), //notifications1
+                new ArrayList<Notification>(), //notifications2
                 new BitmapDrawable());
         friend1.getBirthday().set(1997, 1, 2);
         friend2.getBirthday().set(1998, 2, 3);
@@ -358,6 +381,12 @@ public class DummyUser extends User
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
         friend5.setProfilePic(new BitmapDrawable(context.getResources(),
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+
+        setupFriendNotifications2(friend1);
+        setupFriendNotifications2(friend2);
+        setupFriendNotifications2(friend3);
+        setupFriendNotifications2(friend4);
+        setupFriendNotifications2(friend5);
     }
 
     public User getDummyUser()

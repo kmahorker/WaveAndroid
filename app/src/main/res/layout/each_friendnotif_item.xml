@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/eachFriendNotif_message"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:maxWidth="210dp"
+        android:gravity="center_vertical"
+        android:text="Started following"
+        android:textSize="15sp"
+        android:textColor="#000"
+        android:lines="1"
+        android:ellipsize="end"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"/>
+
+    <TextView
+        android:id="@+id/eachFriendNotif_sender"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:maxWidth="160dp"
+        android:gravity="center_vertical"
+        android:text="Hugo."
+        android:textSize="15sp"
+        android:textColor="#000"
+        android:lines="1"
+        android:textStyle="bold"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/eachFriendNotif_timeAgo"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:text="28min"
+        android:textSize="15sp"
+        android:textColor="#636363"
+        android:layout_marginLeft="5dp"
+        android:lines="1"
+        android:ellipsize="end"/>
+
+</LinearLayout>

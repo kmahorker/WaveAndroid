@@ -30,7 +30,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     private User user;
-    private TextView username_textview, followers_textview, following_textview;
+    private TextView followers_textview, following_textview;
     private ListView notification_listview;
     private ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
@@ -83,25 +83,26 @@ public class UserProfileFragment extends Fragment {
             }
         });
         following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
+        profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
+        notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
+
+        followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
+        following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
+
+        if (CurrentUser.theUser.getProfilePic() != null) {
+            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+                    CurrentUser.theUser.getProfilePic().getBitmap()));
+        }
+        notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
+                CurrentUser.theUser.getNotifications1()));
         following_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(PopupPage.FOLLOWING);
             }
         });
-
-        username_textview = (TextView) mainActivity.findViewById(R.id.user_name);
-        profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
-        notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
-
-        followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "");
-        following_textview.setText(CurrentUser.theUser.getFollowing().size() + "");
-        username_textview.setText(CurrentUser.theUser.getFullName());
-        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                CurrentUser.theUser.getProfilePic().getBitmap()));
-        notification_listview.setAdapter(new UserNotificationCustomAdapter(getActivity(),
-                CurrentUser.theUser.getNotifications()));
     }
+
 
     private void showPopup(PopupPage popup) {
         switch (popup) {
@@ -112,23 +113,5 @@ public class UserProfileFragment extends Fragment {
                 mainActivity.startActivity(intent);
                 break;
         }
-    }
-
-//----------------------------------------------------------------------------------Other Sub-tasks
-
-    //compute age based on birthday: need fixed
-    private int computeAge(Calendar birth) {
-        Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR), month = now.get(Calendar.MONTH), day = now.get(Calendar.DATE);
-        int byear = birth.get(Calendar.YEAR), bmonth = birth.get(Calendar.MONTH), bday = birth.get(Calendar.DATE);
-        if (month == bmonth) {
-            if (day < bday)
-                return year - byear - 1;
-            else
-                return year - byear;
-        } else if (month > bmonth)
-            return year - byear;
-        else
-            return year - byear - 1;
     }
 }

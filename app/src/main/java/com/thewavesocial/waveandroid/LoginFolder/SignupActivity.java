@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -152,7 +153,8 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<Long>(), //party hosted list
                     new ArrayList<Long>(), //party bounced list
                     new ArrayList<Long>(),
-                    new LinkedList(), //notifications
+                    new ArrayList<Notification>(),
+                    new ArrayList<Notification>(),
                     new BitmapDrawable());
             user.getBestFriends().add(bestFriend.getUserID());
             user.setProfilePic(profilePic);
