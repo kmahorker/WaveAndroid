@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:layout_gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/eachSearchPeople_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/round_shape"/>
+
+    <TextView
+        android:id="@+id/eachSearchPeople_follow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Follow"
+        android:textSize="@dimen/button_text_normal"
+        android:textColor="@color/appColor"
+        android:background="@drawable/round_corner_red_edge"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"/>
+
+    <TextView
+        android:id="@+id/eachSearchPeople_name"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:text="Wei Tung Chen"
+        android:textSize="@dimen/text_normal"
+        android:textColor="#000"
+        android:lines="1"
+        android:ellipsize="middle"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/eachSearchPeople_follow"
+        android:layout_toEndOf="@id/eachSearchPeople_image"/>
+
+</RelativeLayout>

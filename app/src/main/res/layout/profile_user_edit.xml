@@ -5,7 +5,7 @@
     android:id="@+id/edit_user_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thewavesocial.waveandroid.UserFolder.EditUserProfileActivity">
+    tools:context="com.thewavesocial.waveandroid.SocialFolder.EditUserProfileActivity">
 
     <ImageView
         android:layout_width="120dp"

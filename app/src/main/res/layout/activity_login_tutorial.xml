@@ -1,0 +1,60 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/login_tutorial_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/facebook_login_button" />
+    <LinearLayout
+        android:id="@+id/dot_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp">
+
+        <ImageView
+            android:id="@+id/login_tutorial_dot1"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pink_full_dot" />
+
+        <ImageView
+            android:id="@+id/login_tutorial_dot2"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pink_hollow_dot" />
+
+        <ImageView
+            android:id="@+id/login_tutorial_dot3"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pink_hollow_dot" />
+
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/facebook_login_button"
+        android:background="@drawable/round_corner_red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOGIN WITH FACEBOOK"
+        android:textColor="#fff"
+        android:layout_above="@+id/dot_layout"
+        android:layout_marginLeft="43dp"
+        android:layout_marginRight="43dp"
+        android:layout_marginBottom="20dp"/>
+
+
+
+</RelativeLayout>

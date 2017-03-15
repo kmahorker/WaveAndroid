@@ -1,30 +1,21 @@
-package com.thewavesocial.waveandroid.FriendsFolder;
+package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
-import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UserFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.Calendar;
-import java.util.List;
-
-public class FriendProfileActivity extends AppCompatActivity
-{
-    private User friend;
+public class FriendProfileActivity extends AppCompatActivity {
+    private User friend; //TODO: Remove Empty User
     private long userID;
     private TextView followers_textview, following_textview, follow_button;
     private ListView notification_listview;
@@ -34,12 +25,10 @@ public class FriendProfileActivity extends AppCompatActivity
 
     @Override
     //initialize everything
-    protected void onCreate(Bundle bundle)
-    {
+    protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.profile_friend);
         mainActivity = this;
-        //CurrentUser.setContext(getApplicationContext());
 
         // access current friend data
         Intent intent = getIntent();
@@ -53,10 +42,8 @@ public class FriendProfileActivity extends AppCompatActivity
 
     @Override
     //onClick event for back button pressed
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home)
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
@@ -65,8 +52,7 @@ public class FriendProfileActivity extends AppCompatActivity
 //-------------------------------------------------------------------------------OnCreate Sub-tasks
 
     //initialize actionbar
-    private void setupActionbar()
-    {
+    private void setupActionbar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(friend.getFirstName() + " " + friend.getLastName());
     }

@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#F06060</color>
     <color name="colorPrimaryDark">#F06060</color>
     <color name="colorAccent">#F06060</color>
+
     <color name="appColor">#f80881</color>
+
     <color name="backgroundColor">#ececf2</color>
+
+    <color name="white_solid">#ffffff</color>
+
+    <color name="black_solid">#000000</color>
+
+    <color name="pink_solid">#ff69b4</color>
+
+    <color name="separator_color">#f5f5f5</color>
+
 </resources>

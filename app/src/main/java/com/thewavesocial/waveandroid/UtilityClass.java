@@ -6,12 +6,16 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
@@ -77,9 +81,7 @@ public final class UtilityClass
     public static RoundedBitmapDrawable toRoundImage(Resources res, Bitmap bitmap)
     {
         //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
-        RoundedBitmapDrawable dr =
-                RoundedBitmapDrawableFactory.create(res,
-                        bitmap);
+        RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(res, bitmap);
         dr.setCircular(true);
         return dr;
     }
@@ -161,5 +163,9 @@ public final class UtilityClass
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
+    }
+
+    public static <T extends View> T getView(@NonNull View v, @IdRes int resId) {
+        return (T) v.findViewById(resId);
     }
 }

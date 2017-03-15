@@ -16,7 +16,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.HomeActivity;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -161,7 +161,7 @@ public class SignupActivity extends FragmentActivity
 
             CurrentUser.setTheUser(user);
 
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent = new Intent(this, HomeSwipeActivity.class);
             startActivity(intent);
 
             finish();

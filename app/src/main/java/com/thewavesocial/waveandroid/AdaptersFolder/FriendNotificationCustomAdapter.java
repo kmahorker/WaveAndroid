@@ -1,28 +1,19 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.FriendsFolder.FriendProfileActivity;
-import com.thewavesocial.waveandroid.HomeActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.SearchFolder.PartyProfileFragment;
-import com.thewavesocial.waveandroid.UtilityClass;
+import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 
 import java.util.List;
 
