@@ -188,7 +188,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(mainActivity, error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(mainActivity, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -209,9 +209,9 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 finish();
             }
             if ( Integer.parseInt(json.getString("age_range").substring(
-                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 18 )
+                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 )
             {
-                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 18+ (College Students) only.", true);
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
                 return;
             }
             else
