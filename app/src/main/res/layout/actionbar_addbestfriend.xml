@@ -26,5 +26,6 @@
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
         android:textSize="18dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:enabled="false"/>
 </RelativeLayout>

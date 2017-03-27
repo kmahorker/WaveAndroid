@@ -12,16 +12,24 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+
+import org.w3c.dom.Text;
 
 public class AddBestFriendActivity extends AppCompatActivity {
     ActionBar actionBar;
     EditText phoneNumberEditText;
     KeyListener phoneTextKeyListener;
+    String name = "";
+    String phoneNumber = "0";
+    TextView doneTextView;
+    TextView skipTextView;
     private static final int RESULT_PICK_CONTACT = 1234;
 
     @Override
@@ -37,6 +45,24 @@ public class AddBestFriendActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.actionbar_addbestfriend);
+        skipTextView = (TextView)findViewById(R.id.skipTextView);
+        doneTextView = (TextView) findViewById(R.id.doneTextView);
+        doneTextView.setEnabled(false);
+        final Intent intent = new Intent(this, HomeSwipeActivity.class);
+        skipTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
+        doneTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
+                // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+                startActivity(intent);
+            }
+        });
 
     }
     private void setUpEditText(){
@@ -58,7 +84,9 @@ public class AddBestFriendActivity extends AppCompatActivity {
                         else{
                             phoneNumberEditText.setText("");
                             phoneNumberEditText.setKeyListener(phoneTextKeyListener);
-                            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0); //TODO: Change with actual pics
+                            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0);//TODO: Change with actual pics
+                            doneTextView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+                            doneTextView.setEnabled(false);
                         }
 
                         return true;
@@ -95,8 +123,6 @@ public class AddBestFriendActivity extends AppCompatActivity {
     private void contactPicked(Intent data){
         Cursor cursor = null;
         try{
-            String phoneNumber = null;
-            String name = null;
             Uri uri = data.getData();
             cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
@@ -108,7 +134,8 @@ public class AddBestFriendActivity extends AppCompatActivity {
             phoneNumberEditText.setText(name);
             phoneNumberEditText.setKeyListener(null);
             phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0); //TODO: Change with actual pics
-            CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+            doneTextView.setTextColor(getResources().getColor(R.color.appColor));
+            doneTextView.setEnabled(true);
         }catch (Exception e) {
             e.printStackTrace();
         }
