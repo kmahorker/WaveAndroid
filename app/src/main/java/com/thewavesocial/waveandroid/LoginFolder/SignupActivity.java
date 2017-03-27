@@ -21,7 +21,6 @@ import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 
 public class SignupActivity extends FragmentActivity
 {
@@ -147,7 +146,7 @@ public class SignupActivity extends FragmentActivity
                     birthday,
                     new ArrayList<Long>(), //best friend list
                     new ArrayList<Long>(), //followers list
-                    new ArrayList<Long>(), //following list
+                    new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //following list
                     new ArrayList<Long>(), //attending list
                     new ArrayList<Long>(), //party attended list
                     new ArrayList<Long>(), //party hosted list
@@ -156,7 +155,7 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<Notification>(),
                     new ArrayList<Notification>(),
                     new BitmapDrawable());
-            user.getBestFriends().add(bestFriend.getUserID());
+            //user.getBestFriends().add(bestFriend.getUserID());
             user.setProfilePic(profilePic);
 
             CurrentUser.setTheUser(user);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_add_best_friend"
     android:layout_width="match_parent"
@@ -8,6 +8,39 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.thewavesocial.waveandroid.LoginFolder.AddBestFriendActivity">
 
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/titleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Message a friend in case of an emergency"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        android:textColor="@color/black_solid"/>
+
+    <TextView
+        android:id="@+id/infoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Add a friend from your contacts to send them a text in case of an emergency by tapping on the SOS button in the map screen."
+        android:textAlignment="center"
+        android:layout_marginTop="15dp"/>
+
+    <EditText
+        android:id="@+id/phoneNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone"
+        android:text=""
+        android:layout_marginTop="70dp"
+        android:drawableRight="@drawable/plus_sign"
+        android:textColor="@color/black_solid"/>
+
+
+</LinearLayout>

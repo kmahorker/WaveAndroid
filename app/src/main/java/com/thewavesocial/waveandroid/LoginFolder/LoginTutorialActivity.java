@@ -249,7 +249,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                             calendar,
                             new ArrayList<Long>(), //followers
                             new ArrayList<Long>(), //following
-                            new ArrayList<Long>(), //bestFriends
+                            new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
                             new ArrayList<Long>(), //hosting
                             new ArrayList<Long>(), //attended
                             new ArrayList<Long>(), //hosted
