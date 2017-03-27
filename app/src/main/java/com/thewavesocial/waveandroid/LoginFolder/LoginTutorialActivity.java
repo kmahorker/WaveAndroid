@@ -175,6 +175,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
     private void processJSONObject(JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
+        //new JSONParsingTask("Specific URL with Facebook ID").execute();
         try
         {
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
