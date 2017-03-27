@@ -7,6 +7,8 @@ import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,6 +32,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
     String phoneNumber = "0";
     TextView doneTextView;
     TextView skipTextView;
+    boolean contact = false;
     private static final int RESULT_PICK_CONTACT = 1234;
 
     @Override
@@ -37,6 +40,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_best_friend);
         setUpActionBar();
+        setUpTextViews();
         setUpEditText();
 
 
@@ -45,9 +49,16 @@ public class AddBestFriendActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.actionbar_addbestfriend);
+
+
+    }
+
+    private void setUpTextViews(){
         skipTextView = (TextView)findViewById(R.id.skipTextView);
+
         doneTextView = (TextView) findViewById(R.id.doneTextView);
         doneTextView.setEnabled(false);
+
         final Intent intent = new Intent(this, HomeSwipeActivity.class);
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,19 +66,26 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         doneTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
-                // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+                if(contact) {
+                    //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
+                    // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+                }
+                else{
+                    //TODO: Update Current User object with phoneNumberEditText.text
+                }
+
                 startActivity(intent);
             }
         });
-
     }
     private void setUpEditText(){
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
         phoneTextKeyListener = phoneNumberEditText.getKeyListener();
+
         phoneNumberEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -84,15 +102,39 @@ public class AddBestFriendActivity extends AppCompatActivity {
                         else{
                             phoneNumberEditText.setText("");
                             phoneNumberEditText.setKeyListener(phoneTextKeyListener);
-                            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0);//TODO: Change with actual pics
-                            doneTextView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
-                            doneTextView.setEnabled(false);
+                            drawableToPlus();
+                            disableDoneTextView();
+                            contact = false;
                         }
 
                         return true;
                     }
                 }
                 return false;
+            }
+        });
+
+        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 0){
+                    enableDoneTextView();
+                    drawableToDelete();
+                }
+                else{
+                    disableDoneTextView();
+                    drawableToPlus();
+                }
             }
         });
 
@@ -133,12 +175,30 @@ public class AddBestFriendActivity extends AppCompatActivity {
             name = cursor.getString(nameIndex);
             phoneNumberEditText.setText(name);
             phoneNumberEditText.setKeyListener(null);
-            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0); //TODO: Change with actual pics
-            doneTextView.setTextColor(getResources().getColor(R.color.appColor));
-            doneTextView.setEnabled(true);
+            drawableToDelete();
+            enableDoneTextView();
+            contact = true;
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void disableDoneTextView(){
+        doneTextView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
+        doneTextView.setEnabled(false);
+    }
+
+    private void enableDoneTextView(){
+        doneTextView.setTextColor(getResources().getColor(R.color.appColor));
+        doneTextView.setEnabled(true);
+    }
+
+    private void drawableToDelete(){
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0); //TODO: Change with actual pics
+    }
+
+    private void drawableToPlus(){
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0);//TODO: Change with actual pics
     }
 
 
