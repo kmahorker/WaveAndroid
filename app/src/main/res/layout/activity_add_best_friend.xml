@@ -20,7 +20,8 @@
         android:text="Message a friend in case of an emergency"
         android:textAlignment="center"
         android:textSize="24dp"
-        android:textColor="@color/black_solid"/>
+        android:textColor="@color/black_solid"
+        android:layout_marginTop="15dp"/>
 
     <TextView
         android:id="@+id/infoLabel"
@@ -40,7 +41,8 @@
         android:text=""
         android:layout_marginTop="70dp"
         android:drawableRight="@drawable/plus_sign"
-        android:textColor="@color/black_solid"/>
+        android:textColor="@color/black_solid"
+        android:textSize="18dp"/>
 
 
 </LinearLayout>

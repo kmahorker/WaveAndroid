@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:paddingLeft="20dp"
+        android:paddingLeft="10dp"
         android:text="Skip"
         android:textColor="@color/appColor"
         android:textSize="18dp" />
@@ -21,9 +21,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/skipTextView"
         android:layout_alignParentEnd="true"
-        android:paddingRight="20dp"
+        android:paddingRight="10dp"
         android:text="Done"
         android:textAlignment="center"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="18dp" />
+        android:textSize="18dp"
+        android:textStyle="bold" />
 </RelativeLayout>

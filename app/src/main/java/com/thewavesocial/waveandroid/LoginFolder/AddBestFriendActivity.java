@@ -35,7 +35,9 @@ public class AddBestFriendActivity extends AppCompatActivity {
     }
     private void setUpActionBar(){
         actionBar = getSupportActionBar();
-        getSupportActionBar().setCustomView(R.layout.actionbar_addbestfriend);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(R.layout.actionbar_addbestfriend);
+
     }
     private void setUpEditText(){
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
@@ -50,13 +52,13 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (phoneNumberEditText.getRight() - phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         //fire contact picker
-                        if(phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_sign).getConstantState())){
+                        if(phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_sign).getConstantState())){ //TODO: Change with actual pics
                             pickContact(v);
                         }
                         else{
                             phoneNumberEditText.setText("");
                             phoneNumberEditText.setKeyListener(phoneTextKeyListener);
-                            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0);
+                            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0); //TODO: Change with actual pics
                         }
 
                         return true;
@@ -86,7 +88,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                     break;
             }
         } else {
-            Log.e("MainActivity", "Failed to pick contact");
+            Log.e("AddBestFriendActivity", "Failed to pick contact");
         }
     }
 
@@ -105,7 +107,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
             name = cursor.getString(nameIndex);
             phoneNumberEditText.setText(name);
             phoneNumberEditText.setKeyListener(null);
-            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0);
+            phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0); //TODO: Change with actual pics
             CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
         }catch (Exception e) {
             e.printStackTrace();
