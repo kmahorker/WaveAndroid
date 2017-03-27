@@ -1,6 +1,9 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -21,11 +24,24 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class LoginTutorialActivity extends AppCompatActivity {
@@ -153,11 +169,104 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
 
     private void processJSONObject(JSONObject json) {
-        Toast.makeText(this, "Home", Toast.LENGTH_LONG).show();
-        System.out.println(json);
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
+        try
+        {
+            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
+            {
+                //login
+                intentLogin.putExtra("userIDLong", json.getString("id"));
+                startActivity(intentLogin);
+                finish();
+            }
+            if ( Integer.parseInt(json.getString("age_range").substring(
+                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 )
+            {
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
+                return;
+            }
+            else
+            {
+                /*
+                //signup
+                intentSignup.putExtra("userIDLong", json.getString("id"));
+                intentSignup.putExtra("userName", json.getString("name"));
+                intentSignup.putExtra("userEmail", json.getString("email"));
+                intentSignup.putExtra("userGender", json.getString("gender"));
+                intentSignup.putExtra("userBirthday", json.getString("birthday"));*/
+
+                //Parse Birthday
+                String string = json.getString("birthday");
+                String pattern1 = "MM/dd/yyyy";
+                String pattern2 = "MM/dd";
+                String pattern3 = "yyyy";
+                Date date = null;
+                Calendar calendar = null;
+                try {
+                    if(string.length() == pattern1.length()) {
+                        date = new SimpleDateFormat(pattern1).parse(string);
+                    }
+                    else if(string.length() == pattern2.length()){
+                        date = new SimpleDateFormat(pattern2).parse(string);
+                    }
+                    else{
+                        date = new SimpleDateFormat(pattern3).parse(string);
+                    }
+                    if(date != null) {
+                        calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                //Get profile pic and convert to bitmapdrawable
+                String id = json.getString("id");
+                URL img_value = null;
+                try {
+                    img_value = new URL("http://graph.facebook.com/"+id+"/picture?type=large");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
+                    User newUser = new User(Long.parseLong(json.getString("id")),
+                            json.getString("first_name"),
+                            json.getString("last_name"),
+                            json.getString("email"),
+                            "password" /*TODO: delete password field*/,
+                            "UCSB" /*TODO: delete college field*/,
+                            json.getString("gender"),
+                            1231231234 /*TODO: delte ph#*/,
+                            new MapAddress(),
+                            calendar,
+                            new ArrayList<Long>(), //followers
+                            new ArrayList<Long>(), //following
+                            new ArrayList<Long>(), //bestFriends
+                            new ArrayList<Long>(), //hosting
+                            new ArrayList<Long>(), //attended
+                            new ArrayList<Long>(), //hosted
+                            new ArrayList<Long>(), //bounced
+                            new ArrayList<Long>(), //attending
+                            new ArrayList<Notification>(),
+                            new ArrayList<Notification>(),
+                            profilePic);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //TODO: Add user object to Database
+
+            }
+        }
+        catch (JSONException e)
+        {
+            System.out.println("Error with JSON LOL" + e.getLocalizedMessage());
+
+        }
         startActivity(intentLogin);
-        finish();
     }
 
     @Override
