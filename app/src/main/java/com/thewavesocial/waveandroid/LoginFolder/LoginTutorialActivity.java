@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -34,7 +35,11 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -195,7 +200,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 intentSignup.putExtra("userGender", json.getString("gender"));
                 intentSignup.putExtra("userBirthday", json.getString("birthday"));*/
 
-                //Parse Birthday
+                //Parse Birthdays
                 String string = json.getString("birthday");
                 String pattern1 = "MM/dd/yyyy";
                 String pattern2 = "MM/dd";
@@ -256,15 +261,11 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 //TODO: Add user object to Database
-
             }
         }
-        catch (JSONException e)
-        {
+        catch (JSONException e) {
             System.out.println("Error with JSON LOL" + e.getLocalizedMessage());
-
         }
         startActivity(intentLogin);
     }
@@ -272,5 +273,69 @@ public class LoginTutorialActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private JSONObject requestDataFromServer(String server_url) {
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        InputStream stream;
+        StringBuffer buffer = new StringBuffer();
+        try {
+            URL url = new URL(server_url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+            if ( connection.getResponseCode() == 500 )
+                stream = connection.getErrorStream();
+            else
+                stream = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(stream));
+            String line ="";
+            while( (line = reader.readLine()) != null )
+                buffer.append(line);
+            String jsonString = buffer.toString();
+            JSONObject jsonObject = new JSONObject(jsonString);
+            return jsonObject.getJSONObject("data");
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        } finally {
+            if ( connection != null )
+                connection.disconnect();
+            try {
+                if ( reader != null )
+                    reader.close();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+
+    public class JSONParsingTask extends AsyncTask<String, String, JSONObject> {
+
+        @Override
+        protected JSONObject doInBackground(String... params){
+            return requestDataFromServer(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result) {
+            super.onPostExecute(result);
+            if (result != null) {
+                String url = "";
+                try {
+                    url = "https://api.theplugsocial.com/v1/users/";
+                    url += result.getLong("id") + "?access_token=";
+                    url += result.getString("jwt");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                JSONObject data = requestDataFromServer(url);
+                // TODO: 03/26/2017 Process user data
+            }
+        }
     }
 }
