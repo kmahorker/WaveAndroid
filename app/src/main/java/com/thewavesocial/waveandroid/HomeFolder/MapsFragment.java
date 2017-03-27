@@ -105,7 +105,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        // new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
+        new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
 
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
@@ -460,23 +460,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 stream = connection.getErrorStream();
             else
                 stream = connection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(stream));
 
+            reader = new BufferedReader(new InputStreamReader(stream));
             String line ="";
+
             while( (line = reader.readLine()) != null ) {
                 buffer.append(line);
             }
             return buffer.toString();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        } catch (IOException e) {}
+        finally {
             if ( connection != null ) {
                 connection.disconnect();
             }
-            try{
+            try {
                 if ( reader != null ){
                     reader.close();
                 }
@@ -500,6 +498,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             super.onPostExecute(result);
             // TODO: 03/24/2017 Get JWT
             UtilityClass.printAlertMessage(getActivity(), result, true);
+            Log.d("Result", result);
+            System.out.println("result");
         }
     }
 }
