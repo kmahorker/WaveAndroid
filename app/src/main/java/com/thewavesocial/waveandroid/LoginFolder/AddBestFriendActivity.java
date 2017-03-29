@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
@@ -33,24 +36,28 @@ public class AddBestFriendActivity extends AppCompatActivity {
     TextView doneTextView;
     TextView skipTextView;
     boolean contact = false;
+    final Activity thisActivity = this;
     private static final int RESULT_PICK_CONTACT = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_best_friend);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(thisActivity);
+            }
+        });
         setUpActionBar();
         setUpTextViews();
         setUpEditText();
-
-
     }
     private void setUpActionBar(){
         actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.actionbar_addbestfriend);
-
-
     }
 
     private void setUpTextViews(){
@@ -63,6 +70,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         skipTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UtilityClass.hideKeyboard(thisActivity);
                 startActivity(intent);
             }
         });
@@ -70,6 +78,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         doneTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
                     //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
                     // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
@@ -96,10 +105,13 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (phoneNumberEditText.getRight() - phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         //fire contact picker
-                        if(phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_sign).getConstantState())){ //TODO: Change with actual pics
+                        if(phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_button).getConstantState())){ //TODO: Change with actual pics
+                            UtilityClass.hideKeyboard(thisActivity);
                             pickContact(v);
                         }
                         else{
+                            UtilityClass.hideKeyboard(thisActivity);
+                            phoneNumberEditText.clearFocus();
                             phoneNumberEditText.setText("");
                             phoneNumberEditText.setKeyListener(phoneTextKeyListener);
                             drawableToPlus();
@@ -194,11 +206,11 @@ public class AddBestFriendActivity extends AppCompatActivity {
     }
 
     private void drawableToDelete(){
-        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.happy_house, 0); //TODO: Change with actual pics
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.cross_button, 0);
     }
 
     private void drawableToPlus(){
-        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_sign, 0);//TODO: Change with actual pics
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_button, 0);
     }
 
 
