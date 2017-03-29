@@ -7,7 +7,8 @@
     <View
         android:id="@+id/home_hostView_view_extraSpace"
         android:layout_width="match_parent"
-        android:layout_height="5dp"/>
+        android:layout_height="5dp"
+        android:elevation="6dp"/>
 
     <ImageView
         android:id="@+id/home_hostView_image_createEvent"
@@ -27,6 +28,7 @@
         android:divider="@color/backgroundColor"
         android:scrollbarStyle="outsideOverlay"
         android:layout_below="@id/home_hostView_view_extraSpace"
-        android:layout_above="@id/home_hostView_image_createEvent"/>
+        android:layout_above="@id/home_hostView_image_createEvent"
+        android:elevation="1dp"/>
 
 </RelativeLayout>

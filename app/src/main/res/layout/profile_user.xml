@@ -11,7 +11,8 @@
         android:id="@+id/user_profile_pic"
         android:background="@drawable/round_shape"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"/> <!-- profile picture-->
+        android:layout_marginTop="20dp"
+        android:elevation="2dp"/> <!-- profile picture-->
 
     <TextView
         android:layout_width="90dp"
@@ -21,7 +22,8 @@
         android:gravity="center"
         android:background="@drawable/round_shape_shadow"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="110dp"/> <!--Followers Count-->
+        android:layout_marginTop="110dp"
+        android:elevation="4dp"/> <!--Followers Count-->
 
     <TextView
         android:layout_width="90dp"
@@ -32,7 +34,8 @@
         android:background="@drawable/round_shape_shadow"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="50dp"
-        android:layout_marginTop="110dp"/> <!--Following Count-->
+        android:layout_marginTop="110dp"
+        android:elevation="4dp"/> <!--Following Count-->
 
     <ListView
         android:layout_width="match_parent"
@@ -43,6 +46,7 @@
         android:scrollbarStyle="insideInset"
         android:scrollbarFadeDuration="0"
         android:layout_marginTop="20dp"
+        android:elevation="-6dp"
         android:layout_below="@id/user_followers_count"/> <!--notifications(list)-->
 
 </RelativeLayout>

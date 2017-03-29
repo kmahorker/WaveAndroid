@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFF"
-        android:layout_below="@+id/home_mapsView_separator">
+        android:layout_below="@+id/home_mapsView_separator"
+        android:elevation="6dp">
 
         <SearchView
             android:id="@+id/home_mapsView_searchbar"
@@ -31,7 +32,8 @@
             android:iconifiedByDefault="false"
             android:clickable="true"
             android:queryHint="Search for an event or person"
-            android:background="@drawable/round_corner_grey" />
+            android:background="@drawable/round_corner_grey"
+            android:elevation="3dp"/>
 
         <FrameLayout
             android:id="@+id/home_mapsView_infoFrame"
@@ -52,6 +54,7 @@
         android:paddingLeft="150dp"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
+        android:elevation="2dp"
         android:layout_centerVertical="true"/>
 
     <ImageView
@@ -63,6 +66,7 @@
         android:layout_marginRight="10dp"
         android:src="@drawable/sos_button"
         android:layout_alignParentEnd="true"
+        android:elevation="6dp"
         android:layout_above="@id/home_mapsView_separator"/> <!--SOS button (Image)-->
 
     <ImageView
@@ -74,6 +78,7 @@
         android:layout_marginRight="10dp"
         android:src="@drawable/compass"
         android:layout_alignParentEnd="true"
+        android:elevation="6dp"
         android:layout_above="@id/home_mapsView_separator"/> <!--CurLoc Button (Image)-->
 
 </RelativeLayout>

@@ -10,4 +10,5 @@
 
     <dimen name="button_text_normal">20dp</dimen>
     <dimen name="text_normal">18dp</dimen>
+    <dimen name="corner_dp">3dp</dimen>
 </resources>

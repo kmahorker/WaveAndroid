@@ -18,6 +18,7 @@
             android:textSize="@dimen/button_text_normal"
             android:gravity="center"
             android:layout_margin="20dp"
+            android:elevation="3dp"
             android:background="@drawable/round_corner_red"/>
 
         <TextView
@@ -29,6 +30,7 @@
             android:textColor="@color/appColor"
             android:gravity="center"
             android:layout_margin="20dp"
+            android:elevation="3dp"
             android:background="@drawable/round_corner_red_edge"
             android:layout_toEndOf="@id/searchView_events_button"/>
 
