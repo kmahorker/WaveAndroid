@@ -33,5 +33,6 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:4.20.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     testCompile 'junit:junit:4.12'
 }
