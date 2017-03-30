@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 
 /*
@@ -29,7 +28,7 @@ public class User
     private long phone;
     private MapAddress mapAddress;
     private Calendar birthday;
-    private List<Long> bestFriends;
+    private List<BestFriend> bestFriends;
     private List<Long> followers;
     private List<Long> following;
     //Below contain list of PartyIDs
@@ -54,7 +53,7 @@ public class User
         phone = 0;
         mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
-        bestFriends = new ArrayList<Long>();
+        bestFriends = new ArrayList<>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
         hosting = new ArrayList<>();
@@ -79,7 +78,7 @@ public class User
                 Calendar birthday,
                 List<Long> followers,
                 List<Long> following,
-                List<Long> bestFriends,
+                List<BestFriend> bestFriends,
                 List<Long> hosting, List<Long> attended,
                 List<Long> hosted,
                 List<Long> bounced,
@@ -157,7 +156,7 @@ public class User
         this.birthday = Calendar.getInstance();
     }
 
-    public void setBestFriends(List<Long> bestFriends)
+    public void setBestFriends(List<BestFriend> bestFriends)
     {
         this.bestFriends = bestFriends;
     }
@@ -229,7 +228,7 @@ public class User
         return birthday;
     }
 
-    public List<Long> getBestFriends()
+    public List<BestFriend> getBestFriends()
     {
         return bestFriends;
     }

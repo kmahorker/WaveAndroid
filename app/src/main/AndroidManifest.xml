@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.thewavesocial.waveandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -14,11 +14,9 @@
         android:label="PLUG"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -34,15 +32,21 @@
         <activity android:name=".LoginFolder.ForgotPasswordActivity" />
         <activity android:name=".LoginFolder.StartupActivity" />
         <activity android:name=".SocialFolder.FollowActivity" />
+        <activity
+            android:name=".HomeSwipeActivity"
+            android:windowSoftInputMode="adjustPan">
 
-        <activity android:name=".HomeSwipeActivity"
-                  android:windowSoftInputMode="adjustPan">
-                   <intent-filter>
-                       <action android:name="android.intent.action.MAIN"/>
-                       <category android:name="android.intent.category.LAUNCHER"/>
-                   </intent-filter>
         </activity>
-        <activity android:name=".LoginFolder.LoginTutorialActivity" />
+        <activity android:name=".LoginFolder.LoginTutorialActivity">
 
+        </activity>
+        <activity android:name=".LoginFolder.AddBestFriendActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
+
 </manifest>
