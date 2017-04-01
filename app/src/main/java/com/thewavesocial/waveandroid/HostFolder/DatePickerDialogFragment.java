@@ -111,10 +111,10 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
         //Intent intent = new Intent(getActivity(), CreateAnEventActivity.class);
         //if(CreateAnEventActivity.class.isInstance(t)){
         if(dateDisplay.equals(getActivity().findViewById(R.id.startDateTextView))) {
-            ((CreateAnEventActivity) getActivity()).setStartCalendar(calendar);
+            CreateAnEventActivity.CreateEventPage1.startCalendar = calendar;
         }
         else if(dateDisplay.equals(getActivity().findViewById((R.id.endDateTextView)))){
-            ((CreateAnEventActivity) getActivity()).setEndCalendar(calendar);
+            CreateAnEventActivity.CreateEventPage1.endCalendar = calendar;
         }
         else{
             Log.d("V", "Neither");

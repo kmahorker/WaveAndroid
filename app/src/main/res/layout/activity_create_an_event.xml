@@ -64,7 +64,8 @@
             android:layout_weight="1"
             android:textAlignment="center"
             android:textColor="@color/black_solid"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            />
 
         <TextView
             android:id="@+id/startTimeTextView"
