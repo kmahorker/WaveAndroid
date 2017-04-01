@@ -3,22 +3,27 @@ package com.thewavesocial.waveandroid.HostFolder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
@@ -29,8 +34,9 @@ import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+
+import java.util.Date;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -55,6 +61,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         forward = (ImageView) findViewById(R.id.imageView);
         cancel = (TextView) findViewById(R.id.cancelTextView);
         title = (TextView) findViewById(R.id.newEvent);
+
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,21 +126,74 @@ public class CreateAnEventActivity extends AppCompatActivity {
     }
 
     public static class CreateEventPage1 extends Fragment {
-        private CreateAnEventActivity mainActivity;
+        TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
+        EditText titleEditText, locationEditText;
+        Switch privateSwitch;
+        org.florescu.android.rangeseekbar.RangeSeekBar rangeSeekBar;
+        //Activity thisActivity = this;
+        static Calendar startCalendar = Calendar.getInstance();
+        static Calendar endCalendar = Calendar.getInstance();
+        String DATE_FORMAT = "MMM d, YYYY";
+        String TIME_FORMAT = "h:mm a";
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.activity_create_an_event, container, false);
+            View view = inflater.inflate(R.layout.activity_create_an_event, container, false);
+            Log.d("V", "OncreateView");
+            return view;
         }
 
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            mainActivity = (CreateAnEventActivity)getActivity();
+            setUpTextViews(view);
+            setupEditText(view);
+            Log.d("V", "OnViewCreated");
+        }
+        private void setUpTextViews(View v){
+            startDateTextView = (TextView) v.findViewById(R.id.startDateTextView);
+            final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+            startDateTextView.setText(dateFormat.format(startCalendar.getTime()));
+            startDateTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
+                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                    dialogFragment.setDateDisplay(startDateTextView);
+                    dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
+                }
+            });
+
+            startTimeTextView = (TextView) v.findViewById(R.id.startTimeTextView);
+            SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+            startTimeTextView.setText(timeFormat.format(startCalendar.getTime()));
+
+            endDateTextView = (TextView) v.findViewById(R.id.endDateTextView);
+            endDateTextView.setText(dateFormat.format(endCalendar.getTime()));
+            endDateTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
+                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                    dialogFragment.setDateDisplay(endDateTextView);
+                    dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
+                }
+            });
+
+            endTimeTextView = (TextView) v.findViewById(R.id.endTimeTextView);
+            Calendar tempCalendar = Calendar.getInstance();
+            tempCalendar.setTime(new Date());
+            tempCalendar.add(Calendar.HOUR, 1);
+            endTimeTextView.setText(timeFormat.format(tempCalendar.getTime()));
+        }
+
+        private void setupEditText(View v) {
+            titleEditText = (EditText) v.findViewById(R.id.eventTitleEditText);
+            locationEditText = (EditText) v.findViewById(R.id.locationEditText);
         }
 
         private void savePage1() {
-            mainActivity.finish();
+            getActivity().finish();
         }
     }
 
@@ -498,9 +558,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
             partyEmoji = null;
         }
         public static void composeParty(){
-            Party party = new Party(
-                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji);
+//            Party party = new Party(
+//                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
+//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji);
             // TODO: 03/31/2017 Send to database and create new party with new ID
         }
     }
