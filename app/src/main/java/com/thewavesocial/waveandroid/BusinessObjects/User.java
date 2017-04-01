@@ -309,6 +309,11 @@ public class User
         this.following = following;
     }
 
+    @Override
+    public String toString() {
+        return getFullName();
+    }
+
     //    //http://www.parcelabler.com/
 //    //Allows putExtra(String, Parcelable Obj)
 //    protected User(Parcel in) {
