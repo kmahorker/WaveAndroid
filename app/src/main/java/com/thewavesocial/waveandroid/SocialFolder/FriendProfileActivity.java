@@ -1,6 +1,8 @@
 package com.thewavesocial.waveandroid.SocialFolder;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -59,12 +61,37 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         TextView title = (TextView) findViewById(R.id.friend_name);
         TextView back = (TextView) findViewById(R.id.friend_back_button);
+        TextView option = (TextView) findViewById(R.id.friend_options);
 
         title.setText(friend.getFullName());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+                dialog.setTitle("-Actions-")
+                    .setCancelable(true)
+                    .setSingleChoiceItems(new String[]{"Block", "Report"}, 0, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int position) {
+                            switch (position) {
+                                case 0:
+                                    // TODO: 04/02/2017 Block user
+                                    break;
+                                case 1:
+                                    // TODO: 04/02/2017 Report user
+                                    break;
+                                default:
+                                    dialog.cancel();
+                            }
+                        }
+                    })
+                    .show();
             }
         });
     }
