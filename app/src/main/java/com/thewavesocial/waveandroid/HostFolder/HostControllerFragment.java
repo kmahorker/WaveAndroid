@@ -20,18 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HostControllerFragment extends Fragment
-{
+public class HostControllerFragment extends Fragment {
     private HomeSwipeActivity mainActivity;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_host_view, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
@@ -44,11 +42,9 @@ public class HostControllerFragment extends Fragment
         manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity,
                 CurrentUser.getPartyListObjects(sample)));
 
-        createButton.setOnClickListener(new View.OnClickListener()
-        {
+        createButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), CreateAnEventActivity.class);
                 startActivity(intent);
             }
