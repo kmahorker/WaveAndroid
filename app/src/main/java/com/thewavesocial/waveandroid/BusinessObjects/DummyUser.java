@@ -8,7 +8,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -34,7 +33,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending,
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
@@ -142,8 +141,8 @@ public class DummyUser extends User
     {
         //setup best friend list
         this.getBirthday().set(1997, 4, 1);
-        this.getBestFriends().add((long) 1);
-        this.getBestFriends().add((long) 2);
+        this.getBestFriends().add(new BestFriend("BFF", "1231231234"));
+        this.getBestFriends().add(new BestFriend("BFF2", "1231231235"));
 
         //setup followers list
         this.getFollowers().add((long) 1);
@@ -272,7 +271,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
@@ -293,7 +292,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
@@ -314,7 +313,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
@@ -335,7 +334,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
@@ -356,7 +355,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new ArrayList<Long>(), //best friend list
                 new ArrayList<Long>(), //follower list
-                new ArrayList<Long>(), //following list
+                new ArrayList<BestFriend>(), //following list
                 new ArrayList<Long>(), //attending list
                 new ArrayList<Long>(), //party attended list
                 new ArrayList<Long>(), //party hosted list
