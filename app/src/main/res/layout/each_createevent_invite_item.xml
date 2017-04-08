@@ -15,7 +15,7 @@
         android:layout_marginStart="10dp"
         android:background="@drawable/round_shape"/>
 
-    <ImageButton
+    <ImageView
         android:id="@+id/eachCreateEvent_invite_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
