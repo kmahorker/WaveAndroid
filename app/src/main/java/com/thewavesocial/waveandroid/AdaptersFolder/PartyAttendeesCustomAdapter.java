@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +20,11 @@ import java.util.List;
 
 public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAttendeesCustomAdapter.ViewHolder>
 {
-    private HomeSwipeActivity mainActivity;
+    private Activity mainActivity;
     private List<User> userList = new ArrayList<>();
     private static LayoutInflater inflater;
 
-    public PartyAttendeesCustomAdapter(HomeSwipeActivity mainActivity, List<User> userList)
+    public PartyAttendeesCustomAdapter(Activity mainActivity, List<User> userList)
     {
         super();
         this.userList = userList;
