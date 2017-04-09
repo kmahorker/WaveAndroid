@@ -33,7 +33,7 @@
         android:id="@+id/create_event_invite_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black_solid"
+        android:background="@color/grey_solid"
         android:layout_above="@id/create_event_invite_create" />
 
     <android.support.v7.widget.RecyclerView

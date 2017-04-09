@@ -19,12 +19,11 @@ import com.thewavesocial.waveandroid.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventStatsActivity extends AppCompatActivity
-{
+public class EventStatsActivity extends AppCompatActivity {
     private Party party;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats);
 
@@ -35,15 +34,14 @@ public class EventStatsActivity extends AppCompatActivity
         setupActionbar();
     }
 
-    private void setupReferences()
-    {
+    private void setupReferences() {
         TextView earnedText = (TextView) findViewById(R.id.eventStats_earning);
         TextView attendedText = (TextView) findViewById(R.id.eventStats_checkedIn);
         RecyclerView hostlist = (RecyclerView) findViewById(R.id.eventStats_hostlist);
         RecyclerView bouncerlist = (RecyclerView) findViewById(R.id.eventStats_bouncerlist);
         GridView peoplelist = (GridView) findViewById(R.id.eventStats_peoplelist);
 
-        earnedText.setText("Amount earned     $" + party.getPrice()*party.getAttendingUsers().size());
+        earnedText.setText("Amount earned     $" + party.getPrice() * party.getAttendingUsers().size());
         attendedText.setText("# of people checked in: " + party.getAttendingUsers().size());
 
         List<User> sample = new ArrayList(); //added friend list 3 times for testing purpose
@@ -51,25 +49,23 @@ public class EventStatsActivity extends AppCompatActivity
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
         sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
 
-        LinearLayoutManager layoutManagerHost= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
-        LinearLayoutManager layoutManagerBounce= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
-        hostlist.setLayoutManager( layoutManagerHost );
-        bouncerlist.setLayoutManager( layoutManagerBounce );
+        LinearLayoutManager layoutManagerHost = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManagerBounce = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        hostlist.setLayoutManager(layoutManagerHost);
+        bouncerlist.setLayoutManager(layoutManagerBounce);
 
-        hostlist.setAdapter( new StatsHostBouncerCustomAdapter(this, sample ));
-        bouncerlist.setAdapter( new StatsHostBouncerCustomAdapter(this, sample));
-        peoplelist.setAdapter( new StatsFriendCustomAdapter(this, sample));
+        hostlist.setAdapter(new StatsHostBouncerCustomAdapter(this, sample));
+        bouncerlist.setAdapter(new StatsHostBouncerCustomAdapter(this, sample));
+        peoplelist.setAdapter(new StatsFriendCustomAdapter(this, sample));
     }
 
-    private void setupActionbar()
-    {
+    private void setupActionbar() {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if ( item.getItemId() == android.R.id.home )
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
             onBackPressed();
         return super.onOptionsItemSelected(item);
     }

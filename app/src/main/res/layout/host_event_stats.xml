@@ -1,88 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/event_stats_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="#FFF"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="25dp"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:weightSum="1">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eventStats_earning"
-        android:text="Amount earned:     $20"
-        android:textSize="20sp"
-        android:textColor="#000"/> <!--Amount Earned (Text)-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eventStats_checkedIn"
-        android:text="# of people checked in: 6"
-        android:textSize="20sp"
-        android:textColor="#000"
-        android:layout_below="@id/eventStats_earning"
-        android:layout_marginTop="30dp"/> <!--Checked In # (Text)-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eventStats_myHosts"
-        android:text="My Host(s)"
-        android:textSize="20sp"
-        android:textColor="#000"
-        android:layout_below="@id/eventStats_checkedIn"
-        android:layout_marginTop="30dp"/> <!--My Hosts (Text)-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eventStats_myBouncers"
-        android:text="My Bouncer(s)"
-        android:textSize="20sp"
-        android:textColor="#000"
-        android:layout_below="@id/eventStats_myHosts"
-        android:layout_marginTop="30dp"/> <!--My Bouncers (Text)-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eventStats_people"
-        android:text="People"
-        android:textSize="20sp"
-        android:textColor="#000"
-        android:layout_below="@id/eventStats_myBouncers"
-        android:layout_marginTop="30dp"/> <!--People (Text)-->
-
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:id="@+id/eventStats_bouncerlist"
-        android:layout_below="@+id/eventStats_hostlist"
-        android:layout_toEndOf="@+id/eventStats_myBouncers"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="10dp"
-        android:layout_height="40dp"/> <!--Bouncer list (Grid)-->
+        android:layout_height="0dp"
+        android:layout_weight="0.45">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/eventStats_hostlist"
-        android:layout_below="@+id/eventStats_checkedIn"
-        android:layout_toEndOf="@+id/eventStats_myHosts"
-        android:layout_marginTop="25dp"
-        android:layout_alignStart="@id/eventStats_bouncerlist"
-        android:layout_height="40dp"/> <!--Host list (Grid)-->
-    
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="6"
-        android:layout_below="@id/eventStats_people"
-        android:layout_margin="5dp"
-        android:id="@+id/eventStats_peoplelist"/> <!--People list (Grid)-->
+        <fragment
+            android:id="@+id/hostEventStats_maps_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="com.google.android.gms.maps.SupportMapFragment">
+        </fragment>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_alignParentBottom="true">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:background="@drawable/round_corner"
+                android:layout_margin="5dp"
+                android:layout_marginRight="2.5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Going"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/grey_solid"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_totalGoing_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="27"
+                    android:textColor="@color/appColor"
+                    android:textSize="@dimen/text_large"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:background="@drawable/round_corner"
+                android:layout_margin="5dp"
+                android:layout_marginLeft="2.5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Females to Males"
+                    android:textSize="@dimen/text_normal"
+                    android:textColor="@color/grey_solid"
+                    android:layout_margin="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_femaleMale_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15/12"
+                    android:textColor="@color/appColor"
+                    android:textSize="@dimen/text_large"
+                    android:layout_marginBottom="10dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55"
+        android:orientation="vertical"
+        android:scrollbars="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/hostEventStats_hosttext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Host"
+                android:textColor="@color/black_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/hostEventStats_hostname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="Max Meitonggggggggggggggggggggggggggggggggggggggggg"
+                android:textColor="@color/grey_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:lines="1"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_solid"
+            android:layout_marginStart="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/hostEventStats_loctext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:textColor="@color/black_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/hostEventStats_locname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="1234 Mario Dr. Santa Barbara, CA"
+                android:textColor="@color/grey_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:lines="1"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_solid"
+            android:layout_marginStart="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/hostEventStats_datetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textColor="@color/black_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/hostEventStats_datename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="Friday, March 31"
+                android:textColor="@color/grey_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:lines="1"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_solid"
+            android:layout_marginStart="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/hostEventStats_timetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textColor="@color/black_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/hostEventStats_timename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:text="9 PM - 12 AM"
+                android:textColor="@color/grey_solid"
+                android:textSize="@dimen/text_normal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:lines="1"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_solid" />
+
+        <TextView
+            android:id="@+id/hostEventStats_attendeetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FRIENDS GOING"
+            android:textColor="#8e8e8e"
+            android:textSize="@dimen/text_small"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"/> <!--Attendee Label-->
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/hostEventStats_attendeelist"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"/> <!--Attendee List-->
+
+        <ImageView
+            android:id="@+id/hostEventStats_qrcode"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/party_sample"
+            android:layout_gravity="center"
+            android:layout_margin="30dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
