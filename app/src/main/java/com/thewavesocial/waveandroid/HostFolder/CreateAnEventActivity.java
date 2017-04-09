@@ -87,7 +87,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
         //actionbar settings
         getSupportActionBar().setCustomView(R.layout.actionbar_create_event_invite);
         back = (ImageView) findViewById(R.id.actionbar_createEvent_invite_back);
-        forward = (ImageView) findViewById(R.id.actionbar_createEvent_invite_forward);
         title = (TextView) findViewById(R.id.actionbar_createEvent_invite_title);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -97,15 +96,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 openFirstPage();
             }
         });
-        forward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CreateEventPage2.savePage2();
-                openThirdPage();
-            }
-        });
-        forward.setVisibility(View.VISIBLE);
-        forward.setClickable(true);
         title.setText("Invite Friends");
     }
 
@@ -120,8 +110,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 openSecondPage();
             }
         });
-        forward.setVisibility(View.INVISIBLE);
-        forward.setClickable(false);
         title.setText("Invite Bouncers");
     }
 
@@ -227,10 +215,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private void setupFunctionality() {
+            create.setText("Next");
             create.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     savePage2();
-                    mainActivity.finish();
+                    mainActivity.openThirdPage();
                 }
             });
             friends = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing());
@@ -255,7 +244,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private static void savePage2() {
             NewPartyInfo.attendingUsers = CurrentUser.getUserIDList(invites);
-            NewPartyInfo.composeParty();
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -420,7 +408,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage3() {
-            NewPartyInfo.bouncingUsers.addAll(CurrentUser.getUserIDList(invites));
+            NewPartyInfo.bouncingUsers = CurrentUser.getUserIDList(invites);
             NewPartyInfo.composeParty();
         }
 
