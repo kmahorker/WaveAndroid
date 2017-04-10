@@ -8,44 +8,37 @@ import java.util.List;
 
 
 //Nothing changed
-public final class CurrentUser
-{
+public final class CurrentUser {
     public static Context context;
     public static DummyUser dummy;
     public static User theUser;
 
-    private CurrentUser()
-    {
+    private CurrentUser() {
         context = null;
         dummy = new DummyUser(context);
         theUser = dummy;
     }
 
-    public static void setContext(Context cont)
-    {
+    public static void setContext(Context cont) {
         context = cont;
         dummy = new DummyUser(context);
         theUser = dummy;
     }
 
-    public static void setTheUser( User theUser )
-    {
+    public static void setTheUser(User theUser) {
         CurrentUser.theUser = theUser;
     }
 
-    public static List<User> getUsersListObjects(List<Long> userIdList)
-    {
+    public static List<User> getUsersListObjects(List<Long> userIdList) {
         List<User> friendObjs = new ArrayList<User>();
-        for(long id : userIdList){
+        for (long id : userIdList) {
             friendObjs.add(getUserObject(id));
         }
         return friendObjs;
     }
 
-    public static User getUserObject(long id)
-    {
-        switch ((int) id)
-        {
+    public static User getUserObject(long id) {
+        switch ((int) id) {
             case 1:
                 return dummy.getFriend1();
             case 2:
@@ -61,19 +54,16 @@ public final class CurrentUser
         }
     }
 
-    public static List<Party> getPartyListObjects(List<Long> partyIdList)
-    {
+    public static List<Party> getPartyListObjects(List<Long> partyIdList) {
         List<Party> partyObjs = new ArrayList<Party>();
-        for(long id: partyIdList){
+        for (long id : partyIdList) {
             partyObjs.add(getPartyObject(id));
         }
         return partyObjs;
     }
 
-    public static Party getPartyObject(long id)
-    {
-        switch ((int) id)
-        {
+    public static Party getPartyObject(long id) {
+        switch ((int) id) {
             case 1:
                 return dummy.getParty1();
             case 2:
@@ -88,4 +78,12 @@ public final class CurrentUser
                 return dummy.getParty1();
         }
     }
+
+    public static List<Long> getUserIDList(List<User> users ) {
+        List<Long> list = new ArrayList<>();
+        for ( User user : users )
+            list.add(user.getUserID());
+        return list;
+    }
+
 }
