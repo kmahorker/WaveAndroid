@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
+import java.util.Calendar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;

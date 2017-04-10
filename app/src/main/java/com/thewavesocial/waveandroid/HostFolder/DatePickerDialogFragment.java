@@ -3,8 +3,11 @@ package com.thewavesocial.waveandroid.HostFolder;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
+import java.util.Calendar;
+import java.util.Date;
+
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.Settings;
@@ -111,10 +114,15 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
         //Intent intent = new Intent(getActivity(), CreateAnEventActivity.class);
         //if(CreateAnEventActivity.class.isInstance(t)){
         if(dateDisplay.equals(getActivity().findViewById(R.id.startDateTextView))) {
-            CreateAnEventActivity.CreateEventPage1.startCalendar = calendar;
+            CreateAnEventActivity.CreateEventPage1.startCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            if(calendar.compareTo(CreateAnEventActivity.CreateEventPage1.endCalendar) >= 0){
+                CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                        CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR)+1,
+                        CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));//set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            }
         }
         else if(dateDisplay.equals(getActivity().findViewById((R.id.endDateTextView)))){
-            CreateAnEventActivity.CreateEventPage1.endCalendar = calendar;
+            CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         }
         else{
             Log.d("V", "Neither");
