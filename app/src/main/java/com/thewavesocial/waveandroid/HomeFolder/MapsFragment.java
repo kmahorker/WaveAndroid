@@ -303,7 +303,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight)
+        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight) + 30
                 && y > UtilityClass.getScreenHeight(mainActivity) - mapHeight + 30
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
