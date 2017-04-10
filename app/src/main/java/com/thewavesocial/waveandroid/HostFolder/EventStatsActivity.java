@@ -47,6 +47,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setupActionbar();
     }
 
+
     private void setupPartyInfos() {
         host = party.getHostName();
         loc = party.getMapAddress().getAddress_string();
@@ -60,6 +61,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         female = party.getAttendingUsers().size()/4;
     }
 
+
     private void setupReferences() {
         goingView = (TextView) findViewById(R.id.hostEventStats_totalGoing_count);
         genderView = (TextView) findViewById(R.id.hostEventStats_femaleMale_count);
@@ -70,6 +72,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
         attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
     }
+
 
     private void setupFunctionalities() {
         goingView.setText(going+"");
@@ -86,6 +89,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this,
                 CurrentUser.getUsersListObjects(party.getAttendingUsers())));
     }
+
 
     private void setupActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -113,7 +117,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         latlng = party.getMapAddress().getAddress_latlng();
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latlng)
@@ -121,11 +124,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         marker.setTag(party.getPartyID());
     }
 
+
     public Bitmap resizeMapIcons(int res, int width, int height) {
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }
-
     //36dp 2dp
 }

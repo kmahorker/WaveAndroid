@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.SearchPeopleCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
@@ -79,7 +80,7 @@ public class FollowActivity extends AppCompatActivity {
         else if (pageType == UserProfileFragment.PopupPage.FOLLOWING)
             follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowing() );
 
-        followUsersList.setAdapter(new FollowersAdapter(this, R.layout.follow_user_row, follows));
+        followUsersList.setAdapter(new SearchPeopleCustomAdapter(this, follows));
     }
 
     public void setupFollowActionbar() {
@@ -102,62 +103,62 @@ public class FollowActivity extends AppCompatActivity {
         }
     }
 
-    private class FollowersAdapter extends ArrayAdapter<User> {
-
-        public FollowersAdapter(Context context, int textViewResourceId, List<User> follows) {
-            super(context, textViewResourceId, follows);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.follow_user_row, null);
-                v.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UtilityClass.hideKeyboard(followActivity);
-                    }
-                });
-            }
-            final User user = getItem(position);
-            if (user != null) {
-
-                final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
-                if (userImage != null) {
-                    BitmapDrawable pic = user.getProfilePic();
-                    if (pic != null) {
-                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
-                    }
-                }
-
-                final TextView name = (TextView) v.findViewById(R.id.iv_follow_row_user_name);
-                if (name != null) {
-                    if (user.getFullName() == null) {
-                        //TODO
-                        name.setText("Unknown Name");
-                    } else {
-                        name.setText(user.getFullName());
-                    }
-                }
-
-                final Button followed = (Button) v.findViewById(R.id.iv_follow_row_user_followed);
-                if (followed != null) {
-                    if (CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
-                        followed.setText(getResources().getString(R.string.follow_row_following));
-                        followed.setTextColor(getResources().getColor(R.color.white_solid));
-                        followed.setBackgroundResource(R.drawable.rounded_pink_button);
-                    } else {
-                        followed.setText(getResources().getString(R.string.follow_row_follow));
-                        followed.setTextColor(getResources().getColor(R.color.pink_solid));
-                        followed.setBackgroundResource(R.drawable.rounded_pink_button_stroke);
-                    }
-
-                }
-
-            }
-            return v;
-        }
-    }
+//    private class FollowersAdapter extends ArrayAdapter<User> {
+//
+//        public FollowersAdapter(Context context, int textViewResourceId, List<User> follows) {
+//            super(context, textViewResourceId, follows);
+//        }
+//
+//        @Override
+//        public View getView(final int position, View convertView, ViewGroup parent) {
+//            View v = convertView;
+//            if (v == null) {
+//                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                v = vi.inflate(R.layout.follow_user_row, null);
+//                v.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        UtilityClass.hideKeyboard(followActivity);
+//                    }
+//                });
+//            }
+//            final User user = getItem(position);
+//            if (user != null) {
+//
+//                final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
+//                if (userImage != null) {
+//                    BitmapDrawable pic = user.getProfilePic();
+//                    if (pic != null) {
+//                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
+//                    }
+//                }
+//
+//                final TextView name = (TextView) v.findViewById(R.id.iv_follow_row_user_name);
+//                if (name != null) {
+//                    if (user.getFullName() == null) {
+//                        //TODO
+//                        name.setText("Unknown Name");
+//                    } else {
+//                        name.setText(user.getFullName());
+//                    }
+//                }
+//
+//                final Button followed = (Button) v.findViewById(R.id.iv_follow_row_user_followed);
+//                if (followed != null) {
+//                    if (CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
+//                        followed.setText(getResources().getString(R.string.follow_row_following));
+//                        followed.setTextColor(getResources().getColor(R.color.white_solid));
+//                        followed.setBackgroundResource(R.drawable.rounded_pink_button);
+//                    } else {
+//                        followed.setText(getResources().getString(R.string.follow_row_follow));
+//                        followed.setTextColor(getResources().getColor(R.color.pink_solid));
+//                        followed.setBackgroundResource(R.drawable.rounded_pink_button_stroke);
+//                    }
+//
+//                }
+//
+//            }
+//            return v;
+//        }
+//    }
 }

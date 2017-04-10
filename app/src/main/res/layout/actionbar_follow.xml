@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left|center_vertical"
-        android:textColor="@color/pink_solid"
+        android:textColor="@color/appColor"
         android:text="Back"
         />
 
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:text="Options"
-        android:textColor="@color/pink_solid"
+        android:textColor="@color/appColor"
         />
 
 </FrameLayout>
