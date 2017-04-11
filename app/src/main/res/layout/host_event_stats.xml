@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/event_stats_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/hostEventStats_party_stats"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/grey_solid">
@@ -90,199 +90,215 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/hostEventStats_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Event"
+        android:textSize="@dimen/button_text_normal"
+        android:textColor="@color/appColor"
+        android:padding="15dp"
+        android:background="#FFF"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:elevation="8dp"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white_solid">
+        android:background="@color/white_solid"
+        android:layout_below="@id/hostEventStats_party_stats"
+        android:layout_above="@id/hostEventStats_delete_button"
+        android:elevation="5dp">
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center_vertical">
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/hostEventStats_hosttext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Host"
+                    android:textColor="@color/black_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_hostname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:text="Max Meitonggggggggggggggggggggggggggggggggggggggggg"
+                    android:textColor="@color/grey_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:lines="1"
+                    android:ellipsize="end"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_solid"
+                android:layout_marginStart="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/hostEventStats_loctext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textColor="@color/black_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_locname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:text="1234 Mario Dr. Santa Barbara, CA"
+                    android:textColor="@color/grey_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:lines="1"
+                    android:ellipsize="end"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_solid"
+                android:layout_marginStart="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/hostEventStats_datetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textColor="@color/black_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_datename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:text="Friday, March 31"
+                    android:textColor="@color/grey_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:lines="1"
+                    android:ellipsize="end"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_solid"
+                android:layout_marginStart="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/hostEventStats_timetext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textColor="@color/black_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/hostEventStats_timename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:text="9 PM - 12 AM"
+                    android:textColor="@color/grey_solid"
+                    android:textSize="@dimen/text_normal"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:lines="1"
+                    android:ellipsize="end"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_solid" />
 
             <TextView
-                android:id="@+id/hostEventStats_hosttext"
+                android:id="@+id/hostEventStats_attendeetext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Host"
-                android:textColor="@color/black_solid"
-                android:textSize="@dimen/text_normal"
+                android:text="FRIENDS GOING"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/text_small"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginStart="15dp"/> <!--Attendee Label-->
 
-            <TextView
-                android:id="@+id/hostEventStats_hostname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:text="Max Meitonggggggggggggggggggggggggggggggggggggggggg"
-                android:textColor="@color/grey_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_alignParentEnd="true"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/hostEventStats_attendeelist"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginEnd="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:lines="1"
-                android:ellipsize="end"/>
+                android:layout_marginStart="15dp"/> <!--Attendee List-->
 
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/hostEventStats_qrcode"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/party_sample"
+                android:layout_gravity="center"
+                android:layout_margin="30dp"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_solid"
-            android:layout_marginStart="15dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/hostEventStats_loctext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:textColor="@color/black_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
-
-            <TextView
-                android:id="@+id/hostEventStats_locname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:text="1234 Mario Dr. Santa Barbara, CA"
-                android:textColor="@color/grey_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:lines="1"
-                android:ellipsize="end"/>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_solid"
-            android:layout_marginStart="15dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/hostEventStats_datetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Date"
-                android:textColor="@color/black_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
-
-            <TextView
-                android:id="@+id/hostEventStats_datename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:text="Friday, March 31"
-                android:textColor="@color/grey_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:lines="1"
-                android:ellipsize="end"/>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_solid"
-            android:layout_marginStart="15dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/hostEventStats_timetext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:textColor="@color/black_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
-
-            <TextView
-                android:id="@+id/hostEventStats_timename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:text="9 PM - 12 AM"
-                android:textColor="@color/grey_solid"
-                android:textSize="@dimen/text_normal"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:lines="1"
-                android:ellipsize="end"/>
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey_solid" />
-
-        <TextView
-            android:id="@+id/hostEventStats_attendeetext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="FRIENDS GOING"
-            android:textColor="#8e8e8e"
-            android:textSize="@dimen/text_small"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"/> <!--Attendee Label-->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/hostEventStats_attendeelist"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"/> <!--Attendee List-->
-
-        <ImageView
-            android:id="@+id/hostEventStats_qrcode"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/party_sample"
-            android:layout_gravity="center"
-            android:layout_margin="30dp"/>
-
-    </LinearLayout>
+        </LinearLayout>
 
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

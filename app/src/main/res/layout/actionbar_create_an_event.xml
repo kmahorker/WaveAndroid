@@ -24,7 +24,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerInParent="true"
         android:layout_marginRight="15dp"
-        app:srcCompat="@drawable/forward_arrow" />
+        android:scaleX="-1"
+        app:srcCompat="@drawable/back_arrow" />
 
     <TextView
         android:id="@+id/newEvent"

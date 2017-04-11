@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,27 +35,43 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
+    public static final int activityHostFragment = 1, activitySocialFragment = 2;
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView;
+    private TextView goingView, genderView, hostView, locView, dateView, timeView, deleteView, editView;
     private ImageView qrCodeView;
     private RecyclerView attendingFriends;
     private String host, loc, date, time;
-    private int going, male, female;
+    private int going, male, female, callerType;
+    private EventStatsActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats);
+        mainActivity = this;
         Intent intent = getIntent();
         party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
+        callerType = intent.getExtras().getInt("callerActivity");
 
         setupMapElements();
         setupPartyInfos();
         setupReferences();
         setupFunctionalities();
         setupActionbar();
+        setupDeleteEditButtons(callerType);
+    }
+
+
+    private void setupDeleteEditButtons(int callerType) {
+        if ( callerType == activityHostFragment ) {
+            editView.setVisibility(View.VISIBLE);
+            deleteView.setVisibility(View.VISIBLE);
+        } else if ( callerType == activitySocialFragment ){
+            editView.setVisibility(View.INVISIBLE);
+            deleteView.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -86,6 +105,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
         attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
+        deleteView = (TextView) findViewById(R.id.hostEventStats_delete_button);
     }
 
 
@@ -98,11 +118,25 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         timeView.setText(time+"");
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
-        LinearLayoutManager layoutManagerAttendees =
-                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         attendingFriends.setLayoutManager(layoutManagerAttendees);
-        attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this,
-                CurrentUser.getUsersListObjects(party.getAttendingUsers())));
+        attendingFriends.setFocusable(false);
+        attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
+        deleteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertMessage = new AlertDialog.Builder(mainActivity);
+                alertMessage.setTitle("Warning")
+                    .setMessage("Are you sure you want to delete this event?")
+                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
+                        }})
+                    .setCancelable(true)
+                    .show();
+            }
+        });
     }
 
 
@@ -111,11 +145,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setCustomView(R.layout.actionbar_hoststats);
 
         TextView partynameView = (TextView) findViewById(R.id.actionbar_hoststats_partyname);
-        TextView editpartyView = (TextView) findViewById(R.id.actionbar_hoststats_editparty);
+        editView = (TextView) findViewById(R.id.actionbar_hoststats_editparty);
         ImageView backButton = (ImageView) findViewById(R.id.actionbar_hoststats_backbutton);
 
         partynameView.setText(party.getName());
-        editpartyView.setOnClickListener(new View.OnClickListener() {
+        editView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: 04/09/2017 Intent Edit Party

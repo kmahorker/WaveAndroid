@@ -87,7 +87,7 @@ public class FollowActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_follow);
 
-        TextView back = (TextView) findViewById(R.id.ib_follow_go_back);
+        ImageView back = (ImageView) findViewById(R.id.ib_follow_go_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

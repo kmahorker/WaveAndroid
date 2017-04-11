@@ -58,7 +58,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_friend);
 
         TextView title = (TextView) findViewById(R.id.friend_name);
-        TextView back = (TextView) findViewById(R.id.friend_back_button);
+        ImageView back = (ImageView) findViewById(R.id.friend_back_button);
 
         title.setText(friend.getFullName());
         back.setOnClickListener(new View.OnClickListener() {

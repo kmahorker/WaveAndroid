@@ -90,9 +90,9 @@ public class ManagePartyCustomAdapter extends BaseAdapter
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                intent.putExtra("callerActivity", EventStatsActivity.activityHostFragment);
                 intent.putExtra("partyIDLong", partyList.get(position).getPartyID());
                 mainActivity.startActivity(intent);
-
             }
         });
 
