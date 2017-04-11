@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:src="@drawable/plus_sign"
-        android:padding="5dp"
+        android:padding="10dp"
         android:background="#FFF"
         android:layout_alignParentBottom="true"/>
 

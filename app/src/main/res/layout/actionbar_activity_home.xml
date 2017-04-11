@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/actionbar_activity_home_text_host"
-        android:text="Host"
+        android:text="HOST"
         android:textSize="15dp"
         android:gravity="center"
         android:textColor="@color/appColor"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/actionbar_activity_home_text_social"
-        android:text="Social"
+        android:text="SOCIAL"
         android:textSize="15dp"
         android:gravity="center"
         android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:id="@+id/actionbar_activity_home_image_logo"
-        android:src="@drawable/plug_icon"
+        android:src="@drawable/plug_icon_black"
         android:layout_centerInParent="true"
         android:padding="15dp"/>
 

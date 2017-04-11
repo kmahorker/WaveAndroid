@@ -27,7 +27,7 @@
         android:textColor="@color/appColor"
         android:background="@drawable/round_corner_red_edge"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"

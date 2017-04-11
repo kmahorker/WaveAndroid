@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +10,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.widget.EditText;
 import android.widget.SearchView;
@@ -32,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.internal.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,14 +48,11 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -112,7 +111,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             @Override public boolean onTouch(View v, MotionEvent event) {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        sos_button.setAlpha(100);
+                        sos_button.setAlpha(155);
                         handle.postDelayed(run, 3000);
                         break;
                     case MotionEvent.ACTION_UP:
@@ -400,11 +399,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS)) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
             } else {
-                sendSOSMessage();
+                askToSendSOSMessage();
             }
         } else {
-            sendSOSMessage();
+            askToSendSOSMessage();
         }
+    }
+
+
+    private void askToSendSOSMessage() {
+        AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
+        fieldAlert.setTitle("Send an alert to " + 
+                        CurrentUser.getUserObject(CurrentUser.theUser.getBestFriends().get(0)).getFirstName())
+                .setMessage("A text will be sent to your friend notifying your current location.")
+                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendSOSMessage();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
     }
 
 
@@ -439,7 +458,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 updateUserLoc(0);
                 break;
             case 20:
-                sendSOSMessage();
+                askToSendSOSMessage();
             default:
                 break;
         }
