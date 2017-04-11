@@ -27,6 +27,13 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
         setupReferences();
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+            }
+        });
     }
 
 
