@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -79,10 +80,9 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
 
         if ( party.getPartyEmoji() != null )
-        {
-            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
-        }
+            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+        else
+            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), CurrentUser.theUser.getProfilePic().getBitmap()));
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText( getCustomInfoText( party ) );
 

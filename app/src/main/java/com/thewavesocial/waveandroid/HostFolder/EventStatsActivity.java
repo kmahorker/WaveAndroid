@@ -1,19 +1,26 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -41,10 +48,18 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent = getIntent();
         party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
 
+        setupMapElements();
         setupPartyInfos();
         setupReferences();
         setupFunctionalities();
         setupActionbar();
+    }
+
+
+    private void setupMapElements() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.hostEventStats_maps_fragment);
+        mapFragment.getMapAsync(this);
     }
 
 
@@ -118,15 +133,18 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         latlng = party.getMapAddress().getAddress_latlng();
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(latlng)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
+        Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
         marker.setTag(party.getPartyID());
+        if ( party.getPartyEmoji() == null )
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(CurrentUser.theUser.getProfilePic(), 150, 150)));
+        else
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(party.getPartyEmoji(), 150, 150)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, (float) 15.0));
     }
 
 
-    public Bitmap resizeMapIcons(int res, int width, int height) {
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
+    public Bitmap resizeMapIcons(BitmapDrawable pic, int width, int height) {
+        Bitmap imageBitmap = pic.getBitmap();
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }

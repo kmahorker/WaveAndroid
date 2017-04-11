@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="1"
+            android:gravity="center"
             android:layout_alignParentBottom="true">
 
             <LinearLayout
@@ -41,7 +42,8 @@
                     android:text="Total Going"
                     android:textSize="@dimen/text_normal"
                     android:textColor="@color/grey_solid"
-                    android:layout_margin="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"/>
 
                 <TextView
                     android:id="@+id/hostEventStats_totalGoing_count"
@@ -59,9 +61,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:orientation="vertical"
-                android:gravity="center_horizontal"
                 android:background="@drawable/round_corner"
                 android:layout_margin="5dp"
+                android:gravity="center"
                 android:layout_marginLeft="2.5dp">
 
                 <TextView
@@ -70,7 +72,8 @@
                     android:text="Females to Males"
                     android:textSize="@dimen/text_normal"
                     android:textColor="@color/grey_solid"
-                    android:layout_margin="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"/>
 
                 <TextView
                     android:id="@+id/hostEventStats_femaleMale_count"
@@ -89,7 +92,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white_solid">
 
         <LinearLayout
         android:layout_width="match_parent"
