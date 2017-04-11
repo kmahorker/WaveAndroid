@@ -23,4 +23,12 @@ public class BestFriend {
         String str = numString.replaceAll("[^\\d]", "");
         phoneNumber = Integer.parseInt(str);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
 }

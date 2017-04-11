@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
@@ -59,7 +60,12 @@ public class PartyProfileFragment extends Fragment {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 03/08/2017 Then what?
+                if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
+                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                } else {
+                    CurrentUser.theUser.getAttending().add(0, party.getPartyID());
+                    Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
