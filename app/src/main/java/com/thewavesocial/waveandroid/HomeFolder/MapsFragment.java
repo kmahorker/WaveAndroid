@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,7 +92,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     private void setupFloatingButtons() {
-        ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
+        ImageButton sos_button = (ImageButton) getActivity().findViewById(R.id.sos_button);
         sos_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,7 +100,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             }
         });
 
-        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
+        ImageButton cur_loc_button = (ImageButton) getActivity().findViewById(R.id.cur_loc_button);
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
