@@ -1,14 +1,18 @@
 package com.thewavesocial.waveandroid.SocialFolder;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
@@ -59,12 +63,31 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         TextView title = (TextView) findViewById(R.id.friend_name);
         TextView back = (TextView) findViewById(R.id.friend_back_button);
+        final TextView option = (TextView) findViewById(R.id.friend_options);
 
         title.setText(friend.getFullName());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+        option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(mainActivity, option);
+                popupMenu.getMenuInflater().inflate(R.menu.friend_options, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if ( menuItem.getItemId() == R.id.friend_options_block )
+                            Toast.makeText(mainActivity, "You are blocking this user.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(mainActivity, "You are reporting this user.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                });
+                popupMenu.show();
             }
         });
     }
