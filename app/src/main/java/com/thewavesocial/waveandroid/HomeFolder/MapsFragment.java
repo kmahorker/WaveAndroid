@@ -165,7 +165,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             @Override
             public void onClick(View view) {
                 dragSeparator(30 - mapHeight / 2, 0);
-                openSearchView();
+                if(!searchOpened)
+                    openSearchView();
                 editText.setCursorVisible(true);
             }
         });
@@ -173,13 +174,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         editText = (EditText) searchbar.findViewById(id);
         editText.setCursorVisible(false);
-        editText.setOnClickListener(new View.OnClickListener() {
+        editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 dragSeparator(30 - mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
+                return false;
             }
         });
     }
@@ -402,4 +404,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 break;
         }
     }
+
+
+
+
 }
