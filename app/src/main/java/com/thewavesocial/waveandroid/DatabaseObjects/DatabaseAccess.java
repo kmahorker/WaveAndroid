@@ -1,70 +1,65 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
 
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.database.DatabaseUtils;
 import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.util.Log;
-
-/*
- * Things I did during file translation:
- * 1. NotImplementedException => NullPointerException
- * 2. Commented out DatabaseInterface implementation
- * 3. Changed Int64 to long
- * - Wei Tung
- */
 import com.thewavesocial.waveandroid.BusinessObjects.*;
-import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
-public final class DatabaseAccess implements DatabaseInterface {
+public final class DatabaseAccess{
     public static String access_token = "";
     public static String user_id = "";
     private static String currentMethod = "";
+
     public DatabaseAccess() {
     }
 
-    public long createParty(Party party) {
+    public static long createParty(Party party) {
         throw new NullPointerException();
     }
 
-    public long createUser(User newUser) {
+    public static long createUser() {
+        new JSONPostingTask().execute("https://api.theplugsocial.com/v1/users");
+        return 0;
+    }
+
+    public static boolean deleteParty(long partyID) {
         throw new NullPointerException();
     }
 
-    public boolean deleteParty(long partyID) {
+    public static boolean deleteUser(long userID) {
         throw new NullPointerException();
     }
 
-    public boolean deleteUser(long userID) {
+    public static Party getParty(long partyID) {
         throw new NullPointerException();
     }
 
-    public Party getParty(long partyID) {
-        throw new NullPointerException();
-    }
-
-    public User getUser(long userID) {
+    public static User getUser(long userID) {
         //Temporary for testing
         return CurrentUser.theUser;
     }
 
-    public boolean updateParty(long partyID, String param) {
+    public static boolean updateParty(long partyID, String param) {
         throw new NullPointerException();
     }
 
-    public boolean updateUser(long userID, String param) {
+    public static boolean updateUser(long userID, String param) {
         throw new NullPointerException();
     }
 
@@ -86,42 +81,6 @@ public final class DatabaseAccess implements DatabaseInterface {
 
         currentMethod = "mainUser_getAllInfo";
         new JSONParsingTask().execute(dataURL);
-    }
-
-    private static String parseJSONFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        InputStream stream;
-        BufferedReader reader = null;
-        String error = "";
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-            StringBuffer buffer = new StringBuffer();
-            while( (line = reader.readLine()) != null )
-                buffer.append(line);
-            return buffer.toString();
-
-        } catch (IOException e) {e.printStackTrace();}
-
-        finally {
-            if ( connection != null )
-                connection.disconnect();
-            try {
-                if ( reader != null )
-                    reader.close();
-            }
-            catch (IOException e){e.printStackTrace();}
-        }
-        return error + server_url;
     }
 
     public static class JSONParsingTask extends AsyncTask<String, String, String> {
@@ -171,5 +130,129 @@ public final class DatabaseAccess implements DatabaseInterface {
                     //do nothing
             }
         }
+    }
+
+    private static String parseJSONFromServer(String server_url) {
+        HttpURLConnection connection = null;
+        InputStream stream;
+        BufferedReader reader = null;
+        String error = "";
+        try {
+            URL url = new URL(server_url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+            if ( connection.getResponseCode() == 500 )
+                stream = connection.getErrorStream();
+            else
+                stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+            String line ="";
+            StringBuffer buffer = new StringBuffer();
+            while( (line = reader.readLine()) != null )
+                buffer.append(line);
+            return buffer.toString();
+
+        } catch (IOException e) {e.printStackTrace();}
+
+        finally {
+            if ( connection != null )
+                connection.disconnect();
+            try {
+                if ( reader != null )
+                    reader.close();
+            }
+            catch (IOException e){e.printStackTrace();}
+        }
+        return error + server_url;
+    }
+
+    public static class JSONPostingTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params){
+            return postJSONToServer(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d("Post Result------", result);
+        }
+    }
+
+    private static String postJSONToServer(String server_url) {
+        HttpURLConnection connection = null;
+        InputStream stream;
+        BufferedReader reader = null;
+        String error = "";
+        try {
+            URL url = new URL(server_url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(10000);
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            List<AbstractMap.SimpleEntry> params = new ArrayList<>();
+            params.add(new AbstractMap.SimpleEntry("email", "12345@gmail.com"));
+            params.add(new AbstractMap.SimpleEntry("last_name", "Mario"));
+            params.add(new AbstractMap.SimpleEntry("first_name", "Brothers"));
+            params.add(new AbstractMap.SimpleEntry("college", "Stanefford"));
+            params.add(new AbstractMap.SimpleEntry("password", "trans"));
+
+            OutputStream output = connection.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+            writer.write(toString(params));
+            writer.flush();
+            writer.close();
+            output.close();
+            connection.connect();
+
+            if ( connection.getResponseCode() == 500 )
+                stream = connection.getErrorStream();
+            else
+                stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+            String line ="";
+            StringBuffer buffer = new StringBuffer();
+            while( (line = reader.readLine()) != null )
+                buffer.append(line+"\n");
+            return buffer.toString();
+
+        } catch (IOException e) {e.printStackTrace();}
+
+        finally {
+            if ( connection != null )
+                connection.disconnect();
+            try {
+                if ( reader != null )
+                    reader.close();
+            }
+            catch (IOException e){e.printStackTrace();}
+        }
+        return error + server_url;
+    }
+
+    private static String toString(List<AbstractMap.SimpleEntry> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (AbstractMap.SimpleEntry pair : params)
+        {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getKey().toString(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue().toString(), "UTF-8"));
+        }
+
+        return result.toString();
     }
 }
