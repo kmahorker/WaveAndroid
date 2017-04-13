@@ -453,8 +453,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 10:
                 updateUserLoc(0);
@@ -465,6 +464,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 break;
         }
     }
+
 
     private String parseJSONFromServer(String server_url) {
         HttpURLConnection connection = null;
@@ -481,28 +481,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 stream = connection.getErrorStream();
             else
                 stream = connection.getInputStream();
-
             reader = new BufferedReader(new InputStreamReader(stream));
             String line ="";
-
-            while( (line = reader.readLine()) != null ) {
+            while( (line = reader.readLine()) != null )
                 buffer.append(line);
-            }
             return buffer.toString();
 
-        } catch (IOException e) {}
+        } catch (IOException e) {e.printStackTrace();}
         finally {
-            if ( connection != null ) {
+            if ( connection != null )
                 connection.disconnect();
-            }
             try {
-                if ( reader != null ){
+                if ( reader != null )
                     reader.close();
-                }
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
+            } catch (IOException e){e.printStackTrace();}
         }
         return error + server_url;
     }
@@ -520,7 +512,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             // TODO: 03/24/2017 Get JWT
             UtilityClass.printAlertMessage(getActivity(), result, true);
             Log.d("Result", result);
-            System.out.println("result");
         }
     }
 }

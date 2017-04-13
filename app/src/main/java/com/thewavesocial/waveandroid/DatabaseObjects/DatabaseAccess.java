@@ -4,13 +4,6 @@ import android.content.pm.PackageManager;
 import android.database.DatabaseUtils;
 import android.provider.ContactsContract;
 
-/*
- * Things I did during file translation:
- * 1. NotImplementedException => NullPointerException
- * 2. Commented out DatabaseInterface implementation
- * 3. Changed Int64 to long
- * - Wei Tung
- */
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 
 public class DatabaseAccess implements DatabaseInterface
