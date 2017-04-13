@@ -9,7 +9,6 @@
     <string name="action_settings">Settings</string>
 
     <string name="facebook_app_id">fb1841371906101974</string> <!-- TODO: Ensure Proper fbID in the end -->
-    <string name="server_url">https://api.theplugsocial.com/v1/Auth?email=pasta@farian.org&amp;password=MEATBALLS!</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

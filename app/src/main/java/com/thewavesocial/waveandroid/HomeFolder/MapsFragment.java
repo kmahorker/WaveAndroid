@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -33,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.facebook.internal.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,16 +42,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
@@ -89,6 +82,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupMapElements();
         setupHeightVariables();
         setupSearchbar();
+        DatabaseAccess.mainUser_login("","");
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -104,7 +98,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
 
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
@@ -463,64 +456,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 askToSendSOSMessage();
             default:
                 break;
-        }
-    }
-
-    private String parseJSONFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        InputStream stream = null;
-        String error = "";
-        StringBuffer buffer = new StringBuffer();
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-
-            while( (line = reader.readLine()) != null ) {
-                buffer.append(line);
-            }
-            return buffer.toString();
-
-        } catch (IOException e) {}
-        finally {
-            if ( connection != null ) {
-                connection.disconnect();
-            }
-            try {
-                if ( reader != null ){
-                    reader.close();
-                }
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        return error + server_url;
-    }
-
-
-    public class JSONParsingTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params){
-            return parseJSONFromServer(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            // TODO: 03/24/2017 Get JWT
-            UtilityClass.printAlertMessage(getActivity(), result, true);
-            Log.d("Result", result);
-            System.out.println("result");
         }
     }
 }
