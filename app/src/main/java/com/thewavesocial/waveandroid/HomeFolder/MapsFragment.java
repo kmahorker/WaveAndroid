@@ -83,7 +83,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupHeightVariables();
         setupSearchbar();
 
-        new DatabaseAccess.LoginTask("pasta@farian.org", "MEATBALLS!").execute();
+        //// TODO: 04/13/2017 Testing purpose for server request
+        String[] loginTokens = DatabaseAccess.getTokenFromLocal(mainActivity);
+
+        //Login automatically if local jwt is still valid. Else, please login.
+        new DatabaseAccess.GetInfoTask(mainActivity, loginTokens[0], loginTokens[1]).execute();
+
+        //Login with credentials if token is not valid
+        new DatabaseAccess.LoginTask(mainActivity, "pasta@farian.org", "MEATBALLS!").execute();
+
+        //Create a new user account
         new DatabaseAccess.CreateUserTask("Star", "Patrick", "pStar@gmail.edu", "UCSB", "pStar").execute();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);

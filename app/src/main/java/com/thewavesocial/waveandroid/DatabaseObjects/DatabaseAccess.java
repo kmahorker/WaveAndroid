@@ -1,8 +1,15 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.UtilityClass;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +29,6 @@ import java.util.HashMap;
 public final class DatabaseAccess{
     public static String access_token = "";
     public static String user_id = "";
-    private static String currentMethod = "";
 
 //----------------------------------------------------------------------------Caller Functions------
 
@@ -62,13 +68,18 @@ public final class DatabaseAccess{
         throw new NullPointerException();
     }
 
-//----------------------------------------------------------------------------Meat Functions-------
+//----------------------------------------------------------------------------Actual Functions------
 
-    //Provide 1. Email 2. Password
+    /**
+     * Given: email, password
+     * Result: user_id, jwt token
+     */
     public static class LoginTask extends AsyncTask< String, String, String> {
         private String email, password;
+        private Activity mainActivity;
 
-        public LoginTask(String email, String password) {
+        public LoginTask(Activity mainActivity, String email, String password) {
+            this.mainActivity = mainActivity;
             this.email = email;
             this.password = password;
         }
@@ -84,11 +95,16 @@ public final class DatabaseAccess{
             super.onPostExecute(result);
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     String user_id = jsonObject.getJSONObject("data").getString("id");
-                    new LoginInfoTask(user_id, access_token).execute();
-                } catch (JSONException e) {e.printStackTrace();}
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+
+                    saveTokentoLocal(mainActivity, user_id, access_token);
+                    new GetInfoTask(mainActivity, user_id, access_token).execute();
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
+                }
             }
+
 
         private static String parseJSONFromServer(String server_url) {
             HttpURLConnection connection = null;
@@ -98,6 +114,8 @@ public final class DatabaseAccess{
             try {
                 URL url = new URL(server_url);
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(10000);
                 connection.connect();
 
                 if ( connection.getResponseCode() == 500 )
@@ -127,11 +145,16 @@ public final class DatabaseAccess{
         }
     }
 
-    //Provide 1. User ID 2. JWT Token
-    public static class LoginInfoTask extends AsyncTask<String, String, String> {
+    /**
+     * Given: user_id, jwt token
+     * Result: all user information and login
+     */
+    public static class GetInfoTask extends AsyncTask<String, String, String> {
         private String id, jwt;
+        private Activity mainActivity;
 
-        public LoginInfoTask(String id, String jwt) {
+        public GetInfoTask(Activity mainActivity, String id, String jwt) {
+            this.mainActivity = mainActivity;
             this.id = id;
             this.jwt = jwt;
         }
@@ -149,31 +172,24 @@ public final class DatabaseAccess{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-                try {
-                    Log.d("Result", result);
-                    JSONObject jsonObject = new JSONObject(result);
-                    String id = jsonObject.getJSONObject("data").getString("id");
-                    String fb_id = jsonObject.getJSONObject("data").getString("fb_id");
-                    String last_name = jsonObject.getJSONObject("data").getString("last_name");
-                    String first_name = jsonObject.getJSONObject("data").getString("first_name");
-                    String email = jsonObject.getJSONObject("data").getString("email");
-                    String image_path = jsonObject.getJSONObject("data").getString("image_path");
-                    String college = jsonObject.getJSONObject("data").getString("college");
-                    String gender = jsonObject.getJSONObject("data").getString("gender");
-                    String birthday = jsonObject.getJSONObject("data").getString("birthday");
-                    Log.d("JSON Result", "-----------------------------------------------------");
-                    Log.d("id", id);
-                    Log.d("fb_id", fb_id);
-                    Log.d("last_name", last_name);
-                    Log.d("first_name", first_name);
-                    Log.d("email", email);
-                    Log.d("image_path", image_path);
-                    Log.d("college", college);
-                    Log.d("gender", gender);
-                    Log.d("birthday", birthday);
-                    Log.d("JSON Result", "-----------------------------------------------------");
-                } catch (JSONException e) {e.printStackTrace();}
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String id = jsonObject.getJSONObject("data").getString("id");
+                String fb_id = jsonObject.getJSONObject("data").getString("fb_id");
+                String last_name = jsonObject.getJSONObject("data").getString("last_name");
+                String first_name = jsonObject.getJSONObject("data").getString("first_name");
+                String email = jsonObject.getJSONObject("data").getString("email");
+                String image_path = jsonObject.getJSONObject("data").getString("image_path");
+                String college = jsonObject.getJSONObject("data").getString("college");
+                String gender = jsonObject.getJSONObject("data").getString("gender");
+                String birthday = jsonObject.getJSONObject("data").getString("birthday");
+                // TODO: 04/13/2017 update local user info and proceed to home screen
+                UtilityClass.printAlertMessage(mainActivity, "Welcome back, " + first_name + " " + last_name + "!", true );
+            } catch (JSONException e) {
+                Toast.makeText(mainActivity, "Please login...", Toast.LENGTH_LONG).show();
             }
+        }
+
 
         private static String parseJSONFromServer(String server_url) {
             HttpURLConnection connection = null;
@@ -183,6 +199,8 @@ public final class DatabaseAccess{
             try {
                 URL url = new URL(server_url);
                 connection = (HttpURLConnection) url.openConnection();
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(10000);
                 connection.connect();
 
                 if ( connection.getResponseCode() == 500 )
@@ -212,7 +230,10 @@ public final class DatabaseAccess{
         }
     }
 
-    //Provide 1.last_name 2. first_name 3. email 4. college 5. password
+    /**
+     * Given: 1.last_name 2. first_name 3. email 4. college 5. password
+     * Result: login automatically
+     */
     public static class CreateUserTask extends AsyncTask<String, String, String> {
         private static String last_name, first_name, email, college, password;
         public CreateUserTask(String last_name, String first_name, String email, String college, String password){
@@ -231,7 +252,6 @@ public final class DatabaseAccess{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.d("Post Result------", result);
         }
 
         private static String postJSONToServer() {
@@ -304,4 +324,24 @@ public final class DatabaseAccess{
             return result.toString();
         }
     }
+
+//----------------------------------------------------------------------------Local Save Functions--
+
+    //Save login info to phone.
+    public static void saveTokentoLocal(Activity mainActivity, String id, String jwt) {
+        SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("loginID", id);
+        editor.putString("loginJWT", jwt);
+        editor.commit();
+    }
+
+    //Get login info from phone.
+    public static String[] getTokenFromLocal(Activity mainActivity) {
+        SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        String id = pref.getString("loginID", "");
+        String jwt = pref.getString("loginJWT", "");
+        return new String[]{id, jwt};
+    }
+
 }
