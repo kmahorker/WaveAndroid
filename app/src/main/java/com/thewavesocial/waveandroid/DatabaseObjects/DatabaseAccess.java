@@ -17,14 +17,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public final class DatabaseAccess{
     public static String access_token = "";
     public static String user_id = "";
     private static String currentMethod = "";
+
+//----------------------------------------------------------------------------Caller Functions------
 
     public DatabaseAccess() {
     }
@@ -34,7 +34,6 @@ public final class DatabaseAccess{
     }
 
     public static long createUser() {
-        new JSONPostingTask().execute("https://api.theplugsocial.com/v1/users");
         return 0;
     }
 
@@ -63,116 +62,170 @@ public final class DatabaseAccess{
         throw new NullPointerException();
     }
 
-//----------------------------------------------------------------------------Authentication-------
+//----------------------------------------------------------------------------Meat Functions-------
 
-    public static void mainUser_login(String email, String password) {
-        email = "pasta@farian.org"; //testing purpose
-        password = "MEATBALLS!"; //testing purpose
-        String authenURL = "https://api.theplugsocial.com/v1/Auth?email=" + email + "&password=" + password;
+    //Provide 1. Email 2. Password
+    public static class LoginTask extends AsyncTask< String, String, String> {
+        private String email, password;
 
-        currentMethod = "mainUser_login";
-        new JSONParsingTask().execute(authenURL);
-    }
-
-    public static void mainUser_getAllInfo() {
-        if ( user_id.isEmpty() || access_token.isEmpty() )
-            Log.d("mainUser_getAllInfo", "No user_id or access_token found.");
-        String dataURL = "https://api.theplugsocial.com/v1/users/" + user_id + "?access_token=" + access_token;
-
-        currentMethod = "mainUser_getAllInfo";
-        new JSONParsingTask().execute(dataURL);
-    }
-
-    public static class JSONParsingTask extends AsyncTask<String, String, String> {
+        public LoginTask(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
 
         @Override
         protected String doInBackground(String... params){
-            return parseJSONFromServer(params[0]);
+            String authenURL = "https://api.theplugsocial.com/v1/Auth?email=" + email + "&password=" + password;
+            return parseJSONFromServer(authenURL);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            switch(currentMethod) {
-                case "mainUser_login":
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        access_token = jsonObject.getJSONObject("data").getString("jwt");
-                        user_id = jsonObject.getJSONObject("data").getString("id");
-                    } catch (JSONException e) {e.printStackTrace();}
-                    mainUser_getAllInfo();
-                    break;
-                case "mainUser_getAllInfo":
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String id = jsonObject.getJSONObject("data").getString("id");
-                        String fb_id = jsonObject.getJSONObject("data").getString("fb_id");
-                        String last_name = jsonObject.getJSONObject("data").getString("last_name");
-                        String first_name = jsonObject.getJSONObject("data").getString("first_name");
-                        String email = jsonObject.getJSONObject("data").getString("email");
-                        String image_path = jsonObject.getJSONObject("data").getString("image_path");
-                        String college = jsonObject.getJSONObject("data").getString("college");
-                        String gender = jsonObject.getJSONObject("data").getString("gender");
-                        String birthday = jsonObject.getJSONObject("data").getString("birthday");
-                        Log.d("JSON Result", "-----------------------------------------------------");
-                        Log.d("id", id);
-                        Log.d("fb_id", fb_id);
-                        Log.d("last_name", last_name);
-                        Log.d("first_name", first_name);
-                        Log.d("email", email);
-                        Log.d("image_path", image_path);
-                        Log.d("college", college);
-                        Log.d("gender", gender);
-                        Log.d("birthday", birthday);
-                        Log.d("JSON Result", "-----------------------------------------------------");
-                    } catch (JSONException e) {e.printStackTrace();}
-                default:
-                    //do nothing
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    new LoginInfoTask(user_id, access_token).execute();
+                } catch (JSONException e) {e.printStackTrace();}
             }
-        }
-    }
 
-    private static String parseJSONFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        InputStream stream;
-        BufferedReader reader = null;
-        String error = "";
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-            StringBuffer buffer = new StringBuffer();
-            while( (line = reader.readLine()) != null )
-                buffer.append(line);
-            return buffer.toString();
-
-        } catch (IOException e) {e.printStackTrace();}
-
-        finally {
-            if ( connection != null )
-                connection.disconnect();
+        private static String parseJSONFromServer(String server_url) {
+            HttpURLConnection connection = null;
+            InputStream stream;
+            BufferedReader reader = null;
+            String error = "";
             try {
-                if ( reader != null )
-                    reader.close();
+                URL url = new URL(server_url);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                if ( connection.getResponseCode() == 500 )
+                    stream = connection.getErrorStream();
+                else
+                    stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+                String line ="";
+                StringBuffer buffer = new StringBuffer();
+                while( (line = reader.readLine()) != null )
+                    buffer.append(line);
+                return buffer.toString();
+
+            } catch (IOException e) {e.printStackTrace();}
+
+            finally {
+                if ( connection != null )
+                    connection.disconnect();
+                try {
+                    if ( reader != null )
+                        reader.close();
+                }
+                catch (IOException e){e.printStackTrace();}
             }
-            catch (IOException e){e.printStackTrace();}
+            return error + server_url;
         }
-        return error + server_url;
     }
 
-    public static class JSONPostingTask extends AsyncTask<String, String, String> {
+    //Provide 1. User ID 2. JWT Token
+    public static class LoginInfoTask extends AsyncTask<String, String, String> {
+        private String id, jwt;
+
+        public LoginInfoTask(String id, String jwt) {
+            this.id = id;
+            this.jwt = jwt;
+        }
 
         @Override
         protected String doInBackground(String... params){
-            return postJSONToServer(params[0]);
+            if ( id.isEmpty() || jwt.isEmpty() ) {
+                Log.d("mainUser_getAllInfo", "No user_id or access_token found.");
+                return "";
+            }
+            String dataURL = "https://api.theplugsocial.com/v1/users/" + id + "?access_token=" + jwt;
+            return parseJSONFromServer(dataURL);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+                try {
+                    Log.d("Result", result);
+                    JSONObject jsonObject = new JSONObject(result);
+                    String id = jsonObject.getJSONObject("data").getString("id");
+                    String fb_id = jsonObject.getJSONObject("data").getString("fb_id");
+                    String last_name = jsonObject.getJSONObject("data").getString("last_name");
+                    String first_name = jsonObject.getJSONObject("data").getString("first_name");
+                    String email = jsonObject.getJSONObject("data").getString("email");
+                    String image_path = jsonObject.getJSONObject("data").getString("image_path");
+                    String college = jsonObject.getJSONObject("data").getString("college");
+                    String gender = jsonObject.getJSONObject("data").getString("gender");
+                    String birthday = jsonObject.getJSONObject("data").getString("birthday");
+                    Log.d("JSON Result", "-----------------------------------------------------");
+                    Log.d("id", id);
+                    Log.d("fb_id", fb_id);
+                    Log.d("last_name", last_name);
+                    Log.d("first_name", first_name);
+                    Log.d("email", email);
+                    Log.d("image_path", image_path);
+                    Log.d("college", college);
+                    Log.d("gender", gender);
+                    Log.d("birthday", birthday);
+                    Log.d("JSON Result", "-----------------------------------------------------");
+                } catch (JSONException e) {e.printStackTrace();}
+            }
+
+        private static String parseJSONFromServer(String server_url) {
+            HttpURLConnection connection = null;
+            InputStream stream;
+            BufferedReader reader = null;
+            String error = "";
+            try {
+                URL url = new URL(server_url);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                if ( connection.getResponseCode() == 500 )
+                    stream = connection.getErrorStream();
+                else
+                    stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+                String line ="";
+                StringBuffer buffer = new StringBuffer();
+                while( (line = reader.readLine()) != null )
+                    buffer.append(line);
+                return buffer.toString();
+
+            } catch (IOException e) {e.printStackTrace();}
+
+            finally {
+                if ( connection != null )
+                    connection.disconnect();
+                try {
+                    if ( reader != null )
+                        reader.close();
+                }
+                catch (IOException e){e.printStackTrace();}
+            }
+            return error + server_url;
+        }
+    }
+
+    //Provide 1.last_name 2. first_name 3. email 4. college 5. password
+    public static class CreateUserTask extends AsyncTask<String, String, String> {
+        private static String last_name, first_name, email, college, password;
+        public CreateUserTask(String last_name, String first_name, String email, String college, String password){
+            this.last_name = last_name;
+            this.first_name = first_name;
+            this.email = email;
+            this.college = college;
+            this.password = password;
+        }
+
+        @Override
+        protected String doInBackground(String... params){
+            return postJSONToServer();
         }
 
         @Override
@@ -180,79 +233,75 @@ public final class DatabaseAccess{
             super.onPostExecute(result);
             Log.d("Post Result------", result);
         }
-    }
 
-    private static String postJSONToServer(String server_url) {
-        HttpURLConnection connection = null;
-        InputStream stream;
-        BufferedReader reader = null;
-        String error = "";
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setReadTimeout(10000);
-            connection.setConnectTimeout(10000);
-            connection.setDoOutput(true);
-            connection.setDoInput(true);
-
-            List<AbstractMap.SimpleEntry> params = new ArrayList<>();
-            params.add(new AbstractMap.SimpleEntry("email", "12345@gmail.com"));
-            params.add(new AbstractMap.SimpleEntry("last_name", "Mario"));
-            params.add(new AbstractMap.SimpleEntry("first_name", "Brothers"));
-            params.add(new AbstractMap.SimpleEntry("college", "Stanefford"));
-            params.add(new AbstractMap.SimpleEntry("password", "trans"));
-
-            OutputStream output = connection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
-            writer.write(toString(params));
-            writer.flush();
-            writer.close();
-            output.close();
-            connection.connect();
-
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-            StringBuffer buffer = new StringBuffer();
-            while( (line = reader.readLine()) != null )
-                buffer.append(line+"\n");
-            return buffer.toString();
-
-        } catch (IOException e) {e.printStackTrace();}
-
-        finally {
-            if ( connection != null )
-                connection.disconnect();
+        private static String postJSONToServer() {
+            HttpURLConnection connection = null;
+            InputStream stream;
+            BufferedReader reader = null;
+            String error = "";
             try {
-                if ( reader != null )
-                    reader.close();
+                URL url = new URL("https://api.theplugsocial.com/v1/users");
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(10000);
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put("last_name", last_name);
+                params.put("first_name", first_name);
+                params.put("email", email);
+                params.put("college", college);
+                params.put("password", password);
+
+                OutputStream output = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+                writer.write(paramsToString(params));
+                writer.flush();
+                writer.close();
+                output.close();
+                connection.connect();
+
+                if ( connection.getResponseCode() == 500 )
+                    stream = connection.getErrorStream();
+                else
+                    stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+                String line ="";
+                StringBuffer buffer = new StringBuffer();
+                while( (line = reader.readLine()) != null )
+                    buffer.append(line+"\n");
+                return buffer.toString();
+
+            } catch (IOException e) {e.printStackTrace();}
+
+            finally {
+                if ( connection != null )
+                    connection.disconnect();
+                try {
+                    if ( reader != null )
+                        reader.close();
+                }
+                catch (IOException e){e.printStackTrace();}
             }
-            catch (IOException e){e.printStackTrace();}
-        }
-        return error + server_url;
-    }
-
-    private static String toString(List<AbstractMap.SimpleEntry> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-
-        for (AbstractMap.SimpleEntry pair : params)
-        {
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(pair.getKey().toString(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(pair.getValue().toString(), "UTF-8"));
+            return error;
         }
 
-        return result.toString();
+        private static String paramsToString(HashMap<String, String> params) throws UnsupportedEncodingException {
+            String result = "";
+            boolean first = true;
+            for (String key : params.keySet()) {
+                if (first)
+                    first = false;
+                else
+                    result += "&";
+                result += URLEncoder.encode(key, "UTF-8");
+                result += "=";
+                result += URLEncoder.encode(params.get(key), "UTF-8");
+            }
+            return result.toString();
+        }
     }
 }

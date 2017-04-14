@@ -82,8 +82,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupMapElements();
         setupHeightVariables();
         setupSearchbar();
-        DatabaseAccess.mainUser_login("","");
-        DatabaseAccess.createUser();
+
+        new DatabaseAccess.LoginTask("pasta@farian.org", "MEATBALLS!").execute();
+        new DatabaseAccess.CreateUserTask("Star", "Patrick", "pStar@gmail.edu", "UCSB", "pStar").execute();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
