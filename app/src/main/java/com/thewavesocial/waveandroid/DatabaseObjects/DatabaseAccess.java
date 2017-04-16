@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -43,13 +44,13 @@ public final class DatabaseAccess{
 
         //Login User
         String authenURL = "https://api.theplugsocial.com/v1/auth";
-        new HttpRequestTask(authenURL, "POST", body, new OnResultReady() {
+        new HttpRequestTask(mainActivity, authenURL, "POST", body, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("LoginByEmail1", result);
                 //Get User Info
                 String getUserURL = "https://api.theplugsocial.com/v1/users/" + getTokenFromLocal(mainActivity)[0] + "?access_token=" + getTokenFromLocal(mainActivity)[1];
-                new HttpRequestTask(getUserURL, "GET", null, new OnResultReady() {
+                new HttpRequestTask(mainActivity, getUserURL, "GET", null, new OnResultReady() {
                     @Override
                     public void sendBackResult(String result) {
                         Log.d("LoginByEmail2", result);
@@ -88,7 +89,7 @@ public final class DatabaseAccess{
         event_info.put("end_date", end_date);
         event_info.put("end_time", end_time);
 
-        new HttpRequestTask(url, "POST", event_info, new OnResultReady() {
+        new HttpRequestTask(mainActivity, url, "POST", event_info, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("Create Party Result", result);
@@ -107,7 +108,7 @@ public final class DatabaseAccess{
         user_info.put("email", email);
         user_info.put("college", college);
         user_info.put("password", password);
-        new HttpRequestTask(url, "POST", user_info, new OnResultReady() {
+        new HttpRequestTask(mainActivity, url, "POST", user_info, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("Create User Result", result);
@@ -121,7 +122,7 @@ public final class DatabaseAccess{
         final User[] user = new User[1];
         String[] tokens = getTokenFromLocal(mainActivity);
         String url = "https://api.theplugsocial.com/v1/users/" + userID + "?access_token=" + tokens[1];
-        new HttpRequestTask(url, "GET", null, new OnResultReady() {
+        new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("GetUserResult", result);
@@ -152,7 +153,7 @@ public final class DatabaseAccess{
         String[] tokens = getTokenFromLocal(mainActivity);
 
         String url = "https://api.theplugsocial.com/v1/events/" + partyID + "/users?access_token=" + tokens[1];
-        new HttpRequestTask(url, "GET", null, new OnResultReady() {
+        new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("GetPartyResult", result);
@@ -167,7 +168,7 @@ public final class DatabaseAccess{
         String[] tokens = getTokenFromLocal(mainActivity);
 
         String url = "https://api.theplugsocial.com/v1/users/" + userID + "/events?access_token=" + tokens[1];
-        new HttpRequestTask(url, "GET", null, new OnResultReady() {
+        new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("GetUserPartiesResult", result);
@@ -206,12 +207,25 @@ public final class DatabaseAccess{
         private String url, endpoint;
         private HashMap<String, String> body;
         private OnResultReady delegate = null;
+        private Activity mainActivity;
+        private ProgressDialog progress;
 
-        public HttpRequestTask(String url, String endpoint, HashMap<String, String> body, OnResultReady delegate) {
+        public HttpRequestTask(Activity mainActivity, String url, String endpoint, HashMap<String, String> body, OnResultReady delegate) {
             this.url = url;
             this.endpoint = endpoint;
             this.body = body;
+            this.mainActivity = mainActivity;
             this.delegate = delegate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = new ProgressDialog(mainActivity);
+            progress.setTitle("Loading");
+            progress.setMessage("Wait while loading...");
+            progress.setCancelable(false);
+            progress.show();
         }
 
         @Override
@@ -221,6 +235,7 @@ public final class DatabaseAccess{
 
         @Override
         protected void onPostExecute(String result) {
+            progress.dismiss();
             delegate.sendBackResult(result);
         }
 
@@ -233,8 +248,8 @@ public final class DatabaseAccess{
             try {
                 URL request_url = new URL(url);
                 connection = (HttpURLConnection) request_url.openConnection();
-                connection.setReadTimeout(30000); //Time out both at 10 seconds
-                connection.setConnectTimeout(30000);
+                connection.setReadTimeout(10000); //Time out both at 10 seconds
+                connection.setConnectTimeout(10000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
                 Log.d("Body", (body==null)+"");
