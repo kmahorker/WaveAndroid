@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -41,12 +42,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
@@ -84,16 +88,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupSearchbar();
 
         //// TODO: 04/13/2017 Testing purpose for server request
-        String[] loginTokens = DatabaseAccess.getTokenFromLocal(mainActivity);
+        User newUser = DatabaseAccess.createUser(mainActivity, "Star", "Patrick", "pStar@gmail.edu", "UCSB", "pStar");
+        User loginUser = DatabaseAccess.loginByEmail(mainActivity, "pasta@farian.org", "MEATBALLS!");
+        Party party = DatabaseAccess.createParty(mainActivity, "Super Party 1", "12", "1234 Super Road", "", "Isla Vista", "CA", "public", "2017-12-1", "3:10", "2017-12-1", "15:10");
 
-        //Login automatically if local jwt is still valid. Else, please login.
-        new DatabaseAccess.GetInfoTask(mainActivity, loginTokens[0], loginTokens[1]).execute();
+        User autoLoginUser = DatabaseAccess.getUser(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
+        User getSpecificUser = DatabaseAccess.getUser(mainActivity, "1");
+        Party getSpecificParty = DatabaseAccess.getParty(mainActivity, "7");
+        ArrayList<Party> getUserParties = DatabaseAccess.getUserParties(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
 
-        //Login with credentials if token is not valid
-        new DatabaseAccess.LoginTask(mainActivity, "pasta@farian.org", "MEATBALLS!").execute();
-
-        //Create a new user account
-        new DatabaseAccess.CreateUserTask("Star", "Patrick", "pStar@gmail.edu", "UCSB", "pStar").execute();
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
