@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -12,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +28,7 @@ import com.facebook.login.LoginResult;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -35,11 +36,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -47,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoginTutorialActivity extends AppCompatActivity {
@@ -238,24 +236,24 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
                     BitmapDrawable profilePic = new BitmapDrawable(bitmap);
-                    User newUser = new User(Long.parseLong(json.getString("id")),
+                    User newUser = new User(json.getString("id"),
                             json.getString("first_name"),
                             json.getString("last_name"),
                             json.getString("email"),
                             "password" /*TODO: delete password field*/,
                             "UCSB" /*TODO: delete college field*/,
                             json.getString("gender"),
-                            1231231234 /*TODO: delte ph#*/,
+                            "1231231234" /*TODO: delte ph#*/,
                             new MapAddress(),
                             calendar,
-                            new ArrayList<Long>(), //followers
-                            new ArrayList<Long>(), //following
+                            new ArrayList<String>(), //followers
+                            new ArrayList<String>(), //following
                             new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-                            new ArrayList<Long>(), //hosting
-                            new ArrayList<Long>(), //attended
-                            new ArrayList<Long>(), //hosted
-                            new ArrayList<Long>(), //bounced
-                            new ArrayList<Long>(), //attending
+                            new ArrayList<String>(), //hosting
+                            new ArrayList<String>(), //attended
+                            new ArrayList<String>(), //hosted
+                            new ArrayList<String>(), //bounced
+                            new ArrayList<String>(), //attending
                             new ArrayList<Notification>(),
                             new ArrayList<Notification>(),
                             profilePic);
@@ -277,66 +275,76 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
-    private JSONObject requestDataFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        InputStream stream;
-        StringBuffer buffer = new StringBuffer();
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-            while( (line = reader.readLine()) != null )
-                buffer.append(line);
-            String jsonString = buffer.toString();
-            JSONObject jsonObject = new JSONObject(jsonString);
-            return jsonObject.getJSONObject("data");
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        } finally {
-            if ( connection != null )
-                connection.disconnect();
-            try {
-                if ( reader != null )
-                    reader.close();
+
+    //Update user id and login token
+    public void server_loginByEmail(String email, String password) {
+        String url = getString(R.string.server_url)+"auth";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("password", password);
+        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Login_byEmail", result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    server_getUserInfo();
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
+                }
             }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
+        }).execute();
     }
 
-
-    public class JSONParsingTask extends AsyncTask<String, String, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params){
-            return requestDataFromServer(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                String url = "";
-                try {
-                    url = "https://api.theplugsocial.com/v1/users/";
-                    url += result.getLong("id") + "?access_token=";
-                    url += result.getString("jwt");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                JSONObject data = requestDataFromServer(url);
-                // TODO: 03/26/2017 Process user data
+    //Get user information
+    private void server_getUserInfo() {
+        String url = getString(R.string.server_url) + "users/" + DatabaseAccess.getTokenFromLocal(mainActivity)[0] + "?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity)[1];
+        new DatabaseAccess.HttpRequestTask(mainActivity, url, "GET", null, new DatabaseAccess.OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Login_GetUserInfo", result);
+                // TODO: 04/17/2017 Parse JSON
+                createCurrentUser(new HashMap<String, Object>());
             }
-        }
+        }).execute();
+    }
+
+    //Create current user
+    private void createCurrentUser(HashMap<String, Object> info) {
+        String userID = (String) info.get("id");
+        String firstName = (String) info.get("first_name");
+        String lastName = (String) info.get("last_name");
+        String email = (String) info.get("email");
+        String password = (String) info.get("password");
+        String college = (String) info.get("college");
+        String gender = (String) info.get("gender");
+        String phone = (String) info.get("phone");
+        MapAddress mapAddress = new MapAddress(); // TODO: 04/17/2017 what to store as address
+        Calendar birthday = Calendar.getInstance();
+        String strB = (String) info.get("birthday");
+        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(0, 4)));
+        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(5, 7)));
+        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(8)));
+
+        List bestFriends = (ArrayList) info.get("best_friends");
+        List followers = (ArrayList) info.get("followers");
+        List following = (ArrayList) info.get("following");
+        List hosting = (ArrayList) info.get("hosting");
+        List attended = (ArrayList) info.get("attended");
+        List hosted = (ArrayList) info.get("hosted");
+        List bounced = (ArrayList) info.get("bounced");
+        List attending = (ArrayList) info.get("attending");
+        List notifications1 = (ArrayList) info.get("notifications1");
+        List notifications2 = (ArrayList) info.get("notifications2");
+        BitmapDrawable profilePic = new BitmapDrawable(); // TODO: 04/17/2017 Extract image
+
+        //Compose user
+        User user = new User(userID, firstName, lastName, email, password, college, gender, phone, mapAddress, birthday,
+                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
+                notifications2, profilePic);
+//        CurrentUser.theUser = user;
     }
 }

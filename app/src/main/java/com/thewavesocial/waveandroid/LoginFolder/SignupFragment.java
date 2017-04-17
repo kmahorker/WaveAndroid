@@ -301,7 +301,7 @@ public class SignupFragment extends Fragment
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
                 if ( !friendphone.getText().toString().equals("") )
-                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
+                    mainActivity.friendphone = friendphone.getText().toString();
                 mainActivity.saveUserData();
             }
         });
@@ -314,7 +314,7 @@ public class SignupFragment extends Fragment
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
                 if ( !friendphone.getText().toString().equals("") )
-                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
+                    mainActivity.friendphone = friendphone.getText().toString();
                 return true;
             }
         });

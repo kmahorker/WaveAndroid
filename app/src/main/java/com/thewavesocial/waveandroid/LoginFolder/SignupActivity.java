@@ -29,7 +29,7 @@ public class SignupActivity extends FragmentActivity
     private ImageView dot1, dot2, dot3, dot4, dot5, dot6;
     public ViewPager mPager;
     public String name = "", email = "", password = "", gender = "", friendname = "";
-    public long friendphone = 0, userID;
+    public String friendphone = "", userID;
     public Calendar birthday;
     public BitmapDrawable profilePic;
 
@@ -41,7 +41,7 @@ public class SignupActivity extends FragmentActivity
 
         Intent intent = getIntent();
         if(intent.getExtras() != null) { //TODO 3/8/2017 Only Get Extras if Login with Facebook
-            userID = Long.parseLong(intent.getExtras().getString("userIDLong"));
+            userID = intent.getExtras().getString("userIDLong");
             name = intent.getExtras().getString("userName");
             email = intent.getExtras().getString("userEmail");
             gender = intent.getExtras().getString("userGender");
@@ -103,7 +103,7 @@ public class SignupActivity extends FragmentActivity
                     .setCancelable(true)
                     .show();
         }
-        else if ( friendphone == 0 )
+        else if ( friendphone.equals("0") )
         {
             fieldAlert.setMessage("Please specify your emergency friend's phone number.")
                     .setCancelable(true)
@@ -136,22 +136,22 @@ public class SignupActivity extends FragmentActivity
                 bestFriend.setLastName("");
             }
             bestFriend.setPhone(friendphone);
-            bestFriend.setUserID(1000);
+            bestFriend.setUserID("1000");
 
-            User user = new User((long) 0,
+            User user = new User("0",
                     "Noname", "Duh",
                     email, password,
                     "", gender,
-                    0, new MapAddress(),
+                    "0", new MapAddress(),
                     birthday,
-                    new ArrayList<Long>(), //best friend list
-                    new ArrayList<Long>(), //followers list
+                    new ArrayList<String>(), //best friend list
+                    new ArrayList<String>(), //followers list
                     new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //following list
-                    new ArrayList<Long>(), //attending list
-                    new ArrayList<Long>(), //party attended list
-                    new ArrayList<Long>(), //party hosted list
-                    new ArrayList<Long>(), //party bounced list
-                    new ArrayList<Long>(),
+                    new ArrayList<String>(), //attending list
+                    new ArrayList<String>(), //party attended list
+                    new ArrayList<String>(), //party hosted list
+                    new ArrayList<String>(), //party bounced list
+                    new ArrayList<String>(),
                     new ArrayList<Notification>(),
                     new ArrayList<Notification>(),
                     new BitmapDrawable());

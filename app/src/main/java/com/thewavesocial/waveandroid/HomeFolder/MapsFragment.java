@@ -59,7 +59,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
     private Marker cur_loc_marker;
-    private List<Long> partyList;
+    private List<String> partyList;
     private GoogleMap mMap;
     private LatLng loc;
 
@@ -88,14 +88,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupSearchbar();
 
         //// TODO: 04/13/2017 Testing purpose for server request
-        User newUser = DatabaseAccess.createUser(mainActivity, "Star", "Patrick", "pStar@gmail.edu", "UCSB", "pStar");
-        User loginUser = DatabaseAccess.loginByEmail(mainActivity, "pasta@farian.org", "MEATBALLS!");
-        Party party = DatabaseAccess.createParty(mainActivity, "Super Party 1", "12", "1234 Super Road", "", "Isla Vista", "CA", "public", "2017-12-1", "3:10", "2017-12-1", "15:10");
-
-        User autoLoginUser = DatabaseAccess.getUser(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
-        User getSpecificUser = DatabaseAccess.getUser(mainActivity, "1");
-        Party getSpecificParty = DatabaseAccess.getParty(mainActivity, "7");
-        ArrayList<Party> getUserParties = DatabaseAccess.getUserParties(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
+//        User newUser = DatabaseAccess.createUser(mainActivity, "Round", "Sponge", "roundPant@gmail.com", "Trump University", "round");
+//        User loginUser = DatabaseAccess.loginByEmail(mainActivity, "roundPant@gmail.com", "round");
+//        Party party = DatabaseAccess.createParty(mainActivity, "Super Party 1", "12", "1234 Super Road", "", "Isla Vista", "CA", "public", "2017-12-1", "3:10", "2017-12-1", "15:10");
+//
+//        User autoLoginUser = DatabaseAccess.getUser(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
+//        User getSpecificUser = DatabaseAccess.getUser(mainActivity, "1");
+//        Party getSpecificParty = DatabaseAccess.getParty(mainActivity, "7");
+//        ArrayList<Party> getUserParties = DatabaseAccess.getUserParties(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
 
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
@@ -306,7 +306,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParty(long partyID, LatLng loc) {
+    public void addParty(String partyID, LatLng loc) {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
@@ -314,8 +314,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParties(GoogleMap googleMap, List<Long> partyIDs) {
-        for (long party : partyIDs) {
+    public void addParties(GoogleMap googleMap, List<String> partyIDs) {
+        for (String party : partyIDs) {
             LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
             if (loc != null)
                 addParty(party, loc);

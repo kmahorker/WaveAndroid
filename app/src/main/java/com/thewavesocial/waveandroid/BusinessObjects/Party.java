@@ -20,44 +20,44 @@ import java.util.List;
 //public class Party implements Parcelable
 public class Party
 {
-    private long partyID;
+    private String partyID;
     private String name;
     private double price; //decimal == double?
     private String hostName;
     private Calendar startingDateTime;
     private Calendar endingDateTime;
     private MapAddress mapAddress;
-    private List<Long> hostingUsers;
-    private List<Long> bouncingUsers;
-    private List<Long> attendingUsers;
+    private List<String> hostingUsers;
+    private List<String> bouncingUsers;
+    private List<String> attendingUsers;
     private boolean isPublic;
     private BitmapDrawable partyEmoji;
 
     public Party()
     {
-        partyID = 0;
+        partyID = "0";
         name = "";
         price = 0;
         hostName = "";
         startingDateTime = Calendar.getInstance();
         endingDateTime = Calendar.getInstance();
         mapAddress = new MapAddress();
-        attendingUsers = new ArrayList<Long>();
+        attendingUsers = new ArrayList<String>();
         isPublic = false;
         partyEmoji = new BitmapDrawable();
     }
 
     public Party(
-            long partyID,
+            String partyID,
             String name,
             double price,
             String hostName,
             Calendar startingDateTime,
             Calendar endingDateTime,
             MapAddress mapAddress,
-            List<Long> hostingUsers,
-            List<Long> bouncingUsers,
-            List<Long> attendingUsers,
+            List<String> hostingUsers,
+            List<String> bouncingUsers,
+            List<String> attendingUsers,
             boolean isPublic, BitmapDrawable partyEmoji)
     {
         this.partyID = partyID;
@@ -75,19 +75,19 @@ public class Party
     }
 
     //Delete
-    public boolean removeAttending(long userIDToRemove)
+    public boolean removeAttending(String userIDToRemove)
     {
         return attendingUsers.remove(userIDToRemove);
     }
 
     //Add
-    public void addAttending(long userIDToAdd)
+    public void addAttending(String userIDToAdd)
     {
         attendingUsers.add(userIDToAdd);
     }
 
     //Setters
-    public void setPartyID(long partyID)
+    public void setPartyID(String partyID)
     {
         this.partyID = partyID;
     }
@@ -122,17 +122,17 @@ public class Party
         this.mapAddress = mapAddress;
     }
 
-    public void setHostingUsers(List<Long> hostingUsers)
+    public void setHostingUsers(List<String> hostingUsers)
     {
         this.hostingUsers = hostingUsers;
     }
 
-    public void setBouncingUsers(List<Long> bouncingUsers)
+    public void setBouncingUsers(List<String> bouncingUsers)
     {
         this.bouncingUsers = bouncingUsers;
     }
 
-    public void setAttendingUsers(List<Long> attendingUsers)
+    public void setAttendingUsers(List<String> attendingUsers)
     {
         this.attendingUsers = attendingUsers;
     }
@@ -143,7 +143,7 @@ public class Party
     }
 
     //Getters
-    public long getPartyID()
+    public String getPartyID()
     {
         return partyID;
     }
@@ -178,17 +178,17 @@ public class Party
         return mapAddress;
     }
 
-    public List<Long> getHostingUsers()
+    public List<String> getHostingUsers()
     {
         return hostingUsers;
     }
 
-    public List<Long> getBouncingUsers()
+    public List<String> getBouncingUsers()
     {
         return bouncingUsers;
     }
 
-    public List<Long> getAttendingUsers()
+    public List<String> getAttendingUsers()
     {
         return attendingUsers;
     }

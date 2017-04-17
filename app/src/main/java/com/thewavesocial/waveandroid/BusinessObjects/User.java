@@ -18,71 +18,71 @@ import java.util.List;
 //public class User implements Parcelable
 public class User
 {
-    private long userID;
+    private String userID;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String college;
     private String gender;
-    private long phone;
+    private String phone;
     private MapAddress mapAddress;
     private Calendar birthday;
     private List<BestFriend> bestFriends;
-    private List<Long> followers;
-    private List<Long> following;
+    private List<String> followers;
+    private List<String> following;
     //Below contain list of PartyIDs
-    private List<Long> hosting;
-    private List<Long> attended;
-    private List<Long> hosted;
-    private List<Long> bounced;
-    private List<Long> attending;
+    private List<String> hosting;
+    private List<String> attended;
+    private List<String> hosted;
+    private List<String> bounced;
+    private List<String> attending;
     private List<Notification> notifications1;
     private List<Notification> notifications2;
     private BitmapDrawable profilePic;
 
     public User()
     {
-        userID = 0;
+        userID = "";
         firstName = "";
         lastName = "";
         email = "";
         password = "";
         college = "";
         gender = "";
-        phone = 0;
+        phone = "";
         mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
         hosting = new ArrayList<>();
-        attended = new ArrayList<Long>();
-        hosted = new ArrayList<Long>();
-        bounced = new ArrayList<Long>();
-        attending = new ArrayList<Long>();
+        attended = new ArrayList<>();
+        hosted = new ArrayList<>();
+        bounced = new ArrayList<>();
+        attending = new ArrayList<>();
         notifications1 = new ArrayList<>();
         notifications2 = new ArrayList<>();
         profilePic = new BitmapDrawable(); //TODO Use different constructor
     }
 
-    public User(Long userID,
+    public User(String userID,
                 String firstName,
                 String lastName,
                 String email,
                 String password,
                 String college,
                 String gender,
-                long phone,
+                String phone,
                 MapAddress mapAddress,
                 Calendar birthday,
-                List<Long> followers,
-                List<Long> following,
+                List<String> followers,
+                List<String> following,
                 List<BestFriend> bestFriends,
-                List<Long> hosting, List<Long> attended,
-                List<Long> hosted,
-                List<Long> bounced,
-                List<Long> attending,
+                List<String> hosting, List<String> attended,
+                List<String> hosted,
+                List<String> bounced,
+                List<String> attending,
                 List<Notification> notifications1,
                 List<Notification> notifications2,
                 BitmapDrawable profilePic)
@@ -111,7 +111,7 @@ public class User
     }
 
     //Setter Block
-    public void setUserID(long userID)
+    public void setUserID(String userID)
     {
         this.userID = userID;
     }
@@ -161,29 +161,29 @@ public class User
         this.bestFriends = bestFriends;
     }
 
-    public void setAttended(List<Long> attended)
+    public void setAttended(List<String> attended)
     {
         this.attended = attended;
     }
 
-    public void setHosted(List<Long> hosted)
+    public void setHosted(List<String> hosted)
     {
         this.hosted = hosted;
     }
 
-    public void setBounced(List<Long> bounced)
+    public void setBounced(List<String> bounced)
     {
         this.bounced = bounced;
     }
 
-    public void setAttending(List<Long> attending) {
+    public void setAttending(List<String> attending) {
         this.attending = attending;
     }
 
     public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
 
     //Getter Block
-    public long getUserID()
+    public String getUserID()
     {
         return userID;
     }
@@ -233,23 +233,23 @@ public class User
         return bestFriends;
     }
 
-    public List<Long> getAttended()
+    public List<String> getAttended()
     {
         return attended;
     }
 
-    public List<Long> getHosted()
+    public List<String> getHosted()
     {
         return hosted;
     }
 
-    public List<Long> getBounced()
+    public List<String> getBounced()
     {
         return bounced;
     }
 
 
-    public List<Long> getAttending()
+    public List<String> getAttending()
     {
         return attending;
     }
@@ -279,32 +279,32 @@ public class User
         this.notifications2 = notifications2;
     }
 
-    public long getPhone()
+    public String getPhone()
     {
         return phone;
     }
 
-    public void setPhone(long phone)
+    public void setPhone(String phone)
     {
         this.phone = phone;
     }
 
-    public List<Long> getFollowers()
+    public List<String> getFollowers()
     {
         return followers;
     }
 
-    public void setFollowers(List<Long> followers)
+    public void setFollowers(List<String> followers)
     {
         this.followers = followers;
     }
 
-    public List<Long> getFollowing()
+    public List<String> getFollowing()
     {
         return following;
     }
 
-    public void setFollowing(List<Long> following)
+    public void setFollowing(List<String> following)
     {
         this.following = following;
     }

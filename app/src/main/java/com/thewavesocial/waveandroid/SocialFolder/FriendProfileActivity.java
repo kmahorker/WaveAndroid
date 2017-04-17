@@ -21,7 +21,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 public class FriendProfileActivity extends AppCompatActivity {
     private User friend; //TODO: Remove Empty User
-    private long userID;
+    private String userID;
     private TextView followers_textview, following_textview, follow_button;
     private ListView notification_listview;
     private ImageView profilepic_imageview;
@@ -37,7 +37,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         // access current friend data
         Intent intent = getIntent();
-        userID = intent.getExtras().getLong("userIDLong");
+        userID = intent.getExtras().getString("userIDLong");
         friend = CurrentUser.getUserObject(userID);
         //TODO: getUserObject(long id) from database class
 

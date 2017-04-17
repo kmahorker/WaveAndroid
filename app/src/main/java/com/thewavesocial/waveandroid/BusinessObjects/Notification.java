@@ -16,7 +16,7 @@ public class Notification
     public static final int type8FriendAttendedNotice = 8;
     private String message;
     private int requestType;
-    private long senderID;
+    private String senderID;
 
     public Notification()
     {
@@ -24,7 +24,7 @@ public class Notification
         requestType = 0;
     }
 
-    public Notification( long senderID, int requestType )
+    public Notification( String senderID, int requestType )
     {
         if ( requestType == type1FollowingNotice )
         {
@@ -86,12 +86,12 @@ public class Notification
         this.requestType = requestType;
     }
 
-    public long getSenderID()
+    public String getSenderID()
     {
         return senderID;
     }
 
-    public void setSenderID(long senderID)
+    public void setSenderID(String senderID)
     {
         this.senderID = senderID;
     }

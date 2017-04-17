@@ -48,6 +48,17 @@ public final class DatabaseAccess{
             @Override
             public void sendBackResult(String result) {
                 Log.d("LoginByEmail1", result);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+
+                    saveTokentoLocal(mainActivity, user_id, access_token);
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
+                }
+
                 //Get User Info
                 String getUserURL = "https://api.theplugsocial.com/v1/users/" + getTokenFromLocal(mainActivity)[0] + "?access_token=" + getTokenFromLocal(mainActivity)[1];
                 new HttpRequestTask(mainActivity, getUserURL, "GET", null, new OnResultReady() {
@@ -56,17 +67,6 @@ public final class DatabaseAccess{
                         Log.d("LoginByEmail2", result);
                     }
                 }).execute();
-
-//                try {
-//                    JSONObject jsonObject = new JSONObject(result);
-//                    String user_id = jsonObject.getJSONObject("data").getString("id");
-//                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-//
-//                    saveTokentoLocal(mainActivity, user_id, access_token);
-//                    User user = getUser(mainActivity);
-//                } catch (JSONException e) {
-//                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
-//                }
             }
         }).execute();
         return user[0];
@@ -195,7 +195,7 @@ public final class DatabaseAccess{
 
 //----------------------------------------------------------------------------Actual Functions------
 
-    private interface OnResultReady {
+    public interface OnResultReady {
         void sendBackResult(String result);
     }
 
@@ -222,8 +222,8 @@ public final class DatabaseAccess{
         protected void onPreExecute() {
             super.onPreExecute();
             progress = new ProgressDialog(mainActivity);
-            progress.setTitle("Loading");
-            progress.setMessage("Wait while loading...");
+            progress.setTitle("Please wait");
+            progress.setMessage("Connecting to Server...");
             progress.setCancelable(false);
             progress.show();
         }
@@ -241,20 +241,17 @@ public final class DatabaseAccess{
 
 
         private static String sendHttpRequest(String url, String endpoint, HashMap<String, String> body) {
-            Log.d("ENdpoint", endpoint);
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             BufferedWriter writer = null;
             try {
                 URL request_url = new URL(url);
                 connection = (HttpURLConnection) request_url.openConnection();
-                connection.setReadTimeout(10000); //Time out both at 10 seconds
-                connection.setConnectTimeout(10000);
+                connection.setReadTimeout(5000); //Time out both at 10 seconds
+                connection.setConnectTimeout(5000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
-                Log.d("Body", (body==null)+"");
                 if ( body != null ) {
-                    //Add parameters for POST and DELETE request
                     connection.setDoInput(true);
                     connection.setDoOutput(true);
                     HashMap<String, String> params = body;

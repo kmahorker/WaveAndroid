@@ -6,29 +6,23 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 public class BestFriend {
     String name;
-    int phoneNumber;
+    String phoneNumber;
 
     public BestFriend(){
         name = "";
-        phoneNumber = 0;
+        phoneNumber = "0";
     }
 
-    public BestFriend(String name, int num){
+    public BestFriend(String name, String num){
         this.name = name;
         phoneNumber = num;
-    }
-
-    public BestFriend(String name, String numString){
-        this.name = name;
-        String str = numString.replaceAll("[^\\d]", "");
-        phoneNumber = Integer.parseInt(str);
     }
 
     public String getName() {
         return name;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 }
