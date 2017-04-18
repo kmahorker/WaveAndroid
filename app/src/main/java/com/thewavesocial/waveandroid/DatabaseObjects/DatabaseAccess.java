@@ -243,7 +243,7 @@ public final class DatabaseAccess{
     }
 
     //Basics Done
-    public static boolean deleteUserFromParty(final Activity mainActivity, String partyID, String userID, String relationship) {
+    public static void deleteUserFromParty(final Activity mainActivity, String partyID, String userID, String relationship) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "/users/" + userID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
