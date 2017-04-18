@@ -5,10 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONException;
@@ -35,7 +38,7 @@ public final class DatabaseAccess{
     public DatabaseAccess() {
     }
 
-    //return User object
+    //Basics Done
     public static User loginByEmail(final Activity mainActivity, String email, String password) {
         final User[] user = new User[1];
         HashMap<String, String> body = new HashMap<>();
@@ -60,7 +63,7 @@ public final class DatabaseAccess{
                 }
 
                 //Get User Info
-                String getUserURL = "https://api.theplugsocial.com/v1/users/" + getTokenFromLocal(mainActivity)[0] + "?access_token=" + getTokenFromLocal(mainActivity)[1];
+                String getUserURL = "https://api.theplugsocial.com/v1/users/" + getTokenFromLocal(mainActivity).get("id") + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
                 new HttpRequestTask(mainActivity, getUserURL, "GET", null, new OnResultReady() {
                     @Override
                     public void sendBackResult(String result) {
@@ -72,10 +75,10 @@ public final class DatabaseAccess{
         return user[0];
     }
 
-    //return party ID in string
+    //Basics Done
     public static Party createParty(final Activity mainActivity, String name, String price, String address, String address2, String city, String state, String is_public, String start_date, String start_time, String end_date, String end_time) {
         final Party[] event_id = {null};
-        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity)[1];
+        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> event_info = new HashMap();
         event_info.put("name", name);
         event_info.put("price", price);
@@ -98,7 +101,21 @@ public final class DatabaseAccess{
         return event_id[0];
     }
 
-    //return user ID in string
+    //Basics Done
+    public static void addUserToParty(final Activity mainActivity, String eventID, String userID, String relationship) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users/"
+                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        body.put("relationship", relationship);
+        new HttpRequestTask(mainActivity, url, "POST", body, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Add User to Party", result);
+            }
+        }).execute();
+    }
+
+    //Basics Done
     public static User createUser(final Activity mainActivity, String last_name, String first_name, String email, String college, String password) {
         final User[] user_id = {null};
         String url = "https://api.theplugsocial.com/v1/users";
@@ -117,11 +134,11 @@ public final class DatabaseAccess{
         return user_id[0];
     }
 
-    //return User object
+    //Basics Done
     public static User getUser(final Activity mainActivity, String userID) {
         final User[] user = new User[1];
-        String[] tokens = getTokenFromLocal(mainActivity);
-        String url = "https://api.theplugsocial.com/v1/users/" + userID + "?access_token=" + tokens[1];
+        HashMap tokens = getTokenFromLocal(mainActivity);
+        String url = "https://api.theplugsocial.com/v1/users/" + userID + "?access_token=" + tokens.get("jwt");
         new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
@@ -147,12 +164,12 @@ public final class DatabaseAccess{
         return user[0];
     }
 
-    //return Party object
+    //Basics Done
     public static Party getParty(final Activity mainActivity, String partyID) {
         final Party[] party = new Party[1];
-        String[] tokens = getTokenFromLocal(mainActivity);
+        HashMap tokens = getTokenFromLocal(mainActivity);
 
-        String url = "https://api.theplugsocial.com/v1/events/" + partyID + "/users?access_token=" + tokens[1];
+        String url = "https://api.theplugsocial.com/v1/events/" + partyID + "/users?access_token=" + tokens.get("jwt");
         new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
@@ -162,12 +179,12 @@ public final class DatabaseAccess{
         return party[0];
     }
 
-    //return Party object
+    //Basics Done
     public static ArrayList<Party> getUserParties(final Activity mainActivity, String userID) {
         ArrayList<Party> parties = new ArrayList<>();
-        String[] tokens = getTokenFromLocal(mainActivity);
+        HashMap tokens = getTokenFromLocal(mainActivity);
 
-        String url = "https://api.theplugsocial.com/v1/users/" + userID + "/events?access_token=" + tokens[1];
+        String url = "https://api.theplugsocial.com/v1/users/" + userID + "/events?access_token=" + tokens.get("jwt");
         new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
             @Override
             public void sendBackResult(String result) {
@@ -177,20 +194,98 @@ public final class DatabaseAccess{
         return parties;
     }
 
-    public static boolean deleteParty(String partyID) {
-        throw new NullPointerException();
+    //Basics Done
+    public static void getFollowing(final Activity mainActivity, String userID) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/followings?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Get Following", result);
+            }
+        }).execute();
     }
 
-    public static boolean deleteUser(String userID) {
-        throw new NullPointerException();
+    //Basics Done
+    public static void getFollowers(final Activity mainActivity, String userID) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/followers?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "GET", null, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Get Followers", result);
+            }
+        }).execute();
     }
 
-    public static boolean updateParty(String partyID, String param) {
-        throw new NullPointerException();
+    //Basics Done
+    public static void followUser(final Activity mainActivity, String userID) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
+                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "POST", null, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Follow User", result);
+            }
+        }).execute();
     }
 
-    public static boolean updateUser(String userID, String param) {
-        throw new NullPointerException();
+    //Basics Done
+    public static void deleteParty(final Activity mainActivity, String partyID) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + " ?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "DELETE", null, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Delete Party", result);
+            }
+        }).execute();
+    }
+
+    //Basics Done
+    public static boolean deleteUserFromParty(final Activity mainActivity, String partyID, String userID, String relationship) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "/users/" + userID
+                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        body.put("relationship", relationship);
+        new HttpRequestTask(mainActivity, url, "DELETE", body, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Delete User From Party", result);
+            }
+        }).execute();
+    }
+
+    //Basics Done
+    public static void updateParty(final Activity mainActivity, String eventID, HashMap<String, String> body) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
+                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "POST", body, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Update Party", result);
+            }
+        }).execute();
+
+    }
+
+    //Basics Done
+    public static void updateUser(final Activity mainActivity, String userID, HashMap<String, String> body) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        new HttpRequestTask(mainActivity, url, "POST", body, new OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Update User", result);
+            }
+        }).execute();
+
+    }
+
+    //Basics DOne
+    public static void unfollowUser(final Activity mainActivity, String userID) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
+                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
     }
 
 //----------------------------------------------------------------------------Actual Functions------
@@ -240,15 +335,16 @@ public final class DatabaseAccess{
         }
 
 
-        private static String sendHttpRequest(String url, String endpoint, HashMap<String, String> body) {
+        private String sendHttpRequest(String url, String endpoint, HashMap<String, String> body) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             BufferedWriter writer = null;
+
             try {
                 URL request_url = new URL(url);
                 connection = (HttpURLConnection) request_url.openConnection();
-                connection.setReadTimeout(5000); //Time out both at 10 seconds
-                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(10000); //Time out both at 10 seconds
+                connection.setConnectTimeout(10000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
                 if ( body != null ) {
@@ -279,7 +375,15 @@ public final class DatabaseAccess{
                 connection.disconnect();
                 reader.close();
                 return buffer.toString();
-            } catch (IOException e) {e.printStackTrace();}
+            } catch (IOException e) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", true);
+                    }
+                });
+            }
 
             //Close connection and reader and writer (Just in case things don't go well...)
             finally {
@@ -292,7 +396,7 @@ public final class DatabaseAccess{
                         writer.close();
                 } catch (IOException e){e.printStackTrace();}
             }
-            return "";
+            return "error";
         }
 
 
@@ -318,17 +422,18 @@ public final class DatabaseAccess{
     public static void saveTokentoLocal(Activity mainActivity, String id, String jwt) {
         SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("loginID", id);
-        editor.putString("loginJWT", jwt);
+        editor.putString("id", id);
+        editor.putString("jwt", jwt);
         editor.commit();
     }
 
     //Get login info from phone.
-    public static String[] getTokenFromLocal(Activity mainActivity) {
+    public static HashMap<String, String> getTokenFromLocal(Activity mainActivity) {
         SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
-        String id = pref.getString("loginID", "");
-        String jwt = pref.getString("loginJWT", "");
-        return new String[]{id, jwt};
+        HashMap<String, String> tokens = new HashMap<>();
+        tokens.put("id", pref.getString("id", ""));
+        tokens.put("jwt", pref.getString("jwt", ""));
+        return tokens;
     }
 
 }

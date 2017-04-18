@@ -276,8 +276,36 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
 
 
-    //Update user id and login token
-    public void server_loginByEmail(String email, String password) {
+
+
+    //Create new user account
+    private void server_create_user(String last_name, String first_name, String email, String college, String password) {
+        String url = getString(R.string.server_url) + "users";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("last_name", last_name);
+        body.put("first_name", first_name);
+        body.put("email", email);
+        body.put("college", college);
+        body.put("password", password);
+        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Create New User Account", result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    server_getUserInfo();
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
+                }
+            }
+        }).execute();
+    }
+
+    //Login using email and password
+    private void server_login_email(String email, String password) {
         String url = getString(R.string.server_url)+"auth";
         HashMap<String, String> body = new HashMap<>();
         body.put("email", email);
@@ -285,7 +313,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
         new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
             @Override
             public void sendBackResult(String result) {
-                Log.d("Login_byEmail", result);
+                Log.d("Login by Email", result);
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     String user_id = jsonObject.getJSONObject("data").getString("id");
@@ -299,21 +327,44 @@ public class LoginTutorialActivity extends AppCompatActivity {
         }).execute();
     }
 
+    //Login using facebook token
+    private void server_login_facebook(String fbtoken) {
+        String url = getString(R.string.server_url)+"FBauth";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("fb_token", fbtoken);
+        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
+            @Override
+            public void sendBackResult(String result) {
+                Log.d("Login by Facebook", result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    server_getUserInfo();
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
+                }
+            }
+        }).execute();
+    }
+
     //Get user information
     private void server_getUserInfo() {
-        String url = getString(R.string.server_url) + "users/" + DatabaseAccess.getTokenFromLocal(mainActivity)[0] + "?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity)[1];
+        String url = getString(R.string.server_url) + "users/" + DatabaseAccess.getTokenFromLocal(mainActivity).get("id")
+                + "?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
         new DatabaseAccess.HttpRequestTask(mainActivity, url, "GET", null, new DatabaseAccess.OnResultReady() {
             @Override
             public void sendBackResult(String result) {
                 Log.d("Login_GetUserInfo", result);
                 // TODO: 04/17/2017 Parse JSON
-                createCurrentUser(new HashMap<String, Object>());
+                constructUser(new HashMap<String, Object>());
             }
         }).execute();
     }
 
     //Create current user
-    private void createCurrentUser(HashMap<String, Object> info) {
+    private void constructUser(HashMap<String, Object> info) {
         String userID = (String) info.get("id");
         String firstName = (String) info.get("first_name");
         String lastName = (String) info.get("last_name");
@@ -347,4 +398,5 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 notifications2, profilePic);
 //        CurrentUser.theUser = user;
     }
+
 }
