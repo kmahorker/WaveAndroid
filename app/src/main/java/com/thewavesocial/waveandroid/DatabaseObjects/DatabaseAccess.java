@@ -35,10 +35,7 @@ import java.util.concurrent.ExecutionException;
 
 public final class DatabaseAccess{
 
-//----------------------------------------------------------------------------Caller Functions------
-
-    public DatabaseAccess() {
-    }
+//--------------------------------------------------------------------Testing Caller Functions------
 
     //Basics Done
     public static void loginByEmail(final Activity mainActivity, String email, String password) {
