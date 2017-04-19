@@ -91,6 +91,36 @@ public final class CurrentUser
             return dummy.getParty1();
     }
 
+
+    //Get user information
+    private User server_getUserInfo(String userID) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("CurUser_GetUserInfo", result);
+        return constructUser(new HashMap<String, Object>());
+    }
+
+    //Get party information
+    private Party server_getPartyInfo(String partyID) {
+        String url = context.getString(R.string.server_url) + "events/" + partyID
+                + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("CurUser_GetPartyInfo", result);
+        return constructParty(new HashMap<String, Object>());
+    }
+
+    //Fill in all party information
     public static Party constructParty(HashMap<String, Object> info) {
         String partyID = (String) info.get("id");
         String name = (String) info.get("name");
@@ -161,18 +191,5 @@ public final class CurrentUser
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
                 notifications2, profilePic);
         return user;
-    }
-
-    //Get user information
-    private void server_getUserInfo(String userID) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
-        String result = null;
-        try {
-            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.d("CurUser_GetUserInfo", result);
     }
 }
