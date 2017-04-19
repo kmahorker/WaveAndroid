@@ -25,6 +25,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -46,6 +47,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LoginTutorialActivity extends AppCompatActivity {
 
@@ -276,8 +278,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
 
 
-
-
     //Create new user account
     private void server_create_user(String last_name, String first_name, String email, String college, String password) {
         String url = getString(R.string.server_url) + "users";
@@ -287,21 +287,22 @@ public class LoginTutorialActivity extends AppCompatActivity {
         body.put("email", email);
         body.put("college", college);
         body.put("password", password);
-        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
-            @Override
-            public void sendBackResult(String result) {
-                Log.d("Create New User Account", result);
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    server_getUserInfo();
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
-                }
-            }
-        }).execute();
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("Create New User Account", result);
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            String user_id = jsonObject.getJSONObject("data").getString("id");
+            String access_token = jsonObject.getJSONObject("data").getString("jwt");
+            DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+            CurrentUser.theUser = CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
+        } catch (JSONException e) {
+            UtilityClass.printAlertMessage(mainActivity, "Create Account Error", true);
+        }
     }
 
     //Login using email and password
@@ -310,21 +311,22 @@ public class LoginTutorialActivity extends AppCompatActivity {
         HashMap<String, String> body = new HashMap<>();
         body.put("email", email);
         body.put("password", password);
-        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
-            @Override
-            public void sendBackResult(String result) {
-                Log.d("Login by Email", result);
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    server_getUserInfo();
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
-                }
-            }
-        }).execute();
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("Login by Email", result);
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            String user_id = jsonObject.getJSONObject("data").getString("id");
+            String access_token = jsonObject.getJSONObject("data").getString("jwt");
+            DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+            CurrentUser.theUser = CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
+        } catch (JSONException e) {
+            UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
+        }
     }
 
     //Login using facebook token
@@ -332,71 +334,23 @@ public class LoginTutorialActivity extends AppCompatActivity {
         String url = getString(R.string.server_url)+"FBauth";
         HashMap<String, String> body = new HashMap<>();
         body.put("fb_token", fbtoken);
-        new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body, new DatabaseAccess.OnResultReady() {
-            @Override
-            public void sendBackResult(String result) {
-                Log.d("Login by Facebook", result);
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    server_getUserInfo();
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
-                }
-            }
-        }).execute();
-    }
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(mainActivity, url, "POST", body).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d("Login by Facebook", result);
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            String user_id = jsonObject.getJSONObject("data").getString("id");
+            String access_token = jsonObject.getJSONObject("data").getString("jwt");
+            DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
 
-    //Get user information
-    private void server_getUserInfo() {
-        String url = getString(R.string.server_url) + "users/" + DatabaseAccess.getTokenFromLocal(mainActivity).get("id")
-                + "?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
-        new DatabaseAccess.HttpRequestTask(mainActivity, url, "GET", null, new DatabaseAccess.OnResultReady() {
-            @Override
-            public void sendBackResult(String result) {
-                Log.d("Login_GetUserInfo", result);
-                // TODO: 04/17/2017 Parse JSON
-                constructUser(new HashMap<String, Object>());
-            }
-        }).execute();
-    }
-
-    //Create current user
-    private void constructUser(HashMap<String, Object> info) {
-        String userID = (String) info.get("id");
-        String firstName = (String) info.get("first_name");
-        String lastName = (String) info.get("last_name");
-        String email = (String) info.get("email");
-        String password = (String) info.get("password");
-        String college = (String) info.get("college");
-        String gender = (String) info.get("gender");
-        String phone = (String) info.get("phone");
-        MapAddress mapAddress = new MapAddress(); // TODO: 04/17/2017 what to store as address
-        Calendar birthday = Calendar.getInstance();
-        String strB = (String) info.get("birthday");
-        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(0, 4)));
-        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(5, 7)));
-        birthday.set(Calendar.YEAR, Integer.parseInt(strB.substring(8)));
-
-        List bestFriends = (ArrayList) info.get("best_friends");
-        List followers = (ArrayList) info.get("followers");
-        List following = (ArrayList) info.get("following");
-        List hosting = (ArrayList) info.get("hosting");
-        List attended = (ArrayList) info.get("attended");
-        List hosted = (ArrayList) info.get("hosted");
-        List bounced = (ArrayList) info.get("bounced");
-        List attending = (ArrayList) info.get("attending");
-        List notifications1 = (ArrayList) info.get("notifications1");
-        List notifications2 = (ArrayList) info.get("notifications2");
-        BitmapDrawable profilePic = new BitmapDrawable(); // TODO: 04/17/2017 Extract image
-
-        //Compose user
-        User user = new User(userID, firstName, lastName, email, password, college, gender, phone, mapAddress, birthday,
-                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
-                notifications2, profilePic);
-//        CurrentUser.theUser = user;
+            CurrentUser.theUser = CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
+        } catch (JSONException e) {
+            UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
+        }
     }
 
 }

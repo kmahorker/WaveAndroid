@@ -52,6 +52,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
@@ -89,6 +90,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
         //// TODO: 04/13/2017 Testing purpose for server request
         User newUser = DatabaseAccess.createUser(mainActivity, "Round", "Sponge", "roundPant@gmail.com", "Trump University", "round");
+
 //        User loginUser = DatabaseAccess.loginByEmail(mainActivity, "roundPant@gmail.com", "round");
 //        Party party = DatabaseAccess.createParty(mainActivity, "Super Party 1", "12", "1234 Super Road", "", "Isla Vista", "CA", "public", "2017-12-1", "3:10", "2017-12-1", "15:10");
 //

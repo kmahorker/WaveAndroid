@@ -41,8 +41,7 @@ public class HostControllerFragment extends Fragment
         List<String> sample = new ArrayList<>();
         sample.addAll(CurrentUser.theUser.getHosted());
         sample.addAll(CurrentUser.theUser.getHosted());
-        manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity,
-                CurrentUser.getPartyListObjects(sample)));
+        manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, CurrentUser.getPartyListObjects(sample)));
 
         createButton.setOnClickListener(new View.OnClickListener()
         {
@@ -54,8 +53,6 @@ public class HostControllerFragment extends Fragment
             }
         });
     }
-
-
 
 
 }
