@@ -77,13 +77,11 @@ public class AddFriendCustomAdapter extends BaseAdapter {
             holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
-            //holder.img.setImageResource(R.drawable.happy_house); //testing //TODO Change to user's image
             holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(),
-                    userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
+                    userList.get(position).getProfilePic().getBitmap()));
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO Not sure if this is right imp
                     context.showFriendProfileActivity(v,userList.get(position));
                 }
             });
@@ -91,7 +89,6 @@ public class AddFriendCustomAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     holder.btn.setImageResource(R.drawable.checkmark);
-                    //TODO: SEND Notification to recepient user
                 }
             });
             return rowView;

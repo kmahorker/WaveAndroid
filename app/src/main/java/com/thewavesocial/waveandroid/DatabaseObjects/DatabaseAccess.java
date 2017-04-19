@@ -148,7 +148,7 @@ public final class DatabaseAccess{
 //                    String college = jsonObject.getJSONObject("data").getString("college");
 //                    String gender = jsonObject.getJSONObject("data").getString("gender");
 //                    String birthday = jsonObject.getJSONObject("data").getString("birthday");
-//                    // TODO: 04/13/2017 update local user info and proceed to home screen
+
 //                    UtilityClass.printAlertMessage(mainActivity, "Welcome back, " + first_name + " " + last_name + "!", true );
 //                } catch (JSONException e) {
 //                    Toast.makeText(mainActivity, "Please login...", Toast.LENGTH_LONG).show();

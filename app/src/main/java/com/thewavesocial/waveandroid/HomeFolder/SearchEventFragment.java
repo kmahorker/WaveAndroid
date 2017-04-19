@@ -35,6 +35,8 @@ public class SearchEventFragment extends Fragment {
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
         final List<Party> eventList = CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttended());
+        // TODO: 04/19/2017 How to search database?
+
         eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
                 searchEvents(eventList, searchbar.getQuery().toString())));
 

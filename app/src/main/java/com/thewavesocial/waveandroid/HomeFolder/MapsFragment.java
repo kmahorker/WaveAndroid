@@ -367,7 +367,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public static void dragSeparator(int distance, int duration) {
-        // TODO: 03/09/2017 Think about adding other views inside drag bar
         Log.d("Distance", distance + "");
         View separator = mainActivity.findViewById(R.id.home_mapsView_separator);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();

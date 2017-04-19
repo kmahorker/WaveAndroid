@@ -271,7 +271,6 @@ public class SignupFragment extends Fragment
             public void onClick(View view)
             {
                 mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-                // TODO: 02/22/2017 Save Image
             }
         });
 
@@ -281,7 +280,6 @@ public class SignupFragment extends Fragment
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                // TODO: 02/22/2017 Save Image
                 return true;
             }
         });

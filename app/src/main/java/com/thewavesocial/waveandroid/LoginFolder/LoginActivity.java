@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity
         Intent intentSignup = new Intent(mainActivity, SignupActivity.class);
         try
         {
-            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
+            if ( json.getString("id") == "100000000000" )
             {
                 //login
                 Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
@@ -179,7 +179,6 @@ public class LoginActivity extends AppCompatActivity
                         Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
                         startActivity(intent);
                         finish();
-                        // TODO: 02/21/2017 Reset CurrentUser info
                     }
                     else
                     {

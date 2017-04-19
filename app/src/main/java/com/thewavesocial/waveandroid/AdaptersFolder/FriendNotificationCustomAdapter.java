@@ -107,16 +107,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                 @Override
                 public void onClick(View view)
                 {
-                    // TODO: 03/12/2017 Figure out a stand-alone party profile or fragment party profile
-//                    Fragment fragment = new PartyProfileFragment();
-//                    Bundle bundle = new Bundle();
-//                    bundle.putLong("partyIDLong", senderParty.getPartyID());
-//                    fragment.setArguments(bundle);
-//
-//                    FragmentManager fm = mainActivity.getSupportFragmentManager();
-//                    FragmentTransaction transaction = fm.beginTransaction();
-//                    transaction.replace(R.id.home_mapsView_infoFrame, fragment);
-//                    transaction.commit();
+                    // TODO: 04/19/2017 pop up party profile activity
                 }
             });
         }

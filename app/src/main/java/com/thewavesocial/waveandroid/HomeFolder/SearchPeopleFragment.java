@@ -37,7 +37,7 @@ public class SearchPeopleFragment extends Fragment {
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
         final List<User> userList = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers());
-        // TODO: 03/14/2017 Change get followers to database users
+        // TODO: 04/19/2017 How to search database?
 
         peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
                 searchPeople(userList, searchbar.getQuery().toString())));

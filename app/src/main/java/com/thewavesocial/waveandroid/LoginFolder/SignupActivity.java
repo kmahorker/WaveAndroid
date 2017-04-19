@@ -40,7 +40,7 @@ public class SignupActivity extends FragmentActivity
         setContentView(R.layout.signup_viewpager_layout);
 
         Intent intent = getIntent();
-        if(intent.getExtras() != null) { //TODO 3/8/2017 Only Get Extras if Login with Facebook
+        if(intent.getExtras() != null) {
             userID = intent.getExtras().getString("userIDLong");
             name = intent.getExtras().getString("userName");
             email = intent.getExtras().getString("userEmail");

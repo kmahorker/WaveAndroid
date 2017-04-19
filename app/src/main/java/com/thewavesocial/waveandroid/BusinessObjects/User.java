@@ -63,7 +63,7 @@ public class User
         attending = new ArrayList<>();
         notifications1 = new ArrayList<>();
         notifications2 = new ArrayList<>();
-        profilePic = new BitmapDrawable(); //TODO Use different constructor
+        profilePic = new BitmapDrawable();
     }
 
     public User(String userID,

@@ -88,7 +88,6 @@ public class MyEventsCustomAdapter extends BaseAdapter {
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO Not sure if this is right imp
                     // FriendsListActivity f = new FriendsListActivity();
                     //fragment.showFriendProfileActivity(v, partyList.get(position));
                     fragment.showPartyProfilePage(partyList.get(position));

@@ -80,13 +80,12 @@ public class CustomAdapter extends BaseAdapter {
             holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
-            //holder.img.setImageResource(R.drawable.happy_house); //testing //TODO Change to user's image
+            //holder.img.setImageResource(R.drawable.happy_house); //testing
             holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(),
-                    userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
+                    userList.get(position).getProfilePic().getBitmap()));
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
                     fragment.showFriendProfileActivity(v, userList.get(position));
                    //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)
