@@ -109,7 +109,8 @@
         android:background="@color/white_solid"
         android:layout_below="@id/hostEventStats_party_stats"
         android:layout_above="@id/hostEventStats_delete_button"
-        android:elevation="5dp">
+        android:elevation="5dp"
+        android:scrollbarFadeDuration="0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -293,7 +294,7 @@
                 android:id="@+id/hostEventStats_qrcode"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:src="@drawable/party_sample"
+                android:src="@drawable/sample_qrcode"
                 android:layout_gravity="center"
                 android:layout_margin="30dp"/>
 

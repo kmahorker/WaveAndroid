@@ -1,20 +1,14 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
-import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +29,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
-    public static final int activityHostFragment = 1, activitySocialFragment = 2;
+    public static final int activityHostFragment = 1, activitySocialFragment = 2, eventStatsRequestCode = 0;
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
@@ -125,7 +119,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alertMessage = new AlertDialog.Builder(mainActivity);
+                final AlertDialog.Builder alertMessage = new AlertDialog.Builder(mainActivity);
                 alertMessage.setTitle("Warning")
                     .setMessage("Are you sure you want to delete this event?")
                     .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
@@ -133,6 +127,12 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
                         }})
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+                        }
+                    })
                     .setCancelable(true)
                     .show();
             }
@@ -152,7 +152,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         editView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 04/09/2017 Intent Edit Party
+                Intent intent = new Intent(mainActivity, EditStatsActivity.class);
+                startActivityForResult(intent, eventStatsRequestCode);
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -182,5 +183,12 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }
-    //36dp 2dp
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( data != null && requestCode == eventStatsRequestCode ) {
+
+        }
+    }
 }
