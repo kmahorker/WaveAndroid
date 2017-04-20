@@ -29,7 +29,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
-    public static final int activityHostFragment = 1, activitySocialFragment = 2, eventStatsRequestCode = 0;
+    public static final int activityHostFragment = 1, activitySocialFragment = 2;
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
@@ -153,7 +153,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditStatsActivity.class);
-                startActivityForResult(intent, eventStatsRequestCode);
+                startActivity(intent);
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -182,13 +182,5 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Bitmap imageBitmap = pic.getBitmap();
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ( data != null && requestCode == eventStatsRequestCode ) {
-
-        }
     }
 }
