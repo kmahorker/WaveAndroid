@@ -23,4 +23,12 @@
         android:textColor="#000"
         android:textSize="18sp"/> <!--Username (Text)-->
 
+    <ImageView
+        android:id="@+id/actionbar_user_setting"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/alert_symbol"/>
+
 </RelativeLayout>
