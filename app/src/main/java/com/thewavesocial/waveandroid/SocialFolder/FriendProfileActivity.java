@@ -37,8 +37,8 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         // access current friend data
         Intent intent = getIntent();
-        userID = intent.getExtras().getString("userIDLong");
-        friend = CurrentUser.getUserObject(userID);
+        friend = (User) intent.getExtras().get("userObject");
+        userID = friend.getUserID();
         //TODO: getUserObject(long id) from database class
 
         setupProfileInfo();

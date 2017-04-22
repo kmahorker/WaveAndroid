@@ -92,7 +92,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", user.getUserID());
+                intent.putExtra("userObject", user);
                 mainActivity.startActivity(intent);
                 UtilityClass.hideKeyboard(mainActivity);
             }

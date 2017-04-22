@@ -17,9 +17,7 @@ import java.util.List;
  * 3. Changed DateTime to Date
  * - Wei Tung
  */
-//public class Party implements Parcelable
-public class Party
-{
+public class Party implements Parcelable {
     private String partyID;
     private String name;
     private double price;
@@ -214,56 +212,83 @@ public class Party
         this.partyEmoji = partyEmoji;
     }
 
-    //protected Party(Parcel in) {
-//        partyID = in.readLong();
-//        name = in.readString();
-//        price = in.readDouble();
-//        hostName = in.readString();
-//        startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
-//        endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
-//        //mapAddress = in.readString();
-//        if (in.readByte() == 0x01) {
-//            attendingUsers = new ArrayList<Long>();
-//            in.readList(attendingUsers, Long.class.getClassLoader());
-//        } else {
-//            attendingUsers = null;
-//        }
-//        isPublic = in.readByte() != 0x00;
-//    }
 
-    //    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeLong(partyID);
-//        dest.writeString(name);
-//        dest.writeDouble(price);
-//        dest.writeString(hostName);
-//        dest.writeValue(startingDateTime);
-//        dest.writeValue(endingDateTime);
-//        //dest.writeString(mapAddress);
-//        if (attendingUsers == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(attendingUsers);
-//        }
-//        dest.writeByte((byte) (isPublic ? 0x01 : 0x00));
-//    }
-//
-//    @SuppressWarnings("unused")
-//    public static final Parcelable.Creator<Party> CREATOR = new Parcelable.Creator<Party>() {
-//        @Override
-//        public Party createFromParcel(Parcel in) {
-//            return new Party(in);
-//        }
-//
-//        @Override
-//        public Party[] newArray(int size) {
-//            return new Party[size];
-//        }
-//    };
+    protected Party(Parcel in) {
+        partyID = in.readString();
+        name = in.readString();
+        price = in.readDouble();
+        hostName = in.readString();
+        startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            hostingUsers = new ArrayList<String>();
+            in.readList(hostingUsers, String.class.getClassLoader());
+        } else {
+            hostingUsers = null;
+        }
+        if (in.readByte() == 0x01) {
+            bouncingUsers = new ArrayList<String>();
+            in.readList(bouncingUsers, String.class.getClassLoader());
+        } else {
+            bouncingUsers = null;
+        }
+        if (in.readByte() == 0x01) {
+            attendingUsers = new ArrayList<String>();
+            in.readList(attendingUsers, String.class.getClassLoader());
+        } else {
+            attendingUsers = null;
+        }
+        isPublic = in.readByte() != 0x00;
+        partyEmoji = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(partyID);
+        dest.writeString(name);
+        dest.writeDouble(price);
+        dest.writeString(hostName);
+        dest.writeValue(startingDateTime);
+        dest.writeValue(endingDateTime);
+        dest.writeValue(mapAddress);
+        if (hostingUsers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(hostingUsers);
+        }
+        if (bouncingUsers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bouncingUsers);
+        }
+        if (attendingUsers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(attendingUsers);
+        }
+        dest.writeByte((byte) (isPublic ? 0x01 : 0x00));
+        dest.writeString(partyEmoji);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Party> CREATOR = new Parcelable.Creator<Party>() {
+        @Override
+        public Party createFromParcel(Parcel in) {
+            return new Party(in);
+        }
+
+        @Override
+        public Party[] newArray(int size) {
+            return new Party[size];
+        }
+    };
 }
