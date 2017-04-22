@@ -80,8 +80,8 @@ public class ManagePartyCustomAdapter extends BaseAdapter
 
         if ( party.getPartyEmoji() != null )
         {
-            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+            // TODO: 04/21/2017 Add image by url
+//            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText( getCustomInfoText( party ) );

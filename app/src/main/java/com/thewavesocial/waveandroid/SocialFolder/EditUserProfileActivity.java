@@ -126,8 +126,8 @@ public class EditUserProfileActivity extends AppCompatActivity {
         edit_bday.setText(UtilityClass.dateToString(birthday));
         edit_bday.setFocusable(false);
         edit_address.setText(user.getMapAddress().getAddress_string());
-        profile_pic.setImageDrawable(UtilityClass.toRoundImage(getResources(),
-                user.getProfilePic().getBitmap()));
+        // TODO: 04/21/2017 Add image by url
+//        profile_pic.setImageDrawable(UtilityClass.toRoundImage(getResources(), user.getProfilePic().getBitmap()));
         username.setText(user.getFullName());
     }
 

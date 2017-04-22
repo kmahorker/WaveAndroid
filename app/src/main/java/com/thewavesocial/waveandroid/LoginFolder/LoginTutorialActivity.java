@@ -235,33 +235,31 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
-                    User newUser = new User(Long.parseLong(json.getString("id")),
-                            json.getString("first_name"),
-                            json.getString("last_name"),
-                            json.getString("email"),
-                            "password" /*TODO: delete password field*/,
-                            "UCSB" /*TODO: delete college field*/,
-                            json.getString("gender"),
-                            1231231234 /*TODO: delte ph#*/,
-                            new MapAddress(),
-                            calendar,
-                            new ArrayList<Long>(), //followers
-                            new ArrayList<Long>(), //following
-                            new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-                            new ArrayList<Long>(), //hosting
-                            new ArrayList<Long>(), //attended
-                            new ArrayList<Long>(), //hosted
-                            new ArrayList<Long>(), //bounced
-                            new ArrayList<Long>(), //attending
-                            new ArrayList<Notification>(),
-                            new ArrayList<Notification>(),
-                            profilePic);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                // TODO: 04/21/2017 Add image by url
+                String profilePic = "";
+//                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+//                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
+                User newUser = new User(json.getString("id"),
+                        json.getString("first_name"),
+                        json.getString("last_name"),
+                        json.getString("email"),
+                        "password" /*TODO: delete password field*/,
+                        "UCSB" /*TODO: delete college field*/,
+                        json.getString("gender"),
+                        "1231231234"/*TODO: delte ph#*/,
+                        new MapAddress(),
+                        calendar,
+                        new ArrayList<String>(), //followers
+                        new ArrayList<String>(), //following
+                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
+                        new ArrayList<String>(), //hosting
+                        new ArrayList<String>(), //attended
+                        new ArrayList<String>(), //hosted
+                        new ArrayList<String>(), //bounced
+                        new ArrayList<String>(), //attending
+                        new ArrayList<Notification>(),
+                        new ArrayList<Notification>(),
+                        profilePic);
                 //TODO: Add user object to Database
             }
         }

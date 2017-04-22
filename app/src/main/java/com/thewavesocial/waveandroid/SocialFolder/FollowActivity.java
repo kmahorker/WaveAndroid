@@ -126,10 +126,11 @@ public class FollowActivity extends AppCompatActivity {
 
                 final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
                 if (userImage != null) {
-                    BitmapDrawable pic = user.getProfilePic();
-                    if (pic != null) {
-                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
-                    }
+                    // TODO: 04/21/2017 Add image by url
+//                    BitmapDrawable pic = user.getProfilePic();
+//                    if (pic != null) {
+//                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
+//                    }
                 }
 
                 final TextView name = (TextView) v.findViewById(R.id.iv_follow_row_user_name);

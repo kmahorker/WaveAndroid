@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,6 +40,7 @@ public class SignupFragment extends Fragment
         fragNum = 0;
     }
 
+    @SuppressLint("ValidFragment")
     public SignupFragment (int fragNum)
     {
         this.fragNum = fragNum;
@@ -301,7 +303,7 @@ public class SignupFragment extends Fragment
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
                 if ( !friendphone.getText().toString().equals("") )
-                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
+                    mainActivity.friendphone = friendphone.getText().toString();
                 mainActivity.saveUserData();
             }
         });
@@ -314,7 +316,7 @@ public class SignupFragment extends Fragment
                 UtilityClass.hideKeyboard(mainActivity);
                 mainActivity.friendname = friendname.getText().toString();
                 if ( !friendphone.getText().toString().equals("") )
-                    mainActivity.friendphone = Long.parseLong(friendphone.getText().toString());
+                    mainActivity.friendphone = friendphone.getText().toString();
                 return true;
             }
         });

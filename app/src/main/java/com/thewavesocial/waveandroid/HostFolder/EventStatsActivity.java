@@ -29,7 +29,7 @@ public class EventStatsActivity extends AppCompatActivity
         setContentView(R.layout.host_event_stats);
 
         Intent intent = getIntent();
-        party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
+        party = CurrentUser.getPartyObject(intent.getExtras().getString("partyIDLong"));
 
         setupReferences();
         setupActionbar();

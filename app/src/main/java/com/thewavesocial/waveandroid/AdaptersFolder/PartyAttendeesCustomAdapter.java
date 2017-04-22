@@ -54,18 +54,18 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-        holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                userList.get(position).getProfilePic().getBitmap()));
-        holder.imgView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", userList.get(position).getUserID());
-                mainActivity.startActivity(intent);
-            }
-        });
+        // TODO: 04/21/2017 Add image by URL
+//        holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic().getBitmap()));
+//        holder.imgView.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+//                intent.putExtra("userIDLong", userList.get(position).getUserID());
+//                mainActivity.startActivity(intent);
+//            }
+//        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder

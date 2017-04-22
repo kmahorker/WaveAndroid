@@ -90,8 +90,8 @@ public class UserProfileFragment extends Fragment {
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
 
         if (CurrentUser.theUser.getProfilePic() != null) {
-            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    CurrentUser.theUser.getProfilePic().getBitmap()));
+            // TODO: 04/21/2017 Add Image with URL
+//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), CurrentUser.theUser.getProfilePic().getBitmap()));
         }
         notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
                 CurrentUser.theUser.getNotifications1()));

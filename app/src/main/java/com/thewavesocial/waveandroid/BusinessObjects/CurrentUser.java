@@ -33,59 +33,55 @@ public final class CurrentUser
         CurrentUser.theUser = theUser;
     }
 
-    public static List<User> getUsersListObjects(List<Long> userIdList)
+    public static List<User> getUsersListObjects(List<String> userIdList)
     {
-        List<User> friendObjs = new ArrayList<User>();
-        for(long id : userIdList){
+        List<User> friendObjs = new ArrayList<>();
+        for(String id : userIdList){
             friendObjs.add(getUserObject(id));
         }
         return friendObjs;
     }
 
-    public static User getUserObject(long id)
+    public static User getUserObject(String id)
     {
-        switch ((int) id)
-        {
-            case 1:
-                return dummy.getFriend1();
-            case 2:
-                return dummy.getFriend2();
-            case 3:
-                return dummy.getFriend3();
-            case 4:
-                return dummy.getFriend4();
-            case 5:
-                return dummy.getFriend5();
-            default:
-                return dummy;
+        if ( id.equals("1") ) {
+            return dummy.getFriend1();
+        } else if ( id.equals("2") ) {
+            return dummy.getFriend2();
+        } else if ( id.equals("3") ) {
+            return dummy.getFriend3();
+        } else if ( id.equals("4") ) {
+            return dummy.getFriend4();
+        } else if ( id.equals("5") ) {
+            return dummy.getFriend5();
+        } else {
+            return dummy;
         }
     }
 
-    public static List<Party> getPartyListObjects(List<Long> partyIdList)
+    public static List<Party> getPartyListObjects(List<String> partyIdList)
     {
-        List<Party> partyObjs = new ArrayList<Party>();
-        for(long id: partyIdList){
+        List<Party> partyObjs = new ArrayList<>();
+        for(String id: partyIdList){
             partyObjs.add(getPartyObject(id));
         }
         return partyObjs;
     }
 
-    public static Party getPartyObject(long id)
+    public static Party getPartyObject(String id)
     {
-        switch ((int) id)
-        {
-            case 1:
-                return dummy.getParty1();
-            case 2:
-                return dummy.getParty2();
-            case 3:
-                return dummy.getParty3();
-            case 4:
-                return dummy.getParty4();
-            case 5:
-                return dummy.getParty5();
-            default:
-                return dummy.getParty1();
+        if ( id.equals("1") ) {
+            return dummy.getParty1();
+        } else if ( id.equals("2") ) {
+            return dummy.getParty2();
+        } else if ( id.equals("3") ) {
+            return dummy.getParty3();
+        } else if ( id.equals("4") ) {
+            return dummy.getParty4();
+        } else if ( id.equals("5") ) {
+            return dummy.getParty5();
+        } else {
+            return dummy.getParty1();
         }
     }
 }

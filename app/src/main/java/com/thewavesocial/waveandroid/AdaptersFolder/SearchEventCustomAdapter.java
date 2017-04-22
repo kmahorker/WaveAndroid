@@ -69,8 +69,8 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
         if (party.getPartyEmoji() != null) {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+            // TODO: 04/21/2017 Add image by url
+//            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
         holder.name.setText(party.getName());
         holder.go.setOnClickListener(new View.OnClickListener() {

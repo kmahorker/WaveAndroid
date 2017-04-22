@@ -65,8 +65,8 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
         if (user.getProfilePic() != null) {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    user.getProfilePic().getBitmap()));
+            // TODO: 04/21/2017 Add image by url
+//            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), user.getProfilePic().getBitmap()));
         }
         holder.name.setText(user.getFullName());
 
