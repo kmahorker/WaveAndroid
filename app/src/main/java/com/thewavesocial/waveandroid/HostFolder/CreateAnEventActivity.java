@@ -153,8 +153,16 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
 
             startTimeTextView = (TextView) v.findViewById(R.id.startTimeTextView);
-            SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+            final SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
             startTimeTextView.setText(timeFormat.format(startCalendar.getTime()));
+            startTimeTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR), startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                    timePickerDialogFragment.setTimeTextView(startTimeTextView);
+                    timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
+                }
+            });
 
             endDateTextView = (TextView) v.findViewById(R.id.endDateTextView);
             endDateTextView.setText(dateFormat.format(endCalendar.getTime()));

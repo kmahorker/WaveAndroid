@@ -114,15 +114,21 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
         //Intent intent = new Intent(getActivity(), CreateAnEventActivity.class);
         //if(CreateAnEventActivity.class.isInstance(t)){
         if(dateDisplay.equals(getActivity().findViewById(R.id.startDateTextView))) {
-            CreateAnEventActivity.CreateEventPage1.startCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            if(calendar.compareTo(CreateAnEventActivity.CreateEventPage1.endCalendar) >= 0){
+            CreateAnEventActivity.CreateEventPage1.startCalendar.set(calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR),
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));
+            /*if(calendar.compareTo(CreateAnEventActivity.CreateEventPage1.endCalendar) >= 0){
                 CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
                         CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR)+1,
                         CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));//set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-            }
+            }*/
         }
         else if(dateDisplay.equals(getActivity().findViewById((R.id.endDateTextView)))){
-            CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+            CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR),
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));
         }
         else{
             Log.d("V", "Neither");
