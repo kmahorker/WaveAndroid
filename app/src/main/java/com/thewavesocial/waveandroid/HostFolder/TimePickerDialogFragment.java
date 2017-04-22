@@ -91,7 +91,7 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
         this.minute = minute;
         calendar.set(Calendar.HOUR,hourOfDay);
         calendar.set(Calendar.MINUTE,minute);
-        timeTextView.setText(timeFormat.format(CreateAnEventActivity.CreateEventPage1.startCalendar.getTime()));
+        //timeTextView.setText(timeFormat.format(CreateAnEventActivity.CreateEventPage1.startCalendar.getTime()));
         if(timeTextView.equals(getActivity().findViewById(R.id.startTimeTextView))){
             CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR));
             CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE));
@@ -104,6 +104,7 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
             Log.d("V", "Neither");
         }
 
+        timeTextView.setText(timeFormat.format(calendar.getTime()));
     }
 
     @Override

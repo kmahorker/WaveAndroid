@@ -2,16 +2,18 @@ package com.thewavesocial.waveandroid.HostFolder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -116,7 +118,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
     public static class CreateEventPage1 extends Fragment {
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
-        Switch privateSwitch;
+        SwitchCompat privateSwitch;
+        boolean privateParty = false;
         org.florescu.android.rangeseekbar.RangeSeekBar rangeSeekBar;
         //Activity thisActivity = this;
         static Calendar startCalendar = Calendar.getInstance();
@@ -136,6 +139,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             super.onViewCreated(view, savedInstanceState);
             setUpTextViews(view);
             setupEditText(view);
+            setupSwitch(view);
             Log.d("V", "OnViewCreated");
         }
         private void setUpTextViews(View v){
@@ -158,7 +162,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             startTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR), startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
+                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
                     timePickerDialogFragment.setTimeTextView(startTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
                 }
@@ -181,12 +186,38 @@ public class CreateAnEventActivity extends AppCompatActivity {
             tempCalendar.setTime(new Date());
             tempCalendar.add(Calendar.HOUR, 1);
             endTimeTextView.setText(timeFormat.format(tempCalendar.getTime()));
+            endTimeTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
+                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                    timePickerDialogFragment.setTimeTextView(endTimeTextView);
+                    timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
+                }
+            });
         }
 
         private void setupEditText(View v) {
             titleEditText = (EditText) v.findViewById(R.id.eventTitleEditText);
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
         }
+
+        private void setupSwitch(View v){
+            privateSwitch = (SwitchCompat) v.findViewById(R.id.privateSwitch);
+            privateSwitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(privateParty == false){
+                        privateParty = true;
+                    }
+                    else{
+                        privateParty = false;
+                    }
+                }
+            });
+        }
+
+
 
         private void savePage1() {
             getActivity().finish();
