@@ -93,7 +93,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });
@@ -102,7 +102,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });
