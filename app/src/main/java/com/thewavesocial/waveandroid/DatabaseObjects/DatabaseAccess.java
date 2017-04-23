@@ -157,19 +157,17 @@ public final class DatabaseAccess{
     }
 
     //Basics Done
-    public static Party getParty(final Activity mainActivity, String partyID) {
-        final Party[] party = new Party[1];
+    public static void getParty(final Activity mainActivity, String partyID) {
         HashMap tokens = getTokenFromLocal(mainActivity);
 
-        String url = "https://api.theplugsocial.com/v1/events/" + partyID + "/users?access_token=" + tokens.get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + tokens.get("jwt");
         String result = null;
         try {
-            new HttpRequestTask(mainActivity, url, "GET", null).execute().get();
+            result = new HttpRequestTask(mainActivity, url, "GET", null).execute().get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        Log.d("GetPartyResult", result);
-        return party[0];
+        Log.d("GetPartyResult", result + "");
     }
 
     //Basics Done
