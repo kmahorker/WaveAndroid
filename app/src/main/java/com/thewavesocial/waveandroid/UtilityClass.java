@@ -106,6 +106,7 @@ public final class UtilityClass {
         mapLoc = loc1;
     }
 
+    //TODO: 4/22/17 Currently always returning NULL
     public static LatLng getLocationFromAddress(Activity activity, String strAddress) {
         Geocoder coder = new Geocoder(activity);
         List<Address> address;

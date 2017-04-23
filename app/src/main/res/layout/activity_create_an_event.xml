@@ -78,6 +78,8 @@
             android:textColor="@color/black_solid"
             android:textSize="18dp" />
 
+
+
         <TextView
             android:id="@+id/endTextView"
             android:layout_width="wrap_content"
@@ -115,6 +117,12 @@
             android:textAlignment="center"
             android:textColor="@color/black_solid"
             android:textSize="18dp" />
+        <!--
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#000000"
+            android:layout_below="@id/startTextView"/> -->
     </RelativeLayout>
 
     <android.support.v7.widget.SwitchCompat
@@ -151,6 +159,15 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         app:absoluteMinValue="17"
-        app:absoluteMaxValue="100"/>
+        app:absoluteMaxValue="100"
+        app:textAboveThumbsColor="@color/appColor"
+        app:activeColor="@color/appColor"
+        app:barHeight="2dp"
+        app:thumbDisabled="@drawable/rangeseekbar_thumb_format"
+        app:thumbNormal="@drawable/rangeseekbar_thumb_format"
+        app:thumbPressed="@drawable/rangeseekbar_thumb_format"
+        app:thumbShadow="true"
+        app:thumbShadowColor="@color/grey_default"
+        />
 
 </LinearLayout>

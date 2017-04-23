@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.util.Range;
 import android.view.View;
 import android.widget.EditText;
 import android.support.annotation.Nullable;
@@ -34,6 +35,8 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
+
+import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,17 +118,27 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("Invite Bouncers");
     }
 
+    public ImageView getForward() {
+        return forward;
+    }
+
     public static class CreateEventPage1 extends Fragment {
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
         SwitchCompat privateSwitch;
         boolean privateParty = false;
-        org.florescu.android.rangeseekbar.RangeSeekBar rangeSeekBar;
+        RangeSeekBar<Integer> rangeSeekBar;
+        Integer RANGE_AGE_MIN = 17;
+        Integer RANGE_AGE_MAX = 40;
+        Integer RANGE_AGE_SELECTED_MIN = 17;
+        Integer RANGE_AGE_SELECTED_MAX = 30;
+
         //Activity thisActivity = this;
         static Calendar startCalendar = Calendar.getInstance();
         static Calendar endCalendar = Calendar.getInstance();
         String DATE_FORMAT = "MMM d, YYYY";
         String TIME_FORMAT = "h:mm a";
+
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -140,8 +153,27 @@ public class CreateAnEventActivity extends AppCompatActivity {
             setUpTextViews(view);
             setupEditText(view);
             setupSwitch(view);
+            setUpRangeSeekBar(view);
+            ImageView forwardImageView = ((CreateAnEventActivity)(getActivity())).getForward();
+            forwardImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(checkInfo()){
+                        savePage1();
+                        ((CreateAnEventActivity)(getActivity())).openSecondPage();
+                    }
+                }
+            });
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UtilityClass.hideKeyboard(getActivity());
+                }
+            });
             Log.d("V", "OnViewCreated");
         }
+
         private void setUpTextViews(View v){
             startDateTextView = (TextView) v.findViewById(R.id.startDateTextView);
             final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
@@ -182,10 +214,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
 
             endTimeTextView = (TextView) v.findViewById(R.id.endTimeTextView);
-            Calendar tempCalendar = Calendar.getInstance();
-            tempCalendar.setTime(new Date());
-            tempCalendar.add(Calendar.HOUR, 1);
-            endTimeTextView.setText(timeFormat.format(tempCalendar.getTime()));
+//            Calendar tempCalendar = Calendar.getInstance();
+//            tempCalendar.setTime(new Date());
+//            tempCalendar.add(Calendar.HOUR, 1);
+            endCalendar.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY) + 1);
+            endTimeTextView.setText(timeFormat.format(endCalendar.getTime()));
             endTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -217,10 +250,55 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
         }
 
+        private void setUpRangeSeekBar(View v){
+            //rangeSeekBar = new RangeSeekBar<>(getActivity());
+            rangeSeekBar =  (RangeSeekBar<Integer>) v.findViewById(R.id.ageRestrictionSeekBar);
+            rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
+            rangeSeekBar.setSelectedMinValue(RANGE_AGE_SELECTED_MIN);
+            rangeSeekBar.setSelectedMaxValue(RANGE_AGE_SELECTED_MAX);
+        }
+
+        private boolean checkInfo(){
+            if(titleEditText.getText().toString().isEmpty()){
+                UtilityClass.printAlertMessage(getActivity(), "The Event Title cannot be empty", true);
+                return false;
+            }
+            else if(locationEditText.getText().toString().isEmpty()){
+                UtilityClass.printAlertMessage(getActivity(), "The Event Location cannot be empty", true);
+                return false;
+            }
+            else if(startCalendar.compareTo(endCalendar) >= 0){
+                UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+                return false;
+            }
+            //TODO: 4/22/17 Currently always returning NULL
+            /*else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) != null){
+                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+                return false;
+            }*/
+            else{
+                return true;
+            }
+        }
 
 
-        private void savePage1() {
-            getActivity().finish();
+
+
+        //ONLY called if all checks are passed
+        public void savePage1() {
+            NewPartyInfo.name = titleEditText.getText().toString();
+            NewPartyInfo.price = 0;
+            NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
+            NewPartyInfo.startingDateTime = startCalendar;
+            NewPartyInfo.endingDateTime = endCalendar;
+            String partyAddress = locationEditText.getText().toString();
+            NewPartyInfo.mapAddress = new MapAddress(partyAddress,
+                    UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
+            NewPartyInfo.isPublic = !privateParty;
+            NewPartyInfo.partyEmoji = ' '; //TODO: 4/22/17 Replace with actual chose emoji
+            NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
+            NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
+            //getActivity().finish();
         }
     }
 
@@ -571,7 +649,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static List<Long> bouncingUsers;
         static List<Long> attendingUsers;
         static boolean isPublic;
-        static BitmapDrawable partyEmoji;
+        static char partyEmoji;
+        static int minAge;
+        static int maxAge;
         public static void initialize() {
             name = "";
             price = 0;
@@ -582,12 +662,12 @@ public class CreateAnEventActivity extends AppCompatActivity {
             bouncingUsers = new ArrayList<>();
             attendingUsers = new ArrayList<>();
             isPublic = false;
-            partyEmoji = null;
+            partyEmoji = ' ';
         }
         public static void composeParty(){
 //            Party party = new Party(
 //                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji);
+//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
             // TODO: 03/31/2017 Send to database and create new party with new ID
         }
     }

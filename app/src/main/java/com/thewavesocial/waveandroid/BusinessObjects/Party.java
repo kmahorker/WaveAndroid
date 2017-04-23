@@ -32,6 +32,8 @@ public class Party
     private List<Long> attendingUsers;
     private boolean isPublic;
     private BitmapDrawable partyEmoji;
+    //private int minAge;
+    //private int maxAge;
 
     public Party()
     {
@@ -58,7 +60,8 @@ public class Party
             List<Long> hostingUsers,
             List<Long> bouncingUsers,
             List<Long> attendingUsers,
-            boolean isPublic, BitmapDrawable partyEmoji)
+            boolean isPublic, BitmapDrawable partyEmoji
+            /*,int minAge, int maxAge*/)
     {
         this.partyID = partyID;
         this.name = name;
@@ -72,6 +75,8 @@ public class Party
         this.attendingUsers = attendingUsers;
         this.isPublic = isPublic;
         this.partyEmoji = partyEmoji;
+        /*this.minAge = minAge;
+        this.maxAge = maxAge;*/
     }
 
     //Delete
@@ -213,6 +218,22 @@ public class Party
     {
         this.partyEmoji = partyEmoji;
     }
+
+    /*public int getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(int minAge) {
+        this.minAge = minAge;
+    }
+
+    public int getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(int maxAge) {
+        this.maxAge = maxAge;
+    }*/
 
     //protected Party(Parcel in) {
 //        partyID = in.readLong();
