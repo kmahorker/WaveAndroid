@@ -20,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -136,7 +137,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         //Activity thisActivity = this;
         static Calendar startCalendar = Calendar.getInstance();
         static Calendar endCalendar = Calendar.getInstance();
-        String DATE_FORMAT = "MMM d, YYYY";
+        String DATE_FORMAT = "MMM d, yyyy";
         String TIME_FORMAT = "h:mm a";
 
         @Nullable
@@ -150,28 +151,47 @@ public class CreateAnEventActivity extends AppCompatActivity {
         @Override
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            setUpTextViews(view);
-            setupEditText(view);
-            setupSwitch(view);
-            setUpRangeSeekBar(view);
-            ImageView forwardImageView = ((CreateAnEventActivity)(getActivity())).getForward();
-            forwardImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(checkInfo()){
-                        savePage1();
-                        ((CreateAnEventActivity)(getActivity())).openSecondPage();
+            try {
+                view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                if (NewPartyInfo.startingDateTime != null) {
+                    startCalendar = NewPartyInfo.startingDateTime;
+                }
+                if (NewPartyInfo.endingDateTime != null) {
+                    endCalendar = NewPartyInfo.endingDateTime;
+                }
+                setUpTextViews(view);
+                setupEditText(view);
+                setupSwitch(view);
+                setUpRangeSeekBar(view);
+                ImageView forwardImageView = ((CreateAnEventActivity) (getActivity())).getForward();
+                forwardImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (checkInfo()) {
+                            savePage1();
+                            ((CreateAnEventActivity) (getActivity())).openSecondPage();
+                        }
                     }
-                }
-            });
+                });
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UtilityClass.hideKeyboard(getActivity());
-                }
-            });
-            Log.d("V", "OnViewCreated");
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UtilityClass.hideKeyboard(getActivity());
+                    }
+                });
+
+                ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollViewCreateAnEvent);
+                scrollView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UtilityClass.hideKeyboard(getActivity());
+                    }
+                });
+                Log.d("V", "OnViewCreated");
+            }catch(Exception e){
+                UtilityClass.printAlertMessage(getActivity(), e.getMessage(), true);
+            }
         }
 
         private void setUpTextViews(View v){
@@ -182,7 +202,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
-                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     dialogFragment.setDateDisplay(startDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
                 }
@@ -195,7 +215,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
-                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     timePickerDialogFragment.setTimeTextView(startTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
                 }
@@ -207,7 +227,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
-                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     dialogFragment.setDateDisplay(endDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
                 }
@@ -217,13 +237,15 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //            Calendar tempCalendar = Calendar.getInstance();
 //            tempCalendar.setTime(new Date());
 //            tempCalendar.add(Calendar.HOUR, 1);
-            endCalendar.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY) + 1);
+            if(NewPartyInfo.endingDateTime == null) {
+                endCalendar.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY) + 1);
+            }
             endTimeTextView.setText(timeFormat.format(endCalendar.getTime()));
             endTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
-                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Holo_Light_Dialog);
+                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     timePickerDialogFragment.setTimeTextView(endTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
                 }
@@ -232,11 +254,25 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupEditText(View v) {
             titleEditText = (EditText) v.findViewById(R.id.eventTitleEditText);
+            titleEditText.setText(NewPartyInfo.name);
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
+            MapAddress address = NewPartyInfo.mapAddress;
+            if(address != null){
+                locationEditText.setText(NewPartyInfo.mapAddress.getAddress_string());
+            }
+
         }
 
         private void setupSwitch(View v){
             privateSwitch = (SwitchCompat) v.findViewById(R.id.privateSwitch);
+            if(NewPartyInfo.isPublic == true) {
+                privateSwitch.setChecked(false);
+                privateParty = false;
+            }
+            else if(NewPartyInfo.isPublic == false){
+                privateSwitch.setChecked(true);
+                privateParty = true;
+            }
             privateSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -254,11 +290,19 @@ public class CreateAnEventActivity extends AppCompatActivity {
             //rangeSeekBar = new RangeSeekBar<>(getActivity());
             rangeSeekBar =  (RangeSeekBar<Integer>) v.findViewById(R.id.ageRestrictionSeekBar);
             rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
-            rangeSeekBar.setSelectedMinValue(RANGE_AGE_SELECTED_MIN);
-            rangeSeekBar.setSelectedMaxValue(RANGE_AGE_SELECTED_MAX);
+            if(NewPartyInfo.minAge == -1 || NewPartyInfo.maxAge == -1) {
+                rangeSeekBar.setSelectedMinValue(RANGE_AGE_SELECTED_MIN);
+                rangeSeekBar.setSelectedMaxValue(RANGE_AGE_SELECTED_MAX);
+            }
+            else{
+                rangeSeekBar.setSelectedMinValue(NewPartyInfo.minAge);
+                rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
+            }
         }
 
         private boolean checkInfo(){
+            //Log.d("Address", locationEditText.getText().toString());
+            //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
             if(titleEditText.getText().toString().isEmpty()){
                 UtilityClass.printAlertMessage(getActivity(), "The Event Title cannot be empty", true);
                 return false;
@@ -272,10 +316,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return false;
             }
             //TODO: 4/22/17 Currently always returning NULL
-            /*else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) != null){
+            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
                 UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
                 return false;
-            }*/
+            }
             else{
                 return true;
             }
@@ -661,8 +705,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
             attendingUsers = new ArrayList<>();
-            isPublic = false;
+            isPublic = true;
             partyEmoji = ' ';
+            minAge = -1;
+            maxAge = -1;
         }
         public static void composeParty(){
 //            Party party = new Party(

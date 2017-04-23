@@ -382,7 +382,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         SmsManager sManager = SmsManager.getDefault();
         sManager.sendTextMessage(
                 phone, null,
-                "Help me, " + name.substring(0, name.lastIndexOf(' '))
+                "Help me, " + name.substring(0, name.lastIndexOf(' ')) //TODO: 4/23/17 FIX SOS MESSAGE CRASH
                         + "!\n\nI'm drunk. LOL.. My last known location is ("
                         + loc.latitude + ", " + loc.longitude
                         + ")\n\n-Sent from ThePlugSocial Emergency Alert.",
