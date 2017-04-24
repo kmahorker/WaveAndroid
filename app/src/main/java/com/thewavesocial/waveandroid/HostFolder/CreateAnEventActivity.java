@@ -13,7 +13,10 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.util.Range;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Date;
+
+import github.ankushsachdeva.emojicon.EmojiconEditText;
+import github.ankushsachdeva.emojicon.EmojiconGridView;
+import github.ankushsachdeva.emojicon.EmojiconsPopup;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -123,9 +131,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
         return forward;
     }
 
-    public static class CreateEventPage1 extends Fragment {
+    public static class CreateEventPage1 extends Fragment{
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
+        EmojiconEditText emojiconEditText;
+        EmojiconsPopup popup;
         SwitchCompat privateSwitch;
         boolean privateParty = false;
         RangeSeekBar<Integer> rangeSeekBar;
@@ -152,6 +162,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             try {
+
+                ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollViewCreateAnEvent);
+                scrollView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UtilityClass.hideKeyboard(getActivity());
+                    }
+                });
                 view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
                 if (NewPartyInfo.startingDateTime != null) {
                     startCalendar = NewPartyInfo.startingDateTime;
@@ -163,6 +181,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 setupEditText(view);
                 setupSwitch(view);
                 setUpRangeSeekBar(view);
+                setupEmojiconEditText(view);
+                setUpEmojicon(view);
                 ImageView forwardImageView = ((CreateAnEventActivity) (getActivity())).getForward();
                 forwardImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -181,17 +201,52 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     }
                 });
 
-                ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollViewCreateAnEvent);
-                scrollView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UtilityClass.hideKeyboard(getActivity());
-                    }
-                });
+
                 Log.d("V", "OnViewCreated");
             }catch(Exception e){
                 UtilityClass.printAlertMessage(getActivity(), e.getMessage(), true);
             }
+        }
+
+        private void setUpEmojicon(View v){
+            final View rootView = v.findViewById(R.id.scrollViewCreateAnEvent);
+            popup = new EmojiconsPopup(rootView, ((CreateAnEventActivity)(getActivity())));
+            popup.setSizeForSoftKeyboard();
+            popup.setOnSoftKeyboardOpenCloseListener(new EmojiconsPopup.OnSoftKeyboardOpenCloseListener() {
+
+                @Override
+                public void onKeyboardOpen(int keyBoardHeight) {
+
+                }
+
+                @Override
+                public void onKeyboardClose() {
+                    if(popup.isShowing())
+                        popup.dismiss();
+                }
+            });
+
+            popup.setOnEmojiconClickedListener(new EmojiconGridView.OnEmojiconClickedListener() {
+                @Override
+                public void onEmojiconClicked(Emojicon emojicon) {
+                    if (emojiconEditText == null || emojicon == null) {
+                        return;
+                    }
+                    else{
+                        emojiconEditText.setText(emojicon.getEmoji());
+                    }
+                }
+            });
+
+            /*popup.setOnEmojiconBackspaceClickedListener(new EmojiconsPopup.OnEmojiconBackspaceClickedListener() {
+
+                @Override
+                public void onEmojiconBackspaceClicked(View v) {
+                    KeyEvent event = new KeyEvent(
+                            0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+                    emojiconEditText.dispatchKeyEvent(event);
+                }
+            });*/
         }
 
         private void setUpTextViews(View v){
@@ -299,6 +354,32 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
             }
         }
+
+        private void setupEmojiconEditText(View v){
+            emojiconEditText  = (EmojiconEditText) v.findViewById(R.id.emojiconEditText);
+            emojiconEditText.setEmojiconSize(100);
+            emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(!popup.isShowing()) {
+                        if(popup.isKeyBoardOpen()) {
+                            popup.showAtBottom();
+                        }
+                        else {
+
+                            emojiconEditText.setFocusableInTouchMode(true);
+                            emojiconEditText.requestFocus();
+                            popup.showAtBottomPending();
+                            final InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.showSoftInput(emojiconEditText, InputMethodManager.SHOW_IMPLICIT);
+                        }
+                    }
+                    return true;
+                }
+            });
+
+        }
+
 
         private boolean checkInfo(){
             //Log.d("Address", locationEditText.getText().toString());
@@ -715,6 +796,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
 //                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
             // TODO: 03/31/2017 Send to database and create new party with new ID
+
         }
     }
 }

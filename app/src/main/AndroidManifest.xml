@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.thewavesocial.waveandroid">
 
     <uses-permission android:name="android.permission.ACCESS_GPS" />
@@ -7,20 +8,26 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+
         android:allowBackup="true"
         android:icon="@drawable/plug_icon"
         android:label="PLUG"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:node="replace">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            />
 
         <activity android:name=".LoginFolder.LoginActivity" />
         <activity android:name=".LoginFolder.SignupActivity" />
@@ -43,13 +50,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginFolder.LoginTutorialActivity"></activity>
-        <activity android:name=".LoginFolder.AddBestFriendActivity">
-
-        </activity>
-        <activity android:name=".HostFolder.CreateAnEventActivity">
-
-        </activity>
+        <activity android:name=".LoginFolder.LoginTutorialActivity" />
+        <activity android:name=".LoginFolder.AddBestFriendActivity" />
+        <activity android:name=".HostFolder.CreateAnEventActivity" />
     </application>
 
 </manifest>
