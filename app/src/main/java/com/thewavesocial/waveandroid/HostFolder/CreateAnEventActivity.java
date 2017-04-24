@@ -40,7 +40,6 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
@@ -432,7 +431,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
             NewPartyInfo.isPublic = !privateParty;
             NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
-            Log.d("emojiCharAt0", StringEscapeUtils.unescapeJava(emojiconEditText.getText().toString()));
             NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
             NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
             //getActivity().finish();

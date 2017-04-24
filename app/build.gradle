@@ -35,6 +35,5 @@ dependencies {
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     compile 'io.github.rockerhieu:emojiconize:1.0.0'
     compile project(':lib')
-    compile "org.apache.commons:commons-lang3:3.5"
     testCompile 'junit:junit:4.12'
 }
