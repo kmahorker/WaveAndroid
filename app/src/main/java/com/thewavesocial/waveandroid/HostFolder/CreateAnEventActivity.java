@@ -40,6 +40,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import io.github.rockerhieu.emojiconize.Emojiconize;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -59,6 +61,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Emojiconize.activity(this).go();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event_layout);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -162,7 +165,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             try {
-
+                //Emojiconize.view(view).go();
                 ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollViewCreateAnEvent);
                 scrollView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -238,7 +241,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 }
             });
 
-            /*popup.setOnEmojiconBackspaceClickedListener(new EmojiconsPopup.OnEmojiconBackspaceClickedListener() {
+            popup.setOnEmojiconBackspaceClickedListener(new EmojiconsPopup.OnEmojiconBackspaceClickedListener() {
 
                 @Override
                 public void onEmojiconBackspaceClicked(View v) {
@@ -246,7 +249,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                             0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
                     emojiconEditText.dispatchKeyEvent(event);
                 }
-            });*/
+            });
         }
 
         private void setUpTextViews(View v){
@@ -356,8 +359,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private void setupEmojiconEditText(View v){
-            emojiconEditText  = (EmojiconEditText) v.findViewById(R.id.emojiconEditText);
-            emojiconEditText.setEmojiconSize(100);
+            emojiconEditText = (EmojiconEditText) v.findViewById(R.id.emojiconEditText);
+            if(!NewPartyInfo.partyEmoji.isEmpty()){
+                emojiconEditText.setText(NewPartyInfo.partyEmoji);
+            }
+            //emojiconEditText.setEmojiconSize(150);
+            emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
             emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -384,19 +392,22 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private boolean checkInfo(){
             //Log.d("Address", locationEditText.getText().toString());
             //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
-            if(titleEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "The Event Title cannot be empty", true);
+            if(emojiconEditText.getText().toString().isEmpty()){
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+                return false;
+            }
+            else if(titleEditText.getText().toString().isEmpty()){
+                UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
                 return false;
             }
             else if(locationEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "The Event Location cannot be empty", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
                 return false;
             }
             else if(startCalendar.compareTo(endCalendar) >= 0){
                 UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
                 return false;
             }
-            //TODO: 4/22/17 Currently always returning NULL
             else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
                 UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
                 return false;
@@ -420,7 +431,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             NewPartyInfo.mapAddress = new MapAddress(partyAddress,
                     UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
             NewPartyInfo.isPublic = !privateParty;
-            NewPartyInfo.partyEmoji = ' '; //TODO: 4/22/17 Replace with actual chose emoji
+            NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
+            Log.d("emojiCharAt0", StringEscapeUtils.unescapeJava(emojiconEditText.getText().toString()));
             NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
             NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
             //getActivity().finish();
@@ -774,7 +786,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static List<Long> bouncingUsers;
         static List<Long> attendingUsers;
         static boolean isPublic;
-        static char partyEmoji;
+        static String partyEmoji;
         static int minAge;
         static int maxAge;
         public static void initialize() {
@@ -787,7 +799,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             bouncingUsers = new ArrayList<>();
             attendingUsers = new ArrayList<>();
             isPublic = true;
-            partyEmoji = ' ';
+            partyEmoji = "";
             minAge = -1;
             maxAge = -1;
         }

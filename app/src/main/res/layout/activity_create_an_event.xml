@@ -25,16 +25,14 @@
 
 
         <github.ankushsachdeva.emojicon.EmojiconEditText
-            android:id = "@+id/emojiconEditText"
+            android:id="@+id/emojiconEditText"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/round_shape_shadow"
             android:layout_marginTop="20dp"
-            android:paddingLeft="35dp"
+            android:background="@drawable/round_shape_shadow"
             android:cursorVisible="false"
-            android:maxLength="1"
-            />
+            android:textSize="75dp"/>
 
         <EditText
             android:id="@+id/eventTitleEditText"
