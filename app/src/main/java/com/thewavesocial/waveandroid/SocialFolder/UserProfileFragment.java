@@ -2,10 +2,12 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,16 +93,12 @@ public class UserProfileFragment extends Fragment {
         followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
 
-        if (CurrentUser.theUser.getProfilePic() != null) {
-            try {
-                profilepic_imageview.setImageDrawable(new BitmapDrawable(new UtilityClass.ImageRequestTask(mainActivity,
-                                "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png").execute().get()));
-            } catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
-//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-//                    CurrentUser.theUser.getProfilePic().getBitmap()));
-        }
-        notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
-                CurrentUser.theUser.getNotifications1()));
+        Log.d("Bitmapppp", user.getProfilePic() + "");
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic());
+        if (image != null)
+            profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+
+        notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(), CurrentUser.theUser.getNotifications1()));
         following_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,8 +55,9 @@ public class StatsHostBouncerCustomAdapter extends RecyclerView.Adapter<StatsHos
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position)
     {
-        holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                userList.get(position).getProfilePic().getBitmap()));
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic());
+        if (image != null)
+            holder.imgView.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
         holder.imgView.setOnClickListener(new View.OnClickListener()
         {
             @Override

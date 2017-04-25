@@ -38,6 +38,7 @@ import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -110,6 +111,15 @@ public final class UtilityClass
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
                 .show();
+    }
+
+    public static Bitmap getBitmapFromURL(Activity mainActivity, String url) {
+        try {
+            return new ImageRequestTask(mainActivity, url).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static class ImageRequestTask extends AsyncTask<String, String, Bitmap> {

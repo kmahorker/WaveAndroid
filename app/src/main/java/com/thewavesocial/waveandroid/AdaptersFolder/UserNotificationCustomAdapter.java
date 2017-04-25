@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,10 +73,11 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
-        if (sender.getProfilePic() != null) {
-            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), sender.getProfilePic().getBitmap()));
-        }
+
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity,sender.getProfilePic());
+        if (image != null)
+            holder.senderImage.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+
         holder.sender.setText(sender.getFirstName());
         holder.notifmessage.setText(getItem(position).getMessage());
         holder.timeAgo.setText("28m");

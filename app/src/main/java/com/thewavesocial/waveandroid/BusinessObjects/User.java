@@ -39,7 +39,7 @@ public class User
     private List<String> attending;
     private List<Notification> notifications1;
     private List<Notification> notifications2;
-    private BitmapDrawable profilePic;
+    private String profilePic;
 
     public User()
     {
@@ -63,7 +63,7 @@ public class User
         attending = new ArrayList<>();
         notifications1 = new ArrayList<>();
         notifications2 = new ArrayList<>();
-        profilePic = new BitmapDrawable();
+        profilePic = "";
     }
 
     public User(String userID,
@@ -85,7 +85,7 @@ public class User
                 List<String> attending,
                 List<Notification> notifications1,
                 List<Notification> notifications2,
-                BitmapDrawable profilePic)
+                String profilePic)
     {
         this.userID = userID;
         this.firstName = firstName;
@@ -180,7 +180,7 @@ public class User
         this.attending = attending;
     }
 
-    public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 
     //Getter Block
     public String getUserID()
@@ -254,7 +254,7 @@ public class User
         return attending;
     }
 
-    public BitmapDrawable getProfilePic()
+    public String getProfilePic()
     {
         return profilePic;
     }

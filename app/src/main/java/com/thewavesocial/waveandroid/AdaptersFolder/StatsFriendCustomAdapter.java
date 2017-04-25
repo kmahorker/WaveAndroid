@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,8 +63,11 @@ public class StatsFriendCustomAdapter extends BaseAdapter
             final Holder holder = new Holder();
             View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
             holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
-            holder.img.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    userList.get(position).getProfilePic().getBitmap()));
+
+            Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic());
+            if (image != null)
+                holder.img.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+
             rowView.setOnClickListener(new View.OnClickListener()
             {
                 @Override

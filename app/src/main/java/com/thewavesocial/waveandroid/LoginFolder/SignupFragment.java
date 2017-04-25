@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,6 +40,7 @@ public class SignupFragment extends Fragment
         fragNum = 0;
     }
 
+    @SuppressLint("ValidFragment")
     public SignupFragment (int fragNum)
     {
         this.fragNum = fragNum;
@@ -249,10 +251,10 @@ public class SignupFragment extends Fragment
         final ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
         final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
 
-        if ( mainActivity.profilePic != null )
-        {
-            profilepic.setImageDrawable(mainActivity.profilePic);
-        }
+
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, mainActivity.profilePic);
+        if (image != null)
+            profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
 
         profilepic.setOnClickListener(new View.OnClickListener()
         {
@@ -331,7 +333,7 @@ public class SignupFragment extends Fragment
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                 ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
                 profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), bitmap) );
-                mainActivity.profilePic = new BitmapDrawable(bitmap);
+                mainActivity.profilePic = "";
             }
             catch (FileNotFoundException e)
             {

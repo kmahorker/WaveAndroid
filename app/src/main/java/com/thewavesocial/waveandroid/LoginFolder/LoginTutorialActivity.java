@@ -237,7 +237,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 }
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
                     User newUser = new User(json.getString("id"),
                             json.getString("first_name"),
                             json.getString("last_name"),
@@ -258,7 +257,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                             new ArrayList<String>(), //attending
                             new ArrayList<Notification>(),
                             new ArrayList<Notification>(),
-                            profilePic);
+                            "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

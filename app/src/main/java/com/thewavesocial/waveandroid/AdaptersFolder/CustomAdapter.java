@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -81,8 +82,11 @@ public class CustomAdapter extends BaseAdapter {
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
             //holder.img.setImageResource(R.drawable.happy_house); //testing
-            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(),
-                    userList.get(position).getProfilePic().getBitmap()));
+
+            Bitmap image = UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic());
+            if (image != null)
+                holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

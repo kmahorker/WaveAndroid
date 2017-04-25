@@ -104,14 +104,14 @@ public final class CurrentUser {
             e.printStackTrace();
         }
 
-        HashMap<String, Object> body = new HashMap<>();
+        HashMap<String, String> body = new HashMap<>();
         try {
             JSONObject main_json = new JSONObject(result);
             JSONObject data = main_json.getJSONObject("data");
             Iterator iterKey = data.keys();
             while (iterKey.hasNext()) {
                 String key = (String) iterKey.next();
-                body.put(key, data.get(key));
+                body.put(key, data.getString(key));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -224,22 +224,23 @@ public final class CurrentUser {
     }
 
     //Fill in all user information
-    private static User constructUser(HashMap<String, Object> info) {
-        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
+    private static User constructUser(HashMap<String, String> info) {
+        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "", profilePic = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
                 hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
                 attended = new ArrayList(), bounced = new ArrayList();
         List notifications1 = new ArrayList(), notifications2 = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
-            userID = info.get("id") + "";
-            firstName = info.get("first_name") + "";
-            lastName = info.get("last_name") + "";
-            email = info.get("email") + "";
-            college = info.get("college") + "";
-            gender = info.get("gender") + "";
+            userID = info.get("id");
+            firstName = info.get("first_name");
+            lastName = info.get("last_name");
+            email = info.get("email");
+            college = info.get("college");
+            gender = info.get("gender");
+            profilePic = info.get("image_path");
 
-            date = info.get("birthday") + "";
+            date = info.get("birthday");
             if ( !date.equals("null") ) {
                 birthday.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
                 birthday.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)));
@@ -268,13 +269,12 @@ public final class CurrentUser {
 //        String password = (String) info.get("password"); // TODO: 04/22/2017 Not provided
 
         String phone = "", password = "";
-        BitmapDrawable profilePic = new BitmapDrawable(); // TODO: 04/17/2017 Extract image
         MapAddress mapAddress = new MapAddress(); // TODO: 04/17/2017 what to store as address
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, password, college, gender, phone, mapAddress, birthday,
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
-                notifications2, profilePic);
+                notifications2, "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
     }
 
@@ -295,13 +295,13 @@ public final class CurrentUser {
             JSONArray list = new JSONArray(result);
             for ( int i = 0; i < list.length(); i++ ) {
 
-                HashMap<String, Object> body = new HashMap<>();
+                HashMap<String, String> body = new HashMap<>();
                 JSONObject main_json = list.getJSONObject(i);
                 JSONObject data = main_json.getJSONObject("data");
                 Iterator iterKey = data.keys();
                 while (iterKey.hasNext()) {
                     String key = (String) iterKey.next();
-                    body.put(key, data.get(key));
+                    body.put(key, data.getString(key));
                 }
                 followings.add(constructUser(body));
 

@@ -31,7 +31,7 @@ public class SignupActivity extends FragmentActivity
     public String name = "", email = "", password = "", gender = "", friendname = "";
     public String friendphone = "", userID;
     public Calendar birthday;
-    public BitmapDrawable profilePic;
+    public String profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -154,7 +154,7 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<String>(),
                     new ArrayList<Notification>(),
                     new ArrayList<Notification>(),
-                    new BitmapDrawable());
+                    "");
             //user.getBestFriends().add(bestFriend.getUserID());
             user.setProfilePic(profilePic);
 

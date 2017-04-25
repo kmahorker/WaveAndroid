@@ -94,6 +94,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         HashMap<String, String> body = new HashMap<>();
         body.put("image_path", "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         DatabaseAccess.updateUser(mainActivity, "10", body);
+        DatabaseAccess.updateUser(mainActivity, "11", body);
+        DatabaseAccess.updateUser(mainActivity, "12", body);
+        DatabaseAccess.updateUser(mainActivity, "13", body);
+        DatabaseAccess.updateUser(mainActivity, "14", body);
+        DatabaseAccess.updateUser(mainActivity, "15", body);
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {

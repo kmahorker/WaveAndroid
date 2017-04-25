@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,10 +65,10 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
-        if (user.getProfilePic() != null) {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    user.getProfilePic().getBitmap()));
-        }
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic());
+        if (image != null)
+            holder.image.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+
         holder.name.setText(user.getFullName());
 
         if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {

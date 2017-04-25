@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -102,10 +103,11 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
-        if (friend.getProfilePic() != null) {
-            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    friend.getProfilePic().getBitmap()));
-        }
+
+        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, friend.getProfilePic());
+        if (image != null)
+            profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
                 friend.getNotifications2()));
 

@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,8 +78,11 @@ public class AddFriendCustomAdapter extends BaseAdapter {
             holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
-            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(),
-                    userList.get(position).getProfilePic().getBitmap()));
+
+            Bitmap image = UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic());
+            if (image != null)
+                holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -126,9 +127,9 @@ public class FollowActivity extends AppCompatActivity {
 
                 final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
                 if (userImage != null) {
-                    BitmapDrawable pic = user.getProfilePic();
-                    if (pic != null) {
-                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
+                    Bitmap image = UtilityClass.getBitmapFromURL(followActivity, user.getProfilePic());
+                    if (image != null) {
+                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
                     }
                 }
 
