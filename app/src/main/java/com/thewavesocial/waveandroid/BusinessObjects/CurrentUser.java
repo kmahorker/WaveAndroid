@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
 
@@ -144,14 +145,14 @@ public final class CurrentUser {
             e.printStackTrace();
         }
 
-        HashMap<String, Object> body = new HashMap<>();
+        HashMap<String, String> body = new HashMap<>();
         try {
             JSONObject main_json = new JSONObject(result);
             JSONObject data = main_json.getJSONObject("data");
             Iterator iterKey = data.keys();
             while (iterKey.hasNext()) {
                 String key = (String) iterKey.next();
-                body.put(key, data.get(key));
+                body.put(key, data.getString(key));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -162,8 +163,8 @@ public final class CurrentUser {
     }
 
     //Fill in all party information
-    private static Party constructParty(HashMap<String, Object> info) {
-        String partyID = "", name = "", startDate = "", startTime = "", endDate = "", endTime = "", address = "", str_isPublic = "", hostName = "";
+    private static Party constructParty(HashMap<String, String> info) {
+        String partyID = "", name = "", emoji = "", startDate = "", startTime = "", endDate = "", endTime = "", address = "", str_isPublic = "", hostName = "";
         List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
         Calendar startingDateTime = Calendar.getInstance(), endingDateTime = Calendar.getInstance();
         MapAddress mapAddress = new MapAddress();
@@ -171,12 +172,13 @@ public final class CurrentUser {
         boolean isPublic = false;
 
         try {
-            partyID = info.get("id") + "";
-            name = info.get("name") + "";
+            partyID = info.get("id");
+            name = info.get("name");
+            emoji = info.get("emoji");
             if ( info.get("price") != null )
                 price = Double.parseDouble(info.get("price") + "");
 
-            startDate = info.get("start_date") + "";
+            startDate = info.get("start_date");
             startTime = info.get("start_time") + "";
             if ( !startDate.equals("null") ) {
                 startingDateTime.set(Calendar.YEAR, Integer.parseInt(startDate.substring(0, 4)));
@@ -200,10 +202,10 @@ public final class CurrentUser {
                 endingDateTime.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
             }
 
-            if ( info.get("address") != null ) {
-                address = info.get("address") + ", " + info.get("city") + ", " + info.get("state");
-                mapAddress.setAddress_string(address);
-            }
+            address = info.get("address") + ", " + info.get("city") + ", " + info.get("state");
+            mapAddress.setAddress_string(address);
+            if ( !info.get("lat").equals("null") && !info.get("lng").equals("null") )
+                mapAddress.setAddress_latlng(new LatLng(Integer.parseInt(info.get("lat")), Integer.parseInt(info.get("lng"))));
 
             str_isPublic = info.get("is_public") + "";
             if ( !str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1 )
