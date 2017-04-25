@@ -25,19 +25,18 @@ import java.util.concurrent.ExecutionException;
 //Nothing changed
 public final class CurrentUser {
     public static Activity context;
-    public static DummyUser dummy;
+//    public static DummyUser dummy;
     public static User theUser;
 
     private CurrentUser() {
         context = null;
-        dummy = new DummyUser(context);
-        theUser = dummy;
+//        dummy = new DummyUser(context);
+        theUser = getUserObject("10");
     }
 
     public static void setContext(Context cont) {
         context = (Activity) cont;
-        dummy = new DummyUser(context);
-        theUser = dummy;
+        theUser = getUserObject("10");
     }
 
     public static void setTheUser(User theUser) {
@@ -61,41 +60,41 @@ public final class CurrentUser {
         }
         return partyObjs;
     }
+//
+//    //Get user information
+//    public static User getUserObject(String id) {
+//        if ( id.equals("1") )
+//            return dummy.getFriend1();
+//        else if ( id.equals("2") )
+//            return dummy.getFriend2();
+//        else if ( id.equals("3") )
+//            return dummy.getFriend3();
+//        else if ( id.equals("4") )
+//            return dummy.getFriend4();
+//        else if ( id.equals("5") )
+//            return dummy.getFriend5();
+//        else
+//            return dummy.getFriend1();
+//    }
+//
+//    //Get party information
+//    public static Party getPartyObject(String id) {
+//        if ( id.equals("1") )
+//            return dummy.getParty1();
+//        else if ( id.equals("2") )
+//            return dummy.getParty2();
+//        else if ( id.equals("3") )
+//            return dummy.getParty3();
+//        else if ( id.equals("4") )
+//            return dummy.getParty4();
+//        else if ( id.equals("5") )
+//            return dummy.getParty5();
+//        else
+//            return dummy.getParty1();
+//    }
 
     //Get user information
-    public static User getUserObject(String id) {
-        if ( id.equals("1") )
-            return dummy.getFriend1();
-        else if ( id.equals("2") )
-            return dummy.getFriend2();
-        else if ( id.equals("3") )
-            return dummy.getFriend3();
-        else if ( id.equals("4") )
-            return dummy.getFriend4();
-        else if ( id.equals("5") )
-            return dummy.getFriend5();
-        else
-            return dummy.getFriend1();
-    }
-
-    //Get party information
-    public static Party getPartyObject(String id) {
-        if ( id.equals("1") )
-            return dummy.getParty1();
-        else if ( id.equals("2") )
-            return dummy.getParty2();
-        else if ( id.equals("3") )
-            return dummy.getParty3();
-        else if ( id.equals("4") )
-            return dummy.getParty4();
-        else if ( id.equals("5") )
-            return dummy.getParty5();
-        else
-            return dummy.getParty1();
-    }
-
-    //Get user information
-    public static User server_getUserObject(String userID) {
+    public static User getUserObject(String userID) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
         String result = null;
@@ -119,11 +118,23 @@ public final class CurrentUser {
         }
 
         Log.d("CurUser_GetUserInfo", result);
-        return constructUser(body);
+        User user = constructUser(body);
+
+        //testing purpose
+        ArrayList<String> followers = new ArrayList<>();
+        followers.add("11");
+        followers.add("12");
+        followers.add("13");
+        followers.add("14");
+        followers.add("15");
+        user.setFollowers(followers);
+        user.setFollowing(followers);
+
+        return user;
     }
 
     //Get party information
-    public static Party server_getPartyObject(String partyID) {
+    public static Party getPartyObject(String partyID) {
         String url = context.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
         String result = null;
@@ -151,49 +162,58 @@ public final class CurrentUser {
     }
 
     //Fill in all party information
-    public static Party constructParty(HashMap<String, Object> info) {
-        String partyID = null, name = null, startDate = null, startTime = null, endDate = null, endTime = null, address = null, str_isPublic = null, hostName = null;
-        List hostingUsers = null, bouncingUsers = null, attendingUsers = null;
-        Calendar startingDateTime = null, endingDateTime = null;
-        MapAddress mapAddress = null;
+    private static Party constructParty(HashMap<String, Object> info) {
+        String partyID = "", name = "", startDate = "", startTime = "", endDate = "", endTime = "", address = "", str_isPublic = "", hostName = "";
+        List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
+        Calendar startingDateTime = Calendar.getInstance(), endingDateTime = Calendar.getInstance();
+        MapAddress mapAddress = new MapAddress();
         double price = 0;
         boolean isPublic = false;
 
         try {
             partyID = info.get("id") + "";
             name = info.get("name") + "";
-            price = Double.parseDouble(info.get("price") + "");
+            if ( info.get("price") != null )
+                price = Double.parseDouble(info.get("price") + "");
 
-            startingDateTime = Calendar.getInstance();
             startDate = info.get("start_date") + "";
             startTime = info.get("start_time") + "";
-            startingDateTime.set(Calendar.YEAR, Integer.parseInt(startDate.substring(0, 4)));
-            startingDateTime.set(Calendar.MONTH, Integer.parseInt(startDate.substring(5, 7)));
-            startingDateTime.set(Calendar.DATE, Integer.parseInt(startDate.substring(8, 10)));
-            startingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
-            startingDateTime.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
+            if ( !startDate.equals("null") ) {
+                startingDateTime.set(Calendar.YEAR, Integer.parseInt(startDate.substring(0, 4)));
+                startingDateTime.set(Calendar.MONTH, Integer.parseInt(startDate.substring(5, 7)));
+                startingDateTime.set(Calendar.DATE, Integer.parseInt(startDate.substring(8, 10)));
+            }
+            if ( !startTime.equals("null") ) {
+                startingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
+                startingDateTime.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
+            }
 
-            endingDateTime = Calendar.getInstance();
             endDate = info.get("end_date") + "";
             endTime = info.get("end_time") + "";
-            endingDateTime.set(Calendar.YEAR, Integer.parseInt(endDate.substring(0, 4)));
-            endingDateTime.set(Calendar.MONTH, Integer.parseInt(endDate.substring(5, 7)));
-            endingDateTime.set(Calendar.DATE, Integer.parseInt(endDate.substring(8, 10)));
-            endingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
-            endingDateTime.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
+            if ( !endDate.equals("null") ) {
+                endingDateTime.set(Calendar.YEAR, Integer.parseInt(endDate.substring(0, 4)));
+                endingDateTime.set(Calendar.MONTH, Integer.parseInt(endDate.substring(5, 7)));
+                endingDateTime.set(Calendar.DATE, Integer.parseInt(endDate.substring(8, 10)));
+            }
+            if ( !endTime.equals("null") ) {
+                endingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
+                endingDateTime.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
+            }
 
-            address = info.get("address") + ", " + info.get("city") + ", " + info.get("state");
-            mapAddress = new MapAddress(address, null);
-            hostingUsers = (ArrayList) info.get("hosting");
-            bouncingUsers = (ArrayList) info.get("bouncing");
-            attendingUsers = (ArrayList) info.get("attending");
-            str_isPublic = (String) info.get("is_public");
+            if ( info.get("address") != null ) {
+                address = info.get("address") + ", " + info.get("city") + ", " + info.get("state");
+                mapAddress.setAddress_string(address);
+            }
 
-            isPublic = false;
-            if (Integer.parseInt(str_isPublic) == 1)
+            str_isPublic = info.get("is_public") + "";
+            if ( !str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1 )
                 isPublic = true;
         } catch (Exception e) {e.printStackTrace();}
 
+
+//        hostingUsers = (ArrayList) info.get("hosting");
+//        bouncingUsers = (ArrayList) info.get("bouncing");
+//        attendingUsers = (ArrayList) info.get("attending");
         hostName = "";
         BitmapDrawable partyEmoji = new BitmapDrawable(); // TODO: 04/18/2017 Extract Image
 
@@ -204,12 +224,13 @@ public final class CurrentUser {
     }
 
     //Fill in all user information
-    public static User constructUser(HashMap<String, Object> info) {
-        String userID = null, firstName = null, lastName = null, email = null, college = null, gender = null, date = null;
-        List bestFriends = null, followers = null, following = null, hosting = null, hosted = null,
-                attending = null, attended = null, bounced = null;
+    private static User constructUser(HashMap<String, Object> info) {
+        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
+        List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
+                hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
+                attended = new ArrayList(), bounced = new ArrayList();
         List notifications1 = new ArrayList(), notifications2 = new ArrayList();
-        Calendar birthday = null;
+        Calendar birthday = Calendar.getInstance();
         try {
             userID = info.get("id") + "";
             firstName = info.get("first_name") + "";
@@ -219,22 +240,24 @@ public final class CurrentUser {
             gender = info.get("gender") + "";
 
             date = info.get("birthday") + "";
-            birthday = Calendar.getInstance();
-            birthday.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
-            birthday.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)));
-            birthday.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
-
-            bestFriends = (ArrayList) info.get("best_friends");
-            followers = (ArrayList) info.get("followers");
-            following = (ArrayList) info.get("following");
-            hosting = (ArrayList) info.get("hosting");
-            hosted = (ArrayList) info.get("hosted");
-            attending = (ArrayList) info.get("attending");
-            attended = (ArrayList) info.get("attended");
-            bounced = (ArrayList) info.get("bounced");
+            if ( !date.equals("null") ) {
+                birthday.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
+                birthday.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)));
+                birthday.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+//        bestFriends = (ArrayList) info.get("best_friends");
+//        followers = (ArrayList) info.get("followers");
+//        following = (ArrayList) info.get("following");
+//        hosting = (ArrayList) info.get("hosting");
+//        hosted = (ArrayList) info.get("hosted");
+//        attending = (ArrayList) info.get("attending");
+//        attended = (ArrayList) info.get("attended");
+//        bounced = (ArrayList) info.get("bounced");
 
 //        List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
 //                hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
@@ -254,4 +277,41 @@ public final class CurrentUser {
                 notifications2, profilePic);
         return user;
     }
+
+    //Get user following
+    public static List<User> getUserFollowing(String userID) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "/followings?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+
+        String result = null;
+        try {
+            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<User> followings = new ArrayList<>();
+        try {
+            JSONArray list = new JSONArray(result);
+            for ( int i = 0; i < list.length(); i++ ) {
+
+                HashMap<String, Object> body = new HashMap<>();
+                JSONObject main_json = list.getJSONObject(i);
+                JSONObject data = main_json.getJSONObject("data");
+                Iterator iterKey = data.keys();
+                while (iterKey.hasNext()) {
+                    String key = (String) iterKey.next();
+                    body.put(key, data.get(key));
+                }
+                followings.add(constructUser(body));
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return followings;
+    }
+
+
 }

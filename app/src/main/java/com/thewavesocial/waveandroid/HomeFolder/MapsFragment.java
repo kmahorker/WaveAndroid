@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -90,21 +91,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupHeightVariables();
         setupSearchbar();
 
-        //// TODO: 04/13/2017 Testing purpose for server request
-//        User newUser = DatabaseAccess.createUser(mainActivity, "Round", "Sponge", "roundPant@gmail.com", "Trump University", "round");
-//
-//        DatabaseAccess.loginByEmail(mainActivity, "roundPant@gmail.com", "round");
-//        Party party = DatabaseAccess.createParty(mainActivity, "Super Party 1", "12", "1234 Super Road", "", "Isla Vista", "CA", "1", "2017-12-1", "3:10", "2017-12-1", "15:10");
-
-//        User autoLoginUser = DatabaseAccess.getUser(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
-//        HashMap<String, String> body = new HashMap<>();
-//        body.put("gender", "Trans");
-//        body.put("birthday", "2017-01-01");
-//        body.put("image_path", "");
-//        DatabaseAccess.updateUser(mainActivity, "17", body);
-//        User getSpecificUser = DatabaseAccess.getUser(mainActivity, "17");
-//        DatabaseAccess.getParty(mainActivity, "7");
-//        ArrayList<Party> getUserParties = DatabaseAccess.getUserParties(mainActivity, DatabaseAccess.getTokenFromLocal(mainActivity)[0]);
+        HashMap<String, String> body = new HashMap<>();
+        body.put("image_path", "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
+        DatabaseAccess.updateUser(mainActivity, "10", body);
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {

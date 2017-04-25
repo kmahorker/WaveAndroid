@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
 
 public class UserProfileFragment extends Fragment {
 
@@ -90,8 +92,12 @@ public class UserProfileFragment extends Fragment {
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
 
         if (CurrentUser.theUser.getProfilePic() != null) {
-            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    CurrentUser.theUser.getProfilePic().getBitmap()));
+            try {
+                profilepic_imageview.setImageDrawable(new BitmapDrawable(new UtilityClass.ImageRequestTask(mainActivity,
+                                "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png").execute().get()));
+            } catch (InterruptedException | ExecutionException e) {e.printStackTrace();}
+//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+//                    CurrentUser.theUser.getProfilePic().getBitmap()));
         }
         notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
                 CurrentUser.theUser.getNotifications1()));

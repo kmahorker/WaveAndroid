@@ -1,11 +1,17 @@
 package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -18,7 +24,19 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -92,6 +110,53 @@ public final class UtilityClass
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
                 .show();
+    }
+
+    public static class ImageRequestTask extends AsyncTask<String, String, Bitmap> {
+        private String url;
+        private Activity mainActivity;
+        private ProgressDialog progress;
+
+        public ImageRequestTask(Activity mainActivity, String url) {
+            this.url = url;
+            this.mainActivity = mainActivity;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress = new ProgressDialog(mainActivity);
+            progress.setTitle("Please wait");
+            progress.setMessage("Connecting to Server...");
+            progress.setCancelable(false);
+            progress.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params){
+            return getBitmapFromURL(url);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            progress.dismiss();
+        }
+
+        //http://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
+        public static Bitmap getBitmapFromURL(String src) {
+            try {
+                URL url = new URL(src);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (IOException e) {
+                // Log exception
+                return null;
+            }
+        }
     }
 
 //------------------------------------------------------------------------------------Map Functions
