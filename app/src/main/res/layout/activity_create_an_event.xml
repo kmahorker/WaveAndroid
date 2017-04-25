@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:id="@+id/scrollViewCreateAnEvent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
@@ -10,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:id="@+id/createAnEventLinearLayout"
         tools:context="com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity"
         android:focusableInTouchMode="true"
         >
@@ -23,16 +25,20 @@
             android:background="@drawable/round_shape_shadow"
             android:layout_marginTop="20dp"/> -->
 
-
-        <github.ankushsachdeva.emojicon.EmojiconEditText
-            android:id="@+id/emojiconEditText"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/round_shape_shadow"
-            android:cursorVisible="false"
-            android:textSize="75dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emojiRelativeLayout">
+                <github.ankushsachdeva.emojicon.EmojiconEditText
+                    android:id="@+id/emojiconEditText"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/round_shape_shadow"
+                    android:cursorVisible="false"
+                    android:textSize="75dp"/>
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/eventTitleEditText"

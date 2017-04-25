@@ -23,6 +23,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
@@ -164,12 +166,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             try {
-                //Emojiconize.view(view).go();
-                ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollViewCreateAnEvent);
-                scrollView.setOnClickListener(new View.OnClickListener() {
+                RelativeLayout relativeLayout = (RelativeLayout)(view.findViewById(R.id.emojiRelativeLayout));
+                relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onTouch(View v, MotionEvent event) {
+
                         UtilityClass.hideKeyboard(getActivity());
+                        popup.dismiss();
+                        return true;
                     }
                 });
                 view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -258,6 +262,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             startDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UtilityClass.hideKeyboard(getActivity());
+                    popup.dismiss();
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
                             startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     dialogFragment.setDateDisplay(startDateTextView);
@@ -271,6 +277,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             startTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UtilityClass.hideKeyboard(getActivity());
+                    popup.dismiss();
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
                             startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     timePickerDialogFragment.setTimeTextView(startTimeTextView);
@@ -283,6 +291,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             endDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UtilityClass.hideKeyboard(getActivity());
+                    popup.dismiss();
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
                             endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     dialogFragment.setDateDisplay(endDateTextView);
@@ -301,6 +311,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             endTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    UtilityClass.hideKeyboard(getActivity());
+                    popup.dismiss();
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
                             endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
                     timePickerDialogFragment.setTimeTextView(endTimeTextView);
@@ -311,12 +323,32 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupEditText(View v) {
             titleEditText = (EditText) v.findViewById(R.id.eventTitleEditText);
-            titleEditText.setText(NewPartyInfo.name);
+            if(!NewPartyInfo.name.isEmpty()) {
+                titleEditText.setText(NewPartyInfo.name);
+            }
+            titleEditText.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(popup.isShowing()){
+                        popup.dismiss();
+                    }
+                    return false;
+                }
+            });
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
             MapAddress address = NewPartyInfo.mapAddress;
             if(address != null){
                 locationEditText.setText(NewPartyInfo.mapAddress.getAddress_string());
             }
+            locationEditText.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(popup.isShowing()){
+                        popup.dismiss();
+                    }
+                    return false;
+                }
+            });
 
         }
 
@@ -339,6 +371,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     else{
                         privateParty = false;
                     }
+                    UtilityClass.hideKeyboard(getActivity());
+                    popup.dismiss();
                 }
             });
         }
@@ -355,6 +389,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 rangeSeekBar.setSelectedMinValue(NewPartyInfo.minAge);
                 rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
             }
+
         }
 
         private void setupEmojiconEditText(View v){
@@ -382,6 +417,16 @@ public class CreateAnEventActivity extends AppCompatActivity {
                         }
                     }
                     return true;
+                }
+            });
+
+
+            emojiconEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(!hasFocus && popup.isShowing()){
+                        popup.dismiss();
+                    }
                 }
             });
 
