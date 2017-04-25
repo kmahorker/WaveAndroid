@@ -1,6 +1,8 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -8,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
@@ -59,6 +63,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
     private ImageView back, forward;
     private FragmentManager fragmentM;
+    private CreateAnEventActivity thisActivity = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +89,26 @@ public class CreateAnEventActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
-                finish();
+                AlertDialog.Builder confirmMessage = new AlertDialog.Builder(thisActivity);
+                confirmMessage.setTitle("In Progress") //TODO: 4/25/17 Make description better
+                        .setMessage("Are you sure you want to discard your progress?")
+                        .setCancelable(false)
+                        .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                onBackPressed();
+                                NewPartyInfo.initialize();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //do nothing
+                            }
+                        })
+                        .show();
+
             }
         });
         forward.setOnClickListener(new View.OnClickListener() {
