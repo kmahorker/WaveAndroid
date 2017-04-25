@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbarFadeDuration="0">
-
-    <LinearLayout
+    android:clickable="true"
+    android:id="@+id/scrollViewEditEvent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbarFadeDuration="0"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/editEventLinearLayout"
+        tools:context="com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity"
+        android:focusableInTouchMode="true"
+        >
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/emojiImageView"
             android:layout_width="125dp"
             android:layout_height="125dp"
             app:srcCompat="@drawable/checkmark"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/round_shape_shadow"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"/> -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editEventEmojiRelativeLayout">
+            <github.ankushsachdeva.emojicon.EmojiconEditText
+                android:id="@+id/emojiconEditText"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/round_shape_shadow"
+                android:cursorVisible="false"
+                android:textSize="75dp"/>
+        </RelativeLayout>
 
         <EditText
-            android:id="@+id/eventTitleEditText"
+            android:id="@+id/editEventEventTitleEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -33,7 +54,7 @@
             android:textSize="18dp"/>
 
         <EditText
-            android:id="@+id/locationEditText"
+            android:id="@+id/editEventLocationEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -50,7 +71,7 @@
             android:layout_marginTop="12dp">
 
             <TextView
-                android:id="@+id/startTextView"
+                android:id="@+id/editEventStartTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -61,7 +82,7 @@
                 android:layout_marginLeft="10dp" />
 
             <TextView
-                android:id="@+id/startDateTextView"
+                android:id="@+id/editEventStartDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -72,7 +93,7 @@
                 />
 
             <TextView
-                android:id="@+id/startTimeTextView"
+                android:id="@+id/editEventStartTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -82,8 +103,10 @@
                 android:textColor="@color/black_solid"
                 android:textSize="18dp" />
 
+
+
             <TextView
-                android:id="@+id/endTextView"
+                android:id="@+id/editEventEndTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -96,7 +119,7 @@
                 android:layout_marginTop="12dp"/>
 
             <TextView
-                android:id="@+id/endDateTextView"
+                android:id="@+id/editEventEndDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/startDateTextView"
@@ -108,7 +131,7 @@
                 android:textSize="18dp" />
 
             <TextView
-                android:id="@+id/endTimeTextView"
+                android:id="@+id/editEventEndTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -119,22 +142,30 @@
                 android:textAlignment="center"
                 android:textColor="@color/black_solid"
                 android:textSize="18dp" />
+            <!--
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="#000000"
+                android:layout_below="@id/startTextView"/> -->
         </RelativeLayout>
 
-        <Switch
-            android:id="@+id/privateSwitch"
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/editEventPrivateSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="12dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
+            android:theme="@style/CreateEventSwitchStyle"
+            android:thumbTint="@color/white_solid"
             android:text="Private"
             android:textSize="18dp"
             android:textColor="@color/black_solid"/>
 
         <TextView
-            android:id="@+id/ageRestrictionTextView"
+            android:id="@+id/editEventAgeRestrictionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -146,15 +177,24 @@
             android:textColor="@color/black_solid"/>
 
         <org.florescu.android.rangeseekbar.RangeSeekBar
-            android:id="@+id/ageRestrictionSeekBar"
+            android:id="@+id/editEventAgeRestrictionSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
-            android:translationY="-15dp"
             app:absoluteMinValue="17"
-            app:absoluteMaxValue="100"/>
+            app:absoluteMaxValue="100"
+            app:textAboveThumbsColor="@color/appColor"
+            app:activeColor="@color/appColor"
+            app:barHeight="2dp"
+            app:thumbDisabled="@drawable/rangeseekbar_thumb_format"
+            app:thumbNormal="@drawable/rangeseekbar_thumb_format"
+            app:thumbPressed="@drawable/rangeseekbar_thumb_format"
+            app:thumbShadow="true"
+            app:thumbShadowColor="@color/grey_default"
+            />
+
 
         <TextView
             android:id="@+id/invite_text"
@@ -175,7 +215,7 @@
             android:id="@+id/bouncing_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="INVITED"
+            android:text="BOUNCING"
             android:textColor="#8e8e8e"
             android:textSize="@dimen/text_small"
             android:layout_marginTop="30dp"/> <!--Attendee Label-->
