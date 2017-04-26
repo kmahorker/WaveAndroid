@@ -7,20 +7,29 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
@@ -47,6 +56,8 @@ public class EditStatsActivity extends AppCompatActivity {
     static Calendar endCalendar = Calendar.getInstance();
     String DATE_FORMAT = "MMM d, yyyy";
     String TIME_FORMAT = "h:mm a";
+
+    RecyclerView invitedRecyclerView, bouncingRecylcerView;
 
     Party party;
 
@@ -129,6 +140,24 @@ public class EditStatsActivity extends AppCompatActivity {
         rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
         rangeSeekBar.setSelectedMinValue(party.getMinAge());
         rangeSeekBar.setSelectedMaxValue(party.getMaxAge());
+
+        invitedRecyclerView = (RecyclerView) findViewById(R.id.invite_list);
+        bouncingRecylcerView = (RecyclerView) findViewById(R.id.bouncing_list);
+
+        LinearLayoutManager invitedListManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+        invitedRecyclerView.setLayoutManager(invitedListManager);
+
+        LinearLayoutManager bouncingListManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+        bouncingRecylcerView.setLayoutManager(bouncingListManager);
+
+        //TODO: Call Server function instead
+        List<User> invitedUsers = new ArrayList<User>();
+        invitedUsers.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invitedUsers));
+
+        List<User> bouncingUsers = new ArrayList<User>();
+        bouncingUsers.addAll(CurrentUser.getUsersListObjects(party.getBouncingUsers()));
+        bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, bouncingUsers));
     }
 
     private void setUpEmojicon(){
