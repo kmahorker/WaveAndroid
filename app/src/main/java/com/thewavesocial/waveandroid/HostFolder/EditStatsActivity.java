@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.HostFolder;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,10 +13,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.R;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
@@ -44,11 +47,14 @@ public class EditStatsActivity extends AppCompatActivity {
     String DATE_FORMAT = "MMM d, yyyy";
     String TIME_FORMAT = "h:mm a";
 
+    Party party;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats_edit);
         mainActivity = this;
+        Intent intent = getIntent();
+        party = intent.getExtras().getParcelable("partyObject");
         setupActionbar();
         setupReference();
         setUpEmojicon();
@@ -68,16 +74,44 @@ public class EditStatsActivity extends AppCompatActivity {
 
     private void setupReference() {
         deleteButton = (TextView) findViewById(R.id.delete_button);
+
         titleEditText = (EditText)findViewById(R.id.editEventEventTitleEditText);
+        titleEditText.setText(party.getName());
+
         locationEditText = (EditText)findViewById(R.id.editEventLocationEditText);
+        locationEditText.setText(party.getMapAddress().getAddress_string());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
+
         startDateTextView = (TextView) findViewById(R.id.editEventStartDateTextView);
+        startDateTextView.setText(dateFormat.format(party.getStartingDateTime().getTime()));
+
         startTimeTextView = (TextView) findViewById(R.id.editEventStartTimeTextView);
+        startTimeTextView.setText(timeFormat.format(party.getStartingDateTime().getTime()));
+
         endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
+        endDateTextView.setText(dateFormat.format(party.getEndingDateTime().getTime()));
+
         endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
+        endTimeTextView.setText(timeFormat.format(party.getEndingDateTime().getTime()));
+
         emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
         emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        emojiconEditText.setText(party.getPartyEmoji());
+
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
+        boolean isPrivate = !party.getIsPublic();
+        if(isPrivate){
+            privateSwitch.setChecked(true);
+        }
+        else{
+            privateSwitch.setChecked(false);
+        }
         rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.editEventAgeRestrictionSeekBar);
+        rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
+        rangeSeekBar.setSelectedMinValue(party.getMinAge());
+        rangeSeekBar.setSelectedMaxValue(party.getMaxAge());
     }
 
     private void setUpEmojicon(){

@@ -115,7 +115,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/startTextView"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="25dp"/>
 
             <TextView
                 android:id="@+id/editEventEndDateTextView"
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/startDateTextView"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="25dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
                 android:textColor="@color/black_solid"
@@ -136,7 +136,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/startTimeTextView"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="25dp"
                 android:layout_weight="1"
                 android:textAlignment="center"
                 android:textColor="@color/black_solid"

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -153,7 +154,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditStatsActivity.class);
-                //TODO: 4/25/17 Pass party object/id to next screen
+                intent.putExtra("partyObject", party);//TODO: XXX 4/25/17 Pass party object/id to next screen
                 startActivity(intent);
             }
         });
