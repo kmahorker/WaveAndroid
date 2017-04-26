@@ -14,9 +14,8 @@
         android:layout_marginBottom="15dp"
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
-        android:background="@drawable/round_shape_shadow"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textSize="35dp"
         android:textAlignment="center"/>
 
     <RelativeLayout
