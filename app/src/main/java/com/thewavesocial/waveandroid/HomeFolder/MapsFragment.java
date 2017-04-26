@@ -104,7 +104,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
+        //TODO: Commented this out
+        // new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
 
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {

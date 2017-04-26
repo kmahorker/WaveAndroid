@@ -13,16 +13,16 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
+import com.thewavesocial.waveandroid.AdaptersFolder.UserActionAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.Calendar;
-
 public class UserProfileFragment extends Fragment {
+
+    private TextView activityButton, attendingButton;
 
     public enum PopupPage {
         FOLLOWERS,
@@ -31,7 +31,7 @@ public class UserProfileFragment extends Fragment {
 
     private User user;
     private TextView followers_textview, following_textview;
-    private ListView notification_listview;
+    private ListView action_listview;
     private ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
     private HomeSwipeActivity mainActivity;
@@ -84,23 +84,42 @@ public class UserProfileFragment extends Fragment {
         });
         following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
         profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
-        notification_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
+        action_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
+        activityButton = (TextView) mainActivity.findViewById(R.id.user_activity_button);
+        attendingButton = (TextView) mainActivity.findViewById(R.id.user_attending_button);
 
         followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
+        if (CurrentUser.theUser.getProfilePic() != null)
+            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), CurrentUser.theUser.getProfilePic().getBitmap()));
 
-        if (CurrentUser.theUser.getProfilePic() != null) {
-            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    CurrentUser.theUser.getProfilePic().getBitmap()));
-        }
-        notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(),
-                CurrentUser.theUser.getNotifications1()));
         following_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(PopupPage.FOLLOWING);
             }
         });
+
+        activityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
+                changeButton(attendingButton, R.color.appColor, R.drawable.round_corner_red_edge);
+                UtilityClass.hideKeyboard(mainActivity);
+                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications1()));
+            }
+        });
+        attendingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
+                changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
+                UtilityClass.hideKeyboard(mainActivity);
+                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttending()), 0));
+            }
+        });
+
+        activityButton.performClick();
     }
 
 
@@ -113,5 +132,10 @@ public class UserProfileFragment extends Fragment {
                 mainActivity.startActivity(intent);
                 break;
         }
+    }
+
+    private void changeButton(TextView view, int textColor, int backgroundColor) {
+        view.setTextColor(mainActivity.getResources().getColor(textColor));
+        view.setBackgroundResource(backgroundColor);
     }
 }

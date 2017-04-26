@@ -6,8 +6,8 @@
     android:background="@color/backgroundColor">
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:id="@+id/user_profile_pic"
         android:background="@drawable/round_shape"
         android:layout_centerHorizontal="true"
@@ -15,27 +15,64 @@
         android:elevation="2dp"/> <!-- profile picture-->
 
     <TextView
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:id="@+id/user_followers_count"
         android:text="250\nfollowers"
         android:gravity="center"
         android:background="@drawable/round_shape_shadow"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="110dp"
+        android:layout_centerHorizontal="true"
+        android:translationX="-80dp"
+        android:layout_marginTop="100dp"
         android:elevation="4dp"/> <!--Followers Count-->
 
     <TextView
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:id="@+id/user_following_count"
         android:text="250\nfollowing"
         android:gravity="center"
         android:background="@drawable/round_shape_shadow"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="50dp"
-        android:layout_marginTop="110dp"
+        android:layout_centerHorizontal="true"
+        android:translationX="80dp"
+        android:layout_marginTop="100dp"
         android:elevation="4dp"/> <!--Following Count-->
+
+    <RelativeLayout
+        android:id="@+id/user_button_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/white_solid"
+        android:layout_below="@id/user_followers_count"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/user_activity_button"
+            android:layout_width="120dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="10dp"
+            android:background="@drawable/round_corner_red"
+            android:textColor="@color/white_solid"
+            android:elevation="3dp"
+            android:gravity="center"
+            android:text="Activity"
+            android:textSize="@dimen/button_text_normal"/>
+
+        <TextView
+            android:id="@+id/user_attending_button"
+            android:layout_width="120dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_margin="10dp"
+            android:layout_toEndOf="@id/user_activity_button"
+            android:background="@drawable/round_corner_red_edge"
+            android:elevation="3dp"
+            android:gravity="center"
+            android:text="Attending"
+            android:textColor="@color/appColor"
+            android:textSize="@dimen/button_text_normal"/>
+
+    </RelativeLayout>
 
     <ListView
         android:layout_width="match_parent"
@@ -45,8 +82,7 @@
         android:background="#FFF"
         android:scrollbarStyle="insideInset"
         android:scrollbarFadeDuration="0"
-        android:layout_marginTop="20dp"
         android:elevation="-6dp"
-        android:layout_below="@id/user_followers_count"/> <!--notifications(list)-->
+        android:layout_below="@id/user_button_panel"/> <!--notifications(list)-->
 
 </RelativeLayout>
