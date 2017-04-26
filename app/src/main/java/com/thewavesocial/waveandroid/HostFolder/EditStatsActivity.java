@@ -18,10 +18,10 @@ import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.Calendar;
 
+import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
-import io.github.rockerhieu.emojicon.EmojiconEditText;
 
 public class EditStatsActivity extends AppCompatActivity {
     private Activity mainActivity;
@@ -81,7 +81,7 @@ public class EditStatsActivity extends AppCompatActivity {
     }
 
     private void setUpEmojicon(){
-        final View rootView = findViewById(R.id.scrollViewCreateAnEvent);
+        final View rootView = findViewById(R.id.scrollViewEditEvent);
         popup = new EmojiconsPopup(rootView, this);
         popup.setSizeForSoftKeyboard();
         popup.setOnSoftKeyboardOpenCloseListener(new EmojiconsPopup.OnSoftKeyboardOpenCloseListener() {
