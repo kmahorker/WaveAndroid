@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
@@ -27,15 +28,22 @@ public class HomeSwipeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
-        CurrentUser.setContext(this);
         mainActivity = this;
         setupMapActionbar();
-
-        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(1);
-        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+        CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
+            @Override
+            public void onResultReady(Boolean result) {
+                if ( result ) {
+                    mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
+                    mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+                    mPager.setAdapter(mPagerAdapter);
+                    mPager.setCurrentItem(1);
+                    mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+                } else {
+                    Log.d("HomeSwipeActivity", "Set User Context Failed...");
+                }
+            }
+        });
 
     }
 

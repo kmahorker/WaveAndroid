@@ -1,12 +1,16 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.R;
 
 import org.json.JSONArray;
@@ -26,18 +30,30 @@ import java.util.concurrent.ExecutionException;
 //Nothing changed
 public final class CurrentUser {
     public static Activity context;
-//    public static DummyUser dummy;
-    public static User theUser;
+    public static User theUser = new User();
 
     private CurrentUser() {
         context = null;
-//        dummy = new DummyUser(context);
-        theUser = getUserObject("10");
+        getUserObject("10", new OnResultReadyListener<User>() {
+            @Override
+            public void onResultReady(User result) {
+                theUser = result;
+            }
+        });
     }
 
-    public static void setContext(Context cont) {
+    public static void setContext(Context cont, final OnResultReadyListener<Boolean> delegate) {
         context = (Activity) cont;
-        theUser = getUserObject("10");
+        getUserObject("10", new OnResultReadyListener<User>() {
+            @Override
+            public void onResultReady(User result) {
+                theUser = result;
+                if ( result != null )
+                    delegate.onResultReady(true);
+                else
+                    delegate.onResultReady(false);
+            }
+        });
     }
 
     public static void setTheUser(User theUser) {
@@ -45,121 +61,177 @@ public final class CurrentUser {
     }
 
     //Get list of user information
-    public static List<User> getUsersListObjects(List<String> userIdList) {
-        List<User> friendObjs = new ArrayList<>();
-        for (String id : userIdList) {
-            friendObjs.add(getUserObject(id));
+    public static void getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
+        RequestComponents[] comps = new RequestComponents[userIdList.size()];
+        for ( int i = 0; i < comps.length; i++ ) {
+            String url = context.getString(R.string.server_url) + "users/" + userIdList.get(i)
+                    + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+            comps[i] = new RequestComponents(url, "GET", null);
         }
-        return friendObjs;
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>(){
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                List<User> friends = new ArrayList<>();
+                for ( int i = 0; i < result.size(); i++ ) {
+                    HashMap<String, String> body = new HashMap<>();
+                    try {
+                        JSONObject main_json = new JSONObject(result.get(i));
+                        JSONObject data = main_json.getJSONObject("data");
+                        Iterator iterKey = data.keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getString(key));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("CurUser_GetUserInfo", result.get(0));
+                    User user = constructUser(body);
+                    //testing purpose
+                    ArrayList<String> followers = new ArrayList<>();
+                    followers.add("11");
+                    followers.add("12");
+                    followers.add("13");
+                    followers.add("14");
+                    followers.add("15");
+                    user.setFollowers(followers);
+                    user.setFollowing(followers);
+                    friends.add(user);
+                }
+                delegate.onResultReady(friends);
+            }
+        }).execute();
     }
 
     //Get list of party information
-    public static List<Party> getPartyListObjects(List<String> partyIdList) {
-        List<Party> partyObjs = new ArrayList<>();
-        for (String id : partyIdList) {
-            partyObjs.add(getPartyObject(id));
+    public static void getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
+        RequestComponents[] comps = new RequestComponents[partyIdList.size()];
+        for ( int i = 0; i < comps.length; i++ ) {
+            String url = context.getString(R.string.server_url) + "users/" + partyIdList.get(i)
+                    + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+            comps[i] = new RequestComponents(url, "GET", null);
         }
-        return partyObjs;
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<Party> parties = new ArrayList<>();
+                for ( int i = 0; i < result.size(); i++ ) {
+                    HashMap<String, String> body = new HashMap<>();
+                    try {
+                        JSONObject main_json = new JSONObject(result.get(0));
+                        JSONObject data = main_json.getJSONObject("data");
+                        Iterator iterKey = data.keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getString(key));
+                        }
+                    } catch (JSONException e) {e.printStackTrace();}
+
+                    Log.d("CurUser_GetPartyInfo", result.get(0));
+                    parties.add(constructParty(body));
+                }
+                delegate.onResultReady(parties);
+            }}).execute();
     }
-//
-//    //Get user information
-//    public static User getUserObject(String id) {
-//        if ( id.equals("1") )
-//            return dummy.getFriend1();
-//        else if ( id.equals("2") )
-//            return dummy.getFriend2();
-//        else if ( id.equals("3") )
-//            return dummy.getFriend3();
-//        else if ( id.equals("4") )
-//            return dummy.getFriend4();
-//        else if ( id.equals("5") )
-//            return dummy.getFriend5();
-//        else
-//            return dummy.getFriend1();
-//    }
-//
-//    //Get party information
-//    public static Party getPartyObject(String id) {
-//        if ( id.equals("1") )
-//            return dummy.getParty1();
-//        else if ( id.equals("2") )
-//            return dummy.getParty2();
-//        else if ( id.equals("3") )
-//            return dummy.getParty3();
-//        else if ( id.equals("4") )
-//            return dummy.getParty4();
-//        else if ( id.equals("5") )
-//            return dummy.getParty5();
-//        else
-//            return dummy.getParty1();
-//    }
 
     //Get user information
-    public static User getUserObject(String userID) {
+    public static void getUserObject(String userID, final OnResultReadyListener<User> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
-        String result = null;
-        try {
-            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>(){
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                HashMap<String, String> body = new HashMap<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONObject data = main_json.getJSONObject("data");
+                    Iterator iterKey = data.keys();
+                    while (iterKey.hasNext()) {
+                        String key = (String) iterKey.next();
+                        body.put(key, data.getString(key));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-        HashMap<String, String> body = new HashMap<>();
-        try {
-            JSONObject main_json = new JSONObject(result);
-            JSONObject data = main_json.getJSONObject("data");
-            Iterator iterKey = data.keys();
-            while (iterKey.hasNext()) {
-                String key = (String) iterKey.next();
-                body.put(key, data.getString(key));
+                Log.d("CurUser_GetUserInfo", result.get(0));
+                User user = constructUser(body);
+
+                //testing purpose
+                ArrayList<String> followers = new ArrayList<>();
+                followers.add("11");
+                followers.add("12");
+                followers.add("13");
+                followers.add("14");
+                followers.add("15");
+                user.setFollowers(followers);
+                user.setFollowing(followers);
+
+                delegate.onResultReady(user);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.d("CurUser_GetUserInfo", result);
-        User user = constructUser(body);
-
-        //testing purpose
-        ArrayList<String> followers = new ArrayList<>();
-        followers.add("11");
-        followers.add("12");
-        followers.add("13");
-        followers.add("14");
-        followers.add("15");
-        user.setFollowers(followers);
-        user.setFollowing(followers);
-
-        return user;
+        }).execute();
     }
 
     //Get party information
-    public static Party getPartyObject(String partyID) {
+    public static void getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = context.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
-        String result = null;
-        try {
-            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
 
-        HashMap<String, String> body = new HashMap<>();
-        try {
-            JSONObject main_json = new JSONObject(result);
-            JSONObject data = main_json.getJSONObject("data");
-            Iterator iterKey = data.keys();
-            while (iterKey.hasNext()) {
-                String key = (String) iterKey.next();
-                body.put(key, data.getString(key));
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                HashMap<String, String> body = new HashMap<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONObject data = main_json.getJSONObject("data");
+                    Iterator iterKey = data.keys();
+                    while (iterKey.hasNext()) {
+                        String key = (String) iterKey.next();
+                        body.put(key, data.getString(key));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_GetPartyInfo", result.get(0));
+                delegate.onResultReady(constructParty(body));
+            }}).execute();
+    }
+
+    //Get user following
+    public static void getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "/followings?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<User> followings = new ArrayList<>();
+                try {
+                    JSONArray list = new JSONArray(result.get(0));
+                    for ( int i = 0; i < list.length(); i++ ) {
+
+                        HashMap<String, String> body = new HashMap<>();
+                        JSONObject main_json = list.getJSONObject(i);
+                        JSONObject data = main_json.getJSONObject("data");
+                        Iterator iterKey = data.keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getString(key));
+                        }
+                        followings.add(constructUser(body));
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                delegate.onResultReady(followings);
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.d("CurUser_GetPartyInfo", result);
-        return constructParty(body);
+        }).execute();
     }
 
     //Fill in all party information
@@ -280,40 +352,37 @@ public final class CurrentUser {
         return user;
     }
 
-    //Get user following
-    public static List<User> getUserFollowing(String userID) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followings?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
-
-        String result = null;
-        try {
-            result = new DatabaseAccess.HttpRequestTask(context, url, "GET", null).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<User> followings = new ArrayList<>();
-        try {
-            JSONArray list = new JSONArray(result);
-            for ( int i = 0; i < list.length(); i++ ) {
-
-                HashMap<String, String> body = new HashMap<>();
-                JSONObject main_json = list.getJSONObject(i);
-                JSONObject data = main_json.getJSONObject("data");
-                Iterator iterKey = data.keys();
-                while (iterKey.hasNext()) {
-                    String key = (String) iterKey.next();
-                    body.put(key, data.getString(key));
-                }
-                followings.add(constructUser(body));
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return followings;
-    }
-
+    //
+//    //Get user information
+//    public static User getUserObject(String id) {
+//        if ( id.equals("1") )
+//            return dummy.getFriend1();
+//        else if ( id.equals("2") )
+//            return dummy.getFriend2();
+//        else if ( id.equals("3") )
+//            return dummy.getFriend3();
+//        else if ( id.equals("4") )
+//            return dummy.getFriend4();
+//        else if ( id.equals("5") )
+//            return dummy.getFriend5();
+//        else
+//            return dummy.getFriend1();
+//    }
+//
+//    //Get party information
+//    public static Party getPartyObject(String id) {
+//        if ( id.equals("1") )
+//            return dummy.getParty1();
+//        else if ( id.equals("2") )
+//            return dummy.getParty2();
+//        else if ( id.equals("3") )
+//            return dummy.getParty3();
+//        else if ( id.equals("4") )
+//            return dummy.getParty4();
+//        else if ( id.equals("5") )
+//            return dummy.getParty5();
+//        else
+//            return dummy.getParty1();
+//    }
 
 }

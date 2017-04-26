@@ -13,9 +13,11 @@ import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +26,7 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link MyEventsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MyEventsFragment#newInstance} factory method to
+ * Use the {@link MyEventsFragment} factory method to
  * create an instance of this fragment.
  */
 public class MyEventsFragment extends Fragment {
@@ -74,15 +76,23 @@ public class MyEventsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        MyEventsFragment thisFragment = this;
+        final MyEventsFragment thisFragment = this;
         DummyUser dummyUser = new DummyUser(getActivity());
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
-        List<Party> partyList = CurrentUser.getPartyListObjects(dummyUser.getAttending());
-        ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
-        myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));
 
+        final List<Party> partyList = new ArrayList<>();
+        CurrentUser.getPartyListObjects(dummyUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if ( result != null ) {
+                    partyList.addAll(result);
+                    ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
+                    myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(), thisFragment, partyList));
+                }
+            }
+        });
     }
 
     /**

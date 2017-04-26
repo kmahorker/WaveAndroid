@@ -14,6 +14,7 @@ import com.thewavesocial.waveandroid.AdaptersFolder.StatsHostBouncerCustomAdapte
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 
 import java.util.ArrayList;
@@ -29,9 +30,18 @@ public class EventStatsActivity extends AppCompatActivity
         setContentView(R.layout.host_event_stats);
 
         Intent intent = getIntent();
-        party = CurrentUser.getPartyObject(intent.getExtras().getString("partyIDLong"));
+        party = new Party();
+        CurrentUser.getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
+            @Override
+            public void onResultReady(Party result) {
+                if ( result != null ) {
+                    party = result;
+                    setupReferences();
+                    setupActionbar();
+                }
+            }
+        });
 
-        setupReferences();
         setupActionbar();
     }
 
@@ -46,10 +56,15 @@ public class EventStatsActivity extends AppCompatActivity
         earnedText.setText("Amount earned     $" + party.getPrice()*party.getAttendingUsers().size());
         attendedText.setText("# of people checked in: " + party.getAttendingUsers().size());
 
-        List<User> sample = new ArrayList(); //added friend list 3 times for testing purpose
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        final List<User> sample = new ArrayList();
+        CurrentUser.getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                if ( result != null ) {
+                    sample.addAll(result);
+                }
+            }
+        });
 
         LinearLayoutManager layoutManagerHost= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManagerBounce= new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);

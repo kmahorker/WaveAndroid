@@ -13,6 +13,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -90,8 +91,16 @@ public class ManageEventsActivity extends AppCompatActivity
         manageListView = (ListView) findViewById(R.id.manageEvents_listview);
         searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
         searchView.setIconifiedByDefault(false);
-        partyList = CurrentUser.getPartyListObjects(dummy.getHosted());
-        CurrentUser.setContext(this);
+        partyList = new ArrayList<>();
+        CurrentUser.getPartyListObjects(dummy.getHosted(), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if ( result != null ) {
+                    partyList.addAll(result);
+                }
+            }
+        });
+
         manageListView.setAdapter(new ManagePartyCustomAdapter(this, partyList));
     }
 

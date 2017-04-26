@@ -46,6 +46,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -91,14 +92,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupHeightVariables();
         setupSearchbar();
 
-        HashMap<String, String> body = new HashMap<>();
-        body.put("image_path", "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
-        DatabaseAccess.updateUser(mainActivity, "10", body);
-        DatabaseAccess.updateUser(mainActivity, "11", body);
-        DatabaseAccess.updateUser(mainActivity, "12", body);
-        DatabaseAccess.updateUser(mainActivity, "13", body);
-        DatabaseAccess.updateUser(mainActivity, "14", body);
-        DatabaseAccess.updateUser(mainActivity, "15", body);
+//        HashMap<String, String> body = new HashMap<>();
+//        body.put("image_path", "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
+//        DatabaseAccess.updateUser(mainActivity, "10", body);
+//        DatabaseAccess.updateUser(mainActivity, "11", body);
+//        DatabaseAccess.updateUser(mainActivity, "12", body);
+//        DatabaseAccess.updateUser(mainActivity, "13", body);
+//        DatabaseAccess.updateUser(mainActivity, "14", body);
+//        DatabaseAccess.updateUser(mainActivity, "15", body);
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -317,10 +318,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public void addParties(GoogleMap googleMap, List<String> partyIDs) {
-        for (String party : partyIDs) {
-            LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
-            if (loc != null)
-                addParty(party, loc);
+        for (String id : partyIDs) {
+            final Party[] party = {new Party()};
+            final LatLng[] loc = new LatLng[1];
+            CurrentUser.getPartyObject(id, new OnResultReadyListener<Party>() {
+                @Override
+                public void onResultReady(Party result) {
+                    if ( result != null ) {
+                        party[0] = result;
+                        loc[0] = party[0].getMapAddress().getAddress_latlng();
+                    }
+                }
+            });
+            if (loc[0] != null)
+                addParty(id, loc[0]);
         }
     }
 

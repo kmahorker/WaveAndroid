@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -39,10 +40,18 @@ public class FriendProfileActivity extends AppCompatActivity {
         // access current friend data
         Intent intent = getIntent();
         userID = intent.getExtras().getString("userIDLong");
-        friend = CurrentUser.getUserObject(userID);
+        friend = new User();
+        CurrentUser.getUserObject(userID, new OnResultReadyListener<User>() {
+            @Override
+            public void onResultReady(User result) {
+                if ( friend != null ) {
+                    friend = result;
+                    setupProfileInfo();
+                }
+            }
+        });
         //TODO: getUserObject(long id) from database class
 
-        setupProfileInfo();
         setupActionbar();
     }
 
@@ -104,9 +113,13 @@ public class FriendProfileActivity extends AppCompatActivity {
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
 
-        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, friend.getProfilePic());
-        if (image != null)
-            profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+        UtilityClass.getBitmapFromURL(mainActivity, friend.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
 
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
                 friend.getNotifications2()));

@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.AdaptersFolder.CustomAdapter;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -25,6 +27,8 @@ import java.util.List;
 
 public class FriendsListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
+    private FragmentActivity mainActivity;
+    private FriendsListFragment mainFragment;
 
     public FriendsListFragment() {
 
@@ -50,15 +54,26 @@ public class FriendsListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final FriendsListFragment fragment = this;
+        mainFragment = this;
+        mainActivity = getActivity();
         DummyUser dummy = new DummyUser(getActivity()); //TODO: FOR TESTING ONLY
 
         ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
-        final List<User> friendsUsers = CurrentUser.getUsersListObjects(dummy.getFollowers());
-        final CustomAdapter adapt = new CustomAdapter(getActivity(), this, friendsUsers);
-        friendsListView.setAdapter(adapt);
+        final List<User> friendsUsers = new ArrayList<>();
+        CurrentUser.getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                if ( result != null ) {
+                    friendsUsers.addAll(result);
+                    final CustomAdapter adapt = new CustomAdapter(mainActivity, mainFragment, friendsUsers);
+                    friendsListView.setAdapter(adapt);
+                }
+            }
+        });
+
 
         ImageView inviteFriends = (ImageView) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {

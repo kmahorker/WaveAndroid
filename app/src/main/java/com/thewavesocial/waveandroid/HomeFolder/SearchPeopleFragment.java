@@ -15,6 +15,7 @@ import com.thewavesocial.waveandroid.AdaptersFolder.SearchEventCustomAdapter;
 import com.thewavesocial.waveandroid.AdaptersFolder.SearchPeopleCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -36,7 +37,13 @@ public class SearchPeopleFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
-        final List<User> userList = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers());
+        final List<User> userList = new ArrayList<>();
+        CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                userList.addAll(result);
+            }
+        });
         // TODO: 04/19/2017 How to search database?
 
         peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,

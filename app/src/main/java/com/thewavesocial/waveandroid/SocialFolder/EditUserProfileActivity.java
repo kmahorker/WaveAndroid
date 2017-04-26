@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -127,9 +128,13 @@ public class EditUserProfileActivity extends AppCompatActivity {
         edit_bday.setFocusable(false);
         edit_address.setText(user.getMapAddress().getAddress_string());
 
-        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic());
-        if (image != null)
-            profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
 
         username.setText(user.getFullName());
     }

@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.ManagePartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -36,12 +38,18 @@ public class HostControllerFragment extends Fragment
         mainActivity = (HomeSwipeActivity) getActivity();
 
         ImageView createButton = (ImageView) mainActivity.findViewById(R.id.home_hostView_image_createEvent);
-        ListView manageList = (ListView) mainActivity.findViewById(R.id.home_hostView_list_manageEvents);
+        final ListView manageList = (ListView) mainActivity.findViewById(R.id.home_hostView_list_manageEvents);
 
-        List<String> sample = new ArrayList<>();
+        final List<String> sample = new ArrayList<>();
         sample.addAll(CurrentUser.theUser.getHosted());
-        sample.addAll(CurrentUser.theUser.getHosted());
-        manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, CurrentUser.getPartyListObjects(sample)));
+        CurrentUser.getPartyListObjects(sample, new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if ( result != null ) {
+                    manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result ));
+                }
+            }
+        });
 
         createButton.setOnClickListener(new View.OnClickListener()
         {

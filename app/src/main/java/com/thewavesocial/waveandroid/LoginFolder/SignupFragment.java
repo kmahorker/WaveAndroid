@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -252,9 +253,13 @@ public class SignupFragment extends Fragment
         final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
 
 
-        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, mainActivity.profilePic);
-        if (image != null)
-            profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+        UtilityClass.getBitmapFromURL(mainActivity, mainActivity.profilePic, new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
 
         profilepic.setOnClickListener(new View.OnClickListener()
         {

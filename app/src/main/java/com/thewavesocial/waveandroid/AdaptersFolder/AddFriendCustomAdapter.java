@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.SocialFolder.InviteFriendsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -79,9 +80,13 @@ public class AddFriendCustomAdapter extends BaseAdapter {
             //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
 
-            Bitmap image = UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic());
-            if (image != null)
-                holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+            UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap image) {
+                    if (image != null)
+                        holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+                }
+            });
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

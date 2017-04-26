@@ -3,10 +3,12 @@ package com.thewavesocial.waveandroid.SocialFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -73,14 +76,27 @@ public class FollowActivity extends AppCompatActivity {
         });
 
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
-        List<User> follows = new ArrayList<>();
+        final List<User> follows = new ArrayList<>();
 
-        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) //Changed to getUsersListObjects()
-            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowers() );
-        else if (pageType == UserProfileFragment.PopupPage.FOLLOWING)
-            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowing() );
+        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
+            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+                @Override
+                public void onResultReady(List<User> result) {
+                    follows.addAll(result);
+                    Log.d("Sizeeeeeeeeeeeeeeee", follows.size() + "" );
+                    followUsersList.setAdapter(new FollowersAdapter(followActivity, R.layout.follow_user_row, follows));
+                }
+            });
+        } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
+            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+                @Override
+                public void onResultReady(List<User> result) {
+                    follows.addAll(result);
+                    followUsersList.setAdapter(new FollowersAdapter(followActivity, R.layout.follow_user_row, follows));
+                }
+            });
+        }
 
-        followUsersList.setAdapter(new FollowersAdapter(this, R.layout.follow_user_row, follows));
     }
 
     public void setupFollowActionbar() {
@@ -127,10 +143,15 @@ public class FollowActivity extends AppCompatActivity {
 
                 final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
                 if (userImage != null) {
-                    Bitmap image = UtilityClass.getBitmapFromURL(followActivity, user.getProfilePic());
-                    if (image != null) {
-                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
-                    }
+                    UtilityClass.getBitmapFromURL(followActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                        @Override
+                        public void onResultReady(Bitmap result) {
+                            Bitmap image = result;
+                            if (image != null) {
+                                userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
+                            }
+                        }
+                    });
                 }
 
                 final TextView name = (TextView) v.findViewById(R.id.iv_follow_row_user_name);

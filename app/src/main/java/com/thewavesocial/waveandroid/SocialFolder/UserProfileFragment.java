@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -94,9 +95,13 @@ public class UserProfileFragment extends Fragment {
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
 
         Log.d("Bitmapppp", user.getProfilePic() + "");
-        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic());
-        if (image != null)
-            profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
 
         notification_listview.setAdapter( new UserNotificationCustomAdapter(getActivity(), CurrentUser.theUser.getNotifications1()));
         following_textview.setOnClickListener(new View.OnClickListener() {

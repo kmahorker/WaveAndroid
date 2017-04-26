@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -74,7 +75,7 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
-            Holder holder = new Holder();
+            final Holder holder = new Holder();
             View rowView;
             rowView = inflater.inflate(R.layout.each_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.friendName);
@@ -83,9 +84,13 @@ public class CustomAdapter extends BaseAdapter {
             holder.tv.setText(userList.get(position).getFullName());
             //holder.img.setImageResource(R.drawable.happy_house); //testing
 
-            Bitmap image = UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic());
-            if (image != null)
-                holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+            UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap image) {
+                    if (image != null)
+                        holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+                }
+            });
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

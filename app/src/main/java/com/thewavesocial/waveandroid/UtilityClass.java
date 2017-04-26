@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,6 +40,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -113,12 +115,13 @@ public final class UtilityClass
                 .show();
     }
 
-    public static Bitmap getBitmapFromURL(Activity mainActivity, String url) {
-        try {
-            return new ImageRequestTask(mainActivity, url).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+    public static Bitmap getBitmapFromURL(Activity mainActivity, String url, final OnResultReadyListener<Bitmap> delegate) {
+        new ImageRequestTask(mainActivity, url, new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap result) {
+                delegate.onResultReady(result);
+            }
+        }).execute();
         return null;
     }
 
@@ -126,20 +129,33 @@ public final class UtilityClass
         private String url;
         private Activity mainActivity;
         private ProgressDialog progress;
+        private Handler handler;
+        private Runnable run;
+        private OnResultReadyListener delegate;
 
-        public ImageRequestTask(Activity mainActivity, String url) {
+        public ImageRequestTask(Activity mainActivity, String url, OnResultReadyListener<Bitmap> delegate) {
             this.url = url;
             this.mainActivity = mainActivity;
+            this.delegate = delegate;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progress = new ProgressDialog(mainActivity);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setTitle("Please wait");
             progress.setMessage("Connecting to Server...");
             progress.setCancelable(false);
-            progress.show();
+
+            handler = new Handler();
+            run = new Runnable() {
+                @Override
+                public void run() {
+                    progress.show();
+                }
+            };
+            handler.postDelayed(run, 3000);
         }
 
         @Override
@@ -149,7 +165,10 @@ public final class UtilityClass
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            progress.dismiss();
+            if ( progress.isShowing() )
+                progress.dismiss();
+            handler.removeCallbacks(run);
+            delegate.onResultReady(bitmap);
         }
 
         //http://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap

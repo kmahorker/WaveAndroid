@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -33,9 +35,16 @@ public class OptionsFragment extends Fragment {
         ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
         user = CurrentUser.theUser;
-        CurrentUser.setContext(getActivity());
+        CurrentUser.setContext(getActivity(), new OnResultReadyListener<Boolean>() {
+            @Override
+            public void onResultReady(Boolean result) {
+                if ( result )
+                    setupOnClickListeners();
+                else
+                    Log.d("OptionsFragment", "Setup User Context Failed...");
+            }
+        });
 
-        setupOnClickListeners();
     }
 
     //set all option onClick events

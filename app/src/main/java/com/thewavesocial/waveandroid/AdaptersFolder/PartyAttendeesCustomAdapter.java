@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
@@ -53,11 +54,15 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position)
+    public void onBindViewHolder(final ViewHolder holder, final int position)
     {
-        Bitmap image = UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic());
-        if (image != null)
-            holder.imgView.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+        UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    holder.imgView.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+            }
+        });
 
         holder.imgView.setOnClickListener(new View.OnClickListener()
         {
