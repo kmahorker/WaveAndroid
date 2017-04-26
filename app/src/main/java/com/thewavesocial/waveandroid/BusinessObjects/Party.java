@@ -31,9 +31,9 @@ public class Party
     private List<Long> bouncingUsers;
     private List<Long> attendingUsers;
     private boolean isPublic;
-    private BitmapDrawable partyEmoji;
-    //private int minAge;
-    //private int maxAge;
+    private String partyEmoji;
+    private int minAge;
+    private int maxAge;
 
     public Party()
     {
@@ -46,7 +46,9 @@ public class Party
         mapAddress = new MapAddress();
         attendingUsers = new ArrayList<Long>();
         isPublic = false;
-        partyEmoji = new BitmapDrawable();
+        partyEmoji = "";
+        minAge = 0;
+        maxAge = 0;
     }
 
     public Party(
@@ -60,8 +62,8 @@ public class Party
             List<Long> hostingUsers,
             List<Long> bouncingUsers,
             List<Long> attendingUsers,
-            boolean isPublic, BitmapDrawable partyEmoji
-            /*,int minAge, int maxAge*/)
+            boolean isPublic, String partyEmoji
+            ,int minAge, int maxAge)
     {
         this.partyID = partyID;
         this.name = name;
@@ -75,8 +77,8 @@ public class Party
         this.attendingUsers = attendingUsers;
         this.isPublic = isPublic;
         this.partyEmoji = partyEmoji;
-        /*this.minAge = minAge;
-        this.maxAge = maxAge;*/
+        this.minAge = minAge;
+        this.maxAge = maxAge;
     }
 
     //Delete
@@ -209,17 +211,17 @@ public class Party
         return name;
     }
 
-    public BitmapDrawable getPartyEmoji()
+    public String getPartyEmoji()
     {
         return partyEmoji;
     }
 
-    public void setPartyEmoji(BitmapDrawable partyEmoji)
+    public void setPartyEmoji(String partyEmoji)
     {
         this.partyEmoji = partyEmoji;
     }
 
-    /*public int getMinAge() {
+    public int getMinAge() {
         return minAge;
     }
 
@@ -233,7 +235,7 @@ public class Party
 
     public void setMaxAge(int maxAge) {
         this.maxAge = maxAge;
-    }*/
+    }
 
     //protected Party(Parcel in) {
 //        partyID = in.readLong();

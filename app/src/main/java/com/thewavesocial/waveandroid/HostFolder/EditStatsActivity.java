@@ -75,6 +75,7 @@ public class EditStatsActivity extends AppCompatActivity {
         endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
         endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
         emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
+        emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
         rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.editEventAgeRestrictionSeekBar);
     }

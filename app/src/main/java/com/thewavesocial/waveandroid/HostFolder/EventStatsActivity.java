@@ -171,10 +171,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         latlng = party.getMapAddress().getAddress_latlng();
         Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
         marker.setTag(party.getPartyID());
-        if ( party.getPartyEmoji() == null )
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(CurrentUser.theUser.getProfilePic(), 150, 150)));
-        else
-            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(party.getPartyEmoji(), 150, 150)));
+        if ( party.getPartyEmoji() != "" )
+            marker.setTitle(party.getPartyEmoji()); //TODO: 4/25/17 Make this the actual custom pin
+                    //setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(CurrentUser.theUser.getProfilePic(), 150, 150)));
+        //else
+        //    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(party.getPartyEmoji(), 150, 150)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, (float) 15.0));
     }
 
