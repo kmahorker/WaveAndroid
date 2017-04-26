@@ -412,7 +412,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 rangeSeekBar.setSelectedMinValue(NewPartyInfo.minAge);
                 rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
             }
-
         }
 
         private void setupEmojiconEditText(View v){

@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/editEventEmojiRelativeLayout">
             <github.ankushsachdeva.emojicon.EmojiconEditText
-                android:id="@+id/emojiconEditText"
+                android:id="@+id/editEventEmojiconEditText"
                 android:layout_width="125dp"
                 android:layout_height="125dp"
                 android:layout_centerInParent="true"

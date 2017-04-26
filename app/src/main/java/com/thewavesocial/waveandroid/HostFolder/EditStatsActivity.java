@@ -6,21 +6,52 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.SwitchCompat;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.R;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
+
+import java.util.Calendar;
+
+import github.ankushsachdeva.emojicon.EmojiconGridView;
+import github.ankushsachdeva.emojicon.EmojiconsPopup;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import io.github.rockerhieu.emojicon.EmojiconEditText;
+
 public class EditStatsActivity extends AppCompatActivity {
     private Activity mainActivity;
     private TextView deleteButton;
-    @Override
+    TextView startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
+    EditText titleEditText, locationEditText;
+    EmojiconEditText emojiconEditText;
+    EmojiconsPopup popup;
+    SwitchCompat privateSwitch;
+    boolean privateParty = false;
+    RangeSeekBar<Integer> rangeSeekBar;
+    Integer RANGE_AGE_MIN = 17;
+    Integer RANGE_AGE_MAX = 40;
+    Integer RANGE_AGE_SELECTED_MIN = 17;
+    Integer RANGE_AGE_SELECTED_MAX = 30;
+
+    //Activity thisActivity = this;
+    static Calendar startCalendar = Calendar.getInstance();
+    static Calendar endCalendar = Calendar.getInstance();
+    String DATE_FORMAT = "MMM d, yyyy";
+    String TIME_FORMAT = "h:mm a";
+
+
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats_edit);
         mainActivity = this;
         setupActionbar();
         setupReference();
+        setUpEmojicon();
         setupFunctionality();
     }
 
@@ -37,6 +68,56 @@ public class EditStatsActivity extends AppCompatActivity {
 
     private void setupReference() {
         deleteButton = (TextView) findViewById(R.id.delete_button);
+        titleEditText = (EditText)findViewById(R.id.editEventEventTitleEditText);
+        locationEditText = (EditText)findViewById(R.id.editEventLocationEditText);
+        startDateTextView = (TextView) findViewById(R.id.editEventStartDateTextView);
+        startTimeTextView = (TextView) findViewById(R.id.editEventStartTimeTextView);
+        endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
+        endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
+        emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
+        privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
+        rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.editEventAgeRestrictionSeekBar);
+    }
+
+    private void setUpEmojicon(){
+        final View rootView = findViewById(R.id.scrollViewCreateAnEvent);
+        popup = new EmojiconsPopup(rootView, this);
+        popup.setSizeForSoftKeyboard();
+        popup.setOnSoftKeyboardOpenCloseListener(new EmojiconsPopup.OnSoftKeyboardOpenCloseListener() {
+
+            @Override
+            public void onKeyboardOpen(int keyBoardHeight) {
+
+            }
+
+            @Override
+            public void onKeyboardClose() {
+                if(popup.isShowing())
+                    popup.dismiss();
+            }
+        });
+
+        popup.setOnEmojiconClickedListener(new EmojiconGridView.OnEmojiconClickedListener() {
+            @Override
+            public void onEmojiconClicked(Emojicon emojicon) {
+                if (emojiconEditText == null || emojicon == null) {
+                    return;
+                }
+                else{
+                    emojiconEditText.setText(emojicon.getEmoji());
+                }
+            }
+        });
+
+        popup.setOnEmojiconBackspaceClickedListener(new EmojiconsPopup.OnEmojiconBackspaceClickedListener() {
+
+            @Override
+            public void onEmojiconBackspaceClicked(View v) {
+                KeyEvent event = new KeyEvent(
+                        0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+                emojiconEditText.dispatchKeyEvent(event);
+            }
+        });
     }
 
     private void setupActionbar() {
@@ -70,7 +151,7 @@ public class EditStatsActivity extends AppCompatActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 04/20/2017 Update server
+                // TODO: 04/20/2017 Update server: update party object
                 onBackPressed();
             }
         });
