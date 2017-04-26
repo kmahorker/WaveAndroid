@@ -12,6 +12,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -175,6 +176,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
     private void processJSONObject(JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
+        Log.d("Facebook JSON", json.toString());
         //new JSONParsingTask("Specific URL with Facebook ID").execute();
         try
         {
@@ -186,8 +188,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 finish();
             }
             if ( Integer.parseInt(json.getString("age_range").substring(
-                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 )
-            {
+                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
                 UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
                 return;
             }
@@ -235,33 +236,33 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
-                    User newUser = new User(Long.parseLong(json.getString("id")),
-                            json.getString("first_name"),
-                            json.getString("last_name"),
-                            json.getString("email"),
-                            "password" /*TODO: delete password field*/,
-                            "UCSB" /*TODO: delete college field*/,
-                            json.getString("gender"),
-                            1231231234 /*TODO: delte ph#*/,
-                            new MapAddress(),
-                            calendar,
-                            new ArrayList<Long>(), //followers
-                            new ArrayList<Long>(), //following
-                            new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-                            new ArrayList<Long>(), //hosting
-                            new ArrayList<Long>(), //attended
-                            new ArrayList<Long>(), //hosted
-                            new ArrayList<Long>(), //bounced
-                            new ArrayList<Long>(), //attending
-                            new ArrayList<Notification>(),
-                            new ArrayList<Notification>(),
-                            profilePic);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+//                Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+//                BitmapDrawable profilePic = new BitmapDrawable(bitmap);
+
+                String name = json.getString("name");
+
+                User newUser = new User(Long.parseLong(json.getString("id")),
+                        name.substring(0, name.lastIndexOf(' ')),
+                        name.substring(name.lastIndexOf(' ') + 1),
+                        json.getString("email"),
+                        "password" /*TODO: delete password field*/,
+                        "UCSB" /*TODO: delete college field*/,
+                        json.getString("gender"),
+                        1231231234 /*TODO: delte ph#*/,
+                        new MapAddress(),
+                        calendar,
+                        new ArrayList<Long>(), //followers
+                        new ArrayList<Long>(), //following
+                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
+                        new ArrayList<Long>(), //hosting
+                        new ArrayList<Long>(), //attended
+                        new ArrayList<Long>(), //hosted
+                        new ArrayList<Long>(), //bounced
+                        new ArrayList<Long>(), //attending
+                        new ArrayList<Notification>(),
+                        new ArrayList<Notification>(),
+                        new BitmapDrawable());
                 //TODO: Add user object to Database
             }
         }
