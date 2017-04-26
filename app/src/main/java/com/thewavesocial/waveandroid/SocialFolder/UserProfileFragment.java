@@ -115,10 +115,11 @@ public class UserProfileFragment extends Fragment {
                 changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-//                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttending()), 0));
+                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttending()), 0));
             }
         });
 
+        activityButton.performClick();
     }
 
 
