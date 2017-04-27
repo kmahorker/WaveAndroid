@@ -35,5 +35,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.journeyapps:zxing-android-embedded:3.4.0'
+    //compile 'com.journeyapps:zxing-android-embedded:3.4.0'
+    compile 'me.sudar:zxing-orient:2.1.1@aar'
 }

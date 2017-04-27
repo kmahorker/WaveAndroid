@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
@@ -24,12 +22,15 @@ import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import me.sudar.zxingorient.ZxingOrient;
+import me.sudar.zxingorient.ZxingOrientResult;
+
 public class HomeSwipeActivity extends AppCompatActivity {
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
     private HomeSwipeActivity mainActivity;
-    private IntentIntegrator qrScanner;
+    //private IntentIntegrator qrScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +127,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
 
-        qrScanner = new IntentIntegrator(this);
+        //qrScanner = new IntentIntegrator(this);
         ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_host_image_plug);
         plug_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +139,13 @@ public class HomeSwipeActivity extends AppCompatActivity {
         qrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qrScanner.initiateScan();
+                ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
+                zxingOrient.setInfo("Scan QR Code");
+                zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
+                zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
+                zxingOrient.setIcon(R.drawable.plug_icon);
+                zxingOrient.initiateScan();
+
             }
         });
     }
@@ -158,7 +165,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult qrResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
         if ( qrResult != null ){
             if ( qrResult.getContents() != null ){
                 try {
