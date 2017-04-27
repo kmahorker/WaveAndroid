@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -60,7 +61,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
     RecyclerView invitedRecyclerView, bouncingRecylcerView;
 
-    Party party;
+    static Party party;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,9 @@ public class EditStatsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
         NewPartyInfo.initialize();
-        
+        startCalendar = NewPartyInfo.startingDateTime;
+        endCalendar = NewPartyInfo.endingDateTime;
+
         setupActionbar();
         setupReference();
         setUpEmojicon();
@@ -280,9 +283,11 @@ public class EditStatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 04/20/2017 Update server: update party object
-                if (checkInfo())
-                    savePage();
-                onBackPressed();
+                savePage();
+                if (checkInfo()) {
+                    NewPartyInfo.composeParty();
+                    onBackPressed();
+                }
             }
         });
     }
@@ -303,6 +308,7 @@ public class EditStatsActivity extends AppCompatActivity {
             return false;
         }
         else if(startCalendar.compareTo(endCalendar) >= 0){
+            Log.d("Date", startCalendar.get(Calendar.DATE) + ", " + endCalendar.get(Calendar.DATE) + "");
             UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
             return false;
         }
@@ -354,18 +360,18 @@ public class EditStatsActivity extends AppCompatActivity {
         static int minAge;
         static int maxAge;
         public static void initialize() {
-            name = "";
-            price = 0;
-            hostName = "";
-            startingDateTime = null;
-            endingDateTime = null;
-            hostingUsers = new ArrayList<>();
-            bouncingUsers = new ArrayList<>();
-            attendingUsers = new ArrayList<>();
-            isPublic = true;
-            partyEmoji = "";
-            minAge = -1;
-            maxAge = -1;
+            name = party.getName();
+            price = party.getPrice();
+            hostName = party.getHostName();
+            startingDateTime = party.getStartingDateTime();
+            endingDateTime = party.getEndingDateTime();
+            hostingUsers = party.getHostingUsers();
+            bouncingUsers = party.getBouncingUsers();
+            attendingUsers = party.getAttendingUsers();
+            isPublic = party.getIsPublic();
+            partyEmoji = party.getPartyEmoji();
+            minAge = party.getMinAge();
+            maxAge = party.getMaxAge();
         }
         public static void composeParty(){
 //            Party party = new Party(
