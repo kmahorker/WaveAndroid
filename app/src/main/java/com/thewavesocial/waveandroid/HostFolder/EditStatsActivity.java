@@ -58,6 +58,7 @@ public class EditStatsActivity extends AppCompatActivity {
     static Calendar endCalendar = Calendar.getInstance();
     String DATE_FORMAT = "MMM d, yyyy";
     String TIME_FORMAT = "h:mm a";
+    String CALLING_CLASS = "EditEvent";
 
     RecyclerView invitedRecyclerView, bouncingRecylcerView;
 
@@ -126,7 +127,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(mainActivity);
                 popup.dismiss();
                 DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
-                        startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                        startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                        CALLING_CLASS);
                 dialogFragment.setDateDisplay(startDateTextView);
                 dialogFragment.show(mainActivity.getFragmentManager(), "datePicker");
             }
@@ -140,7 +142,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(mainActivity);
                 popup.dismiss();
                 TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
-                        startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                        startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                        CALLING_CLASS);
                 timePickerDialogFragment.setTimeTextView(startTimeTextView);
                 timePickerDialogFragment.show(mainActivity.getFragmentManager(), "timePicker");
             }
@@ -154,7 +157,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(mainActivity);
                 popup.dismiss();
                 DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
-                        endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                        endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                        CALLING_CLASS);
                 dialogFragment.setDateDisplay(endDateTextView);
                 dialogFragment.show(mainActivity.getFragmentManager(), "datePicker");
             }
@@ -168,7 +172,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(mainActivity);
                 popup.dismiss();
                 TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
-                        endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                        endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                        CALLING_CLASS);
                 timePickerDialogFragment.setTimeTextView(endTimeTextView);
                 timePickerDialogFragment.show(mainActivity.getFragmentManager(), "timePicker");
             }
@@ -283,8 +288,8 @@ public class EditStatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 04/20/2017 Update server: update party object
-                savePage();
                 if (checkInfo()) {
+                    savePage();
                     NewPartyInfo.composeParty();
                     onBackPressed();
                 }

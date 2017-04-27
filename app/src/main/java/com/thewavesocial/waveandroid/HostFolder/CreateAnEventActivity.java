@@ -176,6 +176,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static Calendar endCalendar = Calendar.getInstance();
         String DATE_FORMAT = "MMM d, yyyy";
         String TIME_FORMAT = "h:mm a";
+        String CALLING_CLASS = "CreateAnEvent";
 
         @Nullable
         @Override
@@ -288,7 +289,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
-                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                            CALLING_CLASS);
                     dialogFragment.setDateDisplay(startDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
                 }
@@ -303,7 +305,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
-                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                            CALLING_CLASS);
                     timePickerDialogFragment.setTimeTextView(startTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
                 }
@@ -317,7 +320,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
                     DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
-                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                            CALLING_CLASS);
                     dialogFragment.setDateDisplay(endDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
                 }
@@ -337,7 +341,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
                     TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
-                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                            CALLING_CLASS);
                     timePickerDialogFragment.setTimeTextView(endTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
                 }
