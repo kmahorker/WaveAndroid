@@ -41,6 +41,14 @@
         <activity android:name=".LoginFolder.ForgotPasswordActivity" />
         <activity android:name=".LoginFolder.StartupActivity" />
         <activity android:name=".SocialFolder.FollowActivity" />
+      
+        <activity android:name=".HostFolder.CreateAnEventActivity" />
+        <activity android:name=".LoginFolder.AddBestFriendActivity" />
+
+
+        <activity android:name=".HomeSwipeActivity"
+                  android:windowSoftInputMode="adjustPan">
+          
         <activity android:name=".HostFolder.EditStatsActivity" />
         <activity
             android:name=".HomeSwipeActivity"
@@ -50,6 +58,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".LoginFolder.LoginTutorialActivity">
         </activity>
         <activity android:name=".LoginFolder.AddBestFriendActivity" />

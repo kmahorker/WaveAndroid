@@ -36,4 +36,6 @@ dependencies {
     compile 'io.github.rockerhieu:emojiconize:1.0.0'
     compile project(':lib')
     testCompile 'junit:junit:4.12'
+    //compile 'com.journeyapps:zxing-android-embedded:3.4.0'
+    compile 'me.sudar:zxing-orient:2.1.1@aar'
 }

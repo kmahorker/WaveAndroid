@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -11,17 +12,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import me.sudar.zxingorient.ZxingOrient;
+import me.sudar.zxingorient.ZxingOrientResult;
+
 public class HomeSwipeActivity extends AppCompatActivity {
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
     private HomeSwipeActivity mainActivity;
+    //private IntentIntegrator qrScanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,11 +128,25 @@ public class HomeSwipeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
 
+        //qrScanner = new IntentIntegrator(this);
         ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_host_image_plug);
         plug_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            }
+        });
+        ImageView qrButton = (ImageView) findViewById(R.id.actionbar_host_qrsymbol);
+        qrButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
+                zxingOrient.setInfo("Scan QR Code");
+                zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
+                zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
+                zxingOrient.setIcon(R.drawable.plug_icon);
+                zxingOrient.initiateScan();
+
             }
         });
     }
@@ -139,5 +162,31 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
+        if ( qrResult != null ){
+            if ( qrResult.getContents() != null ){
+                try {
+                    JSONObject json = new JSONObject(qrResult.getContents());
+                    long party_id = json.getLong("party_id");
+                    long user_id = json.getLong("user_id");
+                    validateUserAndParty(user_id, party_id);
+                } catch (JSONException e) {
+                    Toast.makeText(this, "JSON Parsing Error", Toast.LENGTH_LONG).show();
+                }
+            } 
+            else
+                Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
+        }
+        else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void validateUserAndParty(long user_id, long party_id) {
+        Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
+        // TODO: 04/02/2017 Check with database
     }
 }
