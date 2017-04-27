@@ -102,28 +102,28 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         this.hour = hourOfDay;
         this.minute = minute;
-        calendar.set(Calendar.HOUR,hourOfDay);
+        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
         calendar.set(Calendar.MINUTE,minute);
         //timeTextView.setText(timeFormat.format(CreateAnEventActivity.CreateEventPage1.startCalendar.getTime()));
         switch (callingClass){
             case 1:
                 if(timeTextView.equals(getActivity().findViewById(R.id.startTimeTextView))) {
 
-                    CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR));
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                     CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 }
                 else if(timeTextView.equals(getActivity().findViewById(R.id.endTimeTextView))) {
-                    CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR));
+                    CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                     CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 }
                 break;
                 case 2:
                     if(timeTextView.equals(getActivity().findViewById(R.id.editEventStartTimeTextView))) {
-                        EditStatsActivity.startCalendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR));
+                        EditStatsActivity.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                         EditStatsActivity.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                     }
                     else if(timeTextView.equals(getActivity().findViewById(R.id.editEventEndTimeTextView))) {
-                        EditStatsActivity.endCalendar.set(Calendar.HOUR, calendar.get(Calendar.HOUR));
+                        EditStatsActivity.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                         EditStatsActivity.endCalendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE));
                     }
                     break;
