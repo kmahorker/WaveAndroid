@@ -18,7 +18,7 @@
         android:label="PLUG"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:node="replace">
+        tools:replace="android:label, android:icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -46,9 +46,6 @@
         <activity android:name=".LoginFolder.AddBestFriendActivity" />
 
 
-        <activity android:name=".HomeSwipeActivity"
-                  android:windowSoftInputMode="adjustPan">
-          
         <activity android:name=".HostFolder.EditStatsActivity" />
         <activity
             android:name=".HomeSwipeActivity"
@@ -61,8 +58,7 @@
 
         <activity android:name=".LoginFolder.LoginTutorialActivity">
         </activity>
-        <activity android:name=".LoginFolder.AddBestFriendActivity" />
-        <activity android:name=".HostFolder.CreateAnEventActivity" />
+
     </application>
 
 </manifest>
