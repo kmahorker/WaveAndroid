@@ -21,7 +21,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 public class FriendProfileActivity extends AppCompatActivity {
     private User friend; //TODO: Remove Empty User
-    private long userID;
+    private String userID;
     private TextView followers_textview, following_textview, follow_button;
     private ListView notification_listview;
     private ImageView profilepic_imageview;
@@ -37,8 +37,8 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         // access current friend data
         Intent intent = getIntent();
-        userID = intent.getExtras().getLong("userIDLong");
-        friend = CurrentUser.getUserObject(userID);
+        friend = (User) intent.getExtras().get("userObject");
+        userID = friend.getUserID();
         //TODO: getUserObject(long id) from database class
 
         setupProfileInfo();
@@ -103,8 +103,8 @@ public class FriendProfileActivity extends AppCompatActivity {
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
         if (friend.getProfilePic() != null) {
-            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                    friend.getProfilePic().getBitmap()));
+            // TODO: 04/21/2017 Add image by URL
+//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friend.getProfilePic().getBitmap()));
         }
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
                 friend.getNotifications2()));

@@ -74,3 +74,4 @@ public class MapAddress implements Parcelable {
         }
     };
 }
+

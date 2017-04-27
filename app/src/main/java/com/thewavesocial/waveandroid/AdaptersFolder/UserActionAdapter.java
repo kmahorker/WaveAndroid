@@ -104,7 +104,8 @@ public class UserActionAdapter extends BaseAdapter {
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
         if (sender.getProfilePic() != null)
-            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+            //TODO: Get Image from URL
+            //holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
         holder.sender.setText(sender.getFirstName());
         holder.notifmessage.setText(notifList.get(position).getMessage());
         holder.timeAgo.setText("28m");
@@ -112,7 +113,7 @@ public class UserActionAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });
@@ -120,7 +121,7 @@ public class UserActionAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });
@@ -128,7 +129,7 @@ public class UserActionAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });

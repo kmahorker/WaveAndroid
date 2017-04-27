@@ -47,7 +47,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.host_event_stats);
         mainActivity = this;
         Intent intent = getIntent();
-        party = CurrentUser.getPartyObject(intent.getExtras().getLong("partyIDLong"));
+        party = getIntent().getExtras().getParcelable("partyObject");
         callerType = intent.getExtras().getInt("callerActivity");
 
         setupMapElements();

@@ -50,7 +50,7 @@ public class PartyProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
-        party = CurrentUser.getPartyObject(getArguments().getLong("partyIDLong"));
+        party = CurrentUser.getPartyObject(getArguments().getString("partyIDLong"));
 
         setupReferences();
         setupOnClicks();
@@ -140,7 +140,7 @@ public class PartyProfileFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //                long id = CurrentUser.getUserObject(party.getHostingUsers().get(0)).getHosted().get(i);
 //                openPartyProfile(id);
-                long id = CurrentUser.theUser.getHosted().get(i);
+                String id = CurrentUser.theUser.getHosted().get(i);
                 openPartyProfile(id); // TODO: 03/08/2017 Testing Purpose
             }
         });
@@ -152,10 +152,10 @@ public class PartyProfileFragment extends Fragment {
         }
     }
 
-    private void openPartyProfile(long partyID) {
+    private void openPartyProfile(String partyID) {
         Fragment fragment = new PartyProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("partyIDLong", partyID);
+        bundle.putString("partyIDLong", partyID);
         fragment.setArguments(bundle);
 
         FragmentManager fm = mainActivity.getSupportFragmentManager();

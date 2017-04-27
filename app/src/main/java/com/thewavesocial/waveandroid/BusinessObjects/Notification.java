@@ -1,11 +1,13 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Wei-Tung on 02/18/2017.
  * Stores all notifications:
  */
-public class Notification
-{
+public class Notification implements Parcelable {
     public static final int type1FollowingNotice = 1;
     public static final int type2HostingNotice = 2;
     public static final int type3AttendingNotice = 3;
@@ -16,7 +18,7 @@ public class Notification
     public static final int type8FriendAttendedNotice = 8;
     private String message;
     private int requestType;
-    private long senderID;
+    private String senderID;
 
     public Notification()
     {
@@ -24,7 +26,7 @@ public class Notification
         requestType = 0;
     }
 
-    public Notification( long senderID, int requestType )
+    public Notification( String senderID, int requestType )
     {
         if ( requestType == type1FollowingNotice )
         {
@@ -86,13 +88,44 @@ public class Notification
         this.requestType = requestType;
     }
 
-    public long getSenderID()
+    public String getSenderID()
     {
         return senderID;
     }
 
-    public void setSenderID(long senderID)
+    public void setSenderID(String senderID)
     {
         this.senderID = senderID;
     }
+
+    protected Notification(Parcel in) {
+        message = in.readString();
+        requestType = in.readInt();
+        senderID = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(message);
+        dest.writeInt(requestType);
+        dest.writeString(senderID);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Notification> CREATOR = new Parcelable.Creator<Notification>() {
+        @Override
+        public Notification createFromParcel(Parcel in) {
+            return new Notification(in);
+        }
+
+        @Override
+        public Notification[] newArray(int size) {
+            return new Notification[size];
+        }
+    };
 }

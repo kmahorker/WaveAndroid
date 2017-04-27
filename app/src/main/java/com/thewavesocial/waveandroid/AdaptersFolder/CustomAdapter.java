@@ -79,11 +79,9 @@ public class CustomAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.each_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.friendName);
             holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
-            //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
-            //holder.img.setImageResource(R.drawable.happy_house); //testing //TODO Change to user's image
-            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(),
-                    userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
+            // TODO: 04/21/2017 Add image by URL
+//            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(), userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

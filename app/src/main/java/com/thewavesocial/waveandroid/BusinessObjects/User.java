@@ -3,6 +3,8 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 //import android.media.Image;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,76 +18,76 @@ import java.util.List;
  * - Wei Tung
  */
 //public class User implements Parcelable
-public class User
-{
-    private long userID;
+public class User implements Parcelable {
+    private String userID;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     private String college;
     private String gender;
-    private long phone;
+    private String phone;
     private MapAddress mapAddress;
     private Calendar birthday;
     private List<BestFriend> bestFriends;
-    private List<Long> followers;
-    private List<Long> following;
+    private List<String> followers;
+    private List<String> following;
     //Below contain list of PartyIDs
-    private List<Long> hosting;
-    private List<Long> attended;
-    private List<Long> hosted;
-    private List<Long> bounced;
-    private List<Long> attending;
+    private List<String> hosting;
+    private List<String> attended;
+    private List<String> hosted;
+    private List<String> bounced;
+    private List<String> attending;
     private List<Notification> notifications1;
     private List<Notification> notifications2;
-    private BitmapDrawable profilePic;
+    private String profilePic;
 
     public User()
     {
-        userID = 0;
+        userID = "0";
         firstName = "";
         lastName = "";
         email = "";
         password = "";
         college = "";
         gender = "";
-        phone = 0;
+        phone = "0";
         mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
         hosting = new ArrayList<>();
-        attended = new ArrayList<Long>();
-        hosted = new ArrayList<Long>();
-        bounced = new ArrayList<Long>();
-        attending = new ArrayList<Long>();
+        attended = new ArrayList<>();
+        hosted = new ArrayList<>();
+        bounced = new ArrayList<>();
+        attending = new ArrayList<>();
         notifications1 = new ArrayList<>();
         notifications2 = new ArrayList<>();
-        profilePic = new BitmapDrawable(); //TODO Use different constructor
+        profilePic = ""; //TODO Use different constructor
     }
 
-    public User(Long userID,
+    public User(String userID,
                 String firstName,
                 String lastName,
                 String email,
                 String password,
                 String college,
                 String gender,
-                long phone,
+                String phone,
                 MapAddress mapAddress,
                 Calendar birthday,
-                List<Long> followers,
-                List<Long> following,
+                List<String> followers,
+                List<String> following,
                 List<BestFriend> bestFriends,
-                List<Long> hosting, List<Long> attended,
-                List<Long> hosted,
-                List<Long> bounced,
-                List<Long> attending,
+                List<String> hosting,
+                List<String> attended,
+                List<String> hosted,
+                List<String> bounced,
+                List<String> attending,
                 List<Notification> notifications1,
                 List<Notification> notifications2,
-                BitmapDrawable profilePic)
+                String profilePic)
     {
         this.userID = userID;
         this.firstName = firstName;
@@ -111,7 +113,7 @@ public class User
     }
 
     //Setter Block
-    public void setUserID(long userID)
+    public void setUserID(String userID)
     {
         this.userID = userID;
     }
@@ -161,29 +163,29 @@ public class User
         this.bestFriends = bestFriends;
     }
 
-    public void setAttended(List<Long> attended)
+    public void setAttended(List<String> attended)
     {
         this.attended = attended;
     }
 
-    public void setHosted(List<Long> hosted)
+    public void setHosted(List<String> hosted)
     {
         this.hosted = hosted;
     }
 
-    public void setBounced(List<Long> bounced)
+    public void setBounced(List<String> bounced)
     {
         this.bounced = bounced;
     }
 
-    public void setAttending(List<Long> attending) {
+    public void setAttending(List<String> attending) {
         this.attending = attending;
     }
 
-    public void setProfilePic(BitmapDrawable profilePic) { this.profilePic = profilePic; }
+    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
 
     //Getter Block
-    public long getUserID()
+    public String getUserID()
     {
         return userID;
     }
@@ -233,28 +235,28 @@ public class User
         return bestFriends;
     }
 
-    public List<Long> getAttended()
+    public List<String> getAttended()
     {
         return attended;
     }
 
-    public List<Long> getHosted()
+    public List<String> getHosted()
     {
         return hosted;
     }
 
-    public List<Long> getBounced()
+    public List<String> getBounced()
     {
         return bounced;
     }
 
 
-    public List<Long> getAttending()
+    public List<String> getAttending()
     {
         return attending;
     }
 
-    public BitmapDrawable getProfilePic()
+    public String getProfilePic()
     {
         return profilePic;
     }
@@ -279,147 +281,200 @@ public class User
         this.notifications2 = notifications2;
     }
 
-    public long getPhone()
+    public String getPhone()
     {
         return phone;
     }
 
-    public void setPhone(long phone)
+    public void setPhone(String phone)
     {
         this.phone = phone;
     }
 
-    public List<Long> getFollowers()
+    public List<String> getFollowers()
     {
         return followers;
     }
 
-    public void setFollowers(List<Long> followers)
+    public void setFollowers(List<String> followers)
     {
         this.followers = followers;
     }
 
-    public List<Long> getFollowing()
+    public List<String> getFollowing()
     {
         return following;
     }
 
-    public void setFollowing(List<Long> following)
+    public void setFollowing(List<String> following)
     {
         this.following = following;
     }
 
-    @Override
-    public String toString() {
-        return getFullName();
+    protected User(Parcel in) {
+        userID = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        password = in.readString();
+        college = in.readString();
+        gender = in.readString();
+        phone = in.readString();
+        mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
+        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            bestFriends = new ArrayList<BestFriend>();
+            in.readList(bestFriends, BestFriend.class.getClassLoader());
+        } else {
+            bestFriends = null;
+        }
+        if (in.readByte() == 0x01) {
+            followers = new ArrayList<String>();
+            in.readList(followers, String.class.getClassLoader());
+        } else {
+            followers = null;
+        }
+        if (in.readByte() == 0x01) {
+            following = new ArrayList<String>();
+            in.readList(following, String.class.getClassLoader());
+        } else {
+            following = null;
+        }
+        if (in.readByte() == 0x01) {
+            hosting = new ArrayList<String>();
+            in.readList(hosting, String.class.getClassLoader());
+        } else {
+            hosting = null;
+        }
+        if (in.readByte() == 0x01) {
+            attended = new ArrayList<String>();
+            in.readList(attended, String.class.getClassLoader());
+        } else {
+            attended = null;
+        }
+        if (in.readByte() == 0x01) {
+            hosted = new ArrayList<String>();
+            in.readList(hosted, String.class.getClassLoader());
+        } else {
+            hosted = null;
+        }
+        if (in.readByte() == 0x01) {
+            bounced = new ArrayList<String>();
+            in.readList(bounced, String.class.getClassLoader());
+        } else {
+            bounced = null;
+        }
+        if (in.readByte() == 0x01) {
+            attending = new ArrayList<String>();
+            in.readList(attending, String.class.getClassLoader());
+        } else {
+            attending = null;
+        }
+        if (in.readByte() == 0x01) {
+            notifications1 = new ArrayList<Notification>();
+            in.readList(notifications1, Notification.class.getClassLoader());
+        } else {
+            notifications1 = null;
+        }
+        if (in.readByte() == 0x01) {
+            notifications2 = new ArrayList<Notification>();
+            in.readList(notifications2, Notification.class.getClassLoader());
+        } else {
+            notifications2 = null;
+        }
+        profilePic = in.readString();
     }
 
-    //    //http://www.parcelabler.com/
-//    //Allows putExtra(String, Parcelable Obj)
-//    protected User(Parcel in) {
-//        userID = in.readLong();
-//        firstName = in.readString();
-//        lastName = in.readString();
-//        email = in.readString();
-//        password = in.readString();
-//        college = in.readString();
-//        gender = in.readString();
-//        //mapAddress = in.readString();
-//        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
-//        if (in.readByte() == 0x01) {
-//            bestFriends = new ArrayList<Long>();
-//            in.readList(bestFriends, Long.class.getClassLoader());
-//        } else {
-//            bestFriends = null;
-//        }
-//        if (in.readByte() == 0x01) {
-//            followers = new ArrayList<Long>();
-//            in.readList(followers, Long.class.getClassLoader());
-//        } else {
-//            followers = null;
-//        }
-//        if (in.readByte() == 0x01) {
-//            attended = new ArrayList<Long>();
-//            in.readList(attended, Long.class.getClassLoader());
-//        } else {
-//            attended = null;
-//        }
-//        if (in.readByte() == 0x01) {
-//            hosted = new ArrayList<Long>();
-//            in.readList(hosted, Long.class.getClassLoader());
-//        } else {
-//            hosted = null;
-//        }
-//        if (in.readByte() == 0x01) {
-//            bounced = new ArrayList<Long>();
-//            in.readList(bounced, Long.class.getClassLoader());
-//        } else {
-//            bounced = null;
-//        }
-//        Bitmap bitmap = (Bitmap)in.readParcelable(getClass().getClassLoader());
-//        profilePic = new BitmapDrawable(bitmap);
-//    }
-//
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeLong(userID);
-//        dest.writeString(firstName);
-//        dest.writeString(lastName);
-//        dest.writeString(email);
-//        dest.writeString(password);
-//        dest.writeString(college);
-//        dest.writeString(gender);
-//        //dest.writeString(mapAddress);
-//        dest.writeValue(birthday);
-//        if (bestFriends == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(bestFriends);
-//        }
-//        if (followers == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(followers);
-//        }
-//        if (attended == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(attended);
-//        }
-//        if (hosted == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(hosted);
-//        }
-//        if (bounced == null) {
-//            dest.writeByte((byte) (0x00));
-//        } else {
-//            dest.writeByte((byte) (0x01));
-//            dest.writeList(bounced);
-//        }
-//        Bitmap bitmap = profilePic.getBitmap();
-//        dest.writeParcelable(bitmap, flags);
-//    }
-//
-//    @SuppressWarnings("unused")
-//    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-//        @Override
-//        public User createFromParcel(Parcel in) {
-//            return new User(in);
-//        }
-//
-//        @Override
-//        public User[] newArray(int size) {
-//            return new User[size];
-//        }
-//    };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userID);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeString(college);
+        dest.writeString(gender);
+        dest.writeString(phone);
+        dest.writeValue(mapAddress);
+        dest.writeValue(birthday);
+        if (bestFriends == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bestFriends);
+        }
+        if (followers == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(followers);
+        }
+        if (following == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(following);
+        }
+        if (hosting == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(hosting);
+        }
+        if (attended == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(attended);
+        }
+        if (hosted == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(hosted);
+        }
+        if (bounced == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(bounced);
+        }
+        if (attending == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(attending);
+        }
+        if (notifications1 == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(notifications1);
+        }
+        if (notifications2 == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(notifications2);
+        }
+        dest.writeString(profilePic);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 }

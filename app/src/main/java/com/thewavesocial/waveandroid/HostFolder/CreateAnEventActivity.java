@@ -584,7 +584,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return friends.get(position);
             }
             @Override public long getItemId(int position) {
-                return friends.get(position).getUserID();
+                return position;
             }
             @Override public View getView(final int position, View convertView, ViewGroup parent) {
                 final Holder holder;
@@ -599,7 +599,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
+                //TODO: Get image from URL
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
                 if ( invites.contains( getItem(position) ) )
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
@@ -656,8 +657,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return userList.size();
             }
             @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                        userList.get(position).getProfilePic().getBitmap()));
+                //TODO: Get image from URL
+//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+//                        userList.get(position).getProfilePic().getBitmap()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
@@ -750,7 +752,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return friends.get(position);
             }
             @Override public long getItemId(int position) {
-                return friends.get(position).getUserID();
+                return position;
             }
             @Override public View getView(final int position, View convertView, ViewGroup parent) {
                 final Holder holder;
@@ -766,7 +768,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
 
-                holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
+                //TODO: Get image from URL
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
 
                 if ( invites.contains( getItem(position) ) )
@@ -825,8 +828,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return userList.size();
             }
             @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-                        userList.get(position).getProfilePic().getBitmap()));
+//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
+//                        userList.get(position).getProfilePic().getBitmap()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
@@ -852,9 +855,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static Calendar startingDateTime;
         static Calendar endingDateTime;
         static MapAddress mapAddress;
-        static List<Long> hostingUsers;
-        static List<Long> bouncingUsers;
-        static List<Long> attendingUsers;
+        static List<String> hostingUsers;
+        static List<String> bouncingUsers;
+        static List<String> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;

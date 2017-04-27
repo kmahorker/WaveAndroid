@@ -83,6 +83,8 @@ public class ManagePartyCustomAdapter extends BaseAdapter
 
         if ( party.getPartyEmoji() != "" ) {
             holder.partyEmoji.setText(party.getPartyEmoji());
+            // TODO: 04/21/2017 Add image by url
+//            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText( getCustomInfoText( party ) );
@@ -92,7 +94,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("callerActivity", EventStatsActivity.activityHostFragment);
-                intent.putExtra("partyIDLong", partyList.get(position).getPartyID());
+                intent.putExtra("partyObject", partyList.get(position));
                 mainActivity.startActivity(intent);
             }
         });

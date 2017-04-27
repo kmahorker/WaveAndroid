@@ -421,9 +421,9 @@ public class EditStatsActivity extends AppCompatActivity {
         static Calendar startingDateTime;
         static Calendar endingDateTime;
         static MapAddress mapAddress;
-        static List<Long> hostingUsers;
-        static List<Long> bouncingUsers;
-        static List<Long> attendingUsers;
+        static List<String> hostingUsers;
+        static List<String> bouncingUsers;
+        static List<String> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;

@@ -63,7 +63,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
     private Marker cur_loc_marker;
-    private List<Long> partyList;
+    private List<String> partyList;
     private GoogleMap mMap;
     private LatLng loc;
 
@@ -301,7 +301,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParty(long partyID, LatLng loc) {
+    public void addParty(String partyID, LatLng loc) {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
@@ -309,8 +309,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParties(GoogleMap googleMap, List<Long> partyIDs) {
-        for (long party : partyIDs) {
+    public void addParties(GoogleMap googleMap, List<String> partyIDs) {
+        for (String party : partyIDs) {
             LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
             if (loc != null)
                 addParty(party, loc);

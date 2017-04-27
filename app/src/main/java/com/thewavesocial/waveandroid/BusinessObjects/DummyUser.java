@@ -21,27 +21,27 @@ public class DummyUser extends User
 
     public DummyUser(Context context)
     {
-        super((long) 0,
+        super("",
                 "DummyLongNAME",
                 "MarioLongNAME",
                 "dmario@ucsb.edu",
                 "dmario123",
                 "Cornell",
                 "Male",
-                0000000000,
+                "0000000000",
                 new MapAddress("Pardall Gardens, Isla Vista, CA 93117", new LatLng(34.413331,-119.854490)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending,
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
+                "");
 
         setupDummy(context);
         setupUserObjects(context);
@@ -83,57 +83,55 @@ public class DummyUser extends User
         friend.getNotifications2().add( new Notification( this.getFriend3().getUserID(), Notification.type8FriendAttendedNotice ) );
     }
 
-    public List<User> getFriendsListObjects(List<Long> userIdList)
+    public List<User> getFriendsListObjects(List<String> userIdList)
     {
         List<User> friendObjs = new ArrayList<User>();
-        for(long id : userIdList){
+        for(String id : userIdList){
             friendObjs.add(getFriendObject(id));
         }
         return friendObjs;
     }
 
-    public User getFriendObject(long id)
+    public User getFriendObject(String id)
     {
-        switch ((int) id)
-        {
-            case 1:
-                return friend1;
-            case 2:
-                return friend2;
-            case 3:
-                return friend3;
-            case 4:
-                return friend4;
-            case 5:
-                return friend5;
-            default:
-                return friend1;
+        if ( id.equals("1") ) {
+            return friend1;
+        } else if ( id.equals("2") ) {
+            return friend2;
+        } else if ( id.equals("3") ) {
+            return friend3;
+        } else if ( id.equals("4") ) {
+            return friend4;
+        } else if ( id.equals("5") ) {
+            return friend5;
+        } else {
+            return friend1;
         }
     }
 
-    public List<Party> getPartyListObjects(List<Long> partyIdList)
+    public List<Party> getPartyListObjects(List<String> partyIdList)
     {
         List<Party> partyObjs = new ArrayList<>();
-        for(long id: partyIdList){
+        for(String id: partyIdList){
             partyObjs.add(getPartyObject(id));
         }
         return partyObjs;
     }
 
-    public Party getPartyObject(long id)
+    public Party getPartyObject(String id)
     {
-        switch ((int) id)
-        {
-            case 2:
-                return party2;
-            case 3:
-                return party3;
-            case 4:
-                return party4;
-            case 5:
-                return party5;
-            default:
-                return party1;
+        if ( id.equals("1") ) {
+            return party1;
+        } else if ( id.equals("2") ) {
+            return party2;
+        } else if ( id.equals("3") ) {
+            return party3;
+        } else if ( id.equals("4") ) {
+            return party4;
+        } else if ( id.equals("5") ) {
+            return party5;
+        } else {
+            return party1;
         }
     }
 
@@ -145,56 +143,57 @@ public class DummyUser extends User
         this.getBestFriends().add(new BestFriend("BFF2", "1231231235"));
 
         //setup followers list
-        this.getFollowers().add((long) 1);
-        this.getFollowers().add((long) 2);
-        this.getFollowers().add((long) 3);
-        this.getFollowers().add((long) 4);
-        this.getFollowers().add((long) 5);
-        this.getFollowers().add((long) 1);
-        this.getFollowers().add((long) 2);
-        this.getFollowers().add((long) 3);
+        this.getFollowers().add("1");
+        this.getFollowers().add("2");
+        this.getFollowers().add("3");
+        this.getFollowers().add("4");
+        this.getFollowers().add("5");
+        this.getFollowers().add("1");
+        this.getFollowers().add("2");
+        this.getFollowers().add("3");
 
         //setup following list
-        this.getFollowing().add((long) 1);
-        this.getFollowing().add((long) 2);
-        this.getFollowing().add((long) 3);
-        this.getFollowing().add((long) 4);
-        this.getFollowing().add((long) 5);
+        this.getFollowing().add("1");
+        this.getFollowing().add("2");
+        this.getFollowing().add("3");
+        this.getFollowing().add("4");
+        this.getFollowing().add("5");
 
         //setup party attended list
-        this.getAttended().add((long) 1);
-        this.getAttended().add((long) 2);
-        this.getAttended().add((long) 3);
-        this.getAttended().add((long) 4);
-        this.getAttended().add((long) 5);
+        this.getAttended().add("1");
+        this.getAttended().add("2");
+        this.getAttended().add("3");
+        this.getAttended().add("4");
+        this.getAttended().add("5");
 
         //setup party hosted list
-        this.getHosted().add((long) 1);
-        this.getHosted().add((long) 2);
-        this.getHosted().add((long) 3);
-        this.getHosted().add((long) 4);
-        this.getHosted().add((long) 5);
+        this.getHosted().add("1");
+        this.getHosted().add("2");
+        this.getHosted().add("3");
+        this.getHosted().add("4");
+        this.getHosted().add("5");
 
         //setup party bounced list
-        this.getBounced().add((long) 1);
-        this.getBounced().add((long) 2);
-        this.getBounced().add((long) 3);
-        this.getBounced().add((long) 4);
-        this.getBounced().add((long) 5);
+        this.getBounced().add("1");
+        this.getBounced().add("2");
+        this.getBounced().add("3");
+        this.getBounced().add("4");
+        this.getBounced().add("5");
 
-        this.getAttending().add((long) 1);
-        this.getAttending().add((long) 2);
-        this.getAttending().add((long) 3);
-        this.getAttending().add((long) 4);
-        this.getAttending().add((long) 5);
+        this.getAttending().add("1");
+        this.getAttending().add("2");
+        this.getAttending().add("3");
+        this.getAttending().add("4");
+        this.getAttending().add("5");
 
-        this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+        // TODO: 04/21/2017 Add image by url
+//        this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
     }
 
     private void setupPartyObjects(Context context)
     {
         party1 = new Party(
-                1,
+                "1",
                 "Super Party 1",
                 0,
                 "Super Mario",
@@ -204,7 +203,7 @@ public class DummyUser extends User
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true, "\u1f602", 17, 22);
         party2 = new Party(
-                2,
+                "2",
                 "Super Party 2",
                 0,
                 "Super Mario",
@@ -214,7 +213,7 @@ public class DummyUser extends User
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true, "\u1f60d", 19, 30);
         party3 = new Party(
-                3,
+                "3",
                 "Super Party 3",
                 0,
                 "Super Mario",
@@ -224,7 +223,7 @@ public class DummyUser extends User
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true, "\u1f648", 35, 40 );
         party4 = new Party(
-                4,
+                "4",
                 "Super Party 4 LongName for layout TESTING Text wrapping Multiple Lines Longer Event Here Making It Longer!",
                 50,
                 "Super Mario",
@@ -234,7 +233,7 @@ public class DummyUser extends User
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
                 true, "\u1f631", 21, 25);
         party5 = new Party(
-                5,
+                "5",
                 "Super Party 5",
                 100,
                 "Super Mario",
@@ -259,127 +258,128 @@ public class DummyUser extends User
 
     private void setupUserObjects(Context context)
     {
-        friend1 = new User((long) 1,
+        friend1 = new User("1",
                 "Happy",
                 "Friend1",
                 "h1@ucsb.edu",
                 "happy1",
                 "MIT",
                 "Female",
-                0000000000,
+                "0000000",
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
-        friend2 = new User((long) 2,
+                "");
+        friend2 = new User("2",
                 "Sad",
                 "Friend2",
                 "s2@ucsb.edu",
                 "sad2",
                 "Cornell",
                 "Female",
-                0000000000,
+                "0000000000",
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
-        friend3 = new User((long) 3,
+                "");
+        friend3 = new User("3",
                 "Boring",
                 "Friend3",
                 "b3@ucsb.edu",
                 "boring3",
                 "UCB",
                 "Male",
-                0000000000,
+                "0000000000",
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
-        friend4 = new User((long) 4,
+                "");
+        friend4 = new User("4",
                 "Angry",
                 "Friend4",
                 "a4@ucsb.edu",
                 "angry4",
                 "UCSD",
                 "Male",
-                0000000000,
+                "0000000000",
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
-        friend5 = new User((long) 5,
+                "");
+        friend5 = new User("5",
                 "Lit",
                 "Friend5",
                 "l5@ucsb.edu",
                 "lit5",
                 "UCSB",
                 "Other",
-                0000000000,
+                "0000000000",
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 Calendar.getInstance(),
-                new ArrayList<Long>(), //best friend list
-                new ArrayList<Long>(), //follower list
+                new ArrayList<String>(), //best friend list
+                new ArrayList<String>(), //follower list
                 new ArrayList<BestFriend>(), //following list
-                new ArrayList<Long>(), //attending list
-                new ArrayList<Long>(), //party attended list
-                new ArrayList<Long>(), //party hosted list
-                new ArrayList<Long>(), //party bounced list,
-                new ArrayList<Long>(),
+                new ArrayList<String>(), //attending list
+                new ArrayList<String>(), //party attended list
+                new ArrayList<String>(), //party hosted list
+                new ArrayList<String>(), //party bounced list
+                new ArrayList<String>(),
                 new ArrayList<Notification>(), //notifications1
                 new ArrayList<Notification>(), //notifications2
-                new BitmapDrawable());
+                "");
         friend1.getBirthday().set(1997, 1, 2);
         friend2.getBirthday().set(1998, 2, 3);
         friend3.getBirthday().set(1999, 3, 4);
         friend4.getBirthday().set(1990, 4, 5);
         friend5.getBirthday().set(1991, 5, 6);
 
-        friend1.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
-        friend2.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
-        friend3.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
-        friend4.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
-        friend5.setProfilePic(new BitmapDrawable(context.getResources(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+        // TODO: 04/21/2017 Add image by url
+//        friend1.setProfilePic(new BitmapDrawable(context.getResources(),
+//                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+//        friend2.setProfilePic(new BitmapDrawable(context.getResources(),
+//                BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
+//        friend3.setProfilePic(new BitmapDrawable(context.getResources(),
+//                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+//        friend4.setProfilePic(new BitmapDrawable(context.getResources(),
+//                BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
+//        friend5.setProfilePic(new BitmapDrawable(context.getResources(),
+//                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
 
         setupFriendNotifications2(friend1);
         setupFriendNotifications2(friend2);

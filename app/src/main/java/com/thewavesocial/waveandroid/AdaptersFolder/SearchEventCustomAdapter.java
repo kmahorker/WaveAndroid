@@ -75,6 +75,8 @@ public class SearchEventCustomAdapter extends BaseAdapter
         if ( party.getPartyEmoji() != null )
         {
             holder.image.setText(party.getPartyEmoji());
+            // TODO: 04/21/2017 Add image by url
+//            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
 
         holder.name.setText(party.getName());
