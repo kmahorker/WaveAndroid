@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,16 @@ public class EditStatsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats_edit);
         mainActivity = this;
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.editEventEmojiRelativeLayout);
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                UtilityClass.hideKeyboard(getActivity());
+                popup.dismiss();
+                return true;
+            }
+        });
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
         NewPartyInfo.initialize();
@@ -115,9 +126,27 @@ public class EditStatsActivity extends AppCompatActivity {
 
         titleEditText = (EditText)findViewById(R.id.editEventEventTitleEditText);
         titleEditText.setText(party.getName());
+        titleEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(popup.isShowing()){
+                    popup.dismiss();
+                }
+                return false;
+            }
+        });
 
         locationEditText = (EditText)findViewById(R.id.editEventLocationEditText);
         locationEditText.setText(party.getMapAddress().getAddress_string());
+        locationEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(popup.isShowing()){
+                    popup.dismiss();
+                }
+                return false;
+            }
+        });
 
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
