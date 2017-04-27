@@ -189,7 +189,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -198,7 +198,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if(!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -211,7 +211,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -339,8 +339,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
+        if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+            y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
+        }
+        Log.d ( "TRUE?", y + ", " + separatorHeight
+                + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
         if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
-                && y > UtilityClass.getScreenHeight(mainActivity) - mapHeight + 30
+                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
