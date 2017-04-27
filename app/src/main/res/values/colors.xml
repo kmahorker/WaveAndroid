@@ -21,4 +21,6 @@
 
     <color name="grey_solid">#848484</color>
 
+    <color name="grey_default">#808080</color>
+
 </resources>

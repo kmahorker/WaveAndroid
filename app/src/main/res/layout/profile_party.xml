@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/partyprofile_host_label"
-        android:layout_width="80dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:text="Host"
         android:textColor="#000"
@@ -44,7 +44,7 @@
 
     <TextView
         android:id="@+id/partyprofile_location_label"
-        android:layout_width="80dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:text="Location"
         android:textColor="#000"
@@ -68,7 +68,7 @@
 
     <TextView
         android:id="@+id/partyprofile_time_label"
-        android:layout_width="80dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:text="Time"
         android:textColor="#000"
@@ -93,7 +93,7 @@
 
     <TextView
         android:id="@+id/partyprofile_price_label"
-        android:layout_width="80dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:text="Price"
         android:textColor="#000"
@@ -105,7 +105,7 @@
 
     <TextView
         android:id="@+id/partyprofile_price"
-        android:layout_width="150dp"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:text="$5"
         android:textColor="#000"
@@ -123,7 +123,7 @@
         android:text="GO"
         android:textSize="28sp"
         android:textColor="#FFF"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
         android:layout_alignTop="@id/partyprofile_host_label"
         android:background="@drawable/round_shape_appcolor"
@@ -136,7 +136,7 @@
         android:text="Friends that are also going"
         android:textColor="#8e8e8e"
         android:textSize="17sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@id/partyprofile_price_label"/> <!--Attendee Label-->
 
     <android.support.v7.widget.RecyclerView
@@ -154,13 +154,13 @@
         android:text="Events Hosted"
         android:textColor="#8e8e8e"
         android:textSize="17sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@id/partyprofile_attendee_list"/> <!--Hosted Label-->
 
     <ListView
         android:id="@+id/partyprofile_eventsHosted_list"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:layout_marginEnd="30dp"
         android:layout_below="@id/partyprofile_eventsHosted_label"/> <!--Hosted List-->
 

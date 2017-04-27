@@ -8,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
+
+import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class SearchEventCustomAdapter extends BaseAdapter
 {
@@ -21,8 +25,7 @@ public class SearchEventCustomAdapter extends BaseAdapter
     private List<Party> partyList;
     private static LayoutInflater inflater;
 
-    public SearchEventCustomAdapter(Activity mainActivity, List<Party> partyList)
-    {
+    public SearchEventCustomAdapter(Activity mainActivity, List<Party> partyList) {
         super();
         this.partyList = partyList;
         this.mainActivity = mainActivity;
@@ -30,66 +33,62 @@ public class SearchEventCustomAdapter extends BaseAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return partyList.size();
     }
 
     @Override
-    public Party getItem(int position)
-    {
+    public Party getItem(int position) {
         return partyList.get(position);
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
     public class Holder
     {
-        ImageView image;
+        EmojiconTextView image;
         TextView name;
         TextView go;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Holder holder;
         View layoutView = convertView;
-        if(convertView == null)
-        {
+        if (convertView == null) {
             layoutView = inflater.inflate(R.layout.each_searchevent_item, null);
             holder = new Holder();
             layoutView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (Holder) layoutView.getTag();
         }
 
         final Party party = partyList.get(position);
 
-        holder.image = (ImageView) layoutView.findViewById(R.id.eachSearchEvent_image);
+        holder.image = (EmojiconTextView) layoutView.findViewById(R.id.eachSearchEvent_image);
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchEvent_name);
         holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
         if ( party.getPartyEmoji() != null )
         {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+            holder.image.setText(party.getPartyEmoji());
+            // TODO: 04/21/2017 Add image by url
+//            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
-        holder.name.setText( party.getName() );
-        holder.go.setOnClickListener(new View.OnClickListener()
-        {
+
+        holder.name.setText(party.getName());
+        holder.go.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-//                Intent intent = new Intent(mainActivity, PartyProfileFragment.class);
-//                intent.putExtra("partyIDLong", party.getPartyID());
-//                mainActivity.startActivity(intent);
+            public void onClick(View view) {
+                if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
+                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                } else {
+                    CurrentUser.theUser.getAttending().add(0, party.getPartyID());
+                    Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

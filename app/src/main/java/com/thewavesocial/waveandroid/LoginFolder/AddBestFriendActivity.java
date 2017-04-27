@@ -86,7 +86,6 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 else{
                     //TODO: Update Current User object with phoneNumberEditText.text
                 }
-
                 startActivity(intent);
             }
         });

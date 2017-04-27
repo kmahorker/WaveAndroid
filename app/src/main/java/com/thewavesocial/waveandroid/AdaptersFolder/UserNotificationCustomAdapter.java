@@ -73,8 +73,8 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
         if (sender.getProfilePic() != null) {
-            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+            // TODO: 04/21/2017 Add image by url
+//            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
         }
         holder.sender.setText(sender.getFirstName());
         holder.notifmessage.setText(getItem(position).getMessage());
@@ -93,7 +93,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });
@@ -102,7 +102,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
+                intent.putExtra("userObject", sender);
                 mainActivity.startActivity(intent);
             }
         });

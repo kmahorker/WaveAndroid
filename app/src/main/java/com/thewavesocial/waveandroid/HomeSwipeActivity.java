@@ -45,6 +45,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(1);
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="200dp"
-    android:orientation="horizontal"
-    android:background="@color/white_solid"
-    >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:layout_gravity="center_vertical">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/eachFollow_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/round_shape"/>
+
+    <TextView
+        android:id="@+id/eachFollow_follow"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:orientation="horizontal"
-        >
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Follow"
+        android:textSize="@dimen/button_text_normal"
+        android:textColor="@color/appColor"
+        android:background="@drawable/round_corner_red_edge"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"/>
 
-        <ImageView
-            android:id="@+id/iv_follow_row_user_image"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:padding="10dp"
-            />
+    <TextView
+        android:id="@+id/eachFollow_name"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
+        android:text="Wei Tung Chen"
+        android:textSize="@dimen/text_normal"
+        android:textColor="#000"
+        android:lines="1"
+        android:ellipsize="middle"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/eachFollow_follow"
+        android:layout_toEndOf="@id/eachFollow_image"/>
 
-        <TextView
-            android:id="@+id/iv_follow_row_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="16dp"
-            android:textColor="@color/black_solid"
-            />
-
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/iv_follow_row_user_followed"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="right|center_vertical"
-        android:layout_marginRight="20dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:textSize="16dp"
-        />
-
-</FrameLayout>
+</RelativeLayout>

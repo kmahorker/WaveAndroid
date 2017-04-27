@@ -36,7 +36,7 @@ public class HostControllerFragment extends Fragment {
         ImageView createButton = (ImageView) mainActivity.findViewById(R.id.home_hostView_image_createEvent);
         ListView manageList = (ListView) mainActivity.findViewById(R.id.home_hostView_list_manageEvents);
 
-        List<Long> sample = new ArrayList<>();
+        List<String> sample = new ArrayList<>();
         sample.addAll(CurrentUser.theUser.getHosted());
         sample.addAll(CurrentUser.theUser.getHosted());
         manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity,

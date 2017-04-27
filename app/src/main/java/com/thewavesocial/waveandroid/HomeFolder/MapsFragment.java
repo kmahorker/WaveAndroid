@@ -2,12 +2,16 @@ package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -15,8 +19,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.facebook.internal.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,6 +49,12 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
@@ -50,7 +63,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
     private Marker cur_loc_marker;
-    private List<Long> partyList;
+    private List<String> partyList;
     private GoogleMap mMap;
     private LatLng loc;
 
@@ -91,15 +104,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     private void setupFloatingButtons() {
-        ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        sos_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkSOSMessagePermission();
+        final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
+        //TODO: Commented this out
+        // new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
+
+        final Handler handle = new Handler();
+        sos_button.setOnTouchListener(new View.OnTouchListener() {
+            @Override public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        sos_button.setAlpha(155);
+                        handle.postDelayed(run, 3000);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        sos_button.setAlpha(255);
+                        handle.removeCallbacks(run);
+                        break;
+                }
+                return true;
             }
+
+            Runnable run = new Runnable() {
+                @Override public void run() {
+                    Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(500);
+                    checkSOSMessagePermission();
+                }
+            };
         });
 
-        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
+        ImageButton cur_loc_button = (ImageButton) getActivity().findViewById(R.id.cur_loc_button);
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +189,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -164,8 +198,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
-                openSearchView();
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
+                if(!searchOpened)
+                    openSearchView();
                 editText.setCursorVisible(true);
             }
         });
@@ -173,13 +208,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
         editText = (EditText) searchbar.findViewById(id);
         editText.setCursorVisible(false);
-        editText.setOnClickListener(new View.OnClickListener() {
+        editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                dragSeparator(30 - mapHeight / 2, 0);
+            public boolean onTouch(View v, MotionEvent event) {
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
+                return false;
             }
         });
     }
@@ -265,7 +301,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParty(long partyID, LatLng loc) {
+    public void addParty(String partyID, LatLng loc) {
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
                 .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
@@ -273,8 +309,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParties(GoogleMap googleMap, List<Long> partyIDs) {
-        for (long party : partyIDs) {
+    public void addParties(GoogleMap googleMap, List<String> partyIDs) {
+        for (String party : partyIDs) {
             LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
             if (loc != null)
                 addParty(party, loc);
@@ -303,8 +339,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight)
-                && y > UtilityClass.getScreenHeight(mainActivity) - mapHeight + 30
+        if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+            y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
+        }
+        Log.d ( "TRUE?", y + ", " + separatorHeight
+                + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
+        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
+                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
@@ -367,26 +408,55 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS)) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
             } else {
-                sendSOSMessage();
+                askToSendSOSMessage();
             }
         } else {
-            sendSOSMessage();
+            askToSendSOSMessage();
         }
+    }
+
+
+    private void askToSendSOSMessage() {
+        AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
+        fieldAlert.setTitle("Send an alert to " + 
+                        (CurrentUser.theUser.getBestFriends().get(0)).getName())
+                .setMessage("A text will be sent to your friend notifying your current location.")
+                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendSOSMessage();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .show();
     }
 
 
     private void sendSOSMessage() {
         String phone = "6692254467";
         String name = "Wei Tung Chen";
+        String message = "";
         SmsManager sManager = SmsManager.getDefault();
+        try {
+            message = "Help me, " + name.substring(0, name.lastIndexOf(' '))
+                    + "!\n\nI'm drunk. LOL.. My last known location is ("
+                    + loc.latitude + ", " + loc.longitude
+                    + ")\n\n-Sent from ThePlugSocial Emergency Alert.";
+        } catch (Exception e) {
+            message = "Help me, " + name.substring(0, name.lastIndexOf(' '))
+                    + "!\n\nI'm drunk. LOL.. My last known location is ("
+                    + "location Unknown"
+                    + ")\n\n-Sent from ThePlugSocial Emergency Alert.";
+        }
         sManager.sendTextMessage(
                 phone, null,
-                "Help me, " + name.substring(0, name.lastIndexOf(' '))
-                        + "!\n\nI'm drunk. LOL.. My last known location is ("
-                        + loc.latitude + ", " + loc.longitude
-                        + ")\n\n-Sent from ThePlugSocial Emergency Alert.",
+                message,
                 null, null);
-        Toast.makeText(mainActivity, "Message Sent!", Toast.LENGTH_LONG).show();
+        Toast.makeText(mainActivity, "Message Sent!!!!!!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -397,9 +467,67 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 updateUserLoc(0);
                 break;
             case 20:
-                sendSOSMessage();
+                askToSendSOSMessage();
             default:
                 break;
+        }
+    }
+
+    private String parseJSONFromServer(String server_url) {
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        InputStream stream = null;
+        String error = "";
+        StringBuffer buffer = new StringBuffer();
+        try {
+            URL url = new URL(server_url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+            if ( connection.getResponseCode() == 500 )
+                stream = connection.getErrorStream();
+            else
+                stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+            String line ="";
+
+            while( (line = reader.readLine()) != null ) {
+                buffer.append(line);
+            }
+            return buffer.toString();
+
+        } catch (IOException e) {}
+        finally {
+            if ( connection != null ) {
+                connection.disconnect();
+            }
+            try {
+                if ( reader != null ){
+                    reader.close();
+                }
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return error + server_url;
+    }
+
+
+    public class JSONParsingTask extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... params){
+            return parseJSONFromServer(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            // TODO: 03/24/2017 Get JWT
+            UtilityClass.printAlertMessage(getActivity(), result, true);
+            Log.d("Result", result);
+            System.out.println("result");
         }
     }
 }

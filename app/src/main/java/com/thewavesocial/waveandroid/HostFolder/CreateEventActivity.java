@@ -92,7 +92,7 @@ public class CreateEventActivity extends AppCompatActivity
     {
         Party newParty = new Party();
         // TODO: 02/13/2017 Create New Party ID
-        newParty.setPartyID(12345);
+        newParty.setPartyID("12345");
         newParty.setName(name);
         newParty.setMapAddress( location );
         newParty.setPrice(price);

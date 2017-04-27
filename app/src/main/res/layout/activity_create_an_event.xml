@@ -1,154 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context="com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity">
-
-    <ImageView
-        android:id="@+id/emojiImageView"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        app:srcCompat="@drawable/checkmark"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/round_shape_shadow"
-        android:layout_marginTop="20dp"/>
-
-    <EditText
-        android:id="@+id/eventTitleEditText"
+    android:clickable="true"
+    android:id="@+id/scrollViewCreateAnEvent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbarFadeDuration="0"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Title"
-        android:inputType="textPersonName"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="18dp"/>
+        android:orientation="vertical"
+        android:id="@+id/createAnEventLinearLayout"
+        tools:context="com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity"
+        android:focusableInTouchMode="true"
+        >
 
-    <EditText
-        android:id="@+id/locationEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Location"
-        android:inputType="textPersonName"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="18dp"/>
+        <!--<ImageView
+            android:id="@+id/emojiImageView"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            app:srcCompat="@drawable/checkmark"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/round_shape_shadow"
+            android:layout_marginTop="20dp"/> -->
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="12dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/emojiRelativeLayout">
+                <github.ankushsachdeva.emojicon.EmojiconEditText
+                    android:id="@+id/emojiconEditText"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/round_shape_shadow"
+                    android:cursorVisible="false"
+                    android:textSize="75dp"/>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/startTextView"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/eventTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Title"
+            android:inputType="textPersonName"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="18dp"/>
+
+        <EditText
+            android:id="@+id/locationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Location"
+            android:inputType="textPersonName"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="18dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/startTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Starts"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/startDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp"
+                />
+
+            <TextView
+                android:id="@+id/startTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp" />
+
+
+
+            <TextView
+                android:id="@+id/endTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ends"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/startTextView"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:id="@+id/endDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/startDateTextView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/endTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/startTimeTextView"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/black_solid"
+                android:textSize="18dp" />
+            <!--
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:background="#000000"
+                android:layout_below="@id/startTextView"/> -->
+        </RelativeLayout>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/privateSwitch"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Starts"
-            android:textColor="@color/black_solid"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:theme="@style/CreateEventSwitchStyle"
+            android:thumbTint="@color/white_solid"
+            android:text="Private"
             android:textSize="18dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp" />
+            android:textColor="@color/black_solid"/>
 
         <TextView
-            android:id="@+id/startDateTextView"
-            android:layout_width="wrap_content"
+            android:id="@+id/ageRestrictionTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black_solid"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Age restriction"
             android:textSize="18dp"
+            android:textColor="@color/black_solid"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:id="@+id/ageRestrictionSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            app:absoluteMinValue="17"
+            app:absoluteMaxValue="100"
+            app:textAboveThumbsColor="@color/appColor"
+            app:activeColor="@color/appColor"
+            app:barHeight="2dp"
+            app:thumbDisabled="@drawable/rangeseekbar_thumb_format"
+            app:thumbNormal="@drawable/rangeseekbar_thumb_format"
+            app:thumbPressed="@drawable/rangeseekbar_thumb_format"
+            app:thumbShadow="true"
+            app:thumbShadowColor="@color/grey_default"
             />
 
-        <TextView
-            android:id="@+id/startTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black_solid"
-            android:textSize="18dp" />
 
-        <TextView
-            android:id="@+id/endTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Ends"
-            android:textColor="@color/black_solid"
-            android:textSize="18dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/startTextView"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="12dp"/>
 
-        <TextView
-            android:id="@+id/endDateTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/startDateTextView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black_solid"
-            android:textSize="18dp" />
-
-        <TextView
-            android:id="@+id/endTimeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/startTimeTextView"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textColor="@color/black_solid"
-            android:textSize="18dp" />
-    </RelativeLayout>
-
-    <Switch
-        android:id="@+id/privateSwitch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="Private"
-        android:textSize="18dp"
-        android:textColor="@color/black_solid"/>
-
-    <TextView
-        android:id="@+id/ageRestrictionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="Age restriction"
-        android:textSize="18dp"
-        android:textColor="@color/black_solid"/>
-
-    <org.florescu.android.rangeseekbar.RangeSeekBar
-        android:id="@+id/ageRestrictionSeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        app:absoluteMinValue="17"
-        app:absoluteMaxValue="100"/>
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
