@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -182,6 +185,38 @@ public class EditStatsActivity extends AppCompatActivity {
         emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
         emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         emojiconEditText.setText(party.getPartyEmoji());
+        emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(!popup.isShowing()) {
+                    if(popup.isKeyBoardOpen()) {
+                        popup.showAtBottom();
+                    }
+                    else {
+
+                        emojiconEditText.setFocusableInTouchMode(true);
+                        emojiconEditText.requestFocus();
+                        popup.showAtBottomPending();
+                        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(emojiconEditText, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                }
+                return true;
+            }
+        });
+
+
+        emojiconEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && popup.isShowing()){
+                    popup.dismiss();
+                }
+            }
+        });
+
+        setUpEmojicon();
+
 
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
         boolean isPrivate = !party.getIsPublic();
