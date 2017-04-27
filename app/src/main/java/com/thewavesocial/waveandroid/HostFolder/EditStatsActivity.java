@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.R;
@@ -67,6 +68,8 @@ public class EditStatsActivity extends AppCompatActivity {
         mainActivity = this;
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
+        NewPartyInfo.initialize();
+        
         setupActionbar();
         setupReference();
         setUpEmojicon();
@@ -277,8 +280,99 @@ public class EditStatsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: 04/20/2017 Update server: update party object
+                if (checkInfo())
+                    savePage();
                 onBackPressed();
             }
         });
+    }
+
+    private boolean checkInfo(){
+        //Log.d("Address", locationEditText.getText().toString());
+        //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
+        if(emojiconEditText.getText().toString().isEmpty()){
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+            return false;
+        }
+        else if(titleEditText.getText().toString().isEmpty()){
+            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+            return false;
+        }
+        else if(locationEditText.getText().toString().isEmpty()){
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+            return false;
+        }
+        else if(startCalendar.compareTo(endCalendar) >= 0){
+            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+            return false;
+        }
+        else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
+            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+
+
+
+    //ONLY called if all checks are passed
+    public void savePage() {
+        NewPartyInfo.name = titleEditText.getText().toString();
+        NewPartyInfo.price = 0;
+        NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
+        NewPartyInfo.startingDateTime = startCalendar;
+        NewPartyInfo.endingDateTime = endCalendar;
+        String partyAddress = locationEditText.getText().toString();
+        NewPartyInfo.mapAddress = new MapAddress(partyAddress,
+                UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
+        NewPartyInfo.isPublic = !privateParty;
+        NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
+        NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
+        NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
+        //getActivity().finish();
+    }
+
+    private Activity getActivity() {
+        return this;
+    }
+
+    private static class NewPartyInfo {
+        static String name;
+        static double price;
+        static String hostName;
+        static Calendar startingDateTime;
+        static Calendar endingDateTime;
+        static MapAddress mapAddress;
+        static List<Long> hostingUsers;
+        static List<Long> bouncingUsers;
+        static List<Long> attendingUsers;
+        static boolean isPublic;
+        static String partyEmoji;
+        static int minAge;
+        static int maxAge;
+        public static void initialize() {
+            name = "";
+            price = 0;
+            hostName = "";
+            startingDateTime = null;
+            endingDateTime = null;
+            hostingUsers = new ArrayList<>();
+            bouncingUsers = new ArrayList<>();
+            attendingUsers = new ArrayList<>();
+            isPublic = true;
+            partyEmoji = "";
+            minAge = -1;
+            maxAge = -1;
+        }
+        public static void composeParty(){
+//            Party party = new Party(
+//                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
+//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
+            // TODO: 03/31/2017 Send to database and create new party with new ID
+            // TODO: 04/23/2017 Refresh hosting event list
+        }
     }
 }
