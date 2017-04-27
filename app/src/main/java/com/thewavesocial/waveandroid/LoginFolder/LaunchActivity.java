@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.thewavesocial.waveandroid.R;
 
-public class StartupActivity extends AppCompatActivity
+public class LaunchActivity extends AppCompatActivity
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,8 +22,7 @@ public class StartupActivity extends AppCompatActivity
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d("Yes", "We're In!");
-                Intent intent = new Intent(StartupActivity.this, LoginActivity.class);
+                Intent intent = new Intent(LaunchActivity.this, LoginTutorialActivity.class);
                 startActivity(intent);
                 finish();
             }

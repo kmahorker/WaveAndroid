@@ -39,7 +39,7 @@
         <activity android:name=".HostFolder.ManageEventsActivity" />
         <activity android:name=".HostFolder.EventStatsActivity" />
         <activity android:name=".LoginFolder.ForgotPasswordActivity" />
-        <activity android:name=".LoginFolder.StartupActivity" />
+        <activity android:name=".LoginFolder.LaunchActivity" />
         <activity android:name=".SocialFolder.FollowActivity" />
       
         <activity android:name=".HostFolder.CreateAnEventActivity" />
