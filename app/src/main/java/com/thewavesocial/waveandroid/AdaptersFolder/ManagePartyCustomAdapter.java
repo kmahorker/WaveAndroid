@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -17,6 +18,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 import java.util.List;
+
+import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class ManagePartyCustomAdapter extends BaseAdapter
 {
@@ -52,7 +55,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
 
     public class Holder
     {
-        ImageView partyEmoji;
+        EmojiconTextView partyEmoji;
         TextView partyname;
         TextView partyInfo;
     }
@@ -74,14 +77,12 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         }
 
         Party party = partyList.get(position);
-        holder.partyEmoji = (ImageView) layoutView.findViewById(R.id.eachManage_partyEmoji_icon);
+        holder.partyEmoji = (EmojiconTextView) layoutView.findViewById(R.id.eachManage_partyEmoji_icon);
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
 
-        if ( party.getPartyEmoji() != null )
-        {
-            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+        if ( party.getPartyEmoji() != "" ) {
+            holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText( getCustomInfoText( party ) );
@@ -90,9 +91,9 @@ public class ManagePartyCustomAdapter extends BaseAdapter
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                intent.putExtra("callerActivity", EventStatsActivity.activityHostFragment);
                 intent.putExtra("partyIDLong", partyList.get(position).getPartyID());
                 mainActivity.startActivity(intent);
-
             }
         });
 

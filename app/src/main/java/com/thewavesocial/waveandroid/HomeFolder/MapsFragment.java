@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,7 +133,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             };
         });
 
-        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
+        ImageButton cur_loc_button = (ImageButton) getActivity().findViewById(R.id.cur_loc_button);
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

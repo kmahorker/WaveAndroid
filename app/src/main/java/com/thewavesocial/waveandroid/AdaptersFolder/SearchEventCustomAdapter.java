@@ -17,8 +17,11 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
-public class SearchEventCustomAdapter extends BaseAdapter {
-    private Activity mainActivity;
+import github.ankushsachdeva.emojicon.EmojiconTextView;
+
+public class SearchEventCustomAdapter extends BaseAdapter
+{
+    private Activity mainActivity ;
     private List<Party> partyList;
     private static LayoutInflater inflater;
 
@@ -44,8 +47,9 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         return position;
     }
 
-    public class Holder {
-        ImageView image;
+    public class Holder
+    {
+        EmojiconTextView image;
         TextView name;
         TextView go;
     }
@@ -64,14 +68,15 @@ public class SearchEventCustomAdapter extends BaseAdapter {
 
         final Party party = partyList.get(position);
 
-        holder.image = (ImageView) layoutView.findViewById(R.id.eachSearchEvent_image);
+        holder.image = (EmojiconTextView) layoutView.findViewById(R.id.eachSearchEvent_image);
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchEvent_name);
         holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
-        if (party.getPartyEmoji() != null) {
-            holder.image.setImageDrawable(UtilityClass.toRoundImage(
-                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+        if ( party.getPartyEmoji() != null )
+        {
+            holder.image.setText(party.getPartyEmoji());
         }
+
         holder.name.setText(party.getName());
         holder.go.setOnClickListener(new View.OnClickListener() {
             @Override

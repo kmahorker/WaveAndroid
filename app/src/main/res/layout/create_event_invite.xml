@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white_solid">
+
+    <SearchView
+        android:id="@+id/create_event_invite_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:elevation="4dp"
+        android:iconifiedByDefault="false"/>
+
+    <TextView
+        android:id="@+id/create_event_invite_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:textSize="@dimen/button_text_normal"
+        android:padding="15dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+    <ListView
+        android:id="@+id/create_event_invite_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_below="@id/create_event_invite_search"
+        android:layout_above="@id/create_event_invite_create"/>
+
+    <View
+        android:id="@+id/create_event_invite_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_solid"
+        android:layout_above="@id/create_event_invite_create" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/create_event_invite_selectedList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_solid"
+        android:layout_above="@id/create_event_invite_divider"/>
+
+</RelativeLayout>

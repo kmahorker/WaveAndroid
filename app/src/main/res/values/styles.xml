@@ -28,4 +28,10 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="CreateEventSwitchStyle" parent="Theme.AppCompat.Light">
+        <item name= "colorAccent">@color/appColor</item>
+        <item name="colorSwitchThumbNormal">@color/white_solid</item>
+    </style>
+
+
 </resources>

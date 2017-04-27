@@ -202,7 +202,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
+                true, "\u1f602", 17, 22);
         party2 = new Party(
                 2,
                 "Super Party 2",
@@ -212,7 +212,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
+                true, "\u1f60d", 19, 30);
         party3 = new Party(
                 3,
                 "Super Party 3",
@@ -222,7 +222,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6650 Picasso Rd, Goleta, CA 93117", new LatLng( 34.415500, -119.860575)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true, null );
+                true, "\u1f648", 35, 40 );
         party4 = new Party(
                 4,
                 "Super Party 4 LongName for layout TESTING Text wrapping Multiple Lines Longer Event Here Making It Longer!",
@@ -232,7 +232,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.checkmark)));
+                true, "\u1f631", 21, 25);
         party5 = new Party(
                 5,
                 "Super Party 5",
@@ -242,7 +242,7 @@ public class DummyUser extends User
                 Calendar.getInstance(),
                 new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
                 this.getFollowing(), this.getFollowing(), this.getFollowing(),
-                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
+                true, "\ue32d", 17, 40);
 
         party1.getStartingDateTime().set(2017, 2, 6);
         party2.getStartingDateTime().set(2017, 3, 7);

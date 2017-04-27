@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
