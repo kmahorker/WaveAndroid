@@ -114,15 +114,59 @@ public class EditStatsActivity extends AppCompatActivity {
 
         startDateTextView = (TextView) findViewById(R.id.editEventStartDateTextView);
         startDateTextView.setText(dateFormat.format(party.getStartingDateTime().getTime()));
+        startDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+                popup.dismiss();
+                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
+                        startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                dialogFragment.setDateDisplay(startDateTextView);
+                dialogFragment.show(mainActivity.getFragmentManager(), "datePicker");
+            }
+        });
 
         startTimeTextView = (TextView) findViewById(R.id.editEventStartTimeTextView);
         startTimeTextView.setText(timeFormat.format(party.getStartingDateTime().getTime()));
+        startTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+                popup.dismiss();
+                TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
+                        startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                timePickerDialogFragment.setTimeTextView(startTimeTextView);
+                timePickerDialogFragment.show(mainActivity.getFragmentManager(), "timePicker");
+            }
+        });
 
         endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
         endDateTextView.setText(dateFormat.format(party.getEndingDateTime().getTime()));
+        endDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+                popup.dismiss();
+                DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
+                        endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                dialogFragment.setDateDisplay(endDateTextView);
+                dialogFragment.show(mainActivity.getFragmentManager(), "datePicker");
+            }
+        });
 
         endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
         endTimeTextView.setText(timeFormat.format(party.getEndingDateTime().getTime()));
+        endTimeTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(mainActivity);
+                popup.dismiss();
+                TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
+                        endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert);
+                timePickerDialogFragment.setTimeTextView(endTimeTextView);
+                timePickerDialogFragment.show(mainActivity.getFragmentManager(), "timePicker");
+            }
+        });
 
         emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
         emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
