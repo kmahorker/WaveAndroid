@@ -833,7 +833,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", userList.get(position).getUserID());
+                        intent.putExtra("userIDLong", userList.get(position).getUserID()); //TODO: Change to User Object
                         mainActivity.startActivity(intent);
                     }
                 });
