@@ -71,19 +71,19 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name.setText(user.getFullName());
 
         if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
-            changeButton(holder.follow, "follow", R.color.appColor, R.drawable.round_corner_red_edge);
+            changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
-            changeButton(holder.follow, "following", R.color.white_solid, R.drawable.round_corner_red);
+            changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
         }
         holder.follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (holder.follow.getText().equals("following")) {
+                if (holder.follow.getText().equals("Following")) {
                     CurrentUser.theUser.getFollowing().remove(user.getUserID());
-                    changeButton(holder.follow, "follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                    changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                 } else {
                     CurrentUser.theUser.getFollowing().add(user.getUserID());
-                    changeButton(holder.follow, "following", R.color.white_solid, R.drawable.round_corner_red);
+                    changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
                 }
             }
         });

@@ -110,20 +110,20 @@ public class FriendProfileActivity extends AppCompatActivity {
                 friend.getNotifications2()));
 
         if (!CurrentUser.theUser.getFollowing().contains(userID)) {
-            changeButton("follow", R.color.appColor, R.drawable.round_corner_red_edge);
+            changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
-            changeButton("following", R.color.white_solid, R.drawable.round_corner_red);
+            changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
         }
 
         follow_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (follow_button.getText().equals("following")) {
+                if (follow_button.getText().equals("Following")) {
                     CurrentUser.theUser.getFollowing().remove(userID);
-                    changeButton("follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                    changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                 } else {
                     CurrentUser.theUser.getFollowing().add(userID);
-                    changeButton("following", R.color.white_solid, R.drawable.round_corner_red);
+                    changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
                 }
             }
         });
