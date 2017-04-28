@@ -43,6 +43,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         userID = friend.getUserID();
 
         setupActionbar();
+        setupProfileInfo();
     }
 
     @Override
