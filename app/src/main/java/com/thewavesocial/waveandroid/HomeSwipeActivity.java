@@ -39,20 +39,28 @@ public class HomeSwipeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
         mainActivity = this;
         setupMapActionbar();
-        CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
-            @Override
-            public void onResultReady(Boolean result) {
-                if ( result ) {
-                    mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-                    mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-                    mPager.setAdapter(mPagerAdapter);
-                    mPager.setCurrentItem(1);
-                    mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
-                } else {
-                    Log.d("HomeSwipeActivity", "Set User Context Failed...");
+        if ( CurrentUser.context == null ) {
+            CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
+                @Override
+                public void onResultReady(Boolean result) {
+                    if (result) {
+                        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
+                        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+                        mPager.setAdapter(mPagerAdapter);
+                        mPager.setCurrentItem(1);
+                        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+                    } else {
+                        Log.d("HomeSwipeActivity", "Set User Context Failed...");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
+            mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+            mPager.setAdapter(mPagerAdapter);
+            mPager.setCurrentItem(1);
+            mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+        }
 
     }
 

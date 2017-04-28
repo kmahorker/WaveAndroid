@@ -42,9 +42,9 @@ public final class CurrentUser {
         });
     }
 
-    public static void setContext(Context cont, final OnResultReadyListener<Boolean> delegate) {
+    public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
         context = (Activity) cont;
-        getUserObject("10", new OnResultReadyListener<User>() {
+        getUserObject(DatabaseAccess.getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 theUser = result;

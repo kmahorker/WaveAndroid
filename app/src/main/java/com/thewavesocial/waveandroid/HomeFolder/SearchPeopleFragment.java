@@ -41,13 +41,14 @@ public class SearchPeopleFragment extends Fragment {
         CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
-                userList.addAll(result);
+                if ( result != null ) {
+                    userList.addAll(result);
+                    peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, searchPeople(userList, searchbar.getQuery().toString())));
+                }
             }
         });
         // TODO: 04/19/2017 How to search database?
 
-        peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
-                searchPeople(userList, searchbar.getQuery().toString())));
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

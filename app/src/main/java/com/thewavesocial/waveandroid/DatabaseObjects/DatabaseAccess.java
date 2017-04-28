@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -308,20 +309,21 @@ public final class DatabaseAccess{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = new ProgressDialog(mainActivity);
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setTitle("Please wait");
-            progress.setMessage("Connecting to Server...");
-            progress.setCancelable(false);
-
-            handler = new Handler();
-            run = new Runnable() {
-                @Override
-                public void run() {
-                    progress.show();
-                }
-            };
-            handler.postDelayed(run, 3000);
+            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
+//            progress = new ProgressDialog(mainActivity);
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setTitle("Please wait");
+//            progress.setMessage("Connecting to Server...");
+//            progress.setCancelable(false);
+//
+//            handler = new Handler();
+//            run = new Runnable() {
+//                @Override
+//                public void run() {
+//                    progress.show();
+//                }
+//            };
+//            handler.postDelayed(run, 3000);
         }
 
         @Override
@@ -335,9 +337,9 @@ public final class DatabaseAccess{
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-            if ( progress.isShowing() )
-                progress.dismiss();
-            handler.removeCallbacks(run);
+//            if ( progress.isShowing() )
+//                progress.dismiss();
+//            handler.removeCallbacks(run);
             delegate.onResultReady(result);
         }
 

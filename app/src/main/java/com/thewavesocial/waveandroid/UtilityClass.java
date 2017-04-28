@@ -21,6 +21,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -137,20 +138,21 @@ public final class UtilityClass {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress = new ProgressDialog(mainActivity);
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setTitle("Please wait");
-            progress.setMessage("Connecting to Server...");
-            progress.setCancelable(false);
+            Toast.makeText(mainActivity, "Loading.....", Toast.LENGTH_SHORT).show();
+//            progress = new ProgressDialog(mainActivity);
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setTitle("Please wait");
+//            progress.setMessage("Connecting to Server...");
+//            progress.setCancelable(false);
 
-            handler = new Handler();
-            run = new Runnable() {
-                @Override
-                public void run() {
-                    progress.show();
-                }
-            };
-            handler.postDelayed(run, 3000);
+//            handler = new Handler();
+//            run = new Runnable() {
+//                @Override
+//                public void run() {
+//                    progress.show();
+//                }
+//            };
+//            handler.postDelayed(run, 3000);
         }
 
         @Override
@@ -160,9 +162,9 @@ public final class UtilityClass {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if ( progress.isShowing() )
-                progress.dismiss();
-            handler.removeCallbacks(run);
+//            if ( progress.isShowing() )
+//                progress.dismiss();
+//            handler.removeCallbacks(run);
             delegate.onResultReady(bitmap);
         }
 
