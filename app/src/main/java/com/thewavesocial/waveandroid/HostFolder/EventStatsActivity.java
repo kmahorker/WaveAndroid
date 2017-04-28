@@ -34,9 +34,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView, deleteView, editView;
+    private TextView goingView, genderView, hostView, locView, dateView, timeView, deleteView, editView, bounceView, attendingView;
     private ImageView qrCodeView;
-    private RecyclerView attendingFriends;
+    private RecyclerView attendingFriends, bouncingFriends;
     private String host, loc, date, time;
     private int going, male, female, callerType;
     private EventStatsActivity mainActivity;
@@ -99,8 +99,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         dateView = (TextView) findViewById(R.id.hostEventStats_datename);
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
+        attendingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
         attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
         deleteView = (TextView) findViewById(R.id.hostEventStats_delete_button);
+        bounceView = (TextView) findViewById(R.id.hostEventStats_bouncertext);
+        bouncingFriends = (RecyclerView) findViewById(R.id.hostEventStats_bouncerlist);
     }
 
 
@@ -113,10 +116,29 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         timeView.setText(time+"");
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
-        LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        attendingFriends.setLayoutManager(layoutManagerAttendees);
-        attendingFriends.setFocusable(false);
-        attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
+        if ( callerType == activityHostFragment ) {
+            attendingView.setText("Invites");
+            LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            attendingFriends.setLayoutManager(layoutManagerAttendees);
+            attendingFriends.setFocusable(false);
+            attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
+        } else {
+            attendingView.setText("FRIENDS GOING");
+            LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            attendingFriends.setLayoutManager(layoutManagerAttendees);
+            attendingFriends.setFocusable(false);
+            attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
+        }
+
+        if ( callerType == activityHostFragment ) {
+            bounceView.setText("Bouncers");
+            LinearLayoutManager layoutManagerBouncers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            bouncingFriends.setLayoutManager(layoutManagerBouncers);
+            bouncingFriends.setFocusable(false);
+            bouncingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getBouncingUsers())));
+        }
+
+
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
