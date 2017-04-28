@@ -12,7 +12,6 @@
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
         android:layout_marginRight="15dp"
-        android:padding="5dp"
         app:srcCompat="@drawable/back_arrow" />
 
     <TextView
