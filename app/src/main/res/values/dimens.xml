@@ -8,7 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="button_text_normal">20dp</dimen>
+    <dimen name="button_text_normal">17dp</dimen>
     <dimen name="text_normal">18dp</dimen>
 
     <dimen name="corner_dp">2dp</dimen>
