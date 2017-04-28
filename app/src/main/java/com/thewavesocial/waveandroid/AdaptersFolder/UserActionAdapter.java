@@ -22,6 +22,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.Calendar;
 import java.util.List;
 
+import github.ankushsachdeva.emojicon.EmojiconTextView;
+
 public class UserActionAdapter extends BaseAdapter {
     private Activity mainActivity;
     private List<Notification> notifList;
@@ -75,7 +77,7 @@ public class UserActionAdapter extends BaseAdapter {
     }
 
     public class Holder2 {
-        ImageView partyEmoji;
+        EmojiconTextView partyEmoji;
         TextView partyname;
         TextView partyInfo;
     }
@@ -148,13 +150,12 @@ public class UserActionAdapter extends BaseAdapter {
         }
 
         Party party = partyList.get(position);
-        holder.partyEmoji = (ImageView) layoutView.findViewById(R.id.eachUser_partyEmoji_icon);
+        holder.partyEmoji = (EmojiconTextView) layoutView.findViewById(R.id.eachUser_partyEmoji_icon);
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachUser_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachUser_partyInfo_item);
 
-        if (party.getPartyEmoji() != null) {
-//            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(
-//                    mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
+        if (!party.getPartyEmoji().isEmpty()) {
+            holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText(getCustomInfoText(party));

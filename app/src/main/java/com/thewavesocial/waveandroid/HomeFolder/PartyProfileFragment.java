@@ -30,6 +30,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import github.ankushsachdeva.emojicon.EmojiconTextView;
+
 public class PartyProfileFragment extends Fragment {
     private static Party party;
     private Button goButton;
@@ -40,6 +42,7 @@ public class PartyProfileFragment extends Fragment {
     private static RecyclerView attendingFriends;
     private static HomeSwipeActivity mainActivity;
     private TextView partyname, hostname, datetime, location, price;
+    private EmojiconTextView emoji;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,7 +118,9 @@ public class PartyProfileFragment extends Fragment {
         goButton = (Button) mainActivity.findViewById(R.id.partyprofile_go_button);
         attendingFriends = (RecyclerView) mainActivity.findViewById(R.id.partyprofile_attendee_list);
         hostedEvents = (ListView) mainActivity.findViewById(R.id.partyprofile_eventsHosted_list);
+        emoji = (EmojiconTextView) mainActivity.findViewById(R.id.partyprofile_text_emoji);
 
+        emoji.setText(party.getPartyEmoji());
         partyname.setText(party.getName());
         hostname.setText(party.getHostName());
         datetime.setText(UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
