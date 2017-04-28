@@ -248,7 +248,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                         , 10);
             }
         }
-        mMap.setMyLocationEnabled(true);
         updateUserLoc(1);
 
         addParties(googleMap, partyList);
@@ -290,6 +289,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             }
         } else {
             Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Log.d("Location", location.getLatitude() + ", " + location.getLongitude());
             if (location != null) {
                 loc = new LatLng(location.getLatitude(), location.getLongitude());
             } else {
@@ -351,10 +351,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
             y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
         }
-        Log.d ( "TRUE?", y + ", " + separatorHeight
+        Log.d("TRUE?", y + ", " + separatorHeight
                 + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
         if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
                 && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
@@ -427,8 +427,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void askToSendSOSMessage() {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
-        fieldAlert.setTitle("Send an alert to " + 
-                        (CurrentUser.theUser.getBestFriends().get(0)).getName())
+        fieldAlert.setTitle("Send an alert to " +
+                (CurrentUser.theUser.getBestFriends().get(0)).getName())
                 .setMessage("A text will be sent to your friend notifying your current location.")
                 .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                     @Override
@@ -473,6 +473,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 10:
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
                 updateUserLoc(0);
                 break;
             case 20:
