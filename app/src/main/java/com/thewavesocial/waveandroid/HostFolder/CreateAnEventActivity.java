@@ -479,10 +479,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
                 return false;
             }
-//            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-//                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
-//                return false;
-//            }
+            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
+                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+                return false;
+            }
             else{
                 return true;
             }
