@@ -479,10 +479,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
                 return false;
             }
-            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
-                return false;
-            }
+//            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
+//                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+//                return false;
+//            }
             else{
                 return true;
             }
@@ -624,7 +624,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", getItem(position).getUserID() );
+                        intent.putExtra("userObject", getItem(position) );
                         startActivity(intent);
                     }
                 });
@@ -663,7 +663,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", userList.get(position).getUserID());
+                        intent.putExtra("userObject", userList.get(position));
                         mainActivity.startActivity(intent);
                     }
                 });
@@ -795,7 +795,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", getItem(position).getUserID() );
+                        intent.putExtra("userObject", getItem(position) );
                         startActivity(intent);
                     }
                 });
@@ -833,7 +833,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", userList.get(position).getUserID()); //TODO: Change to User Object
+                        intent.putExtra("userObject", userList.get(position));
                         mainActivity.startActivity(intent);
                     }
                 });

@@ -14,7 +14,7 @@
         android:id="@+id/home_hostView_image_createEvent"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:src="@drawable/plus_sign"
+        android:src="@drawable/plus_button"
         android:padding="10dp"
         android:background="#FFF"
         android:layout_alignParentBottom="true"/>

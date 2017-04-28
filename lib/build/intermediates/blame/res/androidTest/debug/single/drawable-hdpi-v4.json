@@ -12,16 +12,16 @@
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_emoji_places_light_normal.png"
     },
     {
-        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\orca_emoji_category_nature.png",
-        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\orca_emoji_category_nature.png"
-    },
-    {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\orca_emoji_category_cars.png",
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\orca_emoji_category_cars.png"
     },
     {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\sym_keyboard_delete_holo_dark.png",
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\sym_keyboard_delete_holo_dark.png"
+    },
+    {
+        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\orca_emoji_category_nature.png",
+        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\orca_emoji_category_nature.png"
     },
     {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\orca_emoji_more_front_pressed.png",
@@ -144,12 +144,12 @@
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\orca_emoji_category_punctuation.png"
     },
     {
-        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_emoji_people_light_normal.png",
-        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_emoji_people_light_normal.png"
-    },
-    {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_emoji_symbols_light_activated.png",
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_emoji_symbols_light_activated.png"
+    },
+    {
+        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_emoji_people_light_normal.png",
+        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\ic_emoji_people_light_normal.png"
     },
     {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\ic_emoji_recent_light_normal.png",

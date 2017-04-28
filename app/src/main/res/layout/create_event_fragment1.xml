@@ -250,7 +250,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/createEvent1_malePlus_image"
-        android:src="@drawable/plus_sign"
+        android:src="@drawable/plus_button"
         android:layout_toRightOf="@id/createEvent1_maleCount_text"
         android:layout_below="@id/createEvent1_price_editText"
         android:layout_marginTop="6dp"/> <!--Male Plus (Image)-->
@@ -259,7 +259,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:id="@+id/createEvent1_femalePlus_image"
-        android:src="@drawable/plus_sign"
+        android:src="@drawable/plus_button"
         android:layout_toRightOf="@id/createEvent1_femaleCount_text"
         android:layout_below="@id/createEvent1_male_text"
         android:layout_marginTop="12dp"/> <!--Female Plus (Image)-->

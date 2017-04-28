@@ -34,7 +34,7 @@
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:srcCompat="@drawable/plus_sign"
+        app:srcCompat="@drawable/plus_button"
         android:id="@+id/addFriendButton"
         android:layout_gravity="center"
         android:layout_marginLeft="15dp"
