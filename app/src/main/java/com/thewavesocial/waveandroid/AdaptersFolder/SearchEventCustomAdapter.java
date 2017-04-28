@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -84,11 +86,15 @@ public class SearchEventCustomAdapter extends BaseAdapter
             @Override
             public void onClick(View view) {
                 if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
-                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                    Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                 }
+                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                intent.putExtra("partyObject", party);
+                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                mainActivity.startActivity(intent);
             }
         });
 

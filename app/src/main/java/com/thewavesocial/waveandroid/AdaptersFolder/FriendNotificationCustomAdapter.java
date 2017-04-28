@@ -90,7 +90,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                 public void onClick(View view)
                 {
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                    intent.putExtra("userIDLong", senderUser.getUserID());
+                    intent.putExtra("userObject", senderUser);
                     mainActivity.startActivity(intent);
                 }
             });

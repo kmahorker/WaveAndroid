@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -61,14 +62,17 @@ public class PartyProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
-                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                    Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                 }
+                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                intent.putExtra("partyObject", party);
+                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                mainActivity.startActivity(intent);
             }
         });
-
         hostname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +82,6 @@ public class PartyProfileFragment extends Fragment {
                 // TODO: 02/24/2017 Change hostname to host user object
             }
         });
-
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

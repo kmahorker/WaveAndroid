@@ -163,7 +163,8 @@ public class UserActionAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
-                intent.putExtra("partyIDLong", partyList.get(position).getPartyID());
+                intent.putExtra("partyObject", partyList.get(position));
+                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
                 mainActivity.startActivity(intent);
 
             }
