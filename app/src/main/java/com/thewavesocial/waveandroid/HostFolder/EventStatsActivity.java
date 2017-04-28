@@ -117,7 +117,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
         if ( callerType == activityHostFragment ) {
-            attendingView.setText("Invites");
+            attendingView.setText("Invited");
             LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             attendingFriends.setLayoutManager(layoutManagerAttendees);
             attendingFriends.setFocusable(false);
