@@ -3,7 +3,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white_solid"
-    >
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <SearchView
         android:id="@+id/sf_follow_search_field"

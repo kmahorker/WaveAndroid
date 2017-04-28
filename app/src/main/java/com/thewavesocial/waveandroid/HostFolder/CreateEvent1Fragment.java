@@ -295,7 +295,7 @@ public class CreateEvent1Fragment extends Fragment
         public void onTimeSet(TimePicker timePicker, int hr, int min)
         {
             if (startendTimeCheck == 1)
-            {
+                {
                 mainActivity.startCalendar.set(Calendar.HOUR, hr);
                 mainActivity.startCalendar.set(Calendar.MINUTE, min);
                 editStartTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ) );

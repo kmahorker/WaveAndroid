@@ -40,7 +40,7 @@ public class SignupActivity extends FragmentActivity
         setContentView(R.layout.signup_viewpager_layout);
 
         Intent intent = getIntent();
-        if(intent.getExtras() != null) {
+        if(intent.getExtras() != null) { //TODO 3/8/2017 Only Get Extras if Login with Facebook
             userID = intent.getExtras().getString("userIDLong");
             name = intent.getExtras().getString("userName");
             email = intent.getExtras().getString("userEmail");
@@ -156,7 +156,8 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<Notification>(),
                     "");
             //user.getBestFriends().add(bestFriend.getUserID());
-            user.setProfilePic(profilePic);
+            // TODO: 04/21/2017 Add image by url
+//            user.setProfilePic(profilePic);
 
             CurrentUser.setTheUser(user);
 

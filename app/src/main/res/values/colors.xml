@@ -19,4 +19,8 @@
 
     <color name="searchbar_color">#d1dee3</color>
 
+    <color name="grey_solid">#848484</color>
+
+    <color name="grey_default">#808080</color>
+
 </resources>

@@ -39,18 +39,8 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         // access current friend data
         Intent intent = getIntent();
-        userID = intent.getExtras().getString("userIDLong");
-        friend = new User();
-        CurrentUser.getUserObject(userID, new OnResultReadyListener<User>() {
-            @Override
-            public void onResultReady(User result) {
-                if ( friend != null ) {
-                    friend = result;
-                    setupProfileInfo();
-                }
-            }
-        });
-        //TODO: getUserObject(long id) from database class
+        friend = (User) intent.getExtras().get("userObject");
+        userID = friend.getUserID();
 
         setupActionbar();
     }
@@ -72,8 +62,8 @@ public class FriendProfileActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.actionbar_friend);
 
         TextView title = (TextView) findViewById(R.id.friend_name);
-        TextView back = (TextView) findViewById(R.id.friend_back_button);
         final TextView option = (TextView) findViewById(R.id.friend_options);
+        ImageView back = (ImageView) findViewById(R.id.friend_back_button);
 
         title.setText(friend.getFullName());
         back.setOnClickListener(new View.OnClickListener() {

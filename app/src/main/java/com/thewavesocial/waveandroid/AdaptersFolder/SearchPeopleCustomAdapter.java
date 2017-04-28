@@ -73,7 +73,6 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                     holder.image.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
             }
         });
-
         holder.name.setText(user.getFullName());
 
         if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
@@ -98,7 +97,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", user.getUserID());
+                intent.putExtra("userObject", user);
                 mainActivity.startActivity(intent);
                 UtilityClass.hideKeyboard(mainActivity);
             }

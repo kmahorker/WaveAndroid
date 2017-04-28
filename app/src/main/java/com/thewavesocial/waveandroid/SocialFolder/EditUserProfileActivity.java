@@ -135,7 +135,6 @@ public class EditUserProfileActivity extends AppCompatActivity {
                     profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
             }
         });
-
         username.setText(user.getFullName());
     }
 

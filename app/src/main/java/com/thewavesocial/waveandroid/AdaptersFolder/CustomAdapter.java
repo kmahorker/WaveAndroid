@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -80,9 +81,7 @@ public class CustomAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.each_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.friendName);
             holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
-            //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
-            //holder.img.setImageResource(R.drawable.happy_house); //testing
 
             UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
                 @Override

@@ -10,5 +10,9 @@
 
     <dimen name="button_text_normal">20dp</dimen>
     <dimen name="text_normal">18dp</dimen>
+
     <dimen name="corner_dp">2dp</dimen>
+    <dimen name="button_height">34dp</dimen>
+    <dimen name="text_large">30dp</dimen>
+    <dimen name="text_small">12dp</dimen>
 </resources>

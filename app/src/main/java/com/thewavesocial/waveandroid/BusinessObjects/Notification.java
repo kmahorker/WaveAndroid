@@ -1,11 +1,13 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Wei-Tung on 02/18/2017.
  * Stores all notifications:
  */
-public class Notification
-{
+public class Notification implements Parcelable {
     public static final int type1FollowingNotice = 1;
     public static final int type2HostingNotice = 2;
     public static final int type3AttendingNotice = 3;
@@ -95,4 +97,35 @@ public class Notification
     {
         this.senderID = senderID;
     }
+
+    protected Notification(Parcel in) {
+        message = in.readString();
+        requestType = in.readInt();
+        senderID = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(message);
+        dest.writeInt(requestType);
+        dest.writeString(senderID);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Notification> CREATOR = new Parcelable.Creator<Notification>() {
+        @Override
+        public Notification createFromParcel(Parcel in) {
+            return new Notification(in);
+        }
+
+        @Override
+        public Notification[] newArray(int size) {
+            return new Notification[size];
+        }
+    };
 }

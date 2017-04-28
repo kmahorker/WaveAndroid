@@ -62,6 +62,7 @@ public class FriendsListFragment extends Fragment {
         ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);
 
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
+
         final List<User> friendsUsers = new ArrayList<>();
         CurrentUser.getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
             @Override
@@ -73,7 +74,6 @@ public class FriendsListFragment extends Fragment {
                 }
             }
         });
-
 
         ImageView inviteFriends = (ImageView) getActivity().findViewById(R.id.addFriendButton);
         inviteFriends.setOnClickListener(new View.OnClickListener() {

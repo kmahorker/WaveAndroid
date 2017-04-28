@@ -119,6 +119,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
                         }
                     });
                 }
+
             }
         });
 

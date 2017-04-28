@@ -179,7 +179,8 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
     private void processJSONObject(JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
-        //new LoginTask("Specific URL with Facebook ID").execute();
+        Log.d("Facebook JSON", json.toString());
+        //new JSONParsingTask("Specific URL with Facebook ID").execute();
         try
         {
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
@@ -190,8 +191,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 finish();
             }
             if ( Integer.parseInt(json.getString("age_range").substring(
-                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 )
-            {
+                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
                 UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
                 return;
             }
@@ -239,32 +239,32 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-                    User newUser = new User(json.getString("id"),
-                            json.getString("first_name"),
-                            json.getString("last_name"),
-                            json.getString("email"),
-                            "password" /*TODO: delete password field*/,
-                            "UCSB" /*TODO: delete college field*/,
-                            json.getString("gender"),
-                            "1231231234" /*TODO: delte ph#*/,
-                            new MapAddress(),
-                            calendar,
-                            new ArrayList<String>(), //followers
-                            new ArrayList<String>(), //following
-                            new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-                            new ArrayList<String>(), //hosting
-                            new ArrayList<String>(), //attended
-                            new ArrayList<String>(), //hosted
-                            new ArrayList<String>(), //bounced
-                            new ArrayList<String>(), //attending
-                            new ArrayList<Notification>(),
-                            new ArrayList<Notification>(),
-                            "");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+                // TODO: 04/21/2017 Add image by url
+                String profilePic = "";
+//                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+//                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
+                User newUser = new User(json.getString("id"),
+                        json.getString("first_name"),
+                        json.getString("last_name"),
+                        json.getString("email"),
+                        "password" /*TODO: delete password field*/,
+                        "UCSB" /*TODO: delete college field*/,
+                        json.getString("gender"),
+                        "1231231234"/*TODO: delte ph#*/,
+                        new MapAddress(),
+                        calendar,
+                        new ArrayList<String>(), //followers
+                        new ArrayList<String>(), //following
+                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
+                        new ArrayList<String>(), //hosting
+                        new ArrayList<String>(), //attended
+                        new ArrayList<String>(), //hosted
+                        new ArrayList<String>(), //bounced
+                        new ArrayList<String>(), //attending
+                        new ArrayList<Notification>(),
+                        new ArrayList<Notification>(),
+                        profilePic);
                 //TODO: Add user object to Database
             }
         }

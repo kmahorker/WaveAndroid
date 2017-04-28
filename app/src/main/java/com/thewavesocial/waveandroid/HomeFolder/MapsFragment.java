@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,7 +116,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
             @Override public boolean onTouch(View v, MotionEvent event) {
@@ -141,7 +141,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             };
         });
 
-        ImageView cur_loc_button = (ImageView) getActivity().findViewById(R.id.cur_loc_button);
+        ImageButton cur_loc_button = (ImageButton) getActivity().findViewById(R.id.cur_loc_button);
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,7 +197,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -206,7 +206,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if(!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -219,7 +219,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dragSeparator(30 - mapHeight / 2, 0);
+                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
                 if ( !searchOpened )
                     openSearchView();
                 editText.setCursorVisible(true);
@@ -357,8 +357,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
+        if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+            y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
+        }
+        Log.d ( "TRUE?", y + ", " + separatorHeight
+                + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
         if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
-                && y > UtilityClass.getScreenHeight(mainActivity) - mapHeight + 30
+                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:

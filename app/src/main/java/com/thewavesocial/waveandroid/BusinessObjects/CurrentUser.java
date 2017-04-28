@@ -289,11 +289,13 @@ public final class CurrentUser {
 //        bouncingUsers = (ArrayList) info.get("bouncing");
 //        attendingUsers = (ArrayList) info.get("attending");
         hostName = "";
-        BitmapDrawable partyEmoji = new BitmapDrawable(); // TODO: 04/18/2017 Extract Image
+        String partyEmoji = "";
+        int minAge = 17, maxAge = 40;
+
 
         //Compose Party
         Party party = new Party(partyID, name, price, hostName, startingDateTime, endingDateTime,
-                mapAddress, hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji);
+                mapAddress, hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
         return party;
     }
 
@@ -384,5 +386,4 @@ public final class CurrentUser {
 //        else
 //            return dummy.getParty1();
 //    }
-
 }

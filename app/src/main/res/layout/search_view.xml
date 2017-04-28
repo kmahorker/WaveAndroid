@@ -16,6 +16,7 @@
             android:layout_height="40dp"
             android:text="Events"
             android:textSize="@dimen/button_text_normal"
+            android:textColor="@color/white_solid"
             android:gravity="center"
             android:layout_margin="20dp"
             android:elevation="3dp"

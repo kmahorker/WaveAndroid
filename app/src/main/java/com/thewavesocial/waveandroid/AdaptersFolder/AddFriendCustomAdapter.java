@@ -77,7 +77,6 @@ public class AddFriendCustomAdapter extends BaseAdapter {
             holder.tv = (TextView) rowView.findViewById(R.id.addFriendName);
             holder.img = (ImageView) rowView.findViewById(R.id.addFriendImage);
             holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
-            //holder.tv.setText("Name"); //Testing
             holder.tv.setText(userList.get(position).getFullName());
 
             UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
@@ -87,7 +86,6 @@ public class AddFriendCustomAdapter extends BaseAdapter {
                         holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
                 }
             });
-
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
