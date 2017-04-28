@@ -117,13 +117,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
         if ( callerType == activityHostFragment ) {
-            attendingView.setText("Invited");
+            attendingView.setText("Invited (" + party.getAttendingUsers().size() + ")");
             LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             attendingFriends.setLayoutManager(layoutManagerAttendees);
             attendingFriends.setFocusable(false);
             attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
         } else {
-            attendingView.setText("FRIENDS GOING");
+            attendingView.setText("FRIENDS GOING (" + party.getAttendingUsers().size() + ")");
             LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             attendingFriends.setLayoutManager(layoutManagerAttendees);
             attendingFriends.setFocusable(false);
@@ -131,7 +131,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         if ( callerType == activityHostFragment ) {
-            bounceView.setText("Bouncers");
+            bounceView.setText("Bouncers (" + party.getHostingUsers().size() + ")");
             LinearLayoutManager layoutManagerBouncers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             bouncingFriends.setLayoutManager(layoutManagerBouncers);
             bouncingFriends.setFocusable(false);
