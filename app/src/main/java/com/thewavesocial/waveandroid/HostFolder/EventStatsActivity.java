@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.HostFolder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
@@ -114,7 +119,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         locView.setText(loc+"");
         dateView.setText(date+"");
         timeView.setText(time+"");
-        qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
+        qrCodeView.setImageBitmap(getQRCode("WOWOW"));
 
         if ( callerType == activityHostFragment ) {
             attendingView.setText("Invited (" + party.getAttendingUsers().size() + ")");
@@ -160,6 +165,24 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     .show();
             }
         });
+    }
+
+    //        http://stackoverflow.com/a/25283174
+    private Bitmap getQRCode(String qrInput) {
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(qrInput, BarcodeFormat.QR_CODE, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return bmp;
+        } catch (WriterException e) {e.printStackTrace();}
+        return null;
     }
 
 
