@@ -38,17 +38,16 @@
 
     <TextView
         android:id="@+id/friend_follow_button"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="Follow"
+        android:text="Following"
         android:textColor="@color/appColor"
         android:background="@drawable/round_corner"
         android:layout_below="@id/friend_followers_count"
         android:layout_centerHorizontal="true"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
-        android:paddingEnd="25dp"
-        android:paddingStart="25dp"
+        android:gravity="center"
         android:elevation="4dp"/>
 
     <ListView
