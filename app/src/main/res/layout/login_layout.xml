@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/login_text_forgotpassword"
         android:text="Forgot your password?"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:textColor="#000"
         android:layout_marginLeft="40dp"
         android:padding="5dp"
@@ -51,7 +51,7 @@
         android:layout_marginTop="10dp"
         android:text="Log In"
         android:textColor="#000"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"/> <!-- Login Button-->
 
     <TextView
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/login_text_or"
         android:text="OR"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:layout_margin="30dp"/>
 
     <com.facebook.login.widget.LoginButton
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/login_text_signup"
         android:text="Don't have an account? Sign up here"
-        android:textSize="15sp"
+        android:textSize="15dp"
         android:textColor="#000"
         android:padding="10dp"
         android:layout_marginTop="50dp"/> <!-- Sign up-->

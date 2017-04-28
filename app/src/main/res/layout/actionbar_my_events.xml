@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingRight="50dp"
-        android:textSize="24sp"
+        android:textSize="24dp"
         android:gravity="center"
         android:id="@+id/textView"
         android:textColor="#ffff"

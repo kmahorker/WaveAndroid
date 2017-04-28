@@ -20,7 +20,7 @@
         android:text="Host"
         android:layout_centerInParent="true"
         android:textColor="#000"
-        android:textSize="18sp"/> <!--Username (Text)-->
+        android:textSize="18dp"/> <!--Username (Text)-->
 
     <ImageView
         android:id="@+id/actionbar_host_image_plug"

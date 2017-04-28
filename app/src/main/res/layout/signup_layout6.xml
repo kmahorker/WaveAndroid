@@ -13,7 +13,7 @@
         android:id="@+id/signup6_text_bestFriendTitle"
         android:layout_centerHorizontal="true"
         android:text="Choose Best Friend"
-        android:textSize="35sp"
+        android:textSize="35dp"
         android:textColor="#FFF"
         android:layout_marginTop="30dp"/> <!--Choose Best Friend Title(Text)-->
 
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:text="Choose one person you trust to help you in emergency situations."
         android:gravity="center"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:textColor="#FFF"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
@@ -37,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:text="This person will be notified when you hold the SOS button for 3 seconds."
         android:gravity="center"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:textColor="#FFF"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
@@ -56,7 +56,7 @@
             android:id="@+id/signup6_text_friendname"
             android:text="Name:     "
             android:textColor="#FFF"
-            android:textSize="30sp"/> <!-- Friend Name (Text)-->
+            android:textSize="30dp"/> <!-- Friend Name (Text)-->
 
         <EditText
             android:layout_width="180dp"
@@ -80,7 +80,7 @@
             android:id="@+id/signup6_text_friendphone"
             android:text="Phone:     "
             android:textColor="#FFF"
-            android:textSize="30sp"/> <!-- Friend Phone (Text)-->
+            android:textSize="30dp"/> <!-- Friend Phone (Text)-->
 
         <EditText
             android:layout_width="180dp"
@@ -99,7 +99,7 @@
         android:layout_marginTop="30dp"
         android:text="Finish"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"/> <!-- Finish Button-->
 
 </LinearLayout>

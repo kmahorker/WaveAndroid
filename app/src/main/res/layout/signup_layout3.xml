@@ -15,7 +15,7 @@
         android:text="Birthday"
         android:textAlignment="center"
         android:textColor="#FFF"
-        android:textSize="35sp" /> <!--Birthday (Text)-->
+        android:textSize="35dp" /> <!--Birthday (Text)-->
 
     <TextView
         android:id="@+id/birthdayLabel"
@@ -24,7 +24,7 @@
         android:ems="10"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:textSize = "28sp"
+        android:textSize = "28dp"
         android:textAlignment="center"
         android:textColor="#ffff"/>
 
@@ -36,7 +36,7 @@
         android:layout_marginTop="30dp"
         android:text="Next"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"/>
         <!-- android:layout_below="@id/signup3_edittext_month" -->
 

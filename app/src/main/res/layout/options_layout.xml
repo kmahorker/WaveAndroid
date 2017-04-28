@@ -12,7 +12,7 @@
         android:text="ACCOUNT"
         android:id="@+id/options_account_text"
         android:textColor="#000"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:padding="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"/> <!--ACCOUNT (Text)-->
@@ -33,7 +33,7 @@
         android:id="@+id/options_editprofile_text"
         android:text="Edit Profile"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Edit Profile (Text)-->
 
     <View
@@ -52,7 +52,7 @@
         android:id="@+id/options_setBestFriend_text"
         android:text="Set Best Friend"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Set Best Friend (Text)-->
 
     <View
@@ -71,7 +71,7 @@
         android:id="@+id/options_changePassword_text"
         android:text="Change Password"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Change Password (Text)-->
 
     <View
@@ -90,7 +90,7 @@
         android:layout_below="@+id/divider1_3"
         android:id="@+id/options_setting_text"
         android:textColor="#000"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:padding="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"/> <!--SETTING (Text)-->
@@ -111,7 +111,7 @@
         android:id="@+id/options_pushNotification_text"
         android:text="Push Notification"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Push Notification (Text)-->
 
     <View
@@ -130,7 +130,7 @@
         android:id="@+id/options_managePaymentMethods_text"
         android:text="Manage Payment Methods"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Manage Payment Methods (Text)-->
 
     <View
@@ -149,7 +149,7 @@
         android:layout_below="@+id/divider2_2"
         android:id="@+id/options_about_text"
         android:textColor="#000"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:padding="5dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"/> <!--ABOUT (Text)-->
@@ -170,7 +170,7 @@
         android:id="@+id/options_privacyPolicy_text"
         android:text="Privacy Policy"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Privacy Policy (Text)-->
 
     <View
@@ -189,7 +189,7 @@
         android:id="@+id/options_termsOfService_text"
         android:text="Terms of Service"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="18dp"
         android:layout_marginStart="20dp"/> <!--Terms of Service (Text)-->
 
     <View

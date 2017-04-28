@@ -13,7 +13,7 @@
         android:id="@+id/signup4_text_gender"
         android:layout_centerHorizontal="true"
         android:text="Gender"
-        android:textSize="35sp"
+        android:textSize="35dp"
         android:textColor="#FFF"
         android:layout_marginTop="100dp"/> <!--Gender (Text)-->
 
@@ -24,7 +24,7 @@
         android:layout_marginTop="30dp"
         android:text="Male"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"
         android:layout_centerHorizontal="true"/> <!-- Male Button-->
 
@@ -35,7 +35,7 @@
         android:layout_marginTop="30dp"
         android:text="Female"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"
         android:layout_centerHorizontal="true"/> <!-- Female Button-->
 

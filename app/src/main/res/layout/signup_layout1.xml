@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/signup1_text_email"
         android:text="Sign up with email"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:textColor="#FFF"
         android:layout_marginTop="100dp"/> <!--Sign up with email (Text)-->
 
@@ -32,7 +32,7 @@
         android:layout_marginTop="30dp"
         android:text="Next"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"/> <!-- Next Button-->
 
 </LinearLayout>

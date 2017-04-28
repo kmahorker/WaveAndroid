@@ -14,7 +14,7 @@
         android:id="@+id/signup5_text_profilepic"
         android:layout_centerHorizontal="true"
         android:text="Add Profile Picture"
-        android:textSize="35sp"
+        android:textSize="35dp"
         android:textColor="#FFF"
         android:layout_marginTop="100dp"/> <!--Add Profile Pic (Text)-->
 
@@ -28,7 +28,7 @@
         android:layout_marginTop="30dp"
         android:src="@drawable/add_picture_button"
         android:textColor="#FFF"
-        android:textSize="70sp"
+        android:textSize="70dp"
         android:background="@drawable/round_button"
         android:layout_centerHorizontal="true"/> <!-- Male Button-->
 
@@ -39,7 +39,7 @@
         android:layout_marginTop="30dp"
         android:text="Next"
         android:textColor="#FFF"
-        android:textSize="25sp"
+        android:textSize="25dp"
         android:background="@drawable/round_button"/> <!-- Next Button-->
 
 </LinearLayout>

@@ -37,7 +37,7 @@
         android:text="Host"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginLeft="2dp"
         android:layout_below="@id/partyprofile_text_partyname"/> <!--Host Label-->
 
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:text="Max Peterson"
         android:textColor="#000"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_toEndOf="@id/partyprofile_host_label"
         android:layout_below="@id/partyprofile_text_partyname"
         android:lines = "1"
@@ -60,7 +60,7 @@
         android:text="Location"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/partyprofile_host_label"/> <!--Location Label-->
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:text="4690 Del Playa Dr"
         android:textColor="#000"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_toEndOf="@id/partyprofile_location_label"
         android:layout_below="@id/partyprofile_host"
         android:layout_marginTop="5dp"
@@ -84,7 +84,7 @@
         android:text="Time"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/partyprofile_location_label"/> <!--Time Label-->
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:text="9 PM - 12 AM"
         android:textColor="#000"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_toEndOf="@id/partyprofile_location_label"
         android:layout_below="@id/partyprofile_location"
         android:layout_marginTop="5dp"
@@ -109,7 +109,7 @@
         android:text="Price"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="5dp"
         android:layout_below="@id/partyprofile_time_label"/> <!--Price Label-->
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:text="$5"
         android:textColor="#000"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_toEndOf="@id/partyprofile_time_label"
         android:layout_below="@id/partyprofile_time"
         android:layout_marginTop="5dp"
@@ -132,7 +132,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:text="GO"
-        android:textSize="28sp"
+        android:textSize="28dp"
         android:textColor="#FFF"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
@@ -146,7 +146,7 @@
         android:layout_height="wrap_content"
         android:text="Friends that are also going"
         android:textColor="#8e8e8e"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginTop="30dp"
         android:layout_below="@id/partyprofile_price_label"/> <!--Attendee Label-->
 
@@ -164,7 +164,7 @@
         android:layout_height="wrap_content"
         android:text="Events Hosted"
         android:textColor="#8e8e8e"
-        android:textSize="17sp"
+        android:textSize="17dp"
         android:layout_marginTop="30dp"
         android:layout_below="@id/partyprofile_attendee_list"/> <!--Hosted Label-->
 
