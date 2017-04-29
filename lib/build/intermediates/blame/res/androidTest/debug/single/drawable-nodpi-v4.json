@@ -1080,12 +1080,12 @@
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-nodpi-v4\\emoji_2668.png"
     },
     {
-        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-nodpi-v4\\emoji_1f251.png",
-        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-nodpi-v4\\emoji_1f251.png"
-    },
-    {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-nodpi-v4\\emoji_1f51f.png",
         "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-nodpi-v4\\emoji_1f51f.png"
+    },
+    {
+        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-nodpi-v4\\emoji_1f251.png",
+        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-nodpi-v4\\emoji_1f251.png"
     },
     {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-nodpi-v4\\emoji_1f46e.png",

@@ -1,9 +1,13 @@
 package com.thewavesocial.waveandroid;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -26,6 +30,7 @@ import me.sudar.zxingorient.ZxingOrient;
 import me.sudar.zxingorient.ZxingOrientResult;
 
 public class HomeSwipeActivity extends AppCompatActivity {
+    private static final int CAMERA_PERMISSION = 1;
     private PagerAdapter mPagerAdapter;
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
@@ -140,15 +145,35 @@ public class HomeSwipeActivity extends AppCompatActivity {
         qrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
-                zxingOrient.setInfo("Scan QR Code");
-                zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
-                zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
-                zxingOrient.setIcon(R.drawable.plug_icon);
-                zxingOrient.initiateScan();
-
+                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
+                        Log.d("Camera", "Deny");
+                        ActivityCompat.requestPermissions(mainActivity,
+                                new String[]{Manifest.permission.CAMERA},
+                                CAMERA_PERMISSION);
+                    return;
+                }
+                openScanner();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    openScanner();
+        }
+    }
+
+    private void openScanner() {
+        ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
+        zxingOrient.setInfo("Scan QR Code");
+        zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
+        zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
+        zxingOrient.setIcon(R.drawable.plug_icon);
+        zxingOrient.initiateScan();
     }
 
     public void setupUserActionbar() {

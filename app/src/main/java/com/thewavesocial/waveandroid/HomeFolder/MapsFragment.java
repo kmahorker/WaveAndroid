@@ -289,7 +289,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             }
         } else {
             Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Log.d("Location", location.getLatitude() + ", " + location.getLongitude());
             if (location != null) {
                 loc = new LatLng(location.getLatitude(), location.getLongitude());
             } else {
@@ -420,6 +419,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS)) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
             }
+            return;
         }
         askToSendSOSMessage();
     }
