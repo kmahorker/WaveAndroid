@@ -146,8 +146,6 @@ public class HomeSwipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
-                        Log.d("Camera", "Deny");
                         ActivityCompat.requestPermissions(mainActivity,
                                 new String[]{Manifest.permission.CAMERA},
                                 CAMERA_PERMISSION);

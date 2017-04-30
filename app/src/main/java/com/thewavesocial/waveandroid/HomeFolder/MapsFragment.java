@@ -71,6 +71,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public static boolean searchOpened = false;
     private SearchView searchbar;
     private EditText editText;
+    private ImageView separator;
     private int yDelta;
 
 
@@ -91,7 +92,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupHeightVariables();
         setupSearchbar();
 
-        getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
+        separator = (ImageView) getActivity().findViewById(R.id.home_mapsView_separator);
+        separator.setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -276,10 +278,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public void updateUserLoc(int key) {
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{
                                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -345,30 +345,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
-        int y = (int) event.getRawY();
+        int rawY = (int) event.getRawY();
+        int relY = (int) event.getY();
+        int y = rawY - relY; //Top edge of separator
         editText.setCursorVisible(false);
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
-            y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
-        }
-        Log.d("TRUE?", y + ", " + separatorHeight
-                + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
-        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
-                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
+        Log.d("RAWREV", y + "," + (UtilityClass.getScreenHeight(mainActivity) - mapHeight));
+        if ( y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight - 10)
+                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight - 10
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
                 case MotionEvent.ACTION_DOWN:
                     RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    yDelta = y - layoutParams1.bottomMargin;
+                    yDelta = rawY - layoutParams1.bottomMargin;
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    dragSeparator(y - yDelta, 0);
+                    dragSeparator(rawY - yDelta, 0);
                     break;
             }
+        } else if ( y >= UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight) - 10 ) {
+            dragSeparator(mapHeight/2 - (searchBarHeight + separatorHeight) + 10, 0);
+        } else if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight - 10) {
+            dragSeparator(separatorHeight/2 - mapHeight/2, 0);
         }
         UtilityClass.hideKeyboard(mainActivity);
         return true;
@@ -414,11 +416,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 //----------------------------------------------------------------------------------------------SOS
 
     private void checkSOSMessagePermission() {
-        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.SEND_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS)) {
+        if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
-            }
             return;
         }
         askToSendSOSMessage();
@@ -471,6 +470,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     @Override
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d("SMS", "SEND");
         switch (requestCode) {
             case 10:
                 if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -478,11 +478,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                         || ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
                         == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
+                    updateUserLoc(0);
                 }
-                updateUserLoc(0);
                 break;
             case 20:
-                askToSendSOSMessage();
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.SEND_SMS)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    askToSendSOSMessage();
+                }
             default:
                 break;
         }
