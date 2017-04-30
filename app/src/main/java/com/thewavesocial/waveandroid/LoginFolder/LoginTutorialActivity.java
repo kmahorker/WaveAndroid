@@ -84,12 +84,12 @@ public class LoginTutorialActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                        processJSONObject(graphResponse.getJSONObject());
+                        processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
                     }
                 });
                 Bundle parameters = new Bundle();
@@ -174,9 +174,9 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
-    private void processJSONObject(JSONObject json) {
+    private void processJSONObject(String token, JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
-        Log.d("Facebook JSON", json.toString());
+        Log.d("Facebook JSON", token + ",\n" + json.toString());
         //new JSONParsingTask("Specific URL with Facebook ID").execute();
         try
         {
