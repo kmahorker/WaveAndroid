@@ -47,7 +47,7 @@
         android:id="@+id/facebook_login_button"
         android:background="@drawable/round_corner_red"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/button_height"
         android:text="LOGIN WITH FACEBOOK"
         android:textColor="#fff"
         android:layout_above="@+id/dot_layout"

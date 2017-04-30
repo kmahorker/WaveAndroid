@@ -148,8 +148,8 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                                server_login_facebook(loginResult.getAccessToken().getToken());
-//                                processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
+//                                server_login_facebook(loginResult.getAccessToken().getToken());
+                                processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
                             }
                         });
                 Bundle parameters = new Bundle();
@@ -181,7 +181,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private void processJSONObject(String token, JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
         Log.d("Facebook JSON", token + "\n" + json);
-        //new JSONParsingTask("Specific URL with Facebook ID").execute();
         try
         {
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
@@ -279,7 +278,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 
     //Create new user account
     private void server_create_user(String last_name, String first_name, String email, String college, String password) {
