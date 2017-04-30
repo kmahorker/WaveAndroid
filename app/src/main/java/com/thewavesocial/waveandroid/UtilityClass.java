@@ -19,9 +19,11 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -106,7 +108,6 @@ public final class UtilityClass {
         mapLoc = loc1;
     }
 
-    //TODO: 4/22/17 Currently always returning NULL
     public static LatLng getLocationFromAddress(Activity activity, String strAddress) {
         Geocoder coder = new Geocoder(activity);
         List<Address> address;
@@ -123,6 +124,22 @@ public final class UtilityClass {
             Log.d("Sorry", e.getMessage());
         }
         return p1;
+    }
+    
+    public static String getAddressFromLocation(Activity activity, int lat, int lng) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(activity, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {e.printStackTrace();}
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String postalCode = addresses.get(0).getPostalCode();
+        return address + ", " + city + ", " + state + ", " + postalCode;
     }
 
     public static String priceToString(double price) {

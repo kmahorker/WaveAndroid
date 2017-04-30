@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.internal.Utility;
@@ -105,8 +107,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
-        //TODO: Commented this out
-        // new JSONParsingTask().execute(getActivity().getString(R.string.server_url));
 
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
@@ -115,7 +115,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         sos_button.setAlpha(155);
-                        handle.postDelayed(run, 3000);
+                        handle.postDelayed(run, 0000);
                         break;
                     case MotionEvent.ACTION_UP:
                         sos_button.setAlpha(255);
@@ -544,5 +544,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             Log.d("Result", result);
             System.out.println("result");
         }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UtilityClass.hideKeyboard(mainActivity);
     }
 }
