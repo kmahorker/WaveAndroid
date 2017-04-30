@@ -72,55 +72,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
-    private void setupReferences(){
-        mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        mPager.addOnPageChangeListener(new ScreenSlideChangeListener());
-
-        dot1 = (ImageView) findViewById(R.id.login_tutorial_dot1);
-        dot2 = (ImageView) findViewById(R.id.login_tutorial_dot2);
-        dot3 = (ImageView) findViewById(R.id.login_tutorial_dot3);
-
-        //setup facebook
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(final LoginResult loginResult) {
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                        processJSONObject(loginResult.getAccessToken().toString(), graphResponse.getJSONObject());
-                    }
-                });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, name, email, gender, age_range, birthday, location, education");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
-            @Override
-            public void onCancel() {
-                Toast.makeText(mainActivity, "Cancel", Toast.LENGTH_LONG).show();
-            }
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(mainActivity, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-        facebookLogin = (Button) findViewById(R.id.facebook_login_button);
-        facebookLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> permissions = new ArrayList<String>();
-                permissions.add("public_profile");
-                LoginManager.getInstance().logInWithReadPermissions(mainActivity, permissions);
-            }
-        });
-    }
-
-
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -174,6 +125,56 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 dot3.setImageResource(R.drawable.pink_full_dot);
                 break;
         }
+    }
+
+
+    private void setupReferences(){
+        mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.addOnPageChangeListener(new ScreenSlideChangeListener());
+
+        dot1 = (ImageView) findViewById(R.id.login_tutorial_dot1);
+        dot2 = (ImageView) findViewById(R.id.login_tutorial_dot2);
+        dot3 = (ImageView) findViewById(R.id.login_tutorial_dot3);
+
+        //setup facebook
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(final LoginResult loginResult) {
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                                server_login_facebook(loginResult.getAccessToken().getToken());
+//                                processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id, name, email, gender, age_range, birthday, location, education");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+            @Override
+            public void onCancel() {
+                Toast.makeText(mainActivity, "Cancel", Toast.LENGTH_LONG).show();
+            }
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(mainActivity, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        facebookLogin = (Button) findViewById(R.id.facebook_login_button);
+        facebookLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<String> permissions = new ArrayList<String>();
+                permissions.add("public_profile");
+                LoginManager.getInstance().logInWithReadPermissions(mainActivity, permissions);
+            }
+        });
     }
 
 
@@ -278,7 +279,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     //Create new user account
