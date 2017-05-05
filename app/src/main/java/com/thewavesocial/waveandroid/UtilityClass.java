@@ -125,7 +125,7 @@ public final class UtilityClass {
         }
         return p1;
     }
-    
+
     public static String getAddressFromLocation(Activity activity, int lat, int lng) {
         Geocoder geocoder;
         List<Address> addresses = null;
