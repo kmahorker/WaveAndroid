@@ -13,10 +13,11 @@
 
         <ImageView
             android:id="@+id/tutorialBigImage_2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_height="261dp"
-            android:layout_marginBottom="70dp"
-            app:srcCompat="@drawable/plug_icon"/>
+            android:layout_marginBottom="50dp"
+            app:srcCompat="@drawable/plug_icon" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,13 +40,13 @@
                 android:id="@+id/tutorialLargeText_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:lineSpacingExtra="5dp"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="3"
                 android:text="Search for a friend or an event"
                 android:textColor="#000000"
-                android:textSize="25dp" />
+                android:textSize="22dp" />
 
 
         </LinearLayout>
@@ -57,7 +58,7 @@
             android:layout_marginLeft="43dp"
             android:layout_marginRight="43dp"
             android:layout_weight="1"
-            android:lineSpacingExtra="5dp"
+            android:lineSpacingExtra="2dp"
             android:maxLines="5"
             android:text="Use the Search Box to find and follow a friend. Tap on the Events box to find events happening near you."
             android:textColor="#8E8E93"
