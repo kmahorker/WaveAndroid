@@ -90,7 +90,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder confirmMessage = new AlertDialog.Builder(thisActivity);
-                confirmMessage.setTitle("In Progress") //TODO: 4/25/17 Make description better
+                confirmMessage.setTitle("Unsaved Changes")
                         .setMessage("Are you sure you want to discard your progress?")
                         .setCancelable(false)
                         .setPositiveButton("Discard", new DialogInterface.OnClickListener() {

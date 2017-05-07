@@ -311,6 +311,11 @@ public class User implements Parcelable {
         this.following = following;
     }
 
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
+
     protected User(Parcel in) {
         userID = in.readString();
         firstName = in.readString();

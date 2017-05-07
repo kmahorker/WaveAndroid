@@ -1,11 +1,11 @@
 [
     {
-        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\ic_emoji_recent_light_normal.png",
-        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\ic_emoji_recent_light_normal.png"
-    },
-    {
         "merged": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\orca_emoji_backspace_back_normal.png",
         "source": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\orca_emoji_backspace_back_normal.png"
+    },
+    {
+        "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\ic_emoji_recent_light_normal.png",
+        "source": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\ic_emoji_recent_light_normal.png"
     },
     {
         "merged": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\orca_composer_tab.9.png",
