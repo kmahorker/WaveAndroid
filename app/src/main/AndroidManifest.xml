@@ -30,7 +30,9 @@
             android:value="@integer/google_play_services_version"
             />
 
-        <activity android:name=".LoginFolder.LoginActivity" />
+        <activity android:name=".LoginFolder.LoginActivity">
+
+        </activity>
         <activity android:name=".LoginFolder.SignupActivity" />
         <activity android:name=".SocialFolder.FriendProfileActivity" />
         <activity android:name=".SocialFolder.InviteFriendsActivity" />
@@ -50,15 +52,15 @@
         <activity
             android:name=".HomeSwipeActivity"
             android:windowSoftInputMode="adjustPan">
-        </activity>
-
-        <activity android:name=".LoginFolder.LoginTutorialActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <activity android:name=".LoginFolder.LoginTutorialActivity">
+
+        </activity>
     </application>
 
 </manifest>

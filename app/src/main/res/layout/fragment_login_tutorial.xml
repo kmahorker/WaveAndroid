@@ -14,10 +14,11 @@
 
         <ImageView
             android:id="@+id/tutorialBigImage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="261dp"
-            android:layout_marginBottom="81dp"
-            app:srcCompat="@drawable/plug_icon"/>
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            app:srcCompat="@drawable/tutorial_1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,13 +40,13 @@
                 android:id="@+id/tutorialLargeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:lineSpacingExtra="5dp"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="3"
-                android:text="Find Parties Near You"
+                android:text="Find parties near you"
                 android:textColor="#000000"
-                android:textSize="25dp" />
+                android:textSize="22dp" />
 
 
         </LinearLayout>
@@ -57,9 +58,9 @@
             android:layout_marginLeft="43dp"
             android:layout_marginRight="43dp"
             android:layout_weight="1"
-            android:lineSpacingExtra="5dp"
+            android:lineSpacingExtra="2dp"
             android:maxLines="5"
-            android:text="Just tap on a house icon to check it out. You can see who's going to an event and when and where it's going down."
+            android:text="Tap on a house icon to check it out. You can see who's going to an event and when and where it's going down."
             android:textColor="#8E8E93"
             android:textSize="16dp" />
 

@@ -13,10 +13,11 @@
 
         <ImageView
             android:id="@+id/tutorialBigImage_3"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="261dp"
-            android:layout_marginBottom="70dp"
-            app:srcCompat="@drawable/plug_icon"/>
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"
+            app:srcCompat="@drawable/plug_icon" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,17 +40,18 @@
                 android:id="@+id/tutorialLargeText_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:lineSpacingExtra="5dp"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="3"
                 android:text="Host parties and invite friends"
                 android:textColor="#000000"
-                android:textSize="25dp" />
+                android:textSize="22dp" />
 
 
         </LinearLayout>
 
+        <!-- TODO Change to legit description -->
         <TextView
             android:id="@+id/tutorialDescription"
             android:layout_width="match_parent"
@@ -57,7 +59,7 @@
             android:layout_marginLeft="43dp"
             android:layout_marginRight="43dp"
             android:layout_weight="1"
-            android:lineSpacingExtra="5dp"
+            android:lineSpacingExtra="2dp"
             android:maxLines="5"
             android:text="Just tap on a house icon to see who's going to a party and when it's getting shut down"
             android:textColor="#8E8E93"
