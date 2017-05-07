@@ -18,7 +18,7 @@
             android:layout_height="261dp"
             android:layout_gravity="center"
             android:layout_marginBottom="50dp"
-            app:srcCompat="@drawable/tutorial_1" />
+            app:srcCompat="@drawable/tutorial_01" />
 
         <LinearLayout
             android:layout_width="match_parent"
