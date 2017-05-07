@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -31,6 +33,7 @@ public class EditListActivity extends AppCompatActivity {
     private TextView create;
     private ListView friend_list;
     private RecyclerView invite_list;
+    private EditText editText;
     private static EditListActivity mainActivity;
     private List<User> users;
     private static List<User> invites;
@@ -104,11 +107,14 @@ public class EditListActivity extends AppCompatActivity {
 
     private void setupReferences(){
         searchbar = (SearchView)findViewById(R.id.edit_event_list_search);
+        searchbar.setQueryHint("Search Name");
         create = (TextView)findViewById(R.id.edit_event_list_create);
         create.setText("Update List");
         friend_list = (ListView)findViewById(R.id.edit_event_list_list);
         friend_list.setAdapter(new FriendListAdapter(users));
         invite_list = (RecyclerView)findViewById(R.id.edit_event_list_selectedList);
+        LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+        invite_list.setLayoutManager(layoutManager);
         invite_list.setAdapter(new SelectedAdapter(invites));
     }
 
@@ -125,14 +131,31 @@ public class EditListActivity extends AppCompatActivity {
                 }
             }
         });
+        searchbar.clearFocus();
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override public boolean onQueryTextSubmit(String query) {
                 friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(users, query)));
+                searchbar.clearFocus();
                 return false;
             }
             @Override public boolean onQueryTextChange(String query) {
                 friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(users, query)));
                 return false;
+            }
+        });
+
+        int searchCloseButtonId = searchbar.getContext().getResources()
+                .getIdentifier("android:id/search_close_btn", null, null);
+        ImageView closeButton = (ImageView) this.searchbar.findViewById(searchCloseButtonId);
+        // Set on click listener
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+                EditText editText = (EditText) searchbar.findViewById(id);
+                editText.setText("");
+                friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(users, "")));
+                searchbar.clearFocus();
             }
         });
     }
