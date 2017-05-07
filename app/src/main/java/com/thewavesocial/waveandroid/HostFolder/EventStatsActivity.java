@@ -154,6 +154,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
+                            // TODO: 04/20/2017 Remove party from server
+                            // TODO: 04/20/2017 Notify all users
+                            // TODO: 04/20/2017 Back to hostFragment
                         }})
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         @Override
