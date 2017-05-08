@@ -17,6 +17,7 @@
         android:label="PLUG"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:largeHeap="true"
         tools:replace="android:label, android:icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
