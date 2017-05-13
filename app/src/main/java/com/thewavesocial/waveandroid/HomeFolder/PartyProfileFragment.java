@@ -54,7 +54,7 @@ public class PartyProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
-        party = CurrentUser.getPartyObject(getArguments().getString("partyIDLong"));
+        party = getArguments().getParcelable("partyObject");
 
         setupReferences();
         setupOnClicks();

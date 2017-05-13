@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.HomeFolder;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -257,7 +258,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public boolean onMarkerClick(Marker marker) {
         UtilityClass.hideKeyboard(mainActivity);
         if (marker.getTag() != null) {
-            openPartyProfile((long) marker.getTag());
+            openPartyProfile( marker.getTag() + "");
             editText.setCursorVisible(false);
             dragSeparator(80, 0);
             searchOpened = false;
@@ -399,10 +400,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    private void openPartyProfile(long partyID) {
+    private void openPartyProfile(String partyID) {
         Fragment fragment = new PartyProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("partyIDLong", partyID);
+        bundle.putParcelable("partyObject", CurrentUser.getPartyObject(partyID));
         fragment.setArguments(bundle);
 
         FragmentManager fm = mainActivity.getSupportFragmentManager();
