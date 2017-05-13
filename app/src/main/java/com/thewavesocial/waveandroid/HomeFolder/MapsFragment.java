@@ -46,7 +46,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.ui.IconGenerator;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -61,6 +60,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
+import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
@@ -316,11 +317,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public void addParty(Party party, LatLng loc) {
-        IconGenerator iconGenerator = new IconGenerator(mainActivity);
-
+        EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
+        emojiText.setText(party.getPartyEmoji().substring(0,1));
+        emojiText.buildDrawingCache();
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
-                .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(party.getPartyEmoji()))));
+                .icon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache())));
         marker.setTag(party);
     }
 

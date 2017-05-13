@@ -81,4 +81,14 @@
         android:layout_centerVertical="true"
         android:elevation="10dp"/>
 
+    <github.ankushsachdeva.emojicon.EmojiconTextView
+        android:id="@+id/home_mapsView_emoji"
+        android:text="\ue32d"
+        android:textSize="@dimen/button_text_normal"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_shape_blue"/>
+
 </RelativeLayout>

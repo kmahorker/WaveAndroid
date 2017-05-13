@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import github.ankushsachdeva.emojicon.EmojiconTextView;
+
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
     public static final int activityHostFragment = 1, activitySocialFragment = 2;
     private GoogleMap mMap;
@@ -54,13 +58,19 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent = getIntent();
         party = getIntent().getExtras().getParcelable("partyObject");
         callerType = intent.getExtras().getInt("callerActivity");
-
-        setupMapElements();
         setupPartyInfos();
         setupReferences();
         setupFunctionalities();
         setupActionbar();
         setupDeleteEditButtons(callerType);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setupMapElements();
+            }
+        }, 500);
     }
 
 
@@ -230,14 +240,16 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         latlng = party.getMapAddress().getAddress_latlng();
-        Marker marker = mMap.addMarker(new MarkerOptions().position(latlng));
-        marker.setTag(party.getPartyID());
-        if ( party.getPartyEmoji() != "" )
-            marker.setTitle(party.getPartyEmoji()); //TODO: 4/25/17 Make this the actual custom pin
-                    //setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(CurrentUser.theUser.getProfilePic(), 150, 150)));
-        //else
-        //    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(party.getPartyEmoji(), 150, 150)));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, (float) 15.0));
+
+        EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.hostEventStats_emoji);
+        emojiText.setText(party.getPartyEmoji().substring(0,1));
+        emojiText.buildDrawingCache();
+
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(latlng)
+                .icon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache())));
+        marker.setTag(party.getPartyID());
     }
 
 
