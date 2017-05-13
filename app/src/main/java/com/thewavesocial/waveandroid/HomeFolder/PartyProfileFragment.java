@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -138,18 +139,15 @@ public class PartyProfileFragment extends Fragment {
         attendingFriends.setLayoutManager(layoutManagerAttendees);
         attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
 
-//      final List<Party> events = CurrentUser.getPartyListObjects(
-//                CurrentUser.getUserObject(party.getHostingUsers().get(0)).getHosted());
         final List<Party> events = CurrentUser.getPartyListObjects(
                 CurrentUser.theUser.getHosted()); // TODO: 03/08/2017 Testing Purpose
         hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, events));
-        hostedEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        hostedEvents.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                long id = CurrentUser.getUserObject(party.getHostingUsers().get(0)).getHosted().get(i);
-//                openPartyProfile(id);
-                String id = CurrentUser.theUser.getHosted().get(i);
-                openPartyProfile(id); // TODO: 03/08/2017 Testing Purpose
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
     }
@@ -158,17 +156,5 @@ public class PartyProfileFragment extends Fragment {
         if (attendingFriends != null) {
             attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
         }
-    }
-
-    private void openPartyProfile(String partyID) {
-        Fragment fragment = new PartyProfileFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("partyIDLong", partyID);
-        fragment.setArguments(bundle);
-
-        FragmentManager fm = mainActivity.getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.home_mapsView_infoFrame, fragment);
-        transaction.commit();
     }
 }

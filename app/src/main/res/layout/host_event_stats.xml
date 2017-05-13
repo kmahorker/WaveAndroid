@@ -91,10 +91,10 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/hostEventStats_delete_button"
+        android:id="@+id/hostEventStats_qr_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delete Event"
+        android:text="Scan Attendees"
         android:textSize="@dimen/button_text_normal"
         android:textColor="@color/appColor"
         android:padding="15dp"
@@ -108,7 +108,7 @@
         android:layout_height="match_parent"
         android:background="@color/white_solid"
         android:layout_below="@id/hostEventStats_party_stats"
-        android:layout_above="@id/hostEventStats_delete_button"
+        android:layout_above="@id/hostEventStats_qr_button"
         android:elevation="5dp"
         android:scrollbarFadeDuration="0">
 

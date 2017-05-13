@@ -1,12 +1,15 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,17 +36,20 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
+import me.sudar.zxingorient.ZxingOrient;
 
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
     public static final int activityHostFragment = 1, activitySocialFragment = 2;
+    private static final int CAMERA_PERMISSION = 3;
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView, deleteView, editView, bounceView, attendingView;
+    private TextView goingView, genderView, hostView, locView, dateView, timeView, qrAction, editView, bounceView, attendingView;
     private ImageView qrCodeView;
     private RecyclerView attendingFriends, bouncingFriends;
     private String host, loc, date, time;
@@ -62,7 +68,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setupReferences();
         setupFunctionalities();
         setupActionbar();
-        setupDeleteEditButtons(callerType);
+        setupQRAndEditButtons(callerType);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -74,13 +80,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
-    private void setupDeleteEditButtons(int callerType) {
+    private void setupQRAndEditButtons(int callerType) {
         if ( callerType == activityHostFragment ) {
             editView.setVisibility(View.VISIBLE);
-            deleteView.setVisibility(View.VISIBLE);
+            qrAction.setVisibility(View.VISIBLE);
         } else if ( callerType == activitySocialFragment ){
             editView.setVisibility(View.INVISIBLE);
-            deleteView.setVisibility(View.INVISIBLE);
+            qrAction.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -116,7 +122,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
         attendingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
         attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
-        deleteView = (TextView) findViewById(R.id.hostEventStats_delete_button);
+        qrAction = (TextView) findViewById(R.id.hostEventStats_qr_button);
         bounceView = (TextView) findViewById(R.id.hostEventStats_bouncertext);
         bouncingFriends = (RecyclerView) findViewById(R.id.hostEventStats_bouncerlist);
     }
@@ -166,28 +172,18 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
 
 
-        deleteView.setOnClickListener(new View.OnClickListener() {
+        qrAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder alertMessage = new AlertDialog.Builder(mainActivity);
-                alertMessage.setTitle("Warning")
-                    .setMessage("Are you sure you want to delete this event?")
-                    .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
-                            // TODO: 04/20/2017 Remove party from server
-                            // TODO: 04/20/2017 Notify all users
-                            // TODO: 04/20/2017 Back to hostFragment
-                        }})
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //do nothing
-                        }
-                    })
-                    .setCancelable(true)
-                    .show();
+                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
+                    Log.d("Camera", "Deny");
+                    ActivityCompat.requestPermissions(mainActivity,
+                            new String[]{Manifest.permission.CAMERA},
+                            CAMERA_PERMISSION);
+                    return;
+                }
+                openScanner();
             }
         });
     }
@@ -253,9 +249,21 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
-    public Bitmap resizeMapIcons(BitmapDrawable pic, int width, int height) {
-        Bitmap imageBitmap = pic.getBitmap();
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
+    private void openScanner() {
+        ZxingOrient zxingOrient = new ZxingOrient(this);
+        zxingOrient.setInfo("Scan QR Code");
+        zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
+        zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
+        zxingOrient.setIcon(R.drawable.plug_icon);
+        zxingOrient.initiateScan();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    openScanner();
+        }
     }
 }
