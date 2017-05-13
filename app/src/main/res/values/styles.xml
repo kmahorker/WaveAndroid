@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#FFF</item>
         <item name="colorPrimaryDark">@color/appColor</item>
-        <item name="colorAccent">#FFF</item>
+        <item name="colorAccent">#000</item>
         <item name="android:textViewStyle">@style/SFTextViewStyle</item>
         <item name="android:buttonStyle">@style/SFButtonStyle</item>
     </style>
