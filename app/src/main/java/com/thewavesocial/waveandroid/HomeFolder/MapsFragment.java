@@ -46,7 +46,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -258,7 +260,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public boolean onMarkerClick(Marker marker) {
         UtilityClass.hideKeyboard(mainActivity);
         if (marker.getTag() != null) {
-            openPartyProfile( marker.getTag() + "");
+            openPartyProfile( (Party)marker.getTag());
             editText.setCursorVisible(false);
             dragSeparator(80, 0);
             searchOpened = false;
@@ -313,18 +315,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParty(String partyID, LatLng loc) {
+    public void addParty(Party party, LatLng loc) {
+        IconGenerator iconGenerator = new IconGenerator(mainActivity);
+
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(loc)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
-        marker.setTag(partyID);
+                .icon(BitmapDescriptorFactory.fromBitmap(iconGenerator.makeIcon(party.getPartyEmoji()))));
+        marker.setTag(party);
     }
 
 
     public void addParties(GoogleMap googleMap, List<String> partyIDs) {
         // TODO: 05/12/2017 Should pass party objecjt to addParty
-        for (String party : partyIDs) {
-            LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
+        List<Party> parties = CurrentUser.getPartyListObjects(partyIDs);
+        for (Party party : parties) {
+            LatLng loc = party.getMapAddress().getAddress_latlng();
             if (loc != null)
                 addParty(party, loc);
         }
@@ -401,10 +406,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    private void openPartyProfile(String partyID) {
+    private void openPartyProfile(Party party) {
         Fragment fragment = new PartyProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("partyObject", CurrentUser.getPartyObject(partyID));
+        bundle.putParcelable("partyObject", party);
         fragment.setArguments(bundle);
 
         FragmentManager fm = mainActivity.getSupportFragmentManager();
