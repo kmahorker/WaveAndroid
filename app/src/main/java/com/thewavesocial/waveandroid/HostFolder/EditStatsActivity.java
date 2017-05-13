@@ -115,10 +115,19 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                CurrentUser.deleteParty(party.getPartyID());// TODO: 04/20/2017 Remove party from server
-                // TODO: 04/20/2017 Notify all users 
-                Intent intent  = new Intent(mainActivity, HostControllerFragment.class);
-                startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
+                CurrentUser.deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        // TODO: 04/20/2017 Remove party from server
+                        // TODO: 04/20/2017 Notify all users
+                        if ( !result.equals("success") ) {
+                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG ).show();
+                        } else {
+                            Intent intent = new Intent(mainActivity, HostControllerFragment.class);
+                            startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
+                        }
+                    }
+                });
             }
         });
     }

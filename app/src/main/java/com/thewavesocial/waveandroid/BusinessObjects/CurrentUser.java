@@ -44,6 +44,7 @@ public final class CurrentUser {
         });
     }
 
+    //Initialize user object
     public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
         context = (Activity) cont;
         getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
@@ -58,11 +59,12 @@ public final class CurrentUser {
         });
     }
 
+    //Set main user object
     public static void setTheUser(User theUser) {
         CurrentUser.theUser = theUser;
     }
 
-    //Get list of user information
+    //Get list of user information from server
     public static void getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
@@ -106,7 +108,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get list of party information
+    //Get list of party information from server
     public static void getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
@@ -176,7 +178,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get party information
+    //Get party information from server
     public static void getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = context.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + getTokenFromLocal(context).get("jwt");
@@ -203,7 +205,7 @@ public final class CurrentUser {
             }}).execute();
     }
 
-    //Get user following
+    //Get user following from server
     public static void getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(context).get("jwt");
@@ -236,7 +238,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Fill in all party information
+    //Fill in all party information locally
     private static Party constructParty(HashMap<String, String> info) {
         String partyID = "", name = "", emoji = "", startDate = "", startTime = "", endDate = "", endTime = "", address = "", str_isPublic = "", hostName = "";
         List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
@@ -301,7 +303,7 @@ public final class CurrentUser {
         return party;
     }
 
-    //Fill in all user information
+    //Fill in all user information locally
     private static User constructUser(HashMap<String, String> info) {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "", profilePic = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
@@ -356,15 +358,31 @@ public final class CurrentUser {
         return user;
     }
 
-    public static void deleteParty(String partyID) {
+    //Delete party from server
+    public static void deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
-        String url = context.getString(R.string.server_url) + "events/" + partyID + " ?access_token="
-                + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token="
+                + getTokenFromLocal(context).get("jwt");
         String result = null;
         comps[0] = new RequestComponents(url, "DELETE", null);
-        new DatabaseAccess.HttpRequestTask(context, comps, null).execute();
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getJSONObject("status") + "";
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_DeleteEvent", result.get(0));
+                delegate.onResultReady(status);
+            }
+        }).execute();
         Log.d("Delete Party", result);
     }
+
 
     //
 //    //Get user information
