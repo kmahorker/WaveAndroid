@@ -120,7 +120,7 @@ public class PartyProfileFragment extends Fragment {
         hostedEvents = (ListView) mainActivity.findViewById(R.id.partyprofile_eventsHosted_list);
         emoji = (EmojiconTextView) mainActivity.findViewById(R.id.partyprofile_text_emoji);
 
-        emoji.setText(party.getPartyEmoji());
+        emoji.setText(party.getPartyEmoji().substring(0,1));
         partyname.setText(party.getName());
         hostname.setText(party.getHostName());
         datetime.setText(UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
