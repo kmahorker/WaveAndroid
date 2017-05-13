@@ -322,7 +322,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public void addParties(GoogleMap googleMap, List<String> partyIDs) {
-        // TODO: 05/12/2017 Should pass party objecjt to addParty 
+        // TODO: 05/12/2017 Should pass party objecjt to addParty
         for (String party : partyIDs) {
             LatLng loc = CurrentUser.getPartyObject(party).getMapAddress().getAddress_latlng();
             if (loc != null)

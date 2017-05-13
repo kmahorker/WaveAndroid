@@ -90,7 +90,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder confirmMessage = new AlertDialog.Builder(thisActivity);
-                confirmMessage.setTitle("In Progress") //TODO: 4/25/17 Make description better
+                confirmMessage.setTitle("Unsaved Changes")
                         .setMessage("Are you sure you want to discard your progress?")
                         .setCancelable(false)
                         .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
@@ -554,14 +554,30 @@ public class CreateAnEventActivity extends AppCompatActivity {
             invite_list.setLayoutManager(layoutManager);
             invite_list.setAdapter(new SelectedAdapter(invites));
 
+            searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    searchbar.clearFocus();
                     return false;
                 }
                 @Override public boolean onQueryTextChange(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     return false;
+                }
+            });
+            int searchCloseButtonId = searchbar.getContext().getResources()
+                    .getIdentifier("android:id/search_close_btn", null, null);
+            ImageView closeButton = (ImageView) this.searchbar.findViewById(searchCloseButtonId);
+            // Set on click listener
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+                    EditText editText = (EditText) searchbar.findViewById(id);
+                    editText.setText("");
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, "")));
+                    searchbar.clearFocus();
                 }
             });
         }
@@ -721,14 +737,30 @@ public class CreateAnEventActivity extends AppCompatActivity {
             invite_list.setLayoutManager( layoutManager );
             invite_list.setAdapter(new SelectedAdapter(invites));
 
+            searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    searchbar.clearFocus();
                     return false;
                 }
                 @Override public boolean onQueryTextChange(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     return false;
+                }
+            });
+            int searchCloseButtonId = searchbar.getContext().getResources()
+                    .getIdentifier("android:id/search_close_btn", null, null);
+            ImageView closeButton = (ImageView) this.searchbar.findViewById(searchCloseButtonId);
+            // Set on click listener
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+                    EditText editText = (EditText) searchbar.findViewById(id);
+                    editText.setText("");
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, "")));
+                    searchbar.clearFocus();
                 }
             });
         }

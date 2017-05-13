@@ -31,6 +31,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class EditStatsActivity extends AppCompatActivity {
     String CALLING_CLASS = "EditEvent";
 
     RecyclerView invitedRecyclerView, bouncingRecylcerView;
+    TextView inviteTextView, bouncingTextView;
 
     static Party party;
 
@@ -277,6 +279,30 @@ public class EditStatsActivity extends AppCompatActivity {
         List<User> bouncingUsers = new ArrayList<User>();
         bouncingUsers.addAll(CurrentUser.getUsersListObjects(party.getBouncingUsers()));
         bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, bouncingUsers));
+
+        inviteTextView = (TextView)findViewById(R.id.invite_text);
+        inviteTextView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
+        inviteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainActivity, EditListActivity.class);
+                intent.putExtra("partyObj", party);
+                intent.putExtra("layout", 1);
+                startActivity(intent);
+            }
+        });
+        bouncingTextView = (TextView)findViewById(R.id.bouncing_text);
+        bouncingTextView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
+        bouncingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainActivity, EditListActivity.class);
+                intent.putExtra("partyObj", party);
+                intent.putExtra("layout", 2);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void setUpEmojicon(){

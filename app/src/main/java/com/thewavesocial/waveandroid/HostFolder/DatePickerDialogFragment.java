@@ -111,9 +111,9 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_date_picker_dialog, container, false);
+        //View view = inflater.inflate(R.layout.fragment_date_picker_dialog, container, false);
         //dateDisplay = (TextView) view.findViewById(dateDisplayInt);
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);//view;
     }
 
     @Override
@@ -166,11 +166,11 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
             }*/
     }
 
-
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), alertDialogStyle, this, year, month, day);
+        //View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_date_picker_dialog, mContainer, false);
+        //datePickerDialog.setView(view);
         return datePickerDialog;
     }
 

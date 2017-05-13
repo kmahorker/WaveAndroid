@@ -170,9 +170,15 @@ public final class UtilityClass {
         if (query == "")
             return oldList;
         List<T> newList = new ArrayList<>();
-        for (T obj : oldList)
-            if (obj.toString().toLowerCase().contains(query.toLowerCase()))
+        Log.d("outside loop", "Query: " + query);
+        for (T obj : oldList) {
+
+            if (obj.toString().toLowerCase().trim().contains(query.toLowerCase())) {
                 newList.add(obj);
+                Log.d("inside Loop", "Query: " + query);
+            }
+        }
+
         return newList;
     }
 }

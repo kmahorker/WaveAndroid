@@ -88,4 +88,11 @@ public final class CurrentUser {
         return list;
     }
 
+    public static List<String> getPartyIDList(List<Party> parties ) {
+        List<String> list = new ArrayList<>();
+        for ( Party party : parties )
+            list.add(party.getPartyID());
+        return list;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.LoginFolder;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,8 @@ public class LoginTutorialFragment extends Fragment {
     private int fragNum;
     private View view;
     private LoginTutorialActivity mainActivity;
-    private ImageView largeTutorialImage, tutorialIcon;
+    private ImageView tutorialIcon;
+    private AppCompatImageView largeTutorialImage;
     private TextView tutorialLargeText, tutorialDescription;
     public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 

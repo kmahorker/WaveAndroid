@@ -203,7 +203,8 @@
             android:textColor="#8e8e8e"
             android:textSize="@dimen/text_small"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"/> <!--Attendee Label-->
+            android:layout_marginTop="10dp"
+            android:clickable="true" /> <!--Attendee Label-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/invite_list"
@@ -219,7 +220,8 @@
             android:textColor="#8e8e8e"
             android:textSize="@dimen/text_small"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"/> <!--Attendee Label-->
+            android:layout_marginTop="30dp"
+            android:clickable="true"/> <!--Attendee Label-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/bouncing_list"

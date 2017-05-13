@@ -236,6 +236,7 @@ public class Party implements Parcelable {
     }
 
 
+
     protected Party(Parcel in) {
         partyID = in.readString();
         name = in.readString();

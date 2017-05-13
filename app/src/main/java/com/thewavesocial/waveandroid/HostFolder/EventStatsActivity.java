@@ -122,7 +122,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView.setImageBitmap(getQRCode("WOWOW"));
 
         if ( callerType == activityHostFragment ) {
-            attendingView.setText("Invited (" + party.getAttendingUsers().size() + ")");
+            attendingView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
+            attendingView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: Intent Start Activty Put Extra party
+                }
+            });
             LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             attendingFriends.setLayoutManager(layoutManagerAttendees);
             attendingFriends.setFocusable(false);
@@ -136,7 +142,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
 
         if ( callerType == activityHostFragment ) {
-            bounceView.setText("Bouncers (" + party.getHostingUsers().size() + ")");
+            bounceView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
+            bounceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: intent start edit bouncers put extra party
+                }
+            });
             LinearLayoutManager layoutManagerBouncers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             bouncingFriends.setLayoutManager(layoutManagerBouncers);
             bouncingFriends.setFocusable(false);
