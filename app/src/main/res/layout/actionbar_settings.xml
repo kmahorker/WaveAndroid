@@ -19,7 +19,6 @@
         android:layout_gravity="center"
         android:text="Settings"
         android:textColor="@color/black_solid"
-        android:textSize="20dp"
-        android:textStyle="bold"/>
+        android:textSize="20dp"/>
 
 </FrameLayout>
