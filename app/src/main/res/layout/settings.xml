@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
+
+    <RelativeLayout
+        android:id="@+id/settings_sos"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/white_solid">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back_arrow"
+            android:scaleX="-1"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="SOS"
+            android:textSize="@dimen/text_normal"
+            android:textColor="@color/black_solid"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/white_solid">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back_arrow"
+            android:scaleX="-1"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Privacy Policy"
+            android:textSize="@dimen/text_normal"
+            android:textColor="@color/black_solid"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_service"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/white_solid">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back_arrow"
+            android:scaleX="-1"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Terms of Service"
+            android:textSize="@dimen/text_normal"
+            android:textColor="@color/black_solid"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/settings_share"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Share Plug"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/black_solid"
+        android:background="@color/white_solid"
+        android:gravity="center"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/settings_logout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Log out"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/black_solid"
+        android:background="@color/white_solid"
+        android:gravity="center"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:id="@+id/settings_delete_account"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Delete Account"
+        android:textSize="@dimen/text_normal"
+        android:textColor="@color/black_solid"
+        android:background="@color/white_solid"
+        android:gravity="center"
+        android:layout_marginTop="30dp"/>
+
+</LinearLayout>

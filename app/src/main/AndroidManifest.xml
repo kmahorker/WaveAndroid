@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.thewavesocial.waveandroid">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.thewavesocial.waveandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/plug_icon"
         android:label="PLUG"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:largeHeap="true"
         tools:replace="android:label, android:icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".LoginFolder.LoginActivity"></activity>
-        <activity android:name=".LoginFolder.SignupActivity" />
-        <activity android:name=".SocialFolder.FriendProfileActivity" />
-        <activity android:name=".SocialFolder.InviteFriendsActivity" />
-        <activity android:name=".SocialFolder.EditUserProfileActivity" />
-        <activity android:name=".HostFolder.CreateEventActivity" />
-        <activity android:name=".HostFolder.ManageEventsActivity" />
-        <activity android:name=".HostFolder.EventStatsActivity" />
-        <activity android:name=".LoginFolder.ForgotPasswordActivity" />
-        <activity android:name=".LoginFolder.LaunchActivity" />
-        <activity android:name=".SocialFolder.FollowActivity" />
-        <activity android:name=".HostFolder.CreateAnEventActivity" />
-        <activity android:name=".LoginFolder.AddBestFriendActivity" />
-        <activity android:name=".HostFolder.EditStatsActivity" />
+        <activity android:name=".LoginFolder.LoginActivity"/>
+        <activity android:name=".LoginFolder.SignupActivity"/>
+        <activity android:name=".SocialFolder.FriendProfileActivity"/>
+        <activity android:name=".SocialFolder.InviteFriendsActivity"/>
+        <activity android:name=".SocialFolder.EditUserProfileActivity"/>
+        <activity android:name=".HostFolder.CreateEventActivity"/>
+        <activity android:name=".HostFolder.ManageEventsActivity"/>
+        <activity android:name=".HostFolder.EventStatsActivity"/>
+        <activity android:name=".LoginFolder.ForgotPasswordActivity"/>
+        <activity android:name=".LoginFolder.LaunchActivity"/>
+        <activity android:name=".SocialFolder.FollowActivity"/>
+        <activity android:name=".HostFolder.CreateAnEventActivity"/>
+        <activity android:name=".LoginFolder.AddBestFriendActivity"/>
+        <activity android:name=".HostFolder.EditStatsActivity"/>
         <activity
             android:name=".HomeSwipeActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".LoginFolder.LoginTutorialActivity">
-
         </activity>
-        <activity android:name=".HostFolder.EditListActivity"></activity>
+        <activity android:name=".HostFolder.EditListActivity"/>
+        <activity android:name=".SocialFolder.SettingsActivity">
+        </activity>
     </application>
 
 </manifest>

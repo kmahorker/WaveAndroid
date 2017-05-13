@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
+import com.thewavesocial.waveandroid.SocialFolder.SettingsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
 import org.json.JSONException;
@@ -185,6 +186,15 @@ public class HomeSwipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            }
+        });
+
+        ImageView settings = (ImageView) findViewById(R.id.actionbar_user_setting);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainActivity, SettingsActivity.class);
+                startActivity(intent);
             }
         });
     }
