@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.getTokenFromLocal;
+
 
 //Nothing changed
 public final class CurrentUser {
@@ -44,7 +46,7 @@ public final class CurrentUser {
 
     public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
         context = (Activity) cont;
-        getUserObject(DatabaseAccess.getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
+        getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 theUser = result;
@@ -65,7 +67,7 @@ public final class CurrentUser {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
             String url = context.getString(R.string.server_url) + "users/" + userIdList.get(i)
-                    + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                    + "?access_token=" + getTokenFromLocal(context).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>(){
@@ -109,7 +111,7 @@ public final class CurrentUser {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
             String url = context.getString(R.string.server_url) + "users/" + partyIdList.get(i)
-                    + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                    + "?access_token=" + getTokenFromLocal(context).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
@@ -138,7 +140,7 @@ public final class CurrentUser {
     //Get user information
     public static void getUserObject(String userID, final OnResultReadyListener<User> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
-                + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                + "?access_token=" + getTokenFromLocal(context).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>(){
             @Override
@@ -177,7 +179,7 @@ public final class CurrentUser {
     //Get party information
     public static void getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = context.getString(R.string.server_url) + "events/" + partyID
-                + "?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                + "?access_token=" + getTokenFromLocal(context).get("jwt");
 
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -204,7 +206,7 @@ public final class CurrentUser {
     //Get user following
     public static void getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followings?access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                + "/followings?access_token=" + getTokenFromLocal(context).get("jwt");
 
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -352,6 +354,16 @@ public final class CurrentUser {
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
                 notifications2, "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
+    }
+
+    public static void deleteParty(String partyID) {
+        RequestComponents comps[] = new RequestComponents[1];
+        String url = context.getString(R.string.server_url) + "events/" + partyID + " ?access_token="
+                + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        String result = null;
+        comps[0] = new RequestComponents(url, "DELETE", null);
+        new DatabaseAccess.HttpRequestTask(context, comps, null).execute();
+        Log.d("Delete Party", result);
     }
 
     //

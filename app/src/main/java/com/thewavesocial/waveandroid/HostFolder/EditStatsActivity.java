@@ -115,9 +115,10 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                // TODO: 04/20/2017 Remove party from server 
+                CurrentUser.deleteParty(party.getPartyID());// TODO: 04/20/2017 Remove party from server
                 // TODO: 04/20/2017 Notify all users 
-                // TODO: 04/20/2017 Back to hostFragment
+                Intent intent  = new Intent(mainActivity, HostControllerFragment.class);
+                startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
             }
         });
     }
