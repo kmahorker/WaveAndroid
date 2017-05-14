@@ -453,12 +453,20 @@ public final class CurrentUser {
         return event_id[0];
     }
 
-    public static void addUserToParty(String userID, String eventID, String relationship, final OnResultReadyListener<String> delegate){
+    //Parameter action must be either "POST" or "DELETE"
+    public static void manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
         String url = "https://api.theplugsocial.com/v1/events" + eventID + "/users" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
         HashMap<String, String> about = new HashMap();
         about.put("relationship", relationship);
-        comps[0] = new RequestComponents(url, "POST", about);
+        if (action.equals("POST")) {
+            comps[0] = new RequestComponents(url, "POST", about);
+        } else if (action.equals("DELETE")) {
+            comps[0] = new RequestComponents(url, "DELETE", about);
+        }
+        else{
+            Log.d("Action", "Illegal passed action argument: " + action);
+        }
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
@@ -473,8 +481,8 @@ public final class CurrentUser {
                 delegate.onResultReady(status);
             }
         }).execute();
-
     }
+
 
 
 
