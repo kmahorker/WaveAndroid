@@ -113,7 +113,7 @@ public final class CurrentUser {
     public static void getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
-            String url = context.getString(R.string.server_url) + "users/" + partyIdList.get(i)
+            String url = context.getString(R.string.server_url) + "events/" + partyIdList.get(i)
                     + "?access_token=" + getTokenFromLocal(context).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
@@ -391,7 +391,7 @@ public final class CurrentUser {
                 String status = null;
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getJSONObject("status") + "";
+                    status = main_json.getString("status");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -442,7 +442,7 @@ public final class CurrentUser {
                 String status = null;
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getJSONObject("status") + "";
+                    status = main_json.getString("status");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -473,7 +473,7 @@ public final class CurrentUser {
                 String status = null;
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getJSONObject("status") + "";
+                    status = main_json.getString("status");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
