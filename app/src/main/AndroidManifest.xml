@@ -29,33 +29,34 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".LoginFolder.LoginActivity"/>
-        <activity android:name=".LoginFolder.SignupActivity"/>
-        <activity android:name=".SocialFolder.FriendProfileActivity"/>
-        <activity android:name=".SocialFolder.InviteFriendsActivity"/>
-        <activity android:name=".SocialFolder.EditUserProfileActivity"/>
-        <activity android:name=".HostFolder.CreateEventActivity"/>
-        <activity android:name=".HostFolder.ManageEventsActivity"/>
-        <activity android:name=".HostFolder.EventStatsActivity"/>
-        <activity android:name=".LoginFolder.ForgotPasswordActivity"/>
-        <activity android:name=".LoginFolder.LaunchActivity"/>
-        <activity android:name=".SocialFolder.FollowActivity"/>
-        <activity android:name=".HostFolder.CreateAnEventActivity"/>
-        <activity android:name=".LoginFolder.AddBestFriendActivity"/>
-        <activity android:name=".HostFolder.EditStatsActivity"/>
+        <activity android:name=".LoginFolder.LoginActivity" android:screenOrientation="portrait" />
+        <activity android:name=".LoginFolder.SignupActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SocialFolder.FriendProfileActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SocialFolder.InviteFriendsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SocialFolder.EditUserProfileActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".HostFolder.CreateEventActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".HostFolder.ManageEventsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".HostFolder.EventStatsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".LoginFolder.ForgotPasswordActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".LoginFolder.LaunchActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SocialFolder.FollowActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".HostFolder.CreateAnEventActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".LoginFolder.AddBestFriendActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".HostFolder.EditStatsActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".HomeSwipeActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LoginFolder.LoginTutorialActivity">
+        <activity android:name=".LoginFolder.LoginTutorialActivity" android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".HostFolder.EditListActivity"/>
-        <activity android:name=".SocialFolder.SettingsActivity">
+        <activity android:name=".HostFolder.EditListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".SocialFolder.SettingsActivity" android:screenOrientation="portrait">
         </activity>
     </application>
 
