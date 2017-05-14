@@ -415,7 +415,6 @@ public final class CurrentUser {
                                      double duration,
                                      int minAge,
                                      int maxAge,
-
                                      final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
         final Party[] event_id = {null};
@@ -453,6 +452,31 @@ public final class CurrentUser {
         }).execute();
         return event_id[0];
     }
+
+    public static void addUserToParty(String userID, String eventID, String relationship, final OnResultReadyListener<String> delegate){
+        RequestComponents[] comps = new RequestComponents[1];
+        String url = "https://api.theplugsocial.com/v1/events" + eventID + "/users" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> about = new HashMap();
+        about.put("relationship", relationship);
+        comps[0] = new RequestComponents(url, "POST", about);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getJSONObject("status") + "";
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("AddUserToParty", result.get(0));
+                delegate.onResultReady(status);
+            }
+        }).execute();
+
+    }
+
+
 
 
     //
