@@ -37,6 +37,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
@@ -97,8 +98,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                         .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                onBackPressed();
                                 NewPartyInfo.initialize();
+                                onBackPressed();
                                 finish();
                             }
                         })
@@ -919,6 +920,22 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //            Party party = new Party(
 //                    "", name, price, hostName, startingDateTime, endingDateTime, mapAddress,
 //                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
+            CurrentUser.createParty(name, partyEmoji, price, hostName, mapAddress.getAddress_string(),
+                    mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
+                    isPublic, startingDateTime.getTimeInMillis()/1000L,
+                    endingDateTime.getTimeInMillis()/1000L - startingDateTime.getTimeInMillis()/1000L,
+                    minAge, maxAge,
+                    new OnResultReadyListener<String>(){
+                @Override
+                public void onResultReady(String result) {
+                    if(result=="success"){
+                        //TODO: Invite friends to party
+                    }
+                    else{
+                        Log.d("createPartyError", result + "");
+                    }
+                }
+            });
             // TODO: 03/31/2017 Send to database and create new party with new ID
             // TODO: 04/23/2017 Refresh hosting event list
         }

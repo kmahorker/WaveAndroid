@@ -12,6 +12,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -238,12 +239,14 @@ public final class CurrentUser {
 
     //Fill in all party information
     private static Party constructParty(HashMap<String, String> info) {
-        String partyID = "", name = "", emoji = "", startDate = "", startTime = "", endDate = "", endTime = "", address = "", str_isPublic = "", hostName = "";
+        String partyID = "", name = "", emoji = "", startDateTime = "", duration = "", address = "", str_isPublic = "", hostName = "",
+        min_age = "", max_age = "";
         List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
-        Calendar startingDateTime = Calendar.getInstance(), endingDateTime = Calendar.getInstance();
+        Calendar startingDateTimeCalendar = Calendar.getInstance(), endingDateTimeCalendar = Calendar.getInstance();
         MapAddress mapAddress = new MapAddress();
         double price = 0;
         boolean isPublic = false;
+        int minAge = 0, maxAge = 0;
 
         try {
             partyID = info.get("id");
@@ -252,52 +255,69 @@ public final class CurrentUser {
             if ( info.get("price") != null )
                 price = Double.parseDouble(info.get("price") + "");
 
-            startDate = info.get("start_date");
-            startTime = info.get("start_time") + "";
-            if ( !startDate.equals("null") ) {
-                startingDateTime.set(Calendar.YEAR, Integer.parseInt(startDate.substring(0, 4)));
-                startingDateTime.set(Calendar.MONTH, Integer.parseInt(startDate.substring(5, 7)));
-                startingDateTime.set(Calendar.DATE, Integer.parseInt(startDate.substring(8, 10)));
+            startDateTime = info.get("start_time_stamp");
+            duration = info.get("duration");
+            //startTime = info.get("start_time") + "";
+            if ( !startDateTime.equals("null") ) {
+                startingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime));
+                if(!duration.equals("null")){
+                    endingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime) + Long.parseLong(duration));
+                }
+//                startingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(startDateTime.substring(0, 4)));
+//                startingDateTimeCalendar.set(Calendar.MONTH, Integer.parseInt(startDateTime.substring(5, 7)));
+//                startingDateTimeCalendar.set(Calendar.DATE, Integer.parseInt(startDateTime.substring(8, 10)));
             }
-            if ( !startTime.equals("null") ) {
-                startingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
-                startingDateTime.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
-            }
+//            if ( !startTime.equals("null") ) {
+//                startingDateTimeCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
+//                startingDateTimeCalendar.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
+//            }
 
-            endDate = info.get("end_date") + "";
-            endTime = info.get("end_time") + "";
-            if ( !endDate.equals("null") ) {
-                endingDateTime.set(Calendar.YEAR, Integer.parseInt(endDate.substring(0, 4)));
-                endingDateTime.set(Calendar.MONTH, Integer.parseInt(endDate.substring(5, 7)));
-                endingDateTime.set(Calendar.DATE, Integer.parseInt(endDate.substring(8, 10)));
-            }
-            if ( !endTime.equals("null") ) {
-                endingDateTime.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
-                endingDateTime.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
-            }
+//            endDate = info.get("end_date") + "";
+//            endTime = info.get("end_time") + "";
 
-            address = info.get("address") + ", " + info.get("city") + ", " + info.get("state");
+
+//            if ( !endDate.equals("null") ) {
+//                endingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(endDate.substring(0, 4)));
+//                endingDateTimeCalendar.set(Calendar.MONTH, Integer.parseInt(endDate.substring(5, 7)));
+//                endingDateTimeCalendar.set(Calendar.DATE, Integer.parseInt(endDate.substring(8, 10)));
+//            }
+//            if ( !endTime.equals("null") ) {
+//                endingDateTimeCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
+//                endingDateTimeCalendar.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
+//            }
+
+            address = info.get("address");
             mapAddress.setAddress_string(address);
-            if ( !info.get("lat").equals("null") && !info.get("lng").equals("null") )
+            if ( !info.get("lat").equals("null") && !info.get("lng").equals("null") ) {
                 mapAddress.setAddress_latlng(new LatLng(Integer.parseInt(info.get("lat")), Integer.parseInt(info.get("lng"))));
+            }
 
             str_isPublic = info.get("is_public") + "";
-            if ( !str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1 )
+            if ( !str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1 ) {
                 isPublic = true;
+            }
+
+            hostName = info.get("host_name");
+            min_age = info.get("min_age");
+            max_age = info.get("max_age");
+            if(!min_age.equals("null") && !max_age.equals("null")){
+                minAge = Integer.parseInt(min_age);
+                maxAge = Integer.parseInt(max_age);
+            }
         } catch (Exception e) {e.printStackTrace();}
 
 
 //        hostingUsers = (ArrayList) info.get("hosting");
 //        bouncingUsers = (ArrayList) info.get("bouncing");
 //        attendingUsers = (ArrayList) info.get("attending");
-        hostName = "";
-        String partyEmoji = "";
-        int minAge = 17, maxAge = 40;
+//        hostName = "";
+//        String partyEmoji = "";
+//        int minAge = 17, maxAge = 40;
 
 
         //Compose Party
-        Party party = new Party(partyID, name, price, hostName, startingDateTime, endingDateTime,
-                mapAddress, hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
+        Party party = new Party(partyID, name, price, hostName, startingDateTimeCalendar, endingDateTimeCalendar,
+                mapAddress, hostingUsers, bouncingUsers, attendingUsers, isPublic, emoji, minAge, maxAge);
         return party;
     }
 
@@ -365,6 +385,59 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(context, comps, null).execute();
         Log.d("Delete Party", result);
     }
+
+    public static Party createParty( String name,
+                                     String emoji,
+                                     double price,
+                                     String hostName,
+                                     String address,
+                                     double lat,
+                                     double lng,
+                                     boolean isPublic,
+                                     double startTimeStamp,
+                                     double duration,
+                                     int minAge,
+                                     int maxAge,
+
+                                     final OnResultReadyListener<String> delegate){
+        RequestComponents[] comps = new RequestComponents[1];
+        final Party[] event_id = {null};
+        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> event_info = new HashMap();
+        event_info.put("name", name);
+        event_info.put("emoji", emoji);
+        event_info.put("price", price + "");
+        event_info.put("address", address);
+        event_info.put("lat", lat + "");
+        event_info.put("lng", lng + "");
+        event_info.put("is_public", isPublic ? "1" : "0");
+        event_info.put("start_time_stamp", startTimeStamp + "");
+        event_info.put("duration", duration + "");
+        event_info.put("min_age", minAge + "");
+        event_info.put("max_age", maxAge + "");
+        event_info.put("host_name", hostName);
+
+        String result = null;
+
+        comps[0] = new RequestComponents(url, "POST", event_info);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getJSONObject("status") + "";
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("CurUser_CreateEvent", result.get(0));
+                delegate.onResultReady(status);
+            }
+        }).execute();
+        return event_id[0];
+    }
+
+
 
     //
 //    //Get user information

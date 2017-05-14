@@ -255,4 +255,12 @@ public final class UtilityClass {
                 newList.add(obj);
         return newList;
     }
+
+    public static Calendar unixToCalendar(long unixTime){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(unixTime);
+        return calendar;
+    }
+
+
 }
