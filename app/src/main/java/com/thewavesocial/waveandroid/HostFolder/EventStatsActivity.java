@@ -43,7 +43,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 import me.sudar.zxingorient.ZxingOrient;
 
-public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final int activityHostFragment = 1, activitySocialFragment = 2;
     private static final int CAMERA_PERMISSION = 3;
     private GoogleMap mMap;
@@ -81,10 +81,10 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupQRAndEditButtons(int callerType) {
-        if ( callerType == activityHostFragment ) {
+        if (callerType == activityHostFragment) {
             editView.setVisibility(View.VISIBLE);
             qrAction.setVisibility(View.VISIBLE);
-        } else if ( callerType == activitySocialFragment ){
+        } else if (callerType == activitySocialFragment) {
             editView.setVisibility(View.INVISIBLE);
             qrAction.setVisibility(View.INVISIBLE);
         }
@@ -107,8 +107,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 UtilityClass.timeToString(party.getEndingDateTime());
 
         going = party.getAttendingUsers().size();
-        male = party.getAttendingUsers().size()*3/4;
-        female = party.getAttendingUsers().size()/4;
+        male = party.getAttendingUsers().size() * 3 / 4;
+        female = party.getAttendingUsers().size() / 4;
     }
 
 
@@ -129,15 +129,15 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupFunctionalities() {
-        goingView.setText(going+"");
-        genderView.setText(female+"/"+male);
-        hostView.setText(host+"");
-        locView.setText(loc+"");
-        dateView.setText(date+"");
-        timeView.setText(time+"");
+        goingView.setText(going + "");
+        genderView.setText(female + "/" + male);
+        hostView.setText(host + "");
+        locView.setText(loc + "");
+        dateView.setText(date + "");
+        timeView.setText(time + "");
         qrCodeView.setImageBitmap(getQRCode("WOWOW"));
 
-        if ( callerType == activityHostFragment ) {
+        if (callerType == activityHostFragment) {
             attendingView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
             attendingView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,7 +157,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
         }
 
-        if ( callerType == activityHostFragment ) {
+        if (callerType == activityHostFragment) {
             bounceView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
             bounceView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -202,7 +202,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 }
             }
             return bmp;
-        } catch (WriterException e) {e.printStackTrace();}
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -237,6 +239,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mMap = googleMap;
         latlng = party.getMapAddress().getAddress_latlng();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, (float) 15.0));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
+        mMap.getUiSettings().setMapToolbarEnabled(false);
 
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.hostEventStats_emoji);
         emojiText.setText(party.getPartyEmoji().substring(0,1));

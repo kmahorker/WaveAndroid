@@ -142,40 +142,40 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 mPager.setCurrentItem(mPager.getCurrentItem() + 1);
             }
         });
-        ImageView qrButton = (ImageView) findViewById(R.id.actionbar_host_qrsymbol);
-        qrButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
-                        Log.d("Camera", "Deny");
-                        ActivityCompat.requestPermissions(mainActivity,
-                                new String[]{Manifest.permission.CAMERA},
-                                CAMERA_PERMISSION);
-                    return;
-                }
-                openScanner();
-            }
-        });
+//        ImageView qrButton = (ImageView) findViewById(R.id.actionbar_host_qrsymbol);
+//        qrButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+////                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
+//                        Log.d("Camera", "Deny");
+//                        ActivityCompat.requestPermissions(mainActivity,
+//                                new String[]{Manifest.permission.CAMERA},
+//                                CAMERA_PERMISSION);
+//                    return;
+//                }
+//                openScanner();
+//            }
+//        });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case CAMERA_PERMISSION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    openScanner();
-        }
-    }
-
-    private void openScanner() {
-        ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
-        zxingOrient.setInfo("Scan QR Code");
-        zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
-        zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
-        zxingOrient.setIcon(R.drawable.plug_icon);
-        zxingOrient.initiateScan();
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case CAMERA_PERMISSION:
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+//                    openScanner();
+//        }
+//    }
+//
+//    private void openScanner() {
+//        ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
+//        zxingOrient.setInfo("Scan QR Code");
+//        zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
+//        zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
+//        zxingOrient.setIcon(R.drawable.plug_icon);
+//        zxingOrient.initiateScan();
+//    }
 
     public void setupUserActionbar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
