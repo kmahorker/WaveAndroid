@@ -23,7 +23,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 public class UserProfileFragment extends Fragment {
 
-    private TextView activityButton, attendingButton;
+    public static TextView activityButton, attendingButton;
 
     public enum PopupPage {
         FOLLOWERS,
@@ -115,6 +115,7 @@ public class UserProfileFragment extends Fragment {
         attendingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                attendingButton.setText("Attending");
                 changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);

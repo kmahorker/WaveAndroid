@@ -26,6 +26,7 @@ import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class PartyProfileFragment extends Fragment {
     private static HomeSwipeActivity mainActivity;
     private TextView partyname, hostname, datetime, location, price;
     private EmojiconTextView emoji;
+    private TextView actionbar_social;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class PartyProfileFragment extends Fragment {
         mainActivity = (HomeSwipeActivity) getActivity();
 
         party = getArguments().getParcelable("partyObject");
+
+        actionbar_social = (TextView) mainActivity.getSupportActionBar().getCustomView().findViewById(R.id.actionbar_activity_home_text_social);
 
         setupReferences();
         setupOnClicks();
@@ -70,6 +74,8 @@ public class PartyProfileFragment extends Fragment {
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
+                    actionbar_social.setText("SOCIAL(1)");
+                    UserProfileFragment.attendingButton.setText("Attending(1)");
                 }
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("partyObject", party);
