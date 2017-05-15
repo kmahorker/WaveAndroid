@@ -51,6 +51,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import java.util.Date;
@@ -518,7 +519,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites;
+        private static List<User> invites = new ArrayList<>();
         private View view;
 
         @Nullable
@@ -705,7 +706,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites;
+        private static List<User> invites = new ArrayList<>();
 
         @Nullable
         @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -926,12 +927,54 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     endingDateTime.getTimeInMillis()/1000L - startingDateTime.getTimeInMillis()/1000L,
                     minAge, maxAge, new OnResultReadyListener<String>(){
                 @Override
-                public void onResultReady(String result) {
-                    if(result=="success"){
-                        //TODO: Invite friends to party
+                public void onResultReady(String resultOne) {
+                    int commaIndex = resultOne.indexOf(',');
+                    if(commaIndex != -1 && resultOne.substring(0, commaIndex).equals("success")){
+                        final String eventId = resultOne.substring(commaIndex);
+                        for(String attendingId : attendingUsers){
+                            CurrentUser.manageUserForParty(attendingId, eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String resultTwo) {
+                                    if(resultTwo.equals("success")){
+                                        for(String bouncingId : bouncingUsers){
+                                            CurrentUser.manageUserForParty(bouncingId, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                                @Override
+                                                public void onResultReady(String resultThree) {
+                                                    if(resultThree.equals("success")){
+                                                        for(String hostingId : hostingUsers){
+                                                            CurrentUser.manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                                                @Override
+                                                                public void onResultReady(String resultFour) {
+                                                                    if(resultFour.equals("success")){
+                                                                        HashMap<String,String> body = new HashMap<String, String>();
+                                                                        body.put("","");
+                                                                        //TODO: UpdateUser Hosting field in user object with server
+                                                                        //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
+                                                                    }
+                                                                    else{
+                                                                        Log.d("addHostingError", resultFour + "");
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                    else{
+                                                        Log.d("addBouncingUserError", resultThree + "");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                    else{
+                                        Log.d("addInvitedUserError", resultTwo + "");
+                                    }
+                                }
+                            });
+                        }
+
                     }
                     else{
-                        Log.d("createPartyError", result + "");
+                        Log.d("createPartyError", resultOne + "");
                     }
                 }
             });
