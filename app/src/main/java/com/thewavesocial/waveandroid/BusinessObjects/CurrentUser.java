@@ -141,7 +141,7 @@ public final class CurrentUser {
     }
 
     //Get user information
-    public static void getUserObject(String userID, final OnResultReadyListener<User> delegate) {
+    public static void getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(context).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -162,19 +162,21 @@ public final class CurrentUser {
                 }
 
                 Log.d("CurUser_GetUserInfo", result.get(0));
-                User user = constructUser(body);
+                final User user = constructUser(body);
+                getUserFollowing(userID, new OnResultReadyListener<List<String>>() {
+                    @Override
+                    public void onResultReady(List<String> result) {
+                        user.getFollowing().addAll(result);
+                        getUserFollowers(userID, new OnResultReadyListener<List<String>>() {
+                            @Override
+                            public void onResultReady(List<String> result) {
+                                user.getFollowers().addAll(result);
+                                delegate.onResultReady(user);
+                            }
+                        });
 
-                //testing purpose
-                ArrayList<String> followers = new ArrayList<>();
-                followers.add("11");
-                followers.add("12");
-                followers.add("13");
-                followers.add("14");
-                followers.add("15");
-                user.setFollowers(followers);
-                user.setFollowing(followers);
-
-                delegate.onResultReady(user);
+                    }
+                });
             }
         }).execute();
     }
@@ -207,7 +209,34 @@ public final class CurrentUser {
     }
 
     //Get user following from server
-    public static void getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
+    public static void getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "/followers?access_token=" + getTokenFromLocal(context).get("jwt");
+
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<String> followers = new ArrayList<>();
+                try {
+                    JSONObject list = new JSONObject(result.get(0));
+                    JSONArray main_json = list.getJSONArray("data");
+                    for ( int i = 0; i < main_json.length(); i++ ) {
+                        JSONObject data = main_json.getJSONObject(i);
+                        String userID = data.getString("id");
+                        followers.add(userID);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                delegate.onResultReady(followers);
+            }
+        }).execute();
+    }
+
+    //Get user following from server
+    public static void getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(context).get("jwt");
 
@@ -215,22 +244,16 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> followings = new ArrayList<>();
+                ArrayList<String> followings = new ArrayList<>();
                 try {
-                    JSONArray list = new JSONArray(result.get(0));
-                    for ( int i = 0; i < list.length(); i++ ) {
-
-                        HashMap<String, String> body = new HashMap<>();
-                        JSONObject main_json = list.getJSONObject(i);
-                        JSONObject data = main_json.getJSONObject("data");
-                        Iterator iterKey = data.keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getString(key));
-                        }
-                        followings.add(constructUser(body));
-
+                    JSONObject list = new JSONObject(result.get(0));
+                    JSONArray main_json = list.getJSONArray("data");
+                    for ( int i = 0; i < main_json.length(); i++ ) {
+                        JSONObject data = main_json.getJSONObject(i);
+                        String userID = data.getString("id");
+                        followings.add(userID);
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -242,7 +265,7 @@ public final class CurrentUser {
     //Fill in all party information locally
     private static Party constructParty(HashMap<String, String> info) {
         String partyID = "", name = "", emoji = "", startDateTime = "", duration = "", address = "", str_isPublic = "", hostName = "",
-        min_age = "", max_age = "";
+                min_age = "", max_age = "";
         List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
         Calendar startingDateTimeCalendar = Calendar.getInstance(), endingDateTimeCalendar = Calendar.getInstance();
         MapAddress mapAddress = new MapAddress();
