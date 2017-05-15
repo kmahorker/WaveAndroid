@@ -164,7 +164,7 @@ public final class CurrentUser {
                 Log.d("CurUser_GetUserInfo", result.get(0));
                 User user = constructUser(body);
 
-                //testing purpose
+                //TODO: testing purpose
                 ArrayList<String> followers = new ArrayList<>();
                 followers.add("11");
                 followers.add("12");
@@ -443,11 +443,17 @@ public final class CurrentUser {
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     status = main_json.getString("status");
+                    if(!status.equals("error")){
+                        JSONObject data_json = main_json.getJSONObject("data");
+                        status += "," + data_json.getString("insertId");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 Log.d("CurUser_CreateEvent", result.get(0));
+                Log.d("status", status + "");
                 delegate.onResultReady(status);
+
             }
         }).execute();
         return event_id[0];
@@ -482,6 +488,33 @@ public final class CurrentUser {
             }
         }).execute();
     }
+
+    public static void updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents[] comps = new RequestComponents[1];
+        comps[0] = new RequestComponents(url, "POST", body);
+        String result = null;
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("UpdateUser", result.get(0));
+                delegate.onResultReady(status);
+            }
+        });
+    }
+
+
+
+
+
 
 
 
