@@ -185,8 +185,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body6.put("lat", 34.412923 + "");
         body6.put("lng", -119.859315 + "");
         body6.put("is_public", true ? "1" : "0");
-        body6.put("start_timestamp", startDate.getTimeInMillis()/1000 + "");
-        body6.put("end_timestamp", endDate.getTimeInMillis()/1000 + "");
+        body6.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
+        body6.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body6.put("min_age", 18 + "");
         body6.put("max_age", 40 + "");
         CurrentUser.server_updateParty("11", body6, null );
@@ -199,8 +199,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body7.put("lat", 34.414241 + "");
         body7.put("lng", -119.856559 + "");
         body7.put("is_public", true ? "1" : "0");
-        body7.put("start_timestamp", startDate.getTimeInMillis()/1000 + "");
-        body7.put("end_timestamp", endDate.getTimeInMillis()/1000 + "");
+        body7.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
+        body7.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body7.put("min_age", 18 + "");
         body7.put("max_age", 40 + "");
         CurrentUser.server_updateParty("12", body7, null );
@@ -213,8 +213,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body8.put("lat", 34.415500 + "");
         body8.put("lng", -119.860575 + "");
         body8.put("is_public", true ? "1" : "0");
-        body8.put("start_timestamp", startDate.getTimeInMillis()/1000 + "");
-        body8.put("end_timestamp", endDate.getTimeInMillis()/1000 + "");
+        body8.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
+        body8.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body8.put("min_age", 18 + "");
         body8.put("max_age", 40 + "");
         CurrentUser.server_updateParty("13", body8, null );
@@ -227,8 +227,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body9.put("lat", 34.412938 + "");
         body9.put("lng", -119.862853 + "");
         body9.put("is_public", true ? "1" : "0");
-        body9.put("start_timestamp", startDate.getTimeInMillis()/1000 + "");
-        body9.put("end_timestamp", endDate.getTimeInMillis()/1000 + "");
+        body9.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
+        body9.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body9.put("min_age", 18 + "");
         body9.put("max_age", 40 + "");
         CurrentUser.server_updateParty("14", body9, null );
@@ -241,8 +241,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body10.put("lat", 34.411962 + "");
         body10.put("lng", -119.859848 + "");
         body10.put("is_public", true ? "1" : "0");
-        body10.put("start_timestamp", startDate.getTimeInMillis()/1000 + "");
-        body10.put("end_timestamp", endDate.getTimeInMillis()/1000 + "");
+        body10.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
+        body10.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body10.put("min_age", 18 + "");
         body10.put("max_age", 40 + "");
         CurrentUser.server_updateParty("15", body10, null );

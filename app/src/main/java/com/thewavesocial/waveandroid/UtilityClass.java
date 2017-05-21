@@ -65,7 +65,7 @@ public final class UtilityClass {
     }
 
     public static String dateToString(Calendar c) {
-        int m = c.get(Calendar.MONTH) + 1;
+        int m = c.get(Calendar.MONTH);
         int d = c.get(Calendar.DATE);
         String prefixM = "";
         String prefixD = "";
@@ -77,18 +77,18 @@ public final class UtilityClass {
     }
 
     public static String timeToString(Calendar c) {
-        int hour = c.get(Calendar.HOUR);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
         int min = c.get(Calendar.MINUTE);
         String prefixH = "";
         String prefixM = "";
-        String ampm = "am";
+        String ampm = "AM";
         if (hour > 12) {
             hour -= 12;
-            ampm = "pm";
+            ampm = "PM";
         }
         if (hour == 0) {
             hour = 12;
-            ampm = "am";
+            ampm = "AM";
         }
         if (hour < 10)
             prefixH = "0";

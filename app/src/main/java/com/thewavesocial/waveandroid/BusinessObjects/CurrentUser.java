@@ -14,8 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +47,7 @@ public final class CurrentUser {
             @Override
             public void onResultReady(User result) {
                 theUser = result;
-                server_getUserEvents(theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+                server_getEventsOfUser(theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<String>> result) {
                         theUser.getAttending().addAll(result.get("attending"));
@@ -282,32 +284,12 @@ public final class CurrentUser {
             startDateTime = info.get("start_timestamp");
             endDateTime = info.get("end_timestamp");
             if ( startDateTime != null ) {
-                startingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime));
-                if( endDateTime != null ){
-                    endingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(endDateTime));
-                }
-//                startingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(startDateTime.substring(0, 4)));
-//                startingDateTimeCalendar.set(Calendar.MONTH, Integer.parseInt(startDateTime.substring(5, 7)));
-//                startingDateTimeCalendar.set(Calendar.DATE, Integer.parseInt(startDateTime.substring(8, 10)));
+                startingDateTimeCalendar.setTime(new Date(Long.parseLong(startDateTime) * 1000));
             }
-//            if ( !startTime.equals("null") ) {
-//                startingDateTimeCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(startTime.substring(0, 2)));
-//                startingDateTimeCalendar.set(Calendar.MINUTE, Integer.parseInt(startTime.substring(3, 5)));
-//            }
-
-//            endDate = info.get("end_date") + "";
-//            endTime = info.get("end_time") + "";
-
-
-//            if ( !endDate.equals("null") ) {
-//                endingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(endDate.substring(0, 4)));
-//                endingDateTimeCalendar.set(Calendar.MONTH, Integer.parseInt(endDate.substring(5, 7)));
-//                endingDateTimeCalendar.set(Calendar.DATE, Integer.parseInt(endDate.substring(8, 10)));
-//            }
-//            if ( !endTime.equals("null") ) {
-//                endingDateTimeCalendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(endTime.substring(0, 2)));
-//                endingDateTimeCalendar.set(Calendar.MINUTE, Integer.parseInt(endTime.substring(3, 5)));
-//            }
+            if( endDateTime != null ){
+                endingDateTimeCalendar.setTime(new Date(Long.parseLong(endDateTime) * 1000));
+            }
+            Log.d("Calendar", new Date(Long.parseLong(startDateTime)).toString());
 
             address = info.get("address");
             mapAddress.setAddress_string(address);
@@ -618,7 +600,7 @@ public final class CurrentUser {
     }
 
     //Get User's events from server
-    public static void server_getUserEvents(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
+    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
                 + getTokenFromLocal(context).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -653,6 +635,47 @@ public final class CurrentUser {
         }).execute();
     }
 
+    //Get User's events from server
+    public static void server_getUsersOfEvent(String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
+        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
+                + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<User> attending = new ArrayList<>();
+                ArrayList<User> hosting = new ArrayList<>();
+                ArrayList<User> bouncing = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                            attending.add(constructUser(body));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                            hosting.add(constructUser(body));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                            bouncing.add(constructUser(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                HashMap<String, ArrayList<User>> parties = new HashMap();
+                parties.put("attending", attending);
+                parties.put("hosting", hosting);
+                parties.put("bouncing", bouncing);
+                Log.d("Get User Events", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
 
 
     //

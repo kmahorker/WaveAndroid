@@ -63,7 +63,6 @@ public class HostControllerFragment extends Fragment {
     public void populateListView(){
         final List<String> sample = new ArrayList<>();
         sample.addAll(CurrentUser.theUser.getHosted());
-        Log.d("Event", CurrentUser.theUser.getHosted().get(1));
         CurrentUser.server_getPartyListObjects(sample, new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
