@@ -1,19 +1,11 @@
 package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -61,7 +53,7 @@ public class FollowActivity extends AppCompatActivity {
         final List<User> follows = new ArrayList<>();
 
         if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     follows.addAll(result);
@@ -70,7 +62,7 @@ public class FollowActivity extends AppCompatActivity {
                 }
             });
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     follows.addAll(result);

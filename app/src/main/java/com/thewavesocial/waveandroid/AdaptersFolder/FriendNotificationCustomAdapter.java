@@ -82,7 +82,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         {
             final User[] senderUser = {new User()};
             final View finalLayoutView = layoutView;
-            CurrentUser.getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
+            CurrentUser.server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
                     if ( result != null ) {
@@ -107,7 +107,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         {
             final Party[] senderParty = {new Party()};
             final View finalLayoutView1 = layoutView;
-            CurrentUser.getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
+            CurrentUser.server_getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
                 @Override
                 public void onResultReady(Party result) {
                     if ( result != null ) {

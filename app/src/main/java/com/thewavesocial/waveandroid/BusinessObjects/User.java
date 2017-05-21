@@ -26,8 +26,8 @@ public class User implements Parcelable {
     private String password;
     private String college;
     private String gender;
-    private String phone;
-    private MapAddress mapAddress;
+    private String phone; //to be deleted
+    private MapAddress mapAddress; //to be deleted
     private Calendar birthday;
     private List<BestFriend> bestFriends;
     private List<String> followers;

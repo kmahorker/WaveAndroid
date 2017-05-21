@@ -1,12 +1,8 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.util.Range;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,9 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -37,7 +30,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
@@ -54,19 +46,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import java.util.Date;
-
 import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
-import io.github.rockerhieu.emojiconize.Emojiconize;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
     private ImageView back, forward;
     private FragmentManager fragmentM;
-    private CreateAnEventActivity thisActivity = this;
+    public static CreateAnEventActivity thisActivity;
+    private static int threads_completion = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +65,12 @@ public class CreateAnEventActivity extends AppCompatActivity {
         setContentView(R.layout.create_event_layout);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         fragmentM = getSupportFragmentManager();
+        thisActivity = this;
         openFirstPage();
         NewPartyInfo.initialize();
     }
 
+    //Open page 1
     private void openFirstPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage1()).commit();
 
@@ -125,6 +117,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("New Event");
     }
 
+    //Open page 2
     private void openSecondPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage2()).commit();
 
@@ -143,6 +136,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("Invite Friends");
     }
 
+    //Open page 3
     private void openThirdPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage3()).commit();
 
@@ -157,10 +151,12 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("Invite Bouncers");
     }
 
+    //Return Forward Button for page 1
     public ImageView getForward() {
         return forward;
     }
 
+    //Handle create event page 1
     public static class CreateEventPage1 extends Fragment{
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
@@ -512,6 +508,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    //Handle create event page 2
     public static class CreateEventPage2 extends Fragment {
         private SearchView searchbar;
         private TextView create;
@@ -549,7 +546,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     mainActivity.openThirdPage();
                 }
             });
-            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     if ( result != null ) {
@@ -559,7 +556,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 }
             });
 
-            CurrentUser.getUsersListObjects(NewPartyInfo.attendingUsers, new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(NewPartyInfo.attendingUsers, new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     if ( result != null ) {
@@ -699,6 +696,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    //Handle create event page 3
     public static class CreateEventPage3 extends Fragment {
         private SearchView searchbar;
         private TextView create;
@@ -734,7 +732,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     mainActivity.finish();
                 }
             });
-            CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     if ( result != null ) {
@@ -744,7 +742,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 }
             });
 
-            CurrentUser.getUsersListObjects(NewPartyInfo.bouncingUsers, new OnResultReadyListener<List<User>>() {
+            CurrentUser.server_getUsersListObjects(NewPartyInfo.bouncingUsers, new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     if ( result != null ) {
@@ -889,6 +887,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    //Store all new party information
     private static class NewPartyInfo {
         static String name;
         static double price;
@@ -903,6 +902,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static String partyEmoji;
         static int minAge;
         static int maxAge;
+
+        //Initialize party information
         public static void initialize() {
             name = "";
             price = 0;
@@ -917,69 +918,73 @@ public class CreateAnEventActivity extends AppCompatActivity {
             minAge = -1;
             maxAge = -1;
         }
-        public static void composeParty(){
-//            Party party = new Party(
-//                    "", name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
-            Party createdParty = CurrentUser.createParty(name, partyEmoji, price, hostName, mapAddress.getAddress_string(),
-                    mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
-                    isPublic, startingDateTime.getTimeInMillis()/1000L,
-                    endingDateTime.getTimeInMillis()/1000L - startingDateTime.getTimeInMillis()/1000L,
-                    minAge, maxAge, new OnResultReadyListener<String>(){
-                @Override
-                public void onResultReady(String resultOne) {
-                    int commaIndex = resultOne.indexOf(',');
-                    if(commaIndex != -1 && resultOne.substring(0, commaIndex).equals("success")){
-                        final String eventId = resultOne.substring(commaIndex);
-                        for(String attendingId : attendingUsers){
-                            CurrentUser.manageUserForParty(attendingId, eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
-                                @Override
-                                public void onResultReady(String resultTwo) {
-                                    if(resultTwo.equals("success")){
-                                        for(String bouncingId : bouncingUsers){
-                                            CurrentUser.manageUserForParty(bouncingId, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
-                                                @Override
-                                                public void onResultReady(String resultThree) {
-                                                    if(resultThree.equals("success")){
-                                                        for(String hostingId : hostingUsers){
-                                                            CurrentUser.manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
-                                                                @Override
-                                                                public void onResultReady(String resultFour) {
-                                                                    if(resultFour.equals("success")){
-                                                                        HashMap<String,String> body = new HashMap<String, String>();
-                                                                        body.put("","");
-                                                                        //TODO: UpdateUser Hosting field in user object with server
-                                                                        //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
-                                                                    }
-                                                                    else{
-                                                                        Log.d("addHostingError", resultFour + "");
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                    else{
-                                                        Log.d("addBouncingUserError", resultThree + "");
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                    else{
-                                        Log.d("addInvitedUserError", resultTwo + "");
-                                    }
-                                }
-                            });
-                        }
 
+        //Compose all party information
+        public static void composeParty(){
+            CurrentUser.server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
+                    mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
+                    isPublic, startingDateTime.getTimeInMillis()/1000L, endingDateTime.getTimeInMillis()/1000L,
+                    minAge, maxAge, new OnResultReadyListener<String>(){
+
+                @Override
+                public void onResultReady(String result) {
+                    int commaIndex = result.indexOf(',');
+                    if ( commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
+                        Log.d("Compose Party", "Unsuccessful");
+                        return;
                     }
-                    else{
-                        Log.d("createPartyError", resultOne + "");
+
+                    final String eventId = result.substring(commaIndex + 1);
+                    for(String attendingId : attendingUsers){
+                        CurrentUser.server_manageUserForParty(attendingId, eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                Log.d("addInvitedUserError", result + "");
+                                if(result.equals("success")){
+                                    completeThreads();
+                                }
+                            }
+                        });
                     }
+
+                    for(String bouncingId : bouncingUsers){
+                        CurrentUser.server_manageUserForParty(bouncingId, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                Log.d("addInvitedUserError", result + "");
+                                if(result.equals("success")){
+                                    completeThreads();
+                                }
+                            }
+                        });
+                    }
+
+                    for(String hostingId : hostingUsers){
+                        CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                Log.d("addInvitedUserError", result + "");
+                                if(result.equals("success")){
+                                    //TODO: UpdateUser Hosting field in user object with server
+                                    //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
+                                    completeThreads();
+                                }
+                            }
+                        });
+                    }
+
                 }
             });
-            // TODO: 03/31/2017 Send to database and create new party with new ID
-            // TODO: 04/23/2017 Refresh hosting event list
+        }
+
+    }
+
+    //Count attendingUsers, bouncingUsers, and hostingUsers threads completion
+    public static void completeThreads() {
+        threads_completion ++;
+        if ( threads_completion >= (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
+            //Finish task
+            thisActivity.onBackPressed();
         }
     }
 }

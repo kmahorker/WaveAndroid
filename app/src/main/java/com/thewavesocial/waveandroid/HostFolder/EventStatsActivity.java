@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,7 +51,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mainActivity = this;
         Intent intent = getIntent();
         party = new Party();
-        CurrentUser.getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
+        CurrentUser.server_getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
             @Override
             public void onResultReady(Party result) {
                 if ( result != null ) {
@@ -123,7 +121,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
         final List<User> sample = new ArrayList();
-        CurrentUser.getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {

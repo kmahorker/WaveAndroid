@@ -69,7 +69,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
 
         final User[] sender = {new User()};
         final View finalLayoutView = layoutView;
-        CurrentUser.getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
+        CurrentUser.server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 if ( result != null ) {

@@ -1,10 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -40,8 +36,6 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -51,7 +45,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class LoginTutorialActivity extends AppCompatActivity {
 
@@ -299,7 +292,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String user_id = jsonObject.getJSONObject("data").getString("id");
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {
@@ -331,7 +324,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String user_id = jsonObject.getJSONObject("data").getString("id");
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {
@@ -363,7 +356,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
 
-                    CurrentUser.getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {

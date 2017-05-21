@@ -64,7 +64,7 @@ public class FriendsListFragment extends Fragment {
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
 
         final List<User> friendsUsers = new ArrayList<>();
-        CurrentUser.getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {

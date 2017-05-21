@@ -62,7 +62,7 @@ public final class DatabaseAccess{
 //    }
 //
 //    //Basics Done
-//    public static Party createParty(final Activity mainActivity, String name, String price, String address, String address2, String city, String state, String is_public, String start_date, String start_time, String end_date, String end_time) {
+//    public static Party server_createNewParty(final Activity mainActivity, String name, String price, String address, String address2, String city, String state, String is_public, String start_date, String start_time, String end_date, String end_time) {
 //        final Party[] event_id = {null};
 //        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 //        HashMap<String, String> event_info = new HashMap();
@@ -218,7 +218,7 @@ public final class DatabaseAccess{
 //    }
 //
 //    //Basics Done
-//    public static void deleteParty(final Activity mainActivity, String partyID) {
+//    public static void server_deleteParty(final Activity mainActivity, String partyID) {
 //        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + " ?access_token="
 //                + getTokenFromLocal(mainActivity).get("jwt");
 //        String result = null;
@@ -260,7 +260,7 @@ public final class DatabaseAccess{
 //    }
 //
 //    //Basics Done
-//    public static void updateUser(final Activity mainActivity, String userID, HashMap<String, String> body) {
+//    public static void server_updateUser(final Activity mainActivity, String userID, HashMap<String, String> body) {
 //        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
 //                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 //        String result = null;
@@ -340,7 +340,8 @@ public final class DatabaseAccess{
 //            if ( progress.isShowing() )
 //                progress.dismiss();
 //            handler.removeCallbacks(run);
-            delegate.onResultReady(result);
+            if ( delegate != null )
+                delegate.onResultReady(result);
         }
 
 

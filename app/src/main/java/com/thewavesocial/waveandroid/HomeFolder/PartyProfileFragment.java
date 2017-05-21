@@ -52,7 +52,7 @@ public class PartyProfileFragment extends Fragment {
         mainActivity = (HomeSwipeActivity) getActivity();
 
         party = new Party();
-        CurrentUser.getPartyObject(getArguments().getString("partyIDLong"), new OnResultReadyListener<Party>() {
+        CurrentUser.server_getPartyObject(getArguments().getString("partyIDLong"), new OnResultReadyListener<Party>() {
             @Override
             public void onResultReady(Party result) {
                 if ( result != null ) {
@@ -130,7 +130,7 @@ public class PartyProfileFragment extends Fragment {
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList();
-        CurrentUser.getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
@@ -145,7 +145,7 @@ public class PartyProfileFragment extends Fragment {
         attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
 
         final List<Party> events = new ArrayList<>();
-        CurrentUser.getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
+        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {
@@ -157,7 +157,7 @@ public class PartyProfileFragment extends Fragment {
         hostedEvents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                long id = CurrentUser.getUserObject(party.getHostingUsers().get(0)).getHosted().get(i);
+//                long id = CurrentUser.server_getUserObject(party.getHostingUsers().get(0)).getHosted().get(i);
 //                openPartyProfile(id);
                 String id = CurrentUser.theUser.getHosted().get(i);
                 openPartyProfile(id); // TODO: 03/08/2017 Testing Purpose

@@ -36,7 +36,7 @@ public class SearchEventFragment extends Fragment {
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
         final List<Party> eventList = new ArrayList<>();
-        CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttended(), new OnResultReadyListener<List<Party>>() {
+        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttended(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 eventList.addAll(result);

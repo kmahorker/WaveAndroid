@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +62,7 @@ public class HostControllerFragment extends Fragment {
     public void populateListView(){
         final List<String> sample = new ArrayList<>();
         sample.addAll(CurrentUser.theUser.getHosted());
-        CurrentUser.getPartyListObjects(sample, new OnResultReadyListener<List<Party>>() {
+        CurrentUser.server_getPartyListObjects(sample, new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {

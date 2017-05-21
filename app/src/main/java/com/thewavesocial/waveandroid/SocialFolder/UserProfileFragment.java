@@ -3,7 +3,6 @@ package com.thewavesocial.waveandroid.SocialFolder;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserActionAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -26,9 +24,8 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+
 public class UserProfileFragment extends Fragment {
 
     private TextView activityButton, attendingButton;
@@ -130,7 +127,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+                CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttending(), new OnResultReadyListener<List<Party>>() {
                     @Override
                     public void onResultReady(List<Party> result) {
                         if ( result != null ) {

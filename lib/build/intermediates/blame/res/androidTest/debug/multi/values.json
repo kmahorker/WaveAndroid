@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "outputFile": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 303
                 },
                 "from": {
-                    "file": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 349
                 },
                 "from": {
-                    "file": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,
@@ -50,7 +50,7 @@
                     "endOffset": 837
                 },
                 "from": {
-                    "file": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "D:\\Android\\AndroidStudioProjects\\Wave Application\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 5,
                         "startColumn": 4,

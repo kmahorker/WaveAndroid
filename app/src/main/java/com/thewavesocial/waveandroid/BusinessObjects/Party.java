@@ -21,7 +21,7 @@ public class Party implements Parcelable {
     private String partyID;
     private String name;
     private double price;
-    private String hostName;
+    private String hostName; //to hostID
     private Calendar startingDateTime;
     private Calendar endingDateTime;
     private MapAddress mapAddress;

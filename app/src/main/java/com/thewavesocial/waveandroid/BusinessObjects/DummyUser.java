@@ -114,16 +114,16 @@ public class DummyUser extends User
 //        }
 //    }
 //
-//    public List<Party> getPartyListObjects(List<Long> partyIdList)
+//    public List<Party> server_getPartyListObjects(List<Long> partyIdList)
 //    {
 //        List<Party> partyObjs = new ArrayList<>();
 //        for(long id: partyIdList){
-//            partyObjs.add(getPartyObject(id));
+//            partyObjs.add(server_getPartyObject(id));
 //        }
 //        return partyObjs;
 //    }
 //
-//    public Party getPartyObject(long id)
+//    public Party server_getPartyObject(long id)
 //    {
 //        switch ((int) id)
 //        {

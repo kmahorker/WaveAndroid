@@ -17,7 +17,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,7 +114,7 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                CurrentUser.deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                CurrentUser.server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         // TODO: 04/20/2017 Remove party from server
@@ -282,7 +281,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
         //TODO: Call Server function instead
         final List<User> invitedUsers = new ArrayList<>();
-        CurrentUser.getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
@@ -293,7 +292,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         final List<User> bouncingUsers = new ArrayList<>();
-        CurrentUser.getUsersListObjects(party.getBouncingUsers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersListObjects(party.getBouncingUsers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {

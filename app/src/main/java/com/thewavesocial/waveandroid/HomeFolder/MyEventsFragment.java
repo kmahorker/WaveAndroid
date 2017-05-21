@@ -83,7 +83,7 @@ public class MyEventsFragment extends Fragment {
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
 
         final List<Party> partyList = new ArrayList<>();
-        CurrentUser.getPartyListObjects(dummyUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+        CurrentUser.server_getPartyListObjects(dummyUser.getAttending(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {

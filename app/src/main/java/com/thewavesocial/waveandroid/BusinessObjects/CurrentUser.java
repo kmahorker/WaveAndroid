@@ -1,10 +1,6 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -20,12 +16,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.util.concurrent.ExecutionException;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.getTokenFromLocal;
 
@@ -37,7 +30,7 @@ public final class CurrentUser {
 
     private CurrentUser() {
         context = null;
-        getUserObject("10", new OnResultReadyListener<User>() {
+        server_getUserObject("10", new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 theUser = result;
@@ -48,11 +41,14 @@ public final class CurrentUser {
     //Initialize user object
     public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
         context = (Activity) cont;
-        getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
+        server_getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 theUser = result;
-                if ( result != null )
+
+                if ( delegate == null )
+                    return;
+                if ( result != null)
                     delegate.onResultReady(true);
                 else
                     delegate.onResultReady(false);
@@ -66,7 +62,7 @@ public final class CurrentUser {
     }
 
     //Get list of user information from server
-    public static void getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
+    public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
             String url = context.getString(R.string.server_url) + "users/" + userIdList.get(i)
@@ -104,13 +100,14 @@ public final class CurrentUser {
                     user.setFollowing(followers);
                     friends.add(user);
                 }
-                delegate.onResultReady(friends);
+                if ( delegate != null )
+                    delegate.onResultReady(friends);
             }
         }).execute();
     }
 
     //Get list of party information from server
-    public static void getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
+    public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
             String url = context.getString(R.string.server_url) + "events/" + partyIdList.get(i)
@@ -136,12 +133,13 @@ public final class CurrentUser {
                     Log.d("CurUser_GetPartyInfo", result.get(0));
                     parties.add(constructParty(body));
                 }
-                delegate.onResultReady(parties);
+                if ( delegate != null )
+                    delegate.onResultReady(parties);
             }}).execute();
     }
 
     //Get user information
-    public static void getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
+    public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(context).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -163,15 +161,16 @@ public final class CurrentUser {
 
                 Log.d("CurUser_GetUserInfo", result.get(0));
                 final User user = constructUser(body);
-                getUserFollowing(userID, new OnResultReadyListener<List<String>>() {
+                server_getUserFollowing(userID, new OnResultReadyListener<List<String>>() {
                     @Override
                     public void onResultReady(List<String> result) {
                         user.getFollowing().addAll(result);
-                        getUserFollowers(userID, new OnResultReadyListener<List<String>>() {
+                        server_getUserFollowers(userID, new OnResultReadyListener<List<String>>() {
                             @Override
                             public void onResultReady(List<String> result) {
                                 user.getFollowers().addAll(result);
-                                delegate.onResultReady(user);
+                                if ( delegate != null )
+                                    delegate.onResultReady(user);
                             }
                         });
                     }
@@ -180,7 +179,7 @@ public final class CurrentUser {
     }
 
     //Get party information from server
-    public static void getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
+    public static void server_getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = context.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + getTokenFromLocal(context).get("jwt");
 
@@ -202,12 +201,13 @@ public final class CurrentUser {
                 }
 
                 Log.d("CurUser_GetPartyInfo", result.get(0));
-                delegate.onResultReady(constructParty(body));
+                if ( delegate != null )
+                    delegate.onResultReady(constructParty(body));
             }}).execute();
     }
 
     //Get user following from server
-    public static void getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
+    public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "/followers?access_token=" + getTokenFromLocal(context).get("jwt");
 
@@ -228,13 +228,14 @@ public final class CurrentUser {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                delegate.onResultReady(followers);
+                if ( delegate != null )
+                    delegate.onResultReady(followers);
             }
         }).execute();
     }
 
     //Get user following from server
-    public static void getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
+    public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = context.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(context).get("jwt");
 
@@ -255,7 +256,8 @@ public final class CurrentUser {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                delegate.onResultReady(followings);
+                if ( delegate != null )
+                    delegate.onResultReady(followings);
             }
         }).execute();
     }
@@ -400,7 +402,7 @@ public final class CurrentUser {
     }
 
     //Delete party from server
-    public static void deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
+    public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
         String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token="
                 + getTokenFromLocal(context).get("jwt");
@@ -418,27 +420,27 @@ public final class CurrentUser {
                 }
 
                 Log.d("CurUser_DeleteEvent", result.get(0));
-                delegate.onResultReady(status);
+                if ( delegate != null)
+                    delegate.onResultReady(status);
             }
         }).execute();
         Log.d("Delete Party", result);
     }
 
-    public static Party createParty( String name,
-                                     String emoji,
-                                     double price,
-                                     String hostName,
-                                     String address,
-                                     double lat,
-                                     double lng,
-                                     boolean isPublic,
-                                     double startTimeStamp,
-                                     double duration,
-                                     int minAge,
-                                     int maxAge,
-                                     final OnResultReadyListener<String> delegate){
+    //Create new party in server
+    public static void server_createNewParty(String name,
+                                             String emoji,
+                                             double price,
+                                             String address,
+                                             double lat,
+                                             double lng,
+                                             boolean isPublic,
+                                             double startTimeStamp,
+                                             double endingTimeStamp,
+                                             int minAge,
+                                             int maxAge,
+                                             final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
-        final Party[] event_id = {null};
         String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(context).get("jwt");
         HashMap<String, String> event_info = new HashMap();
         event_info.put("name", name);
@@ -448,52 +450,92 @@ public final class CurrentUser {
         event_info.put("lat", lat + "");
         event_info.put("lng", lng + "");
         event_info.put("is_public", isPublic ? "1" : "0");
-        event_info.put("start_time_stamp", startTimeStamp + "");
-        event_info.put("duration", duration + "");
+        event_info.put("start_timestamp", startTimeStamp + "");
+        event_info.put("end_timestamp", endingTimeStamp + "");
         event_info.put("min_age", minAge + "");
         event_info.put("max_age", maxAge + "");
-        event_info.put("host_name", hostName);
-
-        String result = null;
 
         comps[0] = new RequestComponents(url, "POST", event_info);
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                String status = null;
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                    if(!status.equals("error")){
-                        JSONObject data_json = main_json.getJSONObject("data");
-                        status += "," + data_json.getString("insertId");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("CurUser_CreateEvent", result.get(0));
-                Log.d("status", status + "");
-                delegate.onResultReady(status);
+                    String status =  main_json.getString("status");
 
+                    if(!status.equals("error")) {
+                        JSONObject data_json = main_json.getJSONObject("data");
+                        String event_id = data_json.getString("insertId");
+                        status += "," + event_id;
+                        if ( delegate != null )
+                            delegate.onResultReady(status);
+                    }
+
+                } catch (JSONException e) {e.printStackTrace();}
+                Log.d("CreateNewParty", result.get(0));
             }
         }).execute();
-        return event_id[0];
+    }
+
+    //Create new user in server
+    public static void server_createNewUser(String first_name,
+                                            String last_name,
+                                            String email,
+                                            String college,
+                                            String password,
+                                            String fb_id,
+                                            String gender,
+                                            String birthday,
+                                            final OnResultReadyListener<String> delegate) {
+        RequestComponents[] comps = new RequestComponents[1];
+        String url = "https://api.theplugsocial.com/v1/users";
+        HashMap<String, String> event_info = new HashMap();
+        event_info.put("first_name", first_name);
+        event_info.put("last_name", last_name);
+        event_info.put("email", email);
+        event_info.put("college", college);
+        event_info.put("password", password);
+        event_info.put("fb_id", fb_id);
+        event_info.put("gender", gender);
+        event_info.put("birthday", birthday);
+
+        comps[0] = new RequestComponents(url, "POST", event_info);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    String status =  main_json.getString("status");
+
+                    if(!status.equals("error")) {
+                        JSONObject data_json = main_json.getJSONObject("data");
+                        String event_id = data_json.getString("insertId");
+                        status += "," + event_id;
+
+                        if ( delegate != null )
+                            delegate.onResultReady(status);
+                    }
+
+                } catch (JSONException e) {e.printStackTrace();}
+                Log.d("CreateNewUser", result.get(0));
+            }
+        }).execute();
     }
 
     //Parameter action must be either "POST" or "DELETE"
-    public static void manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
+    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/events" + eventID + "/users" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
         HashMap<String, String> about = new HashMap();
         about.put("relationship", relationship);
-        if (action.equals("POST")) {
+
+        if (action.equals("POST"))
             comps[0] = new RequestComponents(url, "POST", about);
-        } else if (action.equals("DELETE")) {
+        else if (action.equals("DELETE"))
             comps[0] = new RequestComponents(url, "DELETE", about);
-        }
-        else{
+        else
             Log.d("Action", "Illegal passed action argument: " + action);
-        }
+
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
@@ -504,18 +546,20 @@ public final class CurrentUser {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("AddUserToParty", result.get(0));
-                delegate.onResultReady(status);
+
+                Log.d("ManageUserForParty", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    public static void updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "?access_token=" + getTokenFromLocal(context).get("jwt");
+    //Update user in server
+    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);
-        String result = null;
+
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
@@ -523,27 +567,65 @@ public final class CurrentUser {
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                } catch (JSONException e) {e.printStackTrace();}
+
                 Log.d("UpdateUser", result.get(0));
-                delegate.onResultReady(status);
+                if ( delegate != null )
+                    delegate.onResultReady(status);
             }
-        });
+        }).execute();
     }
 
+    //Update party in server
+    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents[] comps = new RequestComponents[1];
+        comps[0] = new RequestComponents(url, "POST", body);
 
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {e.printStackTrace();}
 
+                Log.d("UpdateParty", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
 
+    //Follow a user
+    public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "POST", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {e.printStackTrace();}
 
+                Log.d("Follow User", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
 
-
+    
 
 
 
     //
 //    //Get user information
-//    public static User getUserObject(String id) {
+//    public static User server_getUserObject(String id) {
 //        if ( id.equals("1") )
 //            return dummy.getFriend1();
 //        else if ( id.equals("2") )
@@ -559,7 +641,7 @@ public final class CurrentUser {
 //    }
 //
 //    //Get party information
-//    public static Party getPartyObject(String id) {
+//    public static Party server_getPartyObject(String id) {
 //        if ( id.equals("1") )
 //            return dummy.getParty1();
 //        else if ( id.equals("2") )

@@ -10,7 +10,6 @@ import android.widget.SearchView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.ManagePartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -92,7 +91,7 @@ public class ManageEventsActivity extends AppCompatActivity
         searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
         searchView.setIconifiedByDefault(false);
         partyList = new ArrayList<>();
-        CurrentUser.getPartyListObjects(dummy.getHosted(), new OnResultReadyListener<List<Party>>() {
+        CurrentUser.server_getPartyListObjects(dummy.getHosted(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {
