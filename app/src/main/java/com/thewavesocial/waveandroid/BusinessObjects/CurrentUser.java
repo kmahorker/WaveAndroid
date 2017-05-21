@@ -45,13 +45,21 @@ public final class CurrentUser {
             @Override
             public void onResultReady(User result) {
                 theUser = result;
+                server_getUserEvents(theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+                    @Override
+                    public void onResultReady(HashMap<String, ArrayList<String>> result) {
+                        theUser.getAttending().addAll(result.get("attending"));
+                        theUser.getHosted().addAll(result.get("hosting"));
+                        theUser.getBounced().addAll(result.get("hosting"));
 
-                if ( delegate == null )
-                    return;
-                if ( result != null)
-                    delegate.onResultReady(true);
-                else
-                    delegate.onResultReady(false);
+                        if ( delegate == null )
+                            return;
+                        if ( result != null)
+                            delegate.onResultReady(true);
+                        else
+                            delegate.onResultReady(false);
+                    }
+                });
             }
         });
     }
@@ -89,15 +97,6 @@ public final class CurrentUser {
 
                     Log.d("CurUser_GetUserInfo", result.get(0));
                     User user = constructUser(body);
-                    //testing purpose
-                    ArrayList<String> followers = new ArrayList<>();
-                    followers.add("11");
-                    followers.add("12");
-                    followers.add("13");
-                    followers.add("14");
-                    followers.add("15");
-                    user.setFollowers(followers);
-                    user.setFollowing(followers);
                     friends.add(user);
                 }
                 if ( delegate != null )
@@ -109,7 +108,7 @@ public final class CurrentUser {
     //Get list of party information from server
     public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
-        for ( int i = 0; i < comps.length; i++ ) {
+        for ( int i = 0; i < partyIdList.size(); i++ ) {
             String url = context.getString(R.string.server_url) + "events/" + partyIdList.get(i)
                     + "?access_token=" + getTokenFromLocal(context).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
@@ -121,7 +120,7 @@ public final class CurrentUser {
                 for ( int i = 0; i < result.size(); i++ ) {
                     HashMap<String, String> body = new HashMap<>();
                     try {
-                        JSONObject main_json = new JSONObject(result.get(0));
+                        JSONObject main_json = new JSONObject(result.get(i));
                         JSONObject data = main_json.getJSONObject("data");
                         Iterator iterKey = data.keys();
                         while (iterKey.hasNext()) {
@@ -283,9 +282,9 @@ public final class CurrentUser {
             startDateTime = info.get("start_time_stamp");
             duration = info.get("duration");
             //startTime = info.get("start_time") + "";
-            if ( !startDateTime.equals("null") ) {
+            if ( startDateTime != null ) {
                 startingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime));
-                if(!duration.equals("null")){
+                if( duration != null ){
                     endingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime) + Long.parseLong(duration));
                 }
 //                startingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(startDateTime.substring(0, 4)));
@@ -314,7 +313,7 @@ public final class CurrentUser {
             address = info.get("address");
             mapAddress.setAddress_string(address);
             if ( !info.get("lat").equals("null") && !info.get("lng").equals("null") ) {
-                mapAddress.setAddress_latlng(new LatLng(Integer.parseInt(info.get("lat")), Integer.parseInt(info.get("lng"))));
+                mapAddress.setAddress_latlng(new LatLng(Double.parseDouble(info.get("lat")), Double.parseDouble(info.get("lng"))));
             }
 
             str_isPublic = info.get("is_public") + "";
@@ -619,7 +618,41 @@ public final class CurrentUser {
         }).execute();
     }
 
-    
+    //Get User's events from server
+    public static void server_getUserEvents(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
+                + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<String> attending = new ArrayList<>();
+                ArrayList<String> hosting = new ArrayList<>();
+                ArrayList<String> bouncing = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                            attending.add(data.getJSONObject(i).getString("event_id"));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                            hosting.add(data.getJSONObject(i).getString("event_id"));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                            bouncing.add(data.getJSONObject(i).getString("event_id"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                HashMap<String, ArrayList<String>> parties = new HashMap();
+                parties.put("attending", attending);
+                parties.put("hosting", hosting);
+                parties.put("bouncing", bouncing);
+                Log.d("Get User Events", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
 
 
 

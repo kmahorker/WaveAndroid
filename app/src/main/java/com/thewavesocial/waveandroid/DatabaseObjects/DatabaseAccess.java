@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -309,7 +310,7 @@ public final class DatabaseAccess{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
 //            progress = new ProgressDialog(mainActivity);
 //            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //            progress.setTitle("Please wait");

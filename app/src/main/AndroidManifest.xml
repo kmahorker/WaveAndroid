@@ -42,17 +42,19 @@
         <activity android:name=".SocialFolder.FollowActivity" />
       
         <activity android:name=".HostFolder.CreateAnEventActivity" />
-        <activity android:name=".LoginFolder.AddBestFriendActivity" />
+        <activity android:name=".LoginFolder.AddBestFriendActivity" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
 
         <activity android:name=".HostFolder.EditStatsActivity" />
         <activity
             android:name=".HomeSwipeActivity"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity android:name=".LoginFolder.LoginTutorialActivity">
