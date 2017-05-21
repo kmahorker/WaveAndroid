@@ -50,7 +50,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(Boolean result) {
                     if (result) {
-//                        setupServerDummies();
+                        setupServerDummies();
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
                         mPager.setAdapter(mPagerAdapter);
@@ -179,7 +179,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         HashMap<String, String> body6 = new HashMap<>();
         body6.put("name", "Party1");
-        body6.put("emoji", "");
+        body6.put("emoji", "\ue32d");
         body6.put("price", "0");
         body6.put("address", "6612 Sueno Rd Goleta, CA 93117");
         body6.put("lat", 34.412923 + "");
@@ -193,7 +193,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         HashMap<String, String> body7 = new HashMap<>();
         body7.put("name", "Party2");
-        body7.put("emoji", "");
+        body7.put("emoji", "\ue32d");
         body7.put("price", "10");
         body7.put("address", "6555 Segovia Rd Goleta, CA 93117");
         body7.put("lat", 34.414241 + "");
@@ -207,7 +207,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         HashMap<String, String> body8 = new HashMap<>();
         body8.put("name", "Party3");
-        body8.put("emoji", "");
+        body8.put("emoji", "\ue32d");
         body8.put("price", "20");
         body8.put("address", "6650 Picasso Rd, Goleta, CA 93117");
         body8.put("lat", 34.415500 + "");
@@ -221,7 +221,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         HashMap<String, String> body9 = new HashMap<>();
         body9.put("name", "Party4");
-        body9.put("emoji", "");
+        body9.put("emoji", "\ue32d");
         body9.put("price", "50");
         body9.put("address", "895 Camino Del Sur Goleta, CA 93117");
         body9.put("lat", 34.412938 + "");
@@ -235,7 +235,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         HashMap<String, String> body10 = new HashMap<>();
         body10.put("name", "Party5");
-        body10.put("emoji", "");
+        body10.put("emoji", "\ue32d");
         body10.put("price", "100");
         body10.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body10.put("lat", 34.411962 + "");

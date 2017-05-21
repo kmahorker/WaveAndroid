@@ -50,19 +50,23 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.host_event_stats);
         mainActivity = this;
         Intent intent = getIntent();
-        party = new Party();
-        CurrentUser.server_getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
-            @Override
-            public void onResultReady(Party result) {
-                if ( result != null ) {
-                    party = result;
-                    setupReferences();
-                    setupActionbar();
-                }
-            }
-        });
+        party = intent.getExtras().getParcelable("partyObject");
+//        CurrentUser.server_getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
+//            @Override
+//            public void onResultReady(Party result) {
+//                if ( result != null ) {
+//                    party = result;
+//                    setupReferences();
+//                    setupActionbar();
+//                }
+//            }
+//        });
 
         setupActionbar();
+        setupReferences();
+        setupPartyInfos();
+        setupFunctionalities();
+        setupMapElements();
         setupDeleteEditButtons(callerType);
     }
 

@@ -263,7 +263,7 @@ public final class CurrentUser {
 
     //Fill in all party information locally
     private static Party constructParty(HashMap<String, String> info) {
-        String partyID = "", name = "", emoji = "", startDateTime = "", duration = "", address = "", str_isPublic = "", hostName = "",
+        String partyID = "", name = "", emoji = "", startDateTime = "", endDateTime = "", address = "", str_isPublic = "", hostName = "",
                 min_age = "", max_age = "";
         List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
         Calendar startingDateTimeCalendar = Calendar.getInstance(), endingDateTimeCalendar = Calendar.getInstance();
@@ -279,13 +279,12 @@ public final class CurrentUser {
             if ( info.get("price") != null )
                 price = Double.parseDouble(info.get("price") + "");
 
-            startDateTime = info.get("start_time_stamp");
-            duration = info.get("duration");
-            //startTime = info.get("start_time") + "";
+            startDateTime = info.get("start_timestamp");
+            endDateTime = info.get("end_timestamp");
             if ( startDateTime != null ) {
                 startingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime));
-                if( duration != null ){
-                    endingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(startDateTime) + Long.parseLong(duration));
+                if( endDateTime != null ){
+                    endingDateTimeCalendar = UtilityClass.unixToCalendar(Long.parseLong(endDateTime));
                 }
 //                startingDateTimeCalendar.set(Calendar.YEAR, Integer.parseInt(startDateTime.substring(0, 4)));
 //                startingDateTimeCalendar.set(Calendar.MONTH, Integer.parseInt(startDateTime.substring(5, 7)));
