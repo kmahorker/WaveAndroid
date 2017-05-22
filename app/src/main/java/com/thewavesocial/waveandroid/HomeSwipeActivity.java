@@ -42,7 +42,6 @@ public class HomeSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        setupMapActionbar();
         DatabaseAccess.saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
 
         if ( CurrentUser.context == null ) {
@@ -50,7 +49,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(Boolean result) {
                     if (result) {
-                        setupServerDummies();
+//                        setupServerDummies();
+                        setupMapActionbar();
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
                         mPager.setAdapter(mPagerAdapter);
@@ -62,6 +62,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 }
             });
         } else {
+            setupMapActionbar();
             mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
             mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
             mPager.setAdapter(mPagerAdapter);

@@ -729,6 +729,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             create.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     savePage3();
+                    NewPartyInfo.composeParty();
                     mainActivity.finish();
                 }
             });
@@ -753,9 +754,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
-
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
@@ -774,7 +772,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 IDs.add(user.getUserID());
             }
             NewPartyInfo.bouncingUsers = IDs;
-            NewPartyInfo.composeParty();
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -811,6 +808,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
 
+                Log.d("Contains?", getItem(position).toString() + ", " + invites.toString() );
                 if ( invites.contains( getItem(position) ) )
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
@@ -917,6 +915,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             partyEmoji = "";
             minAge = -1;
             maxAge = -1;
+            mapAddress = new MapAddress();
         }
 
         //Compose all party information

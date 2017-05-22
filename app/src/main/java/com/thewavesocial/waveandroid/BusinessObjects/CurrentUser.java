@@ -289,7 +289,7 @@ public final class CurrentUser {
             if( endDateTime != null ){
                 endingDateTimeCalendar.setTime(new Date(Long.parseLong(endDateTime) * 1000));
             }
-            Log.d("Calendar", new Date(Long.parseLong(startDateTime)).toString());
+            Log.d("Calendar", startingDateTimeCalendar.get(Calendar.MONTH)+"");
 
             address = info.get("address");
             mapAddress.setAddress_string(address);

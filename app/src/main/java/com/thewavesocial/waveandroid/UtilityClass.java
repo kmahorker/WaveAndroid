@@ -65,7 +65,7 @@ public final class UtilityClass {
     }
 
     public static String dateToString(Calendar c) {
-        int m = c.get(Calendar.MONTH);
+        int m = c.get(Calendar.MONTH) + 1;
         int d = c.get(Calendar.DATE);
         String prefixM = "";
         String prefixD = "";

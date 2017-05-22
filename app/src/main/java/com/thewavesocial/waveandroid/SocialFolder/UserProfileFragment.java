@@ -107,8 +107,13 @@ public class UserProfileFragment extends Fragment {
         UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
             @Override
             public void onResultReady(Bitmap image) {
-                if (image != null)
-                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+                if (image != null) {
+                    try {
+                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
