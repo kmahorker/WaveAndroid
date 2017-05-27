@@ -105,10 +105,11 @@ public final class UtilityClass {
         return dr;
     }
 
-    public static void printAlertMessage(Activity activity, String message, boolean cancelable) {
+    public static void printAlertMessage(Activity activity, String message, String header, boolean cancelable) {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
+                .setTitle(header)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

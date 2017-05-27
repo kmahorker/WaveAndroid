@@ -396,24 +396,24 @@ public class EditStatsActivity extends AppCompatActivity {
         //Log.d("Address", locationEditText.getText().toString());
         //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
         if(emojiconEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Editing Party", true);
             return false;
         }
         else if(titleEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Editing Party", true);
             return false;
         }
         else if(locationEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Editing Party", true);
             return false;
         }
         else if(startCalendar.compareTo(endCalendar) >= 0){
             Log.d("Date", startCalendar.get(Calendar.DATE) + ", " + endCalendar.get(Calendar.DATE) + "");
-            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Editing Party", true);
             return false;
         }
         else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Editing Party", true);
             return false;
         }
         else{
