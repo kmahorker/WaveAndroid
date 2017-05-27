@@ -179,11 +179,11 @@ public class DummyUser extends User
 //        this.getHosted().add("5");
 //
 //        //setup party bounced list
-//        this.getBounced().add("1");
-//        this.getBounced().add("2");
-//        this.getBounced().add("3");
-//        this.getBounced().add("4");
-//        this.getBounced().add("5");
+//        this.getBouncing().add("1");
+//        this.getBouncing().add("2");
+//        this.getBouncing().add("3");
+//        this.getBouncing().add("4");
+//        this.getBouncing().add("5");
 //
 //        this.getAttending().add("1");
 //        this.getAttending().add("2");

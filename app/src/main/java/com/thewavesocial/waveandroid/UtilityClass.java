@@ -262,5 +262,4 @@ public final class UtilityClass {
         return calendar;
     }
 
-
 }

@@ -8,19 +8,19 @@ import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.getTokenFromLocal;
 
@@ -51,8 +51,8 @@ public final class CurrentUser {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<String>> result) {
                         theUser.getAttending().addAll(result.get("attending"));
-                        theUser.getHosted().addAll(result.get("hosting"));
-                        theUser.getBounced().addAll(result.get("hosting"));
+                        theUser.getHosting().addAll(result.get("hosting"));
+                        theUser.getBouncing().addAll(result.get("bouncing"));
 
                         if ( delegate == null )
                             return;
@@ -97,7 +97,7 @@ public final class CurrentUser {
                         e.printStackTrace();
                     }
 
-                    Log.d("CurUser_GetUserInfo", result.get(0));
+                    Log.d("CurUser_GetUserInfo", result.get(i));
                     User user = constructUser(body);
                     friends.add(user);
                 }
@@ -118,8 +118,9 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
+                Map<Long, Party> raw_parties = new TreeMap<>();
                 for ( int i = 0; i < result.size(); i++ ) {
+                    long date_key = 0;
                     HashMap<String, String> body = new HashMap<>();
                     try {
                         JSONObject main_json = new JSONObject(result.get(i));
@@ -129,11 +130,19 @@ public final class CurrentUser {
                             String key = (String) iterKey.next();
                             body.put(key, data.getString(key));
                         }
+                        date_key = Long.parseLong(data.getString("start_timestamp"));
                     } catch (JSONException e) {e.printStackTrace();}
 
-                    Log.d("CurUser_GetPartyInfo", result.get(0));
-                    parties.add(constructParty(body));
+                    Log.d("CurUser_GetPartyInfo", result.get(i));
+                    while (raw_parties.keySet().contains(date_key))
+                        date_key += 1;
+                    raw_parties.put(date_key, constructParty(body));
                 }
+                ArrayList<Party> parties = new ArrayList<>();
+                for ( Long key : raw_parties.keySet() ) {
+                    parties.add(raw_parties.get(key));
+                }
+
                 if ( delegate != null )
                     delegate.onResultReady(parties);
             }}).execute();
@@ -257,6 +266,7 @@ public final class CurrentUser {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Log.d("User Following", result.get(0));
                 if ( delegate != null )
                     delegate.onResultReady(followings);
             }
