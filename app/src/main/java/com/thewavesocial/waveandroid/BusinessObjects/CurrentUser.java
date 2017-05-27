@@ -688,7 +688,26 @@ public final class CurrentUser {
     }
 
     public static void server_addBestFriend(String name, String number, final OnResultReadyListener<String> delegate){
-
+        String url =  context.getString(R.string.server_url) + "users/" + theUser.getUserID() + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        //TODO: 5/27/17 Add when server is updated body.put("name", name);
+        body.put("contact", number);
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                try{
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    String status =  main_json.getString("status");
+                    if ( delegate != null )
+                        delegate.onResultReady(status);
+                }catch(JSONException e){
+                   e.printStackTrace();
+                }
+                Log.d("addBestFriend", result.get(0) + "");
+            }
+        }).execute();
     }
 
 
