@@ -130,7 +130,11 @@ public class PartyProfileFragment extends Fragment {
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList();
-        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        List<String> userIds = new ArrayList<>();
+        for(Attendee a : party.getAttendingUsers()) {
+            userIds.add(a.getUserId());
+        }
+        CurrentUser.server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {

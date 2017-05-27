@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -108,6 +109,12 @@ public final class UtilityClass {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .show();
     }
 

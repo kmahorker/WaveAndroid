@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
@@ -281,7 +282,13 @@ public class EditStatsActivity extends AppCompatActivity {
 
         //TODO: Call Server function instead
         final List<User> invitedUsers = new ArrayList<>();
-        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        List<String> userIds = new ArrayList<>();
+        for(Attendee a : party.getAttendingUsers()) {
+            if(a.getStatus().equals("invited")) {
+                userIds.add(a.getUserId());
+            }
+        }
+        CurrentUser.server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
@@ -447,7 +454,7 @@ public class EditStatsActivity extends AppCompatActivity {
         static MapAddress mapAddress;
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
-        static List<String> attendingUsers;
+        static List<Attendee> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
