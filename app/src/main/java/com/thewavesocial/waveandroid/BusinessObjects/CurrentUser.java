@@ -740,6 +740,30 @@ public final class CurrentUser {
         }).execute();
     }
 
+    public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
+        String url = context.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> map = new HashMap<>();
+        map.put("contact", number);
+        RequestComponents comp = new RequestComponents(url, "DELETE", map);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_DelBestFriend", result.get(0) + "");
+                if ( delegate != null)
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
 
     //
 //    //Get user information
