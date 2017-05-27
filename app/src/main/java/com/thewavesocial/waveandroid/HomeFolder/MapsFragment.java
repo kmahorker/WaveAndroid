@@ -110,8 +110,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
-            @Override public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()) {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         sos_button.setAlpha(155);
                         handle.postDelayed(run, 3000);
@@ -125,7 +126,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             }
 
             Runnable run = new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     Vibrator vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(500);
                     checkSOSMessagePermission();
@@ -189,8 +191,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
-                if ( !searchOpened )
+                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
+                if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
             }
@@ -198,8 +200,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
-                if(!searchOpened)
+                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
+                if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
             }
@@ -211,8 +213,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dragSeparator(separatorHeight/2-mapHeight / 2, 0);
-                if ( !searchOpened )
+                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
+                if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
                 return false;
@@ -237,7 +239,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
-        updateUserLoc(1);
+        if (ActivityCompat.checkSelfPermission(mainActivity,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(mainActivity,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
 
         addParties(googleMap, partyList);
     }
