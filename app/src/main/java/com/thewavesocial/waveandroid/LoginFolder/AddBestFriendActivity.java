@@ -18,9 +18,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -80,13 +82,25 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
+                    CurrentUser.context = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
+                    CurrentUser.server_addBestFriend(name, phoneNumber, new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if(result.equals("success")){
+                                startActivity(intent);
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "Error adding a best friend", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                     //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
                     // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
                 }
                 else{
                     //TODO: Update Current User object with phoneNumberEditText.text
                 }
-                startActivity(intent);
+
             }
         });
     }
@@ -109,15 +123,15 @@ public class AddBestFriendActivity extends AppCompatActivity {
                             UtilityClass.hideKeyboard(thisActivity);
                             pickContact(v);
                         }
-                        /*else{
+                        else{
                             UtilityClass.hideKeyboard(thisActivity);
                             phoneNumberEditText.clearFocus();
                             phoneNumberEditText.setText("");
-                            phoneNumberEditText.setKeyListener(phoneTextKeyListener);
+                            //phoneNumberEditText.setKeyListener(phoneTextKeyListener);
                             drawableToPlus();
                             disableDoneTextView();
                             contact = false;
-                        }*/
+                        }
 
                         return true;
                     }
