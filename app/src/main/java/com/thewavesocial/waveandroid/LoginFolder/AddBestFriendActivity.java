@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -45,16 +46,42 @@ public class AddBestFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_best_friend);
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UtilityClass.hideKeyboard(thisActivity);
-            }
-        });
-        setUpActionBar();
-        setUpTextViews();
-        setUpEditText();
+        DatabaseAccess.saveTokentoLocal(thisActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
+
+        if ( CurrentUser.context == null ) {
+            CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
+                @Override
+                public void onResultReady(Boolean result) {
+                    if (result) {
+                        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
+                        linearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                UtilityClass.hideKeyboard(thisActivity);
+                            }
+                        });
+                        setUpActionBar();
+                        setUpTextViews();
+                        setUpEditText();
+                    } else {
+                        Log.d("HomeSwipeActivity", "Set User Context Failed...");
+                    }
+                }
+            });
+        }
+        else{
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UtilityClass.hideKeyboard(thisActivity);
+                }
+            });
+            setUpActionBar();
+            setUpTextViews();
+            setUpEditText();
+        }
+
     }
     private void setUpActionBar(){
         actionBar = getSupportActionBar();
@@ -82,11 +109,12 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
-                    CurrentUser.context = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
+                    //CurrentUser.context = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
                     CurrentUser.server_addBestFriend(name, phoneNumber, new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if(result.equals("success")){
+                                // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
                                 startActivity(intent);
                             }
                             else{
@@ -95,7 +123,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                         }
                     });
                     //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
-                    // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+
                 }
                 else{
                     //TODO: Update Current User object with phoneNumberEditText.text
@@ -197,7 +225,8 @@ public class AddBestFriendActivity extends AppCompatActivity {
             int  phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             // column index of the contact name
             int  nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-            phoneNumber = cursor.getString(phoneIndex);
+            String numberText = cursor.getString(phoneIndex);
+            phoneNumber = numberText.replaceAll("\\D+","");
             name = cursor.getString(nameIndex);
             phoneNumberEditText.setText(name);
             phoneNumberEditText.setKeyListener(null);
