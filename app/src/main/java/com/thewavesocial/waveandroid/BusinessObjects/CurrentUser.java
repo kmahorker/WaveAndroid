@@ -97,7 +97,7 @@ public final class CurrentUser {
                         e.printStackTrace();
                     }
 
-                    Log.d("CurUser_GetUserInfo", result.get(0));
+                    Log.d("CurUser_GetUserInfo", result.get(i));
                     User user = constructUser(body);
                     friends.add(user);
                 }
@@ -257,6 +257,7 @@ public final class CurrentUser {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Log.d("User Following", result.get(0));
                 if ( delegate != null )
                     delegate.onResultReady(followings);
             }

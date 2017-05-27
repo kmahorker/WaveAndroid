@@ -32,6 +32,7 @@ public class User implements Parcelable {
     private List<BestFriend> bestFriends;
     private List<String> followers;
     private List<String> following;
+
     //Below contain list of PartyIDs
     private List<String> hosting;
     private List<String> attended;
@@ -309,6 +310,14 @@ public class User implements Parcelable {
     public void setFollowing(List<String> following)
     {
         this.following = following;
+    }
+
+    public List<String> getHosting() {
+        return hosting;
+    }
+
+    public void setHosting(List<String> hosting) {
+        this.hosting = hosting;
     }
 
     protected User(Parcel in) {

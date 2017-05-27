@@ -31,10 +31,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
-import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
@@ -43,7 +44,6 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
@@ -56,18 +56,29 @@ public class CreateAnEventActivity extends AppCompatActivity {
     private ImageView back, forward;
     private FragmentManager fragmentM;
     public static CreateAnEventActivity thisActivity;
+    public static ArrayList<User> followings;
     private static int threads_completion = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Emojiconize.activity(this).go();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event_layout);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
+
         fragmentM = getSupportFragmentManager();
         thisActivity = this;
+
         openFirstPage();
         NewPartyInfo.initialize();
+
+        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                followings = new ArrayList<>();
+                if ( result != null )
+                    followings.addAll(result);
+            }
+        });
     }
 
     //Open page 1
@@ -480,7 +491,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
             else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
                 UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
-                return false;
+                return true;
             }
             else{
                 return true;
@@ -516,7 +527,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites = new ArrayList<>();
+        private static List<Integer> invite_index = new ArrayList<>();
         private View view;
 
         @Nullable
@@ -546,27 +557,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     mainActivity.openThirdPage();
                 }
             });
-            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    if ( result != null ) {
-                        friends = result;
-                        friend_list.setAdapter(new FriendListAdapter(friends));
-                    }
-                }
-            });
 
-            CurrentUser.server_getUsersListObjects(NewPartyInfo.attendingUsers, new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    if ( result != null ) {
-                        invites = result;
-                        LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
-                        invite_list.setLayoutManager(layoutManager);
-                        invite_list.setAdapter(new SelectedAdapter(invites));
-                    }
-                }
-            });
+            friends = followings;
+            friend_list.setAdapter(new FriendListAdapter(friends));
+
+            invite_index = NewPartyInfo.attendingUsers;
+            LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+            invite_list.setLayoutManager(layoutManager);
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
 
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
@@ -581,11 +579,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage2() {
-            List<String> IDs = new ArrayList<>();
-            for ( User user : invites ) {
-                IDs.add(user.getUserID());
-            }
-            NewPartyInfo.attendingUsers = IDs;
+            NewPartyInfo.attendingUsers = invite_index;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -620,20 +614,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 //TODO: Get image from URL
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
-                if ( invites.contains( getItem(position) ) )
+                if ( invite_index.contains( position ))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invites.contains( getItem(position) ) ) {
-                            invites.add(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                        if ( !invite_index.contains( position ) ) {
+                            invite_index.add(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                         } else {
-                            invites.remove(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                            invite_index.remove(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                         }
                     }
@@ -704,7 +698,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites = new ArrayList<>();
+        private static List<Integer> invite_index = new ArrayList<>();
 
         @Nullable
         @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -733,27 +727,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     mainActivity.finish();
                 }
             });
-            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    if ( result != null ) {
-                        friends = result;
-                        friend_list.setAdapter(new FriendListAdapter(friends));
-                    }
-                }
-            });
 
-            CurrentUser.server_getUsersListObjects(NewPartyInfo.bouncingUsers, new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    if ( result != null ) {
-                        invites = result;
-                        LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
-                        invite_list.setLayoutManager( layoutManager );
-                        invite_list.setAdapter(new SelectedAdapter(invites));
-                    }
-                }
-            });
+            friends = followings;
+            friend_list.setAdapter(new FriendListAdapter(friends));
+
+            invite_index = NewPartyInfo.bouncingUsers;
+            LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+            invite_list.setLayoutManager(layoutManager);
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
@@ -767,11 +748,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage3() {
-            List<String> IDs = new ArrayList<>();
-            for ( User user : invites ) {
-                IDs.add(user.getUserID());
-            }
-            NewPartyInfo.bouncingUsers = IDs;
+            NewPartyInfo.bouncingUsers = invite_index;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -808,22 +785,25 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
 
-                Log.d("Contains?", getItem(position).toString() + ", " + invites.toString() );
-                if ( invites.contains( getItem(position) ) )
+                Log.d("Contains?", invite_index.toString() );
+                if ( invite_index.contains( position ) )
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invites.contains( getItem(position) ) ) {
-                            invites.add(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                        Log.d("Position", position+"");
+                        if ( !invite_index.contains( position ) ) {
+                            invite_index.add(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                            Log.d("Contains?", invite_index.toString() );
                         } else {
-                            invites.remove(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                            invite_index.remove(invite_index.indexOf(position));
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                            Log.d("Contains?", invite_index.toString() );
                         }
                     }
                 });
@@ -832,7 +812,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userIDLong", getItem(position).getUserID() );
+                        intent.putExtra("userIDLong", followings.get(position) );
                         startActivity(intent);
                     }
                 });
@@ -885,6 +865,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    public static List<User> getUsersFromFollowing(List<Integer> indexes) {
+        ArrayList<User> users = new ArrayList<>();
+        for ( int i = 0; i < indexes.size(); i++ ) {
+            users.add(followings.get(indexes.get(i)));
+        }
+        return users;
+    }
+
     //Store all new party information
     private static class NewPartyInfo {
         static String name;
@@ -894,8 +882,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static Calendar endingDateTime;
         static MapAddress mapAddress;
         static List<String> hostingUsers;
-        static List<String> bouncingUsers;
-        static List<String> attendingUsers;
+        static List<Integer> bouncingUsers;
+        static List<Integer> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
@@ -916,64 +904,75 @@ public class CreateAnEventActivity extends AppCompatActivity {
             minAge = -1;
             maxAge = -1;
             mapAddress = new MapAddress();
+
+            hostingUsers.add("10");
         }
 
         //Compose all party information
         public static void composeParty(){
-            CurrentUser.server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
-                    mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
-                    isPublic, startingDateTime.getTimeInMillis()/1000L, endingDateTime.getTimeInMillis()/1000L,
-                    minAge, maxAge, new OnResultReadyListener<String>(){
+            Log.d("Compose Party", "EEntered");
+            if ( mapAddress.getAddress_latlng() == null )
+                mapAddress.setAddress_latlng(new LatLng(0,0));
 
-                @Override
-                public void onResultReady(String result) {
-                    int commaIndex = result.indexOf(',');
-                    if ( commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
-                        Log.d("Compose Party", "Unsuccessful");
-                        return;
-                    }
+            try {
+                CurrentUser.server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
+                        mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
+                        isPublic, startingDateTime.getTimeInMillis() / 1000L, endingDateTime.getTimeInMillis() / 1000L,
+                        minAge, maxAge, new OnResultReadyListener<String>() {
 
-                    final String eventId = result.substring(commaIndex + 1);
-                    for(String attendingId : attendingUsers){
-                        CurrentUser.server_manageUserForParty(attendingId, eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
-                                Log.d("addInvitedUserError", result + "");
-                                if(result.equals("success")){
-                                    completeThreads();
+                                int commaIndex = result.indexOf(',');
+                                if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
+                                    Log.d("Compose Party", "Unsuccessful");
+                                    return;
                                 }
+
+                                final String eventId = result.substring(commaIndex + 1);
+
+                                for(User user : getUsersFromFollowing(attendingUsers)){
+                                    CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addInvitedUserError", result + "");
+                                            if(result.equals("success")){
+                                                completeThreads();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                for(User user : getUsersFromFollowing(bouncingUsers)){
+                                    CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addInvitedUserError", result + "");
+                                            if(result.equals("success")){
+                                                completeThreads();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                for(String hostingId : hostingUsers){
+                                    CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addInvitedUserError", result + "");
+                                            if(result != null || result.equals("success")){
+                                                //TODO: UpdateUser Hosting field in user object with server
+                                                //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
+                                                completeThreads();
+                                            }
+                                        }
+                                    });
+                                }
+
                             }
                         });
-                    }
-
-                    for(String bouncingId : bouncingUsers){
-                        CurrentUser.server_manageUserForParty(bouncingId, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
-                            @Override
-                            public void onResultReady(String result) {
-                                Log.d("addInvitedUserError", result + "");
-                                if(result.equals("success")){
-                                    completeThreads();
-                                }
-                            }
-                        });
-                    }
-
-                    for(String hostingId : hostingUsers){
-                        CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
-                            @Override
-                            public void onResultReady(String result) {
-                                Log.d("addInvitedUserError", result + "");
-                                if(result.equals("success")){
-                                    //TODO: UpdateUser Hosting field in user object with server
-                                    //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
-                                    completeThreads();
-                                }
-                            }
-                        });
-                    }
-
-                }
-            });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -983,6 +982,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         threads_completion ++;
         if ( threads_completion >= (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
             //Finish task
+
+            CurrentUser.setContext(thisActivity, null);
             thisActivity.onBackPressed();
         }
     }
