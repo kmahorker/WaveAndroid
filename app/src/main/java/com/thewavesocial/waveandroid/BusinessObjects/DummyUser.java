@@ -54,19 +54,19 @@ public class DummyUser extends User
 //
 //    private void setupNotifications1()
 //    {
-//        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type1FollowingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type1FollowingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type1FollowingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend4().getUserID(), Notification.type1FollowingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend5().getUserID(), Notification.type1FollowingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type1FollowingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type1FollowingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type1FollowingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend4().getUserID(), Notification.type1FollowingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend5().getUserID(), Notification.type1FollowingNotice ) );
 //
-//        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type2HostingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type2HostingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type2HostingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type2HostingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type2HostingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type2HostingNotice ) );
 //
-//        this.getNotifications1().add( new Notification( this.getFriend1().getUserID(), Notification.type3AttendingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend2().getUserID(), Notification.type3AttendingNotice ) );
-//        this.getNotifications1().add( new Notification( this.getFriend3().getUserID(), Notification.type3AttendingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend1().getUserID(), Notification.type3AttendingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend2().getUserID(), Notification.type3AttendingNotice ) );
+//        this.getNotifications().add( new Notification( this.getFriend3().getUserID(), Notification.type3AttendingNotice ) );
 //    }
 //
 //    private void setupFriendNotifications2(User friend)

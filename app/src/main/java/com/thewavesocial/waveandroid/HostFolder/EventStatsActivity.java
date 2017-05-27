@@ -31,6 +31,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
@@ -52,16 +53,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mainActivity = this;
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
-//        CurrentUser.server_getPartyObject(intent.getExtras().getString("partyIDLong"), new OnResultReadyListener<Party>() {
-//            @Override
-//            public void onResultReady(Party result) {
-//                if ( result != null ) {
-//                    party = result;
-//                    setupReferences();
-//                    setupActionbar();
-//                }
-//            }
-//        });
 
         setupActionbar();
         setupReferences();
@@ -91,7 +82,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupPartyInfos() {
-        host = party.getHostName();
         loc = party.getMapAddress().getAddress_string();
         date = UtilityClass.dateToString(party.getStartingDateTime()) + " - " +
                 UtilityClass.dateToString(party.getEndingDateTime());
@@ -126,6 +116,21 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         qrCodeView.setImageDrawable(getDrawable(R.drawable.sample_qrcode));
 
         final List<User> sample = new ArrayList();
+
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                if ( result != null ) {
+                    hostView.setText(result.get("hosting").get(0).getFullName());
+
+                    sample.addAll(result.get("attending"));
+                    LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+                    attendingFriends.setLayoutManager(layoutManagerAttendees);
+                    attendingFriends.setFocusable(false);
+                    attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
+                }
+            }
+        });
         List<String> userIds = new ArrayList<>();
         for(Attendee a : party.getAttendingUsers()){
             userIds.add(a.getUserId());
@@ -135,7 +140,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
-                    sample.addAll(result);
                     LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
                     attendingFriends.setLayoutManager(layoutManagerAttendees);
                     attendingFriends.setFocusable(false);

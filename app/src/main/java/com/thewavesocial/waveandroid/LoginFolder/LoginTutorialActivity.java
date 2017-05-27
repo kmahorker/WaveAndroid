@@ -244,8 +244,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         "password" /*TODO: delete password field*/,
                         "UCSB" /*TODO: delete college field*/,
                         json.getString("gender"),
-                        "1231231234"/*TODO: delte ph#*/,
-                        new MapAddress(),
                         calendar,
                         new ArrayList<String>(), //followers
                         new ArrayList<String>(), //following
@@ -255,7 +253,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         new ArrayList<String>(), //hosted
                         new ArrayList<String>(), //bounced
                         new ArrayList<String>(), //attending
-                        new ArrayList<Notification>(),
                         new ArrayList<Notification>(),
                         profilePic);
                 //TODO: Add user object to Database
