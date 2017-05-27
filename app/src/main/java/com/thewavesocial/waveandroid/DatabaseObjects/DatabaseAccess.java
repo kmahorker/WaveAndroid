@@ -431,7 +431,7 @@ public final class DatabaseAccess{
 
     //Save login info to phone.
     public static void saveTokentoLocal(Activity mainActivity, String id, String jwt) {
-        SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("id", id);
         editor.putString("jwt", jwt);
@@ -440,7 +440,7 @@ public final class DatabaseAccess{
 
     //Get login info from phone.
     public static HashMap<String, String> getTokenFromLocal(Activity mainActivity) {
-        SharedPreferences pref = mainActivity.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         HashMap<String, String> tokens = new HashMap<>();
         tokens.put("id", pref.getString("id", ""));
         tokens.put("jwt", pref.getString("jwt", ""));

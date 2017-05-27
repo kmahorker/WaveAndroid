@@ -37,6 +37,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -724,7 +725,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 @Override public void onClick(View v) {
                     savePage3();
                     NewPartyInfo.composeParty();
-                    mainActivity.finish();
                 }
             });
 
@@ -905,7 +905,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             maxAge = -1;
             mapAddress = new MapAddress();
 
-            hostingUsers.add("10");
+            hostingUsers.add(DatabaseAccess.getTokenFromLocal(thisActivity).get("id"));
         }
 
         //Compose all party information
@@ -934,7 +934,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                     CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
-                                            Log.d("addInvitedUserError", result + "");
+                                            Log.d("addInvitedUser", result + "");
                                             if(result.equals("success")){
                                                 completeThreads();
                                             }
@@ -946,7 +946,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                     CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
-                                            Log.d("addInvitedUserError", result + "");
+                                            Log.d("addBouncingUser", result + "");
                                             if(result.equals("success")){
                                                 completeThreads();
                                             }
@@ -958,8 +958,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                     CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
-                                            Log.d("addInvitedUserError", result + "");
-                                            if(result != null || result.equals("success")){
+                                            Log.d("addHostingUser", result + "");
+                                            if(result != null && result.equals("success")){
                                                 //TODO: UpdateUser Hosting field in user object with server
                                                 //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
                                                 completeThreads();
@@ -982,9 +982,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         threads_completion ++;
         if ( threads_completion >= (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
             //Finish task
-
-            CurrentUser.setContext(thisActivity, null);
-            thisActivity.onBackPressed();
+            CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
+                @Override
+                public void onResultReady(Boolean result) {
+                    thisActivity.onBackPressed();
+                    thisActivity.finish();
+                }
+            });
         }
     }
 }

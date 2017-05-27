@@ -58,6 +58,7 @@ public class HostControllerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         populateListView();
+        Log.d("Resume", "TRUE");
     }
 
     public void populateListView(){
