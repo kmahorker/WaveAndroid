@@ -342,7 +342,7 @@ public final class CurrentUser {
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
                 hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
                 attended = new ArrayList(), bounced = new ArrayList();
-        List notifications1 = new ArrayList(), notifications2 = new ArrayList();
+        List notifications = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
             userID = info.get("id");
@@ -385,9 +385,9 @@ public final class CurrentUser {
         MapAddress mapAddress = new MapAddress(); // TODO: 04/17/2017 what to store as address
 
         //Compose user
-        User user = new User(userID, firstName, lastName, email, password, college, gender, phone, mapAddress, birthday,
-                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications1,
-                notifications2, "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
+        User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,
+                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications,
+                "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
     }
 

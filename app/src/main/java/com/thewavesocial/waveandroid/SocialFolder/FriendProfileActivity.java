@@ -113,7 +113,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         });
 
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
-                friend.getNotifications2()));
+                friend.getNotifications()));
 
         if (!CurrentUser.theUser.getFollowing().contains(userID)) {
             changeButton("follow", R.color.appColor, R.drawable.round_corner_red_edge);

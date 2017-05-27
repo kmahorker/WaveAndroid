@@ -123,7 +123,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(attendingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications1()));
+                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications()));
             }
         });
         attendingButton.setOnClickListener(new View.OnClickListener() {
