@@ -1,11 +1,13 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +31,11 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.thewavesocial.waveandroid.BusinessObjects.CurrentUser.theUser;
 
 public class AddBestFriendActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -110,23 +117,56 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
                     //CurrentUser.context = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
-                    CurrentUser.server_addBestFriend(name, phoneNumber, new OnResultReadyListener<String>() {
+                    List<BestFriend> bestFriends = new ArrayList<BestFriend>();
+                    CurrentUser.server_getBestFriends(theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
-                        public void onResultReady(String result) {
-                            if(result.equals("success")){
-                                // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
-                                startActivity(intent);
+                        public void onResultReady(List<BestFriend> result) {
+                            boolean duplicate = false;
+                            for(BestFriend bf : result){
+                                if(bf.getPhoneNumber().equals(phoneNumber)){
+                                    duplicate = true;
+                                    break; //no need to check others once one duplicate found
+                                }
                             }
-                            else{
-                                Toast.makeText(getApplicationContext(), "Error adding a best friend", Toast.LENGTH_SHORT).show();
+                            if(!duplicate){ //Add best friend to server if not a duplicate
+                                CurrentUser.server_addBestFriend(name, phoneNumber, theUser.getUserID(), new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        if(result.equals("success")){
+                                            // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+                                            //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
+                                            startActivity(intent);
+                                        }
+                                        else{
+                                            Toast.makeText(getApplicationContext(), "Error adding a best friend", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                            }
+                            else{ //Alert that this is a duplicate contact
+
+                                final AlertDialog.Builder confirmMessage = new AlertDialog.Builder(thisActivity);
+                                confirmMessage.setTitle("Duplicate Contact")
+                                        .setMessage("This contact is already in your best friend's list!")
+                                        .setCancelable(true)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i)
+                                            {
+                                                dialogInterface.dismiss();
+                                            }
+                                        })
+                                        .show();
+
                             }
                         }
                     });
-                    //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
 
                 }
                 else{
-                    //TODO: Update Current User object with phoneNumberEditText.text
+                    //TODO: When contact is manually entered
                 }
 
             }

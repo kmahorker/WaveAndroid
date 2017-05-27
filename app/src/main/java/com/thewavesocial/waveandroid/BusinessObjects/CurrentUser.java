@@ -687,8 +687,8 @@ public final class CurrentUser {
         }).execute();
     }
 
-    public static void server_addBestFriend(String name, String number, final OnResultReadyListener<String> delegate){
-        String url =  context.getString(R.string.server_url) + "users/" + theUser.getUserID() + "/bestfriends?access_token=" +
+    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
+        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(context).get("jwt");
         HashMap<String, String> body = new HashMap<>();
         //TODO: 5/27/17 Add when server is updated body.put("name", name);
@@ -706,6 +706,36 @@ public final class CurrentUser {
                    e.printStackTrace();
                 }
                 Log.d("addBestFriend", result.get(0) + "");
+            }
+        }).execute();
+    }
+
+    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
+        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                List<BestFriend> bestFriends = new ArrayList<BestFriend>();
+                try {
+                    JSONObject list = new JSONObject(result.get(0));
+                    JSONArray main_json = list.getJSONArray("data");
+                    String name = "", number = "";
+                    for ( int i = 0; i < main_json.length(); i++ ) {
+                        JSONObject data = main_json.getJSONObject(i);
+                        //TODO: 5/27/17 add this line upon server update //name = data.getString("name");
+                        number = data.getString("contact");
+                        bestFriends.add(new BestFriend(name, number));
+                    }
+                    if(delegate != null) {
+                        delegate.onResultReady(bestFriends);
+                    }
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+                Log.d("getBestFriends", result.get(0) + "");
             }
         }).execute();
     }
