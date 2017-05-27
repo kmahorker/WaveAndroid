@@ -2,7 +2,6 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 //import android.media.Image;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -37,7 +36,7 @@ public class User implements Parcelable {
     private List<String> hosting;
     private List<String> attended;
     private List<String> hosted;
-    private List<String> bounced;
+    private List<String> bouncing;
     private List<String> attending;
     private List<Notification> notifications1;
     private List<Notification> notifications2;
@@ -61,7 +60,7 @@ public class User implements Parcelable {
         hosting = new ArrayList<>();
         attended = new ArrayList<>();
         hosted = new ArrayList<>();
-        bounced = new ArrayList<>();
+        bouncing = new ArrayList<>();
         attending = new ArrayList<>();
         notifications1 = new ArrayList<>();
         notifications2 = new ArrayList<>();
@@ -84,7 +83,7 @@ public class User implements Parcelable {
                 List<String> hosting,
                 List<String> attended,
                 List<String> hosted,
-                List<String> bounced,
+                List<String> bouncing,
                 List<String> attending,
                 List<Notification> notifications1,
                 List<Notification> notifications2,
@@ -104,10 +103,10 @@ public class User implements Parcelable {
         this.following = following;
         this.bestFriends = bestFriends;
         this.hosting = hosting;
-        this.attended = attended;
         this.hosted = hosted;
-        this.bounced = bounced;
         this.attending = attending;
+        this.attended = attended;
+        this.bouncing = bouncing;
         this.notifications1 = notifications1;
         this.notifications2 = notifications2;
         this.profilePic = profilePic;
@@ -174,9 +173,9 @@ public class User implements Parcelable {
         this.hosted = hosted;
     }
 
-    public void setBounced(List<String> bounced)
+    public void setBouncing(List<String> bouncing)
     {
-        this.bounced = bounced;
+        this.bouncing = bouncing;
     }
 
     public void setAttending(List<String> attending) {
@@ -246,9 +245,9 @@ public class User implements Parcelable {
         return hosted;
     }
 
-    public List<String> getBounced()
+    public List<String> getBouncing()
     {
-        return bounced;
+        return bouncing;
     }
 
 
@@ -312,6 +311,7 @@ public class User implements Parcelable {
         this.following = following;
     }
 
+
     public List<String> getHosting() {
         return hosting;
     }
@@ -368,10 +368,10 @@ public class User implements Parcelable {
             hosted = null;
         }
         if (in.readByte() == 0x01) {
-            bounced = new ArrayList<String>();
-            in.readList(bounced, String.class.getClassLoader());
+            bouncing = new ArrayList<String>();
+            in.readList(bouncing, String.class.getClassLoader());
         } else {
-            bounced = null;
+            bouncing = null;
         }
         if (in.readByte() == 0x01) {
             attending = new ArrayList<String>();
@@ -447,11 +447,11 @@ public class User implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(hosted);
         }
-        if (bounced == null) {
+        if (bouncing == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(bounced);
+            dest.writeList(bouncing);
         }
         if (attending == null) {
             dest.writeByte((byte) (0x00));

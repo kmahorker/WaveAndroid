@@ -8,13 +8,11 @@ import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -51,8 +49,8 @@ public final class CurrentUser {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<String>> result) {
                         theUser.getAttending().addAll(result.get("attending"));
-                        theUser.getHosted().addAll(result.get("hosting"));
-                        theUser.getBounced().addAll(result.get("hosting"));
+                        theUser.getHosting().addAll(result.get("hosting"));
+                        theUser.getBouncing().addAll(result.get("bouncing"));
 
                         if ( delegate == null )
                             return;
