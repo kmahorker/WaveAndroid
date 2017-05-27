@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.getTokenFromLocal;
 
@@ -116,8 +118,9 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
+                Map<Long, Party> raw_parties = new TreeMap<>();
                 for ( int i = 0; i < result.size(); i++ ) {
+                    long date_key = 0;
                     HashMap<String, String> body = new HashMap<>();
                     try {
                         JSONObject main_json = new JSONObject(result.get(i));
@@ -127,11 +130,19 @@ public final class CurrentUser {
                             String key = (String) iterKey.next();
                             body.put(key, data.getString(key));
                         }
+                        date_key = Long.parseLong(data.getString("start_timestamp"));
                     } catch (JSONException e) {e.printStackTrace();}
 
-                    Log.d("CurUser_GetPartyInfo", result.get(0));
-                    parties.add(constructParty(body));
+                    Log.d("CurUser_GetPartyInfo", result.get(i));
+                    while (raw_parties.keySet().contains(date_key))
+                        date_key += 1;
+                    raw_parties.put(date_key, constructParty(body));
                 }
+                ArrayList<Party> parties = new ArrayList<>();
+                for ( Long key : raw_parties.keySet() ) {
+                    parties.add(raw_parties.get(key));
+                }
+
                 if ( delegate != null )
                     delegate.onResultReady(parties);
             }}).execute();
