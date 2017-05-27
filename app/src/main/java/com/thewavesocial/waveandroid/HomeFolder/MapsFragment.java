@@ -241,10 +241,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
-        mMap.setOnMapClickListener(this);
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+
         if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{
@@ -254,6 +251,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                         , 10);
             }
         }
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnMapClickListener(this);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         updateUserLoc(1);
 
         addParties(googleMap, partyList);
