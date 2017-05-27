@@ -691,7 +691,7 @@ public final class CurrentUser {
         String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(context).get("jwt");
         HashMap<String, String> body = new HashMap<>();
-        //TODO: 5/27/17 Add when server is updated body.put("name", name);
+        body.put("name", name);
         body.put("contact", number);
         RequestComponents comp = new RequestComponents(url, "POST", body);
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -725,7 +725,7 @@ public final class CurrentUser {
                     String name = "", number = "";
                     for ( int i = 0; i < main_json.length(); i++ ) {
                         JSONObject data = main_json.getJSONObject(i);
-                        //TODO: 5/27/17 add this line upon server update //name = data.getString("name");
+                        name = data.getString("name");
                         number = data.getString("contact");
                         bestFriends.add(new BestFriend(name, number));
                     }
@@ -743,9 +743,9 @@ public final class CurrentUser {
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
         String url = context.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(context).get("jwt");
-        HashMap<String, String> map = new HashMap<>();
-        map.put("contact", number);
-        RequestComponents comp = new RequestComponents(url, "DELETE", map);
+        HashMap<String, String> body = new HashMap<>();
+        body.put("contact", number);
+        RequestComponents comp = new RequestComponents(url, "DELETE", body);
         new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
