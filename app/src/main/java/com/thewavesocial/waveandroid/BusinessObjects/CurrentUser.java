@@ -677,6 +677,10 @@ public final class CurrentUser {
         }).execute();
     }
 
+    public static void server_addBestFriend(String name, String number, final OnResultReadyListener<String> delegate){
+
+    }
+
 
     //
 //    //Get user information

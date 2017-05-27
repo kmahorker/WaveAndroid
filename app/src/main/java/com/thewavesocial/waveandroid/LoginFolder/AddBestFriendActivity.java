@@ -92,7 +92,8 @@ public class AddBestFriendActivity extends AppCompatActivity {
     }
     private void setUpEditText(){
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
-        phoneTextKeyListener = phoneNumberEditText.getKeyListener();
+        //phoneTextKeyListener = phoneNumberEditText.getKeyListener();
+        phoneNumberEditText.setKeyListener(null);
 
         phoneNumberEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -108,7 +109,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                             UtilityClass.hideKeyboard(thisActivity);
                             pickContact(v);
                         }
-                        else{
+                        /*else{
                             UtilityClass.hideKeyboard(thisActivity);
                             phoneNumberEditText.clearFocus();
                             phoneNumberEditText.setText("");
@@ -116,7 +117,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                             drawableToPlus();
                             disableDoneTextView();
                             contact = false;
-                        }
+                        }*/
 
                         return true;
                     }
@@ -125,7 +126,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
             }
         });
 
-        phoneNumberEditText.addTextChangedListener(new TextWatcher() {
+        /*phoneNumberEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -147,7 +148,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                     drawableToPlus();
                 }
             }
-        });
+        });*/
 
     }
 
