@@ -22,7 +22,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
-import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -39,7 +38,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView, deleteView, editView;
+    private TextView goingView, genderView, hostView, locView, dateView, timeView, actionButton, editView;
     private ImageView qrCodeView;
     private RecyclerView attendingFriends;
     private String host, loc, date, time;
@@ -59,17 +58,17 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setupPartyInfos();
         setupFunctionalities();
         setupMapElements();
-        setupDeleteEditButtons(callerType);
+        setupSpecialFields(callerType);
     }
 
 
-    private void setupDeleteEditButtons(int callerType) {
+    private void setupSpecialFields(int callerType) {
         if ( callerType == activityHostFragment ) {
             editView.setVisibility(View.VISIBLE);
-            deleteView.setVisibility(View.VISIBLE);
+            actionButton.setText("Open QR Scanner");
         } else if ( callerType == activitySocialFragment ){
             editView.setVisibility(View.INVISIBLE);
-            deleteView.setVisibility(View.INVISIBLE);
+            actionButton.setText("Open QR Code");
         }
     }
 
@@ -103,7 +102,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
         attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
-        deleteView = (TextView) findViewById(R.id.hostEventStats_delete_button);
+        actionButton = (TextView) findViewById(R.id.hostEventStats_delete_button);
     }
 
     private void setupFunctionalities() {
@@ -132,7 +131,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        deleteView.setOnClickListener(new View.OnClickListener() {
+        actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder alertMessage = new AlertDialog.Builder(mainActivity);
