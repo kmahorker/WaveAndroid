@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.support.annotation.Nullable;
@@ -38,7 +37,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
-import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -563,7 +561,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             friends = followings;
             friend_list.setAdapter(new FriendListAdapter(friends));
 
-            invite_index = NewPartyInfo.attendingUsers;
+            invite_index = NewPartyInfo.invitingUsers;
             LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
             invite_list.setLayoutManager(layoutManager);
             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
@@ -581,7 +579,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage2() {
-            NewPartyInfo.attendingUsers = invite_index;
+            NewPartyInfo.invitingUsers = invite_index;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -884,7 +882,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static MapAddress mapAddress;
         static List<String> hostingUsers;
         static List<Integer> bouncingUsers;
-        static List<Integer> attendingUsers;
+        static List<Integer> invitingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
@@ -899,7 +897,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             endingDateTime = null;
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
-            attendingUsers = new ArrayList<>();
+            invitingUsers = new ArrayList<>();
             isPublic = true;
             partyEmoji = "";
             minAge = -1;
@@ -931,8 +929,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                                 final String eventId = result.substring(commaIndex + 1);
 
-                                for(User user : getUsersFromFollowing(attendingUsers)){
-                                    CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "invited"/*TODO: change this method to new call*/ , "POST", new OnResultReadyListener<String>() {
+                                for(User user : getUsersFromFollowing(invitingUsers)){
+                                    CurrentUser.server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
@@ -979,11 +977,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
     }
 
-    //Count attendingUsers, bouncingUsers, and hostingUsers threads completion
+    //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
         threads_completion ++;
-        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
-        if ( threads_completion >= (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
+        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
+        if ( threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
             //Finish task
             CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
                 @Override

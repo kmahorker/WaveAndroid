@@ -476,7 +476,7 @@ public class EditStatsActivity extends AppCompatActivity {
         public static void composeParty(){
 //            Party party = new Party(
 //                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
+//                    hostingUsers, bouncingUsers, invitingUsers, isPublic, partyEmoji, minAge, maxAge);
             // TODO: 03/31/2017 Send to database and create new party with new ID
             // TODO: 04/23/2017 Refresh hosting event list
         }
