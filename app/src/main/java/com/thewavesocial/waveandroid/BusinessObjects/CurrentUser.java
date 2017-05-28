@@ -71,6 +71,250 @@ public final class CurrentUser {
         CurrentUser.theUser = theUser;
     }
 
+//------------------------------------------------------------------------------------POST Requests
+
+    //Create new party in server
+    public static void server_createNewParty(String name,
+                                             String emoji,
+                                             double price,
+                                             String address,
+                                             double lat,
+                                             double lng,
+                                             boolean isPublic,
+                                             double startTimeStamp,
+                                             double endingTimeStamp,
+                                             int minAge,
+                                             int maxAge,
+                                             final OnResultReadyListener<String> delegate){
+        RequestComponents[] comps = new RequestComponents[1];
+        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> event_info = new HashMap();
+        event_info.put("name", name);
+        event_info.put("emoji", emoji);
+        event_info.put("price", price + "");
+        event_info.put("address", address);
+        event_info.put("lat", lat + "");
+        event_info.put("lng", lng + "");
+        event_info.put("is_public", isPublic ? "1" : "0");
+        event_info.put("start_timestamp", startTimeStamp + "");
+        event_info.put("end_timestamp", endingTimeStamp + "");
+        event_info.put("min_age", minAge + "");
+        event_info.put("max_age", maxAge + "");
+
+        comps[0] = new RequestComponents(url, "POST", event_info);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    String status =  main_json.getString("status");
+
+                    if(!status.equals("error")) {
+                        JSONObject data_json = main_json.getJSONObject("data");
+                        String event_id = data_json.getString("insertId");
+                        status += "," + event_id;
+                        if ( delegate != null )
+                            delegate.onResultReady(status);
+                    }
+
+                } catch (JSONException e) {e.printStackTrace();}
+                Log.d("CreateNewParty", result.get(0));
+            }
+        }).execute();
+    }
+
+    //Create new user in server
+    public static void server_createNewUser(String first_name,
+                                            String last_name,
+                                            String email,
+                                            String college,
+                                            String password,
+                                            String fb_id,
+                                            String gender,
+                                            String birthday,
+                                            final OnResultReadyListener<String> delegate) {
+        RequestComponents[] comps = new RequestComponents[1];
+        String url = "https://api.theplugsocial.com/v1/users";
+        HashMap<String, String> event_info = new HashMap();
+        event_info.put("first_name", first_name);
+        event_info.put("last_name", last_name);
+        event_info.put("email", email);
+        event_info.put("college", college);
+        event_info.put("password", password);
+        event_info.put("fb_id", fb_id);
+        event_info.put("gender", gender);
+        event_info.put("birthday", birthday);
+
+        comps[0] = new RequestComponents(url, "POST", event_info);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    String status =  main_json.getString("status");
+
+                    if(!status.equals("error")) {
+                        JSONObject data_json = main_json.getJSONObject("data");
+                        String event_id = data_json.getString("insertId");
+                        status += "," + event_id;
+
+                        if ( delegate != null )
+                            delegate.onResultReady(status);
+                    }
+
+                } catch (JSONException e) {e.printStackTrace();}
+                Log.d("CreateNewUser", result.get(0));
+            }
+        }).execute();
+    }
+
+    //Parameter action must be either "POST" or "DELETE"
+    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
+        RequestComponents[] comps = new RequestComponents[1];
+        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> about = new HashMap();
+        about.put("relationship", relationship);
+
+        if (action.equals("POST"))
+            comps[0] = new RequestComponents(url, "POST", about);
+        else if (action.equals("DELETE"))
+            comps[0] = new RequestComponents(url, "DELETE", about);
+        else
+            Log.d("Action", "Illegal passed action argument: " + action);
+
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("ManageUserForParty", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+    //Update user in server
+    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents[] comps = new RequestComponents[1];
+        comps[0] = new RequestComponents(url, "POST", body);
+
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {e.printStackTrace();}
+
+                Log.d("UpdateUser", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+    //Update party in server
+    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents[] comps = new RequestComponents[1];
+        comps[0] = new RequestComponents(url, "POST", body);
+
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {e.printStackTrace();}
+
+                Log.d("UpdateParty", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+    //Follow a user
+    public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID
+                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "POST", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {e.printStackTrace();}
+
+                Log.d("Follow User", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+    //Add Best Friend on server
+    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
+        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        body.put("name", name);
+        body.put("contact", number);
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                try{
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    String status =  main_json.getString("status");
+                    if ( delegate != null )
+                        delegate.onResultReady(status);
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+                Log.d("addBestFriend", result.get(0) + "");
+            }
+        }).execute();
+    }
+
+    /** Invite User to event. Return either "success" or "error" */
+    public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
+        String url = context.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "POST", null);
+
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("InviteUserToParty", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+//-------------------------------------------------------------------------------------GET Requests
+
     //Get list of user information from server
     public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
@@ -280,6 +524,202 @@ public final class CurrentUser {
         }).execute();
     }
 
+    //Get User's events from server
+    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
+        String url = context.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
+                + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<String> attending = new ArrayList<>();
+                ArrayList<String> hosting = new ArrayList<>();
+                ArrayList<String> bouncing = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                            attending.add(data.getJSONObject(i).getString("event_id"));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                            hosting.add(data.getJSONObject(i).getString("event_id"));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                            bouncing.add(data.getJSONObject(i).getString("event_id"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                HashMap<String, ArrayList<String>> parties = new HashMap();
+                parties.put("attending", attending);
+                parties.put("hosting", hosting);
+                parties.put("bouncing", bouncing);
+                Log.d("Get User Events", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
+
+    //Get User's events from server
+    public static void server_getUsersOfEvent(String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
+        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
+                + getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<User> attending = new ArrayList<>();
+                ArrayList<User> hosting = new ArrayList<>();
+                ArrayList<User> bouncing = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                            attending.add(constructUser(body));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                            hosting.add(constructUser(body));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                            bouncing.add(constructUser(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                HashMap<String, ArrayList<User>> parties = new HashMap();
+                parties.put("attending", attending);
+                parties.put("hosting", hosting);
+                parties.put("bouncing", bouncing);
+                Log.d("Get User Events", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
+
+    //Get Best Friend from server
+    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
+        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                List<BestFriend> bestFriends = new ArrayList<BestFriend>();
+                try {
+                    JSONObject list = new JSONObject(result.get(0));
+                    JSONArray main_json = list.getJSONArray("data");
+                    String name = "", number = "";
+                    for ( int i = 0; i < main_json.length(); i++ ) {
+                        JSONObject data = main_json.getJSONObject(i);
+                        name = data.getString("name");
+                        number = data.getString("contact");
+                        bestFriends.add(new BestFriend(name, number));
+                    }
+                    if(delegate != null) {
+                        delegate.onResultReady(bestFriends);
+                    }
+                }catch(JSONException e){
+                    e.printStackTrace();
+                }
+                Log.d("getBestFriends", result.get(0) + "");
+            }
+        }).execute();
+    }
+
+    //Get events in specified distance
+    public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
+        String url = context.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+                + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
+                + "&access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<Party> parties = new ArrayList<>();
+                try {
+                    JSONObject json_result = new JSONObject(result.get(0));
+                    JSONArray data = json_result.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        parties.add(constructParty(body));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("Get Events In Distance", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
+
+//----------------------------------------------------------------------------------DELETE Requests
+
+    //Delete Best Friend on server
+    public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
+        String url = context.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(context).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        body.put("contact", number);
+        RequestComponents comp = new RequestComponents(url, "DELETE", body);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_DelBestFriend", result.get(0) + "");
+                if ( delegate != null)
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
+    //Delete party from server
+    public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
+        RequestComponents comps[] = new RequestComponents[1];
+        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token="
+                + getTokenFromLocal(context).get("jwt");
+        String result = null;
+        comps[0] = new RequestComponents(url, "DELETE", null);
+        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_DeleteEvent", result.get(0));
+                if ( delegate != null)
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+        Log.d("Delete Party", result);
+    }
+
+//-----------------------------------------------------------------------------------Helper Methods
+
     //Fill in all party information locally
     private static Party constructParty(HashMap<String, String> info) {
         String partyID = "", name = "", emoji = "", startDateTime = "", endDateTime = "", address = "", str_isPublic = "", hostName = "",
@@ -398,441 +838,4 @@ public final class CurrentUser {
                 "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
     }
-
-    //Delete party from server
-    public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
-        RequestComponents comps[] = new RequestComponents[1];
-        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token="
-                + getTokenFromLocal(context).get("jwt");
-        String result = null;
-        comps[0] = new RequestComponents(url, "DELETE", null);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_DeleteEvent", result.get(0));
-                if ( delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-        Log.d("Delete Party", result);
-    }
-
-    //Create new party in server
-    public static void server_createNewParty(String name,
-                                             String emoji,
-                                             double price,
-                                             String address,
-                                             double lat,
-                                             double lng,
-                                             boolean isPublic,
-                                             double startTimeStamp,
-                                             double endingTimeStamp,
-                                             int minAge,
-                                             int maxAge,
-                                             final OnResultReadyListener<String> delegate){
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(context).get("jwt");
-        HashMap<String, String> event_info = new HashMap();
-        event_info.put("name", name);
-        event_info.put("emoji", emoji);
-        event_info.put("price", price + "");
-        event_info.put("address", address);
-        event_info.put("lat", lat + "");
-        event_info.put("lng", lng + "");
-        event_info.put("is_public", isPublic ? "1" : "0");
-        event_info.put("start_timestamp", startTimeStamp + "");
-        event_info.put("end_timestamp", endingTimeStamp + "");
-        event_info.put("min_age", minAge + "");
-        event_info.put("max_age", maxAge + "");
-
-        comps[0] = new RequestComponents(url, "POST", event_info);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
-
-                    if(!status.equals("error")) {
-                        JSONObject data_json = main_json.getJSONObject("data");
-                        String event_id = data_json.getString("insertId");
-                        status += "," + event_id;
-                        if ( delegate != null )
-                            delegate.onResultReady(status);
-                    }
-
-                } catch (JSONException e) {e.printStackTrace();}
-                Log.d("CreateNewParty", result.get(0));
-            }
-        }).execute();
-    }
-
-    //Create new user in server
-    public static void server_createNewUser(String first_name,
-                                            String last_name,
-                                            String email,
-                                            String college,
-                                            String password,
-                                            String fb_id,
-                                            String gender,
-                                            String birthday,
-                                            final OnResultReadyListener<String> delegate) {
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/users";
-        HashMap<String, String> event_info = new HashMap();
-        event_info.put("first_name", first_name);
-        event_info.put("last_name", last_name);
-        event_info.put("email", email);
-        event_info.put("college", college);
-        event_info.put("password", password);
-        event_info.put("fb_id", fb_id);
-        event_info.put("gender", gender);
-        event_info.put("birthday", birthday);
-
-        comps[0] = new RequestComponents(url, "POST", event_info);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
-
-                    if(!status.equals("error")) {
-                        JSONObject data_json = main_json.getJSONObject("data");
-                        String event_id = data_json.getString("insertId");
-                        status += "," + event_id;
-
-                        if ( delegate != null )
-                            delegate.onResultReady(status);
-                    }
-
-                } catch (JSONException e) {e.printStackTrace();}
-                Log.d("CreateNewUser", result.get(0));
-            }
-        }).execute();
-    }
-
-    //Parameter action must be either "POST" or "DELETE"
-    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
-        HashMap<String, String> about = new HashMap();
-        about.put("relationship", relationship);
-
-        if (action.equals("POST"))
-            comps[0] = new RequestComponents(url, "POST", about);
-        else if (action.equals("DELETE"))
-            comps[0] = new RequestComponents(url, "DELETE", about);
-        else
-            Log.d("Action", "Illegal passed action argument: " + action);
-
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("ManageUserForParty", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    //Update user in server
-    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
-        RequestComponents[] comps = new RequestComponents[1];
-        comps[0] = new RequestComponents(url, "POST", body);
-
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
-
-                Log.d("UpdateUser", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    //Update party in server
-    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(context).get("jwt");
-        RequestComponents[] comps = new RequestComponents[1];
-        comps[0] = new RequestComponents(url, "POST", body);
-
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
-
-                Log.d("UpdateParty", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    //Follow a user
-    public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(context).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "POST", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
-
-                Log.d("Follow User", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    //Get User's events from server
-    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
-                + getTokenFromLocal(context).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<String> attending = new ArrayList<>();
-                ArrayList<String> hosting = new ArrayList<>();
-                ArrayList<String> bouncing = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
-                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
-                            attending.add(data.getJSONObject(i).getString("event_id"));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
-                            hosting.add(data.getJSONObject(i).getString("event_id"));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
-                            bouncing.add(data.getJSONObject(i).getString("event_id"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                HashMap<String, ArrayList<String>> parties = new HashMap();
-                parties.put("attending", attending);
-                parties.put("hosting", hosting);
-                parties.put("bouncing", bouncing);
-                Log.d("Get User Events", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(parties);
-            }
-        }).execute();
-    }
-
-    //Get User's events from server
-    public static void server_getUsersOfEvent(String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
-                + getTokenFromLocal(context).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> attending = new ArrayList<>();
-                ArrayList<User> hosting = new ArrayList<>();
-                ArrayList<User> bouncing = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
-                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
-                            attending.add(constructUser(body));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
-                            hosting.add(constructUser(body));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
-                            bouncing.add(constructUser(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                HashMap<String, ArrayList<User>> parties = new HashMap();
-                parties.put("attending", attending);
-                parties.put("hosting", hosting);
-                parties.put("bouncing", bouncing);
-                Log.d("Get User Events", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(parties);
-            }
-        }).execute();
-    }
-
-    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
-        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
-        HashMap<String, String> body = new HashMap<>();
-        body.put("name", name);
-        body.put("contact", number);
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                try{
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
-                    if ( delegate != null )
-                        delegate.onResultReady(status);
-                }catch(JSONException e){
-                   e.printStackTrace();
-                }
-                Log.d("addBestFriend", result.get(0) + "");
-            }
-        }).execute();
-    }
-
-    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
-        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                try {
-                    JSONObject list = new JSONObject(result.get(0));
-                    JSONArray main_json = list.getJSONArray("data");
-                    String name = "", number = "";
-                    for ( int i = 0; i < main_json.length(); i++ ) {
-                        JSONObject data = main_json.getJSONObject(i);
-                        name = data.getString("name");
-                        number = data.getString("contact");
-                        bestFriends.add(new BestFriend(name, number));
-                    }
-                    if(delegate != null) {
-                        delegate.onResultReady(bestFriends);
-                    }
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-                Log.d("getBestFriends", result.get(0) + "");
-            }
-        }).execute();
-    }
-
-    public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
-        String url = context.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
-        HashMap<String, String> body = new HashMap<>();
-        body.put("contact", number);
-        RequestComponents comp = new RequestComponents(url, "DELETE", body);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_DelBestFriend", result.get(0) + "");
-                if ( delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        String url = context.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
-                + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
-                + "&access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
-                try {
-                    JSONObject json_result = new JSONObject(result.get(0));
-                    JSONArray data = json_result.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
-                        parties.add(constructParty(body));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Log.d("Get Events In Distance", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(parties);
-            }
-        }).execute();
-    }
-
-    //
-//    //Get user information
-//    public static User server_getUserObject(String id) {
-//        if ( id.equals("1") )
-//            return dummy.getFriend1();
-//        else if ( id.equals("2") )
-//            return dummy.getFriend2();
-//        else if ( id.equals("3") )
-//            return dummy.getFriend3();
-//        else if ( id.equals("4") )
-//            return dummy.getFriend4();
-//        else if ( id.equals("5") )
-//            return dummy.getFriend5();
-//        else
-//            return dummy.getFriend1();
-//    }
-//
-//    //Get party information
-//    public static Party server_getPartyObject(String id) {
-//        if ( id.equals("1") )
-//            return dummy.getParty1();
-//        else if ( id.equals("2") )
-//            return dummy.getParty2();
-//        else if ( id.equals("3") )
-//            return dummy.getParty3();
-//        else if ( id.equals("4") )
-//            return dummy.getParty4();
-//        else if ( id.equals("5") )
-//            return dummy.getParty5();
-//        else
-//            return dummy.getParty1();
-//    }
 }
