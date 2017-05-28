@@ -246,7 +246,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                 Log.d("V", "OnViewCreated");
             }catch(Exception e){
-                UtilityClass.printAlertMessage(getActivity(), e.getMessage(), true);
+                UtilityClass.printAlertMessage(getActivity(), e.getMessage(), "Error", true);
             }
         }
 
@@ -476,23 +476,23 @@ public class CreateAnEventActivity extends AppCompatActivity {
             //Log.d("Address", locationEditText.getText().toString());
             //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
             if(emojiconEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Creating Party", true);
                 return false;
             }
             else if(titleEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Creating Party", true);
                 return false;
             }
             else if(locationEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location","Error Creating Party", true);
                 return false;
             }
             else if(startCalendar.compareTo(endCalendar) >= 0){
-                UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+                UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Creating Party", true);
                 return false;
             }
             else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Creating Party", true);
                 return true;
             }
             else{

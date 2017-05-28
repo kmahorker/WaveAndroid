@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
@@ -281,7 +282,13 @@ public class EditStatsActivity extends AppCompatActivity {
 
         //TODO: Call Server function instead
         final List<User> invitedUsers = new ArrayList<>();
-        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        List<String> userIds = new ArrayList<>();
+        for(Attendee a : party.getAttendingUsers()) {
+            if(a.getStatus().equals("invited")) {
+                userIds.add(a.getUserId());
+            }
+        }
+        CurrentUser.server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
@@ -389,24 +396,24 @@ public class EditStatsActivity extends AppCompatActivity {
         //Log.d("Address", locationEditText.getText().toString());
         //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
         if(emojiconEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Editing Party", true);
             return false;
         }
         else if(titleEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Editing Party", true);
             return false;
         }
         else if(locationEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Editing Party", true);
             return false;
         }
         else if(startCalendar.compareTo(endCalendar) >= 0){
             Log.d("Date", startCalendar.get(Calendar.DATE) + ", " + endCalendar.get(Calendar.DATE) + "");
-            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Editing Party", true);
             return false;
         }
         else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Editing Party", true);
             return false;
         }
         else{
@@ -447,7 +454,7 @@ public class EditStatsActivity extends AppCompatActivity {
         static MapAddress mapAddress;
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
-        static List<String> attendingUsers;
+        static List<Attendee> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;

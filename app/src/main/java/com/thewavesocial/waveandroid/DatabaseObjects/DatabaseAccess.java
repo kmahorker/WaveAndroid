@@ -391,7 +391,7 @@ public final class DatabaseAccess{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", true);
+                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", "Network Error", true);
                     }
                 });
             }

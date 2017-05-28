@@ -63,7 +63,7 @@ public class PartyProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
-                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "You're already going to this party!", "Party Already Added", true);
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
@@ -123,6 +123,7 @@ public class PartyProfileFragment extends Fragment {
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList();
+
         CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {

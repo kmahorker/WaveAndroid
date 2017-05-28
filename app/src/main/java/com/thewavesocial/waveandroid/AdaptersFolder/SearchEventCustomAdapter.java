@@ -84,7 +84,7 @@ public class SearchEventCustomAdapter extends BaseAdapter
             @Override
             public void onClick(View view) {
                 if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
-                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Party Already Added.", "Error Creating Party", true);
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();

@@ -330,15 +330,15 @@ public class CreateEvent1Fragment extends Fragment
                         editLocation.getText().toString().isEmpty() ||
                         editPrice.getText().toString().isEmpty() )
                 {
-                    UtilityClass.printAlertMessage(mainActivity, "Please enter all the party information.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Please enter all the party information.", "Error Creating Party", true);
                 }
                 else if ( mainActivity.endCalendar.compareTo( mainActivity.startCalendar ) < 0 )
                 {
-                    UtilityClass.printAlertMessage(mainActivity, "Your ending time should come after your starting time.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Your ending time should come after your starting time.","Error Creating Party", true);
                 }
                 else if ( mainActivity.maleCount + mainActivity.femaleCount == 0 )
                 {
-                    UtilityClass.printAlertMessage(mainActivity, "Please specify the numbers of males and females", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Please specify the numbers of males and females", "Error Creating Party",true);
                 }
 //                else if ( latlng == null )
 //                {

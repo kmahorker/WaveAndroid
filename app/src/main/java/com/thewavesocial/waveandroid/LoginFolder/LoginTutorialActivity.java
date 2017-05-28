@@ -185,7 +185,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
             }
             if ( Integer.parseInt(json.getString("age_range").substring(
                     json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
-                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", "Underage!", true);
                 return;
             }
             else
@@ -298,7 +298,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Create Account Error", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Sorry, we couldn't create your account!", "Create Account Error", true);
                 }
             }
         }).execute();
@@ -330,7 +330,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", "Sign in Error", true);
                 }
             }
         }).execute();
@@ -362,7 +362,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Facebook Login Error", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Could not authorize facebook", "Facebook Login Error", true);
                 }
             }
         }).execute();
