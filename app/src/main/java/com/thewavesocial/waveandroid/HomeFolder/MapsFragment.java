@@ -3,12 +3,15 @@ package com.thewavesocial.waveandroid.HomeFolder;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -31,8 +34,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.internal.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,7 +54,16 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+
+import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
@@ -78,21 +92,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
         User user = CurrentUser.theUser;
-        partyList = user.getAttended();
 
         setupFloatingButtons();
         setupMapElements();
         setupHeightVariables();
         setupSearchbar();
-
-//        HashMap<String, String> body = new HashMap<>();
-//        body.put("image_path", "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
-//        DatabaseAccess.server_updateUser(mainActivity, "10", body);
-//        DatabaseAccess.server_updateUser(mainActivity, "11", body);
-//        DatabaseAccess.server_updateUser(mainActivity, "12", body);
-//        DatabaseAccess.server_updateUser(mainActivity, "13", body);
-//        DatabaseAccess.server_updateUser(mainActivity, "14", body);
-//        DatabaseAccess.server_updateUser(mainActivity, "15", body);
 
         getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -108,6 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private void setupFloatingButtons() {
         final ImageView sos_button = (ImageView) getActivity().findViewById(R.id.sos_button);
+
         final Handler handle = new Handler();
         sos_button.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -115,7 +120,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         sos_button.setAlpha(155);
-                        handle.postDelayed(run, 3000);
+                        handle.postDelayed(run, 0000);
                         break;
                     case MotionEvent.ACTION_UP:
                         sos_button.setAlpha(255);
@@ -235,33 +240,43 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
+
+        if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.INTERNET}
+                        , 10);
+            }
+        }
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);
-        if (ActivityCompat.checkSelfPermission(mainActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(mainActivity,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMyLocationEnabled(true);
 
-        addParties(googleMap, partyList);
+        updateUserLoc(1);
+        LatLng loc = UtilityClass.getUserLocation();
+        if ( loc != null ) {
+            CurrentUser.server_getEventsInDistance(loc.latitude - 200 + "", loc.latitude + 200 + "",
+                    loc.longitude - 200 + "", loc.longitude + 200 + "",
+                    new OnResultReadyListener<ArrayList<Party>>() {
+                        @Override
+                        public void onResultReady(ArrayList<Party> result) {
+                            if (result != null)
+                                addParties(result);
+                        }
+                    });
+        }
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         UtilityClass.hideKeyboard(mainActivity);
         if (marker.getTag() != null) {
-            openPartyProfile((long) marker.getTag());
+            openPartyProfile( (Party)marker.getTag());
             editText.setCursorVisible(false);
             dragSeparator(80, 0);
             searchOpened = false;
@@ -305,10 +320,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 } else {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
                 }
-
-                cur_loc_marker = mMap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon, 150, 150)))
-                        .position(UtilityClass.getUserLocation()));
+//
+//                cur_loc_marker = mMap.addMarker(new MarkerOptions()
+//                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon, 150, 150)))
+//                        .position(UtilityClass.getUserLocation()));
             } else {
                 moveMapCamera(loc);
             }
@@ -316,29 +331,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public void addParty(String partyID, LatLng loc) {
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(loc)
-                .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.happy_house, 150, 150))));
-        marker.setTag(partyID);
+    public void addParty(Party party, LatLng loc) {
+        EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
+        emojiText.setText(party.getPartyEmoji().substring(0,1));
+        emojiText.buildDrawingCache();
+        Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
+        marker.setTag(party);
     }
 
 
-    public void addParties(GoogleMap googleMap, List<String> partyIDs) {
-        for (String id : partyIDs) {
-            final Party[] party = {new Party()};
-            final LatLng[] loc = new LatLng[1];
-            CurrentUser.server_getPartyObject(id, new OnResultReadyListener<Party>() {
-                @Override
-                public void onResultReady(Party result) {
-                    if ( result != null ) {
-                        party[0] = result;
-                        loc[0] = party[0].getMapAddress().getAddress_latlng();
-                    }
-                }
-            });
-            if (loc[0] != null)
-                addParty(id, loc[0]);
+    public void addParties(List<Party> parties) {
+        // TODO: 05/12/2017 Should pass party objecjt to addParty
+        for (Party party : parties) {
+            LatLng loc = party.getMapAddress().getAddress_latlng();
+            if (loc != null)
+                addParty(party, loc);
         }
     }
 
@@ -364,10 +372,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (y < 1157) {
             PartyProfileFragment.updateAttendeeImages();
         }
-        if ( y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
             y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
         }
-        Log.d ( "TRUE?", y + ", " + separatorHeight
+        Log.d("TRUE?", y + ", " + separatorHeight
                 + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
         if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
                 && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
@@ -390,6 +398,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public static void dragSeparator(int distance, int duration) {
+        // TODO: 03/09/2017 Think about adding other views inside drag bar
         Log.d("Distance", distance + "");
         View separator = mainActivity.findViewById(R.id.home_mapsView_separator);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();
@@ -412,10 +421,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    private void openPartyProfile(long partyID) {
+    private void openPartyProfile(Party party) {
         Fragment fragment = new PartyProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putLong("partyIDLong", partyID);
+        bundle.putParcelable("partyObject", party);
         fragment.setArguments(bundle);
 
         FragmentManager fm = mainActivity.getSupportFragmentManager();
@@ -431,19 +440,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.SEND_SMS)) {
                 ActivityCompat.requestPermissions(mainActivity, new String[]{Manifest.permission.SEND_SMS}, 20);
-            } else {
-                askToSendSOSMessage();
             }
-        } else {
-            askToSendSOSMessage();
+            return;
         }
+        askToSendSOSMessage();
     }
 
 
     private void askToSendSOSMessage() {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
-        fieldAlert.setTitle("Send an alert to " + 
-                        (CurrentUser.theUser.getBestFriends().get(0)).getName())
+        fieldAlert.setTitle("Send an alert to " +
+                (CurrentUser.theUser.getBestFriends().get(0)).getName())
                 .setMessage("A text will be sent to your friend notifying your current location.")
                 .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                     @Override
@@ -488,6 +495,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case 10:
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED
+                        || ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    mMap.setMyLocationEnabled(true);
+                }
                 updateUserLoc(0);
                 break;
             case 20:
@@ -495,5 +508,53 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             default:
                 break;
         }
+    }
+
+    private String parseJSONFromServer(String server_url) {
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        InputStream stream = null;
+        String error = "";
+        StringBuffer buffer = new StringBuffer();
+        try {
+            URL url = new URL(server_url);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.connect();
+
+            if ( connection.getResponseCode() == 500 )
+                stream = connection.getErrorStream();
+            else
+                stream = connection.getInputStream();
+
+            reader = new BufferedReader(new InputStreamReader(stream));
+            String line ="";
+
+            while( (line = reader.readLine()) != null ) {
+                buffer.append(line);
+            }
+            return buffer.toString();
+
+        } catch (IOException e) {}
+        finally {
+            if ( connection != null ) {
+                connection.disconnect();
+            }
+            try {
+                if ( reader != null ){
+                    reader.close();
+                }
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        return error + server_url;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        UtilityClass.hideKeyboard(mainActivity);
     }
 }

@@ -303,8 +303,9 @@ public final class CurrentUser {
 
             address = info.get("address");
             mapAddress.setAddress_string(address);
-            if ( !info.get("lat").equals("null") && !info.get("lng").equals("null") ) {
+            if ( info.get("lat") != null && info.get("lng") != null ) {
                 mapAddress.setAddress_latlng(new LatLng(Double.parseDouble(info.get("lat")), Double.parseDouble(info.get("lng"))));
+                Log.d("MyLatLng", mapAddress.getAddress_latlng().toString());
             }
 
             str_isPublic = info.get("is_public") + "";
@@ -764,7 +765,36 @@ public final class CurrentUser {
         }).execute();
     }
 
-
+    public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
+        String url = context.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+                + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
+                + "&access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<Party> parties = new ArrayList<>();
+                try {
+                    JSONObject json_result = new JSONObject(result.get(0));
+                    JSONArray data = json_result.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        parties.add(constructParty(body));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.d("Get Events In Distance", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+    }
 
     //
 //    //Get user information

@@ -49,8 +49,8 @@
             android:id="@+id/home_mapsView_searchbar"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginBottom="10dp"
             android:gravity="center"
             android:iconifiedByDefault="false"
@@ -80,5 +80,15 @@
         android:paddingBottom="12dp"
         android:layout_centerVertical="true"
         android:elevation="10dp"/>
+
+    <github.ankushsachdeva.emojicon.EmojiconTextView
+        android:id="@+id/home_mapsView_emoji"
+        android:text="\ue32d"
+        android:textSize="@dimen/button_text_normal"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/round_shape_blue"/>
 
 </RelativeLayout>

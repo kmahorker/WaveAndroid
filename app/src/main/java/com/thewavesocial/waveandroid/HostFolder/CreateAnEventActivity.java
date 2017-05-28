@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.support.annotation.Nullable;
@@ -935,8 +936,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
-                                            if(result.equals("success")){
-                                                completeThreads();
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
                                             }
                                         }
                                     });
@@ -947,8 +949,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addBouncingUser", result + "");
-                                            if(result.equals("success")){
-                                                completeThreads();
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
                                             }
                                         }
                                     });
@@ -959,10 +962,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addHostingUser", result + "");
-                                            if(result != null && result.equals("success")){
-                                                //TODO: UpdateUser Hosting field in user object with server
-                                                //TODO: Resume (Attach) HostControllerFragment --> add where compose was called
-                                                completeThreads();
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
                                             }
                                         }
                                     });
@@ -980,6 +982,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
     //Count attendingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
         threads_completion ++;
+        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
         if ( threads_completion >= (NewPartyInfo.attendingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
             //Finish task
             CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
