@@ -28,6 +28,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class PartyProfileFragment extends Fragment {
@@ -51,18 +52,10 @@ public class PartyProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
-        party = new Party();
-        CurrentUser.server_getPartyObject(getArguments().getString("partyIDLong"), new OnResultReadyListener<Party>() {
-            @Override
-            public void onResultReady(Party result) {
-                if ( result != null ) {
-                    party = result;
-                    setupOnClicks();
-                }
-            }
-        });
+        party = getArguments().getParcelable("partyObject");
 
         setupReferences();
+        setupOnClicks();
     }
 
     private void setupOnClicks() {
@@ -130,19 +123,23 @@ public class PartyProfileFragment extends Fragment {
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList();
-        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
-            public void onResultReady(List<User> result) {
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
-                    sample.addAll(result);
+
+                    if ( !result.get("hosting").isEmpty() )
+                        hostname.setText(result.get("hosting").get(0).getFullName());
+
+                    if ( !result.get("attending").isEmpty() )
+                        sample.addAll(result.get("attending"));
+                    LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+                    attendingFriends.setLayoutManager(layoutManagerAttendees);
+                    attendingFriends.setFocusable(false);
+                    attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
                 }
             }
         });
-
-        LinearLayoutManager layoutManagerAttendees =
-                new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
-        attendingFriends.setLayoutManager(layoutManagerAttendees);
-        attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
 
         final List<Party> events = new ArrayList<>();
         CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {

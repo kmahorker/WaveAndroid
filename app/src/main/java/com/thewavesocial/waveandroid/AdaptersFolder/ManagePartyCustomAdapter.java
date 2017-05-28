@@ -73,7 +73,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
 
-        if ( party.getPartyEmoji() != "" ) {
+        if ( party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
             holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());

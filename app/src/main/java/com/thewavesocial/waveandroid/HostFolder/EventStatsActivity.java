@@ -129,17 +129,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 }
             }
         });
-        CurrentUser.server_getUsersListObjects(party.getAttendingUsers(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(List<User> result) {
-                if ( result != null ) {
-                    LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
-                    attendingFriends.setLayoutManager(layoutManagerAttendees);
-                    attendingFriends.setFocusable(false);
-                    attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
-                }
-            }
-        });
 
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
