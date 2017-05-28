@@ -136,7 +136,14 @@ public final class CurrentUser {
                     Log.d("CurUser_GetPartyInfo", result.get(i));
                     while (raw_parties.keySet().contains(date_key))
                         date_key += 1;
-                    raw_parties.put(date_key, constructParty(body));
+
+                    //Filter out past events
+                    Calendar event_date = Calendar.getInstance();
+                    event_date.setTime(new Date(date_key*1000));
+                    if ( event_date.get(Calendar.DATE) - Calendar.getInstance().get(Calendar.DATE) >= 0) {
+                        Party party = constructParty(body);
+                        raw_parties.put(date_key, party);
+                    }
                 }
                 ArrayList<Party> parties = new ArrayList<>();
                 for ( Long key : raw_parties.keySet() ) {
