@@ -12,6 +12,7 @@ import android.widget.SearchView;
 import com.thewavesocial.waveandroid.AdaptersFolder.SearchEventCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -34,7 +35,15 @@ public class SearchEventFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
-        final List<Party> eventList = CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttended());
+        final List<Party> eventList = new ArrayList<>();
+        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttended(), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                eventList.addAll(result);
+            }
+        });
+        // TODO: 04/19/2017 How to search database?
+
         eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
                 searchEvents(eventList, searchbar.getQuery().toString())));
 

@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.CreateAnEventActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.R;
@@ -74,18 +76,24 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
-            Holder holder = new Holder();
+            final Holder holder = new Holder();
             View rowView;
             rowView = inflater.inflate(R.layout.each_friend_item, null);
             holder.tv = (TextView) rowView.findViewById(R.id.friendName);
             holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
             holder.tv.setText(userList.get(position).getFullName());
-            // TODO: 04/21/2017 Add image by URL
-//            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(), userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
+
+            UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap image) {
+                    if (image != null)
+                        holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+                }
+            });
+
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO Not sure if this is right imp
                    // FriendsListActivity f = new FriendsListActivity();
                     fragment.showFriendProfileActivity(v, userList.get(position));
                    //Intent in = new Intent(FriendsListActivity, FriendProfileActivity.class)

@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -39,10 +41,9 @@ public class FriendProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         friend = (User) intent.getExtras().get("userObject");
         userID = friend.getUserID();
-        //TODO: getUserObject(long id) from database class
 
-        setupProfileInfo();
         setupActionbar();
+        setupProfileInfo();
     }
 
     @Override
@@ -102,12 +103,17 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
-        if (friend.getProfilePic() != null) {
-            // TODO: 04/21/2017 Add image by URL
-//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friend.getProfilePic().getBitmap()));
-        }
+
+        UtilityClass.getBitmapFromURL(mainActivity, friend.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
+
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
-                friend.getNotifications2()));
+                friend.getNotifications()));
 
         if (!CurrentUser.theUser.getFollowing().contains(userID)) {
             changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);

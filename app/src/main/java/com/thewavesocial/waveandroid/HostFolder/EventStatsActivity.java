@@ -1,16 +1,13 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +16,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,22 +32,29 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 import me.sudar.zxingorient.ZxingOrient;
 
-public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback {
-    public static final int activityHostFragment = 1, activitySocialFragment = 2;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
+    public static final int activityHostFragment = 1, activitySocialFragment = 2, listInvited = 3, listGoing = 4, listBouncing = 5;
     private static final int CAMERA_PERMISSION = 3;
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView, qrAction, editView, bounceView, attendingView;
+    private TextView goingView, genderView, hostView, locView, dateView, timeView, editView, qrAction, bounceView, invitedGoingView;
+
     private ImageView qrCodeView;
-    private RecyclerView attendingFriends, bouncingFriends;
+    private RecyclerView invitedGoingFriends, bouncingFriends;
     private String host, loc, date, time;
     private int going, male, female, callerType;
     private EventStatsActivity mainActivity;
@@ -61,14 +64,16 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_event_stats);
         mainActivity = this;
+
         Intent intent = getIntent();
-        party = getIntent().getExtras().getParcelable("partyObject");
+        party = intent.getExtras().getParcelable("partyObject");
         callerType = intent.getExtras().getInt("callerActivity");
-        setupPartyInfos();
-        setupReferences();
-        setupFunctionalities();
+
         setupActionbar();
-        setupQRAndEditButtons(callerType);
+        setupReferences();
+        setupPartyInfos();
+        setupFunctionalities();
+        setupSpecialFields(callerType);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -79,14 +84,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }, 500);
     }
 
-
-    private void setupQRAndEditButtons(int callerType) {
-        if (callerType == activityHostFragment) {
+    private void setupSpecialFields(int callerType) {
+        if ( callerType == activityHostFragment ) {
             editView.setVisibility(View.VISIBLE);
-            qrAction.setVisibility(View.VISIBLE);
-        } else if (callerType == activitySocialFragment) {
+            qrAction.setText("Open QR Scanner");
+        } else if ( callerType == activitySocialFragment ){
             editView.setVisibility(View.INVISIBLE);
-            qrAction.setVisibility(View.INVISIBLE);
+            qrAction.setText("Open QR Code");
         }
     }
 
@@ -99,7 +103,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupPartyInfos() {
-        host = party.getHostName();
         loc = party.getMapAddress().getAddress_string();
         date = UtilityClass.dateToString(party.getStartingDateTime()) + " - " +
                 UtilityClass.dateToString(party.getEndingDateTime());
@@ -120,8 +123,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         dateView = (TextView) findViewById(R.id.hostEventStats_datename);
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
         qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
-        attendingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
-        attendingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
+        invitedGoingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
+        invitedGoingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
         qrAction = (TextView) findViewById(R.id.hostEventStats_qr_button);
         bounceView = (TextView) findViewById(R.id.hostEventStats_bouncertext);
         bouncingFriends = (RecyclerView) findViewById(R.id.hostEventStats_bouncerlist);
@@ -136,42 +139,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         dateView.setText(date + "");
         timeView.setText(time + "");
         qrCodeView.setImageBitmap(getQRCode("WOWOW"));
-
-        if (callerType == activityHostFragment) {
-            attendingView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
-            attendingView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: Intent Start Activty Put Extra party
-                }
-            });
-            LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            attendingFriends.setLayoutManager(layoutManagerAttendees);
-            attendingFriends.setFocusable(false);
-            attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
-        } else {
-            attendingView.setText("FRIENDS GOING (" + party.getAttendingUsers().size() + ")");
-            LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            attendingFriends.setLayoutManager(layoutManagerAttendees);
-            attendingFriends.setFocusable(false);
-            attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getAttendingUsers())));
-        }
-
-        if (callerType == activityHostFragment) {
-            bounceView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
-            bounceView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: intent start edit bouncers put extra party
-                }
-            });
-            LinearLayoutManager layoutManagerBouncers = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            bouncingFriends.setLayoutManager(layoutManagerBouncers);
-            bouncingFriends.setFocusable(false);
-            bouncingFriends.setAdapter(new PartyAttendeesCustomAdapter(this, CurrentUser.getUsersListObjects(party.getBouncingUsers())));
-        }
-
-
         qrAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +153,59 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 openScanner();
             }
         });
+
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                if ( result != null ) {
+                    if ( callerType == activityHostFragment ) {
+                        invitedGoingView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
+                        invitedGoingView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //TODO: Intent Start Activty Put Extra party
+                            }
+                        });
+                        // TODO: 05/28/2017 Get Invited List
+                    } else {
+                        invitedGoingView.setText("FRIENDS GOING (" + party.getAttendingUsers().size() + ")");
+                        invitedGoingView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //TODO: Intent Start Activty Put Extra party
+                            }
+                        });
+                        populateHorizontalList(result.get("going"), listGoing);
+                    }
+
+                    bounceView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
+                    bounceView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //TODO: intent start edit bouncers put extra party
+                        }
+                    });
+                    hostView.setText(result.get("hosting").get(0).getFullName());
+                    populateHorizontalList(result.get("bouncing"), listBouncing);
+                }
+            }
+        });
+
+    }
+
+
+    private void populateHorizontalList(List<User> list, int type) {
+        LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+
+        if (type == listGoing || type == listInvited) {
+            invitedGoingFriends.setLayoutManager(layoutManagerAttendees);
+            invitedGoingFriends.setFocusable(false);
+            invitedGoingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
+        } else if ( type == listBouncing ) {
+            bouncingFriends.setLayoutManager(layoutManagerAttendees);
+            bouncingFriends.setFocusable(false);
+            bouncingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
+        }
     }
 
     //        http://stackoverflow.com/a/25283174

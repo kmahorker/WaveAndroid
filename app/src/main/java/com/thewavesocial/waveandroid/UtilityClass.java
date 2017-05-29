@@ -1,13 +1,20 @@
 package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -17,17 +24,34 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -60,18 +84,18 @@ public final class UtilityClass {
     }
 
     public static String timeToString(Calendar c) {
-        int hour = c.get(Calendar.HOUR);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
         int min = c.get(Calendar.MINUTE);
         String prefixH = "";
         String prefixM = "";
-        String ampm = "am";
+        String ampm = "AM";
         if (hour > 12) {
             hour -= 12;
-            ampm = "pm";
+            ampm = "PM";
         }
         if (hour == 0) {
             hour = 12;
-            ampm = "am";
+            ampm = "AM";
         }
         if (hour < 10)
             prefixH = "0";
@@ -87,11 +111,92 @@ public final class UtilityClass {
         return dr;
     }
 
-    public static void printAlertMessage(Activity activity, String message, boolean cancelable) {
+    public static void printAlertMessage(Activity activity, String message, String header, boolean cancelable) {
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
+                .setTitle(header)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
                 .show();
+    }
+
+    public static Bitmap getBitmapFromURL(Activity mainActivity, String url, final OnResultReadyListener<Bitmap> delegate) {
+        new ImageRequestTask(mainActivity, url, new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap result) {
+                delegate.onResultReady(result);
+            }
+        }).execute();
+        return null;
+    }
+
+    public static class ImageRequestTask extends AsyncTask<String, String, Bitmap> {
+        private String url;
+        private Activity mainActivity;
+        private ProgressDialog progress;
+        private Handler handler;
+        private Runnable run;
+        private OnResultReadyListener delegate;
+
+        public ImageRequestTask(Activity mainActivity, String url, OnResultReadyListener<Bitmap> delegate) {
+            this.url = url;
+            this.mainActivity = mainActivity;
+            this.delegate = delegate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(mainActivity, "Loading.....", Toast.LENGTH_SHORT).show();
+//            progress = new ProgressDialog(mainActivity);
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setTitle("Please wait");
+//            progress.setMessage("Connecting to Server...");
+//            progress.setCancelable(false);
+
+//            handler = new Handler();
+//            run = new Runnable() {
+//                @Override
+//                public void run() {
+//                    progress.show();
+//                }
+//            };
+//            handler.postDelayed(run, 3000);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params){
+            return getBitmapFromURL(url);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+//            if ( progress.isShowing() )
+//                progress.dismiss();
+//            handler.removeCallbacks(run);
+            delegate.onResultReady(bitmap);
+        }
+
+        //http://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
+        public static Bitmap getBitmapFromURL(String src) {
+            try {
+                URL url = new URL(src);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (IOException e) {
+                // Log exception
+                return null;
+            }
+        }
     }
 
 //------------------------------------------------------------------------------------Map Functions
@@ -198,5 +303,11 @@ public final class UtilityClass {
         Canvas canvas = new Canvas(image);
         canvas.drawText(text, 0, baseline, paint);
         return image;
+    }
+
+    public static Calendar unixToCalendar(long unixTime){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(unixTime);
+        return calendar;
     }
 }

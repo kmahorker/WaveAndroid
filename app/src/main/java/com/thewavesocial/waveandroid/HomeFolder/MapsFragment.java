@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -59,6 +60,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
@@ -90,7 +92,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
         User user = CurrentUser.theUser;
-        partyList = user.getAttended();
 
         setupFloatingButtons();
         setupMapElements();
@@ -239,7 +240,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -257,7 +258,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mMap.getUiSettings().setMapToolbarEnabled(false);
         updateUserLoc(1);
 
-        addParties(googleMap, partyList);
+        LatLng loc = UtilityClass.getUserLocation();
+        if ( loc != null ) {
+            CurrentUser.server_getEventsInDistance(loc.latitude - 200 + "", loc.latitude + 200 + "",
+                    loc.longitude - 200 + "", loc.longitude + 200 + "",
+                    new OnResultReadyListener<ArrayList<Party>>() {
+                        @Override
+                        public void onResultReady(ArrayList<Party> result) {
+                            if (result != null)
+                                addParties(result);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -323,16 +335,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
         emojiText.setText(party.getPartyEmoji().substring(0,1));
         emojiText.buildDrawingCache();
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(loc)
-                .icon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache())));
+
+        Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
         marker.setTag(party);
     }
 
 
-    public void addParties(GoogleMap googleMap, List<String> partyIDs) {
+    public void addParties(List<Party> parties) {
         // TODO: 05/12/2017 Should pass party objecjt to addParty
-        List<Party> parties = CurrentUser.getPartyListObjects(partyIDs);
         for (Party party : parties) {
             LatLng loc = party.getMapAddress().getAddress_latlng();
             if (loc != null)
@@ -542,26 +553,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    public class JSONParsingTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... params){
-            return parseJSONFromServer(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            // TODO: 03/24/2017 Get JWT
-            UtilityClass.printAlertMessage(getActivity(), result, true);
-            Log.d("Result", result);
-            System.out.println("result");
-        }
-    }
-
-
     @Override
     public void onResume() {
         super.onResume();
         UtilityClass.hideKeyboard(mainActivity);
     }
+
 }

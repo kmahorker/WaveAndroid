@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.thewavesocial.waveandroid.AdaptersFolder.SearchEventCustomAdapter;
 import com.thewavesocial.waveandroid.AdaptersFolder.SearchPeopleCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -36,11 +35,18 @@ public class SearchPeopleFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
-        final List<User> userList = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowers());
-        // TODO: 03/14/2017 Change get followers to database users
+        final List<User> userList = new ArrayList<>();
+        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                if ( result != null ) {
+                    userList.addAll(result);
+                    peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, searchPeople(userList, searchbar.getQuery().toString())));
+                }
+            }
+        });
+        // TODO: 04/19/2017 How to search database?
 
-        peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
-                searchPeople(userList, searchbar.getQuery().toString())));
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

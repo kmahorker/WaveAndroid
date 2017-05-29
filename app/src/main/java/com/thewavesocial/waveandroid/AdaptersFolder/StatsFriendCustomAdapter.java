@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -62,8 +64,15 @@ public class StatsFriendCustomAdapter extends BaseAdapter
             final Holder holder = new Holder();
             View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
             holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
-            // TODO: 04/21/2017 Add image by url
-//            holder.img.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic().getBitmap()));
+
+            UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap image) {
+                    if (image != null)
+                        holder.img.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+                }
+            });
+
             rowView.setOnClickListener(new View.OnClickListener()
             {
                 @Override

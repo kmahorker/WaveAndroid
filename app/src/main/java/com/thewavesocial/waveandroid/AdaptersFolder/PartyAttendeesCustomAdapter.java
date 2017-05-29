@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
@@ -53,20 +55,26 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position)
+    public void onBindViewHolder(final ViewHolder holder, final int position)
     {
-        // TODO: 04/21/2017 Add image by URL
-//        holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic().getBitmap()));
-//        holder.imgView.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-//                intent.putExtra("userObject", userList.get(position));
-//                mainActivity.startActivity(intent);
-//            }
-//        });
+        UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    holder.imgView.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+            }
+        });
+
+        holder.imgView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                intent.putExtra("userIDLong", userList.get(position).getUserID());
+                mainActivity.startActivity(intent);
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder

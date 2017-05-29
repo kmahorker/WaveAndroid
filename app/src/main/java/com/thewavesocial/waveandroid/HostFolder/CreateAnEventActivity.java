@@ -1,12 +1,8 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.util.Range;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,9 +22,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -38,10 +31,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
-import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -51,31 +46,42 @@ import org.florescu.android.rangeseekbar.RangeSeekBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Date;
-
 import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
-import io.github.rockerhieu.emojiconize.Emojiconize;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
     private ImageView back, forward;
     private FragmentManager fragmentM;
-    private CreateAnEventActivity thisActivity = this;
+    public static CreateAnEventActivity thisActivity;
+    public static ArrayList<User> followings;
+    private static int threads_completion = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //Emojiconize.activity(this).go();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event_layout);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
+
         fragmentM = getSupportFragmentManager();
+        thisActivity = this;
+
         openFirstPage();
         NewPartyInfo.initialize();
+
+        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                followings = new ArrayList<>();
+                if ( result != null )
+                    followings.addAll(result);
+            }
+        });
     }
 
+    //Open page 1
     private void openFirstPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage1()).commit();
 
@@ -96,8 +102,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                         .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                onBackPressed();
                                 NewPartyInfo.initialize();
+                                onBackPressed();
                                 finish();
                             }
                         })
@@ -122,6 +128,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("New Event");
     }
 
+    //Open page 2
     private void openSecondPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage2()).commit();
 
@@ -140,6 +147,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("Invite Friends");
     }
 
+    //Open page 3
     private void openThirdPage() {
         fragmentM.beginTransaction().replace(R.id.createEvent_fragment_container, new CreateEventPage3()).commit();
 
@@ -154,10 +162,12 @@ public class CreateAnEventActivity extends AppCompatActivity {
         title.setText("Invite Bouncers");
     }
 
+    //Return Forward Button for page 1
     public ImageView getForward() {
         return forward;
     }
 
+    //Handle create event page 1
     public static class CreateEventPage1 extends Fragment{
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
@@ -234,7 +244,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                 Log.d("V", "OnViewCreated");
             }catch(Exception e){
-                UtilityClass.printAlertMessage(getActivity(), e.getMessage(), true);
+                UtilityClass.printAlertMessage(getActivity(), e.getMessage(), "Error", true);
             }
         }
 
@@ -464,24 +474,24 @@ public class CreateAnEventActivity extends AppCompatActivity {
             //Log.d("Address", locationEditText.getText().toString());
             //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
             if(emojiconEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Creating Party", true);
                 return false;
             }
             else if(titleEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Creating Party", true);
                 return false;
             }
             else if(locationEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location","Error Creating Party", true);
                 return false;
             }
             else if(startCalendar.compareTo(endCalendar) >= 0){
-                UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+                UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Creating Party", true);
                 return false;
             }
             else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
-                return false;
+                UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Creating Party", true);
+                return true;
             }
             else{
                 return true;
@@ -509,6 +519,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    //Handle create event page 2
     public static class CreateEventPage2 extends Fragment {
         private SearchView searchbar;
         private TextView create;
@@ -516,7 +527,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites;
+        private static List<Integer> invite_index = new ArrayList<>();
         private View view;
 
         @Nullable
@@ -546,13 +557,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     mainActivity.openThirdPage();
                 }
             });
-            friends = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing());
+
+            friends = followings;
             friend_list.setAdapter(new FriendListAdapter(friends));
 
+            invite_index = NewPartyInfo.invitingUsers;
             LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
-            invites = CurrentUser.getUsersListObjects(NewPartyInfo.attendingUsers);
             invite_list.setLayoutManager(layoutManager);
-            invite_list.setAdapter(new SelectedAdapter(invites));
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -583,7 +595,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage2() {
-            NewPartyInfo.attendingUsers = CurrentUser.getUserIDList(invites);
+            NewPartyInfo.invitingUsers = invite_index;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -618,20 +630,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 //TODO: Get image from URL
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
-                if ( invites.contains( getItem(position) ) )
+                if ( invite_index.contains( position ))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invites.contains( getItem(position) ) ) {
-                            invites.add(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                        if ( !invite_index.contains( position ) ) {
+                            invite_index.add(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                         } else {
-                            invites.remove(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                            invite_index.remove(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                         }
                     }
@@ -694,6 +706,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    //Handle create event page 3
     public static class CreateEventPage3 extends Fragment {
         private SearchView searchbar;
         private TextView create;
@@ -701,7 +714,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
         private List<User> friends;
-        private static List<User> invites;
+        private static List<Integer> invite_index = new ArrayList<>();
 
         @Nullable
         @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -726,16 +739,17 @@ public class CreateAnEventActivity extends AppCompatActivity {
             create.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     savePage3();
-                    mainActivity.finish();
+                    NewPartyInfo.composeParty();
                 }
             });
-            friends = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing());
+
+            friends = followings;
             friend_list.setAdapter(new FriendListAdapter(friends));
 
+            invite_index = NewPartyInfo.bouncingUsers;
             LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
-            invites = CurrentUser.getUsersListObjects(NewPartyInfo.bouncingUsers);
-            invite_list.setLayoutManager( layoutManager );
-            invite_list.setAdapter(new SelectedAdapter(invites));
+            invite_list.setLayoutManager(layoutManager);
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -766,8 +780,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         private static void savePage3() {
-            NewPartyInfo.bouncingUsers = CurrentUser.getUserIDList(invites);
-            NewPartyInfo.composeParty();
+            NewPartyInfo.bouncingUsers = invite_index;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -804,21 +817,25 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
 
-                if ( invites.contains( getItem(position) ) )
+                Log.d("Contains?", invite_index.toString() );
+                if ( invite_index.contains( position ) )
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invites.contains( getItem(position) ) ) {
-                            invites.add(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                        Log.d("Position", position+"");
+                        if ( !invite_index.contains( position ) ) {
+                            invite_index.add(position);
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                            Log.d("Contains?", invite_index.toString() );
                         } else {
-                            invites.remove(getItem(position));
-                            invite_list.setAdapter(new SelectedAdapter(invites));
+                            invite_index.remove(invite_index.indexOf(position));
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                            Log.d("Contains?", invite_index.toString() );
                         }
                     }
                 });
@@ -880,6 +897,15 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
+    public static List<User> getUsersFromFollowing(List<Integer> indexes) {
+        ArrayList<User> users = new ArrayList<>();
+        for ( int i = 0; i < indexes.size(); i++ ) {
+            users.add(followings.get(indexes.get(i)));
+        }
+        return users;
+    }
+
+    //Store all new party information
     private static class NewPartyInfo {
         static String name;
         static double price;
@@ -888,12 +914,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static Calendar endingDateTime;
         static MapAddress mapAddress;
         static List<String> hostingUsers;
-        static List<String> bouncingUsers;
-        static List<String> attendingUsers;
+        static List<Integer> bouncingUsers;
+        static List<Integer> invitingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
         static int maxAge;
+
+        //Initialize party information
         public static void initialize() {
             name = "";
             price = 0;
@@ -902,18 +930,99 @@ public class CreateAnEventActivity extends AppCompatActivity {
             endingDateTime = null;
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
-            attendingUsers = new ArrayList<>();
+            invitingUsers = new ArrayList<>();
             isPublic = true;
             partyEmoji = "";
             minAge = -1;
             maxAge = -1;
+            mapAddress = new MapAddress();
+
+            hostingUsers.add(DatabaseAccess.getTokenFromLocal(thisActivity).get("id"));
         }
+
+        //Compose all party information
         public static void composeParty(){
-//            Party party = new Party(
-//                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
-            // TODO: 03/31/2017 Send to database and create new party with new ID
-            // TODO: 04/23/2017 Refresh hosting event list
+            Log.d("Compose Party", "EEntered");
+            if ( mapAddress.getAddress_latlng() == null )
+                mapAddress.setAddress_latlng(new LatLng(0,0));
+
+            try {
+                CurrentUser.server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
+                        mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
+                        isPublic, startingDateTime.getTimeInMillis() / 1000L, endingDateTime.getTimeInMillis() / 1000L,
+                        minAge, maxAge, new OnResultReadyListener<String>() {
+
+                            @Override
+                            public void onResultReady(String result) {
+                                int commaIndex = result.indexOf(',');
+                                if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
+                                    Log.d("Compose Party", "Unsuccessful");
+                                    return;
+                                }
+
+                                final String eventId = result.substring(commaIndex + 1);
+
+                                for(User user : getUsersFromFollowing(invitingUsers)){
+                                    CurrentUser.server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addInvitedUser", result + "");
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
+                                            }
+                                        }
+                                    });
+                                }
+
+                                for(User user : getUsersFromFollowing(bouncingUsers)){
+                                    CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addBouncingUser", result + "");
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
+                                            }
+                                        }
+                                    });
+                                }
+
+                                for(String hostingId : hostingUsers){
+                                    CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            Log.d("addHostingUser", result + "");
+                                            completeThreads();
+                                            if(result.equals("error")){
+                                                // TODO: 05/27/2017 Alert Message
+                                            }
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
+    public static void completeThreads() {
+        threads_completion ++;
+        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
+        if ( threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
+            //Finish task
+            CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
+                @Override
+                public void onResultReady(Boolean result) {
+                    thisActivity.onBackPressed();
+                    thisActivity.finish();
+                }
+            });
         }
     }
 }

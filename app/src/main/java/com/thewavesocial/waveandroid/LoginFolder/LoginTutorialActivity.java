@@ -1,10 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -26,9 +22,13 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -36,11 +36,6 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
@@ -48,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoginTutorialActivity extends AppCompatActivity {
@@ -67,7 +63,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_tutorial);
         setupReferences();
     }
-
 
     private void setupReferences(){
         mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
@@ -116,7 +111,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -176,8 +170,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
     private void processJSONObject(String token, JSONObject json) {
         Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
-        Log.d("Facebook JSON", token + ",\n" + json.toString());
-        //new JSONParsingTask("Specific URL with Facebook ID").execute();
+        Log.d("Facebook JSON", token + "\n" + json);
         try
         {
             if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
@@ -189,7 +182,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
             }
             if ( Integer.parseInt(json.getString("age_range").substring(
                     json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
-                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", true);
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", "Underage!", true);
                 return;
             }
             else
@@ -248,8 +241,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         "password" /*TODO: delete password field*/,
                         "UCSB" /*TODO: delete college field*/,
                         json.getString("gender"),
-                        "1231231234"/*TODO: delte ph#*/,
-                        new MapAddress(),
                         calendar,
                         new ArrayList<String>(), //followers
                         new ArrayList<String>(), //following
@@ -259,7 +250,6 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         new ArrayList<String>(), //hosted
                         new ArrayList<String>(), //bounced
                         new ArrayList<String>(), //attending
-                        new ArrayList<Notification>(),
                         new ArrayList<Notification>(),
                         profilePic);
                 //TODO: Add user object to Database
@@ -276,67 +266,103 @@ public class LoginTutorialActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    //Create new user account
+    private void server_create_user(String last_name, String first_name, String email, String college, String password) {
+        String url = getString(R.string.server_url) + "users";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("last_name", last_name);
+        body.put("first_name", first_name);
+        body.put("email", email);
+        body.put("college", college);
+        body.put("password", password);
 
-    private JSONObject requestDataFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        InputStream stream;
-        StringBuffer buffer = new StringBuffer();
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-            if ( connection.getResponseCode() == 500 )
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
-            while( (line = reader.readLine()) != null )
-                buffer.append(line);
-            String jsonString = buffer.toString();
-            JSONObject jsonObject = new JSONObject(jsonString);
-            return jsonObject.getJSONObject("data");
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-        } finally {
-            if ( connection != null )
-                connection.disconnect();
-            try {
-                if ( reader != null )
-                    reader.close();
-            }
-            catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-    public class JSONParsingTask extends AsyncTask<String, String, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params){
-            return requestDataFromServer(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                String url = "";
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                Log.d("Create New User Account", result.get(0));
                 try {
-                    url = "https://api.theplugsocial.com/v1/users/";
-                    url += result.getLong("id") + "?access_token=";
-                    url += result.getString("jwt");
+                    JSONObject jsonObject = new JSONObject(result.get(0));
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                        @Override
+                        public void onResultReady(User result) {
+                            if ( result != null ) {
+                                CurrentUser.theUser = result;
+                            }
+                        }
+                    });
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    UtilityClass.printAlertMessage(mainActivity, "Sorry, we couldn't create your account!", "Create Account Error", true);
                 }
-
-                JSONObject data = requestDataFromServer(url);
-                // TODO: 03/26/2017 Process user data
             }
-        }
+        }).execute();
     }
+
+    //Login using email and password
+    private void server_login_email(String email, String password) {
+        String url = getString(R.string.server_url)+"auth";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("email", email);
+        body.put("password", password);
+
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                Log.d("Login by Email", result.get(0));
+                try {
+                    JSONObject jsonObject = new JSONObject(result.get(0));
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                        @Override
+                        public void onResultReady(User result) {
+                            if ( result != null ) {
+                                CurrentUser.theUser = result;
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", "Sign in Error", true);
+                }
+            }
+        }).execute();
+    }
+
+    //Login using facebook token
+    private void server_login_facebook(String fbtoken) {
+        String url = getString(R.string.server_url)+"FBauth";
+        HashMap<String, String> body = new HashMap<>();
+        body.put("fb_token", fbtoken);
+
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                Log.d("Login by Facebook", result.get(0));
+                try {
+                    JSONObject jsonObject = new JSONObject(result.get(0));
+                    String user_id = jsonObject.getJSONObject("data").getString("id");
+                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+
+                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                        @Override
+                        public void onResultReady(User result) {
+                            if ( result != null ) {
+                                CurrentUser.theUser = result;
+                            }
+                        }
+                    });
+                } catch (JSONException e) {
+                    UtilityClass.printAlertMessage(mainActivity, "Could not authorize facebook", "Facebook Login Error", true);
+                }
+            }
+        }).execute();
+    }
+
 }

@@ -21,13 +21,13 @@ public class Party implements Parcelable {
     private String partyID;
     private String name;
     private double price;
-    private String hostName;
+    private String hostName; //to hostID
     private Calendar startingDateTime;
     private Calendar endingDateTime;
     private MapAddress mapAddress;
     private List<String> hostingUsers;
     private List<String> bouncingUsers;
-    private List<String> attendingUsers;
+    private List<Attendee> attendingUsers;
     private boolean isPublic;
     private String partyEmoji;
     private int minAge;
@@ -59,9 +59,11 @@ public class Party implements Parcelable {
             MapAddress mapAddress,
             List<String> hostingUsers,
             List<String> bouncingUsers,
-            List<String> attendingUsers,
-            boolean isPublic, String partyEmoji,
-            int minAge, int maxAge)
+            List<Attendee> attendingUsers,
+            boolean isPublic,
+            String partyEmoji,
+            int minAge,
+            int maxAge)
     {
         this.partyID = partyID;
         this.name = name;
@@ -80,15 +82,15 @@ public class Party implements Parcelable {
     }
 
     //Delete
-    public boolean removeAttending(long userIDToRemove)
+    public boolean removeAttending(String userIDToRemove)
     {
         return attendingUsers.remove(userIDToRemove);
     }
 
     //Add
-    public void addAttending(String userIDToAdd)
+    public void addAttending(Attendee attendeeToAdd)
     {
-        attendingUsers.add(userIDToAdd);
+        attendingUsers.add(attendeeToAdd);
     }
 
     //Setters
@@ -137,7 +139,7 @@ public class Party implements Parcelable {
         this.bouncingUsers = bouncingUsers;
     }
 
-    public void setAttendingUsers(List<String> attendingUsers)
+    public void setAttendingUsers(List<Attendee> attendingUsers)
     {
         this.attendingUsers = attendingUsers;
     }
@@ -193,7 +195,7 @@ public class Party implements Parcelable {
         return bouncingUsers;
     }
 
-    public List<String> getAttendingUsers()
+    public List<Attendee> getAttendingUsers()
     {
         return attendingUsers;
     }
@@ -258,7 +260,7 @@ public class Party implements Parcelable {
             bouncingUsers = null;
         }
         if (in.readByte() == 0x01) {
-            attendingUsers = new ArrayList<String>();
+            attendingUsers = new ArrayList<>();
             in.readList(attendingUsers, String.class.getClassLoader());
         } else {
             attendingUsers = null;

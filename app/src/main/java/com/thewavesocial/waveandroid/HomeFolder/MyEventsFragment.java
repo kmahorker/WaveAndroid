@@ -10,11 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.MyEventsCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.DummyUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,15 +26,13 @@ import java.util.List;
  * Activities that contain this fragment must implement the
  * {@link MyEventsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MyEventsFragment#newInstance} factory method to
+ * Use the {@link MyEventsFragment} factory method to
  * create an instance of this fragment.
  */
 public class MyEventsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -48,7 +49,6 @@ public class MyEventsFragment extends Fragment {
 //     * @param partyList List of parties user is attending
 //     * @return A new instance of fragment MyEventsFragment.
 //     */
-//    // TODO: Rename and change types and number of parameters
 //    public static MyEventsFragment newInstance(ArrayList<Party> partyList) {
 //        MyEventsFragment fragment = new MyEventsFragment();
 //        Bundle args = new Bundle();
@@ -76,15 +76,23 @@ public class MyEventsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        MyEventsFragment thisFragment = this;
+        final MyEventsFragment thisFragment = this;
         DummyUser dummyUser = new DummyUser(getActivity());
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((HomeSwipeActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_my_events);
-        List<Party> partyList = dummyUser.getPartyListObjects(dummyUser.getAttending()); //TODO: Get Parties from User Object from database
-        ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
-        myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(),thisFragment,partyList));
 
+        final List<Party> partyList = new ArrayList<>();
+        CurrentUser.server_getPartyListObjects(dummyUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if ( result != null ) {
+                    partyList.addAll(result);
+                    ListView myEventsList = (ListView) getActivity().findViewById(R.id.myEventsListView);
+                    myEventsList.setAdapter(new MyEventsCustomAdapter(getActivity(), thisFragment, partyList));
+                }
+            }
+        });
     }
 
     /**
@@ -98,7 +106,6 @@ public class MyEventsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 

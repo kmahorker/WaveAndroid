@@ -14,10 +14,10 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 import java.util.List;
@@ -90,8 +90,8 @@ public class UserActionAdapter extends BaseAdapter {
             return setupViewAttending(position, convertView, parent);
     }
 
-    private View setupViewActivity(int position, View convertView, ViewGroup parent) {
-        Holder1 holder;
+    private View setupViewActivity(final int position, View convertView, ViewGroup parent) {
+        final Holder1 holder;
         View layoutView = convertView;
         if (convertView == null) {
             layoutView = inflater.inflate(R.layout.each_usernotif_item, null);
@@ -100,41 +100,50 @@ public class UserActionAdapter extends BaseAdapter {
         } else {
             holder = (Holder1) layoutView.getTag();
         }
-        final User sender = CurrentUser.getUserObject(notifList.get(position).getSenderID());
-        holder.senderImage = (ImageView) layoutView.findViewById(R.id.eachNotif_senderPhoto);
-        holder.sender = (TextView) layoutView.findViewById(R.id.eachNotif_sender);
-        holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
-        holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
-        if (sender.getProfilePic() != null)
-            //TODO: Get Image from URL
-            //holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
-        holder.sender.setText(sender.getFirstName());
-        holder.notifmessage.setText(notifList.get(position).getMessage());
-        holder.timeAgo.setText("28m");
-        holder.senderImage.setOnClickListener(new View.OnClickListener() {
+
+        final View finalLayoutView = layoutView;
+        CurrentUser.server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userObject", sender);
-                mainActivity.startActivity(intent);
-            }
+            public void onResultReady(final User sender) {
+                if ( sender != null ) {
+                    holder.senderImage = (ImageView) finalLayoutView.findViewById(R.id.eachNotif_senderPhoto);
+                    holder.sender = (TextView) finalLayoutView.findViewById(R.id.eachNotif_sender);
+                    holder.notifmessage = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
+                    holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
+                    if (sender.getProfilePic() != null)
+                        //TODO: Get Image from URL
+                        //holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
+                        holder.sender.setText(sender.getFirstName());
+                    holder.notifmessage.setText(notifList.get(position).getMessage());
+                    holder.timeAgo.setText("28m");
+                    holder.senderImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userObject", sender);
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+                    holder.sender.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userObject", sender);
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+                    holder.notifmessage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userObject", sender);
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+                }
+             }
         });
-        holder.sender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userObject", sender);
-                mainActivity.startActivity(intent);
-            }
-        });
-        holder.notifmessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userObject", sender);
-                mainActivity.startActivity(intent);
-            }
-        });
+
         return layoutView;
     }
 

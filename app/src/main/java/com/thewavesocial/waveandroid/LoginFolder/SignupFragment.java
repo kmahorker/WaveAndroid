@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -251,10 +252,14 @@ public class SignupFragment extends Fragment
         final ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
         final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
 
-        if ( mainActivity.profilePic != null )
-        {
-            profilepic.setImageDrawable(mainActivity.profilePic);
-        }
+
+        UtilityClass.getBitmapFromURL(mainActivity, mainActivity.profilePic, new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            }
+        });
 
         profilepic.setOnClickListener(new View.OnClickListener()
         {
@@ -273,7 +278,6 @@ public class SignupFragment extends Fragment
             public void onClick(View view)
             {
                 mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-                // TODO: 02/22/2017 Save Image
             }
         });
 
@@ -283,7 +287,6 @@ public class SignupFragment extends Fragment
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
                 UtilityClass.hideKeyboard(mainActivity);
-                // TODO: 02/22/2017 Save Image
                 return true;
             }
         });
@@ -335,7 +338,7 @@ public class SignupFragment extends Fragment
                 bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                 ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
                 profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), bitmap) );
-                mainActivity.profilePic = new BitmapDrawable(bitmap);
+                mainActivity.profilePic = "";
             }
             catch (FileNotFoundException e)
             {

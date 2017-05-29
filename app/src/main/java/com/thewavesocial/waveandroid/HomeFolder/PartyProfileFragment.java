@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -30,6 +31,7 @@ import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
@@ -135,18 +137,35 @@ public class PartyProfileFragment extends Fragment {
         location.setText(party.getMapAddress().getAddress_string());
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
-        sample = new ArrayList(); //added friend list 3 times for testing purpose
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
-        sample.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
+        sample = new ArrayList();
 
-        LinearLayoutManager layoutManagerAttendees =
-                new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
-        attendingFriends.setLayoutManager(layoutManagerAttendees);
-        attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                if ( result != null ) {
 
-        final List<Party> events = CurrentUser.getPartyListObjects(
-                CurrentUser.theUser.getHosted()); // TODO: 03/08/2017 Testing Purpose
+                    if ( !result.get("hosting").isEmpty() )
+                        hostname.setText(result.get("hosting").get(0).getFullName());
+
+                    if ( !result.get("attending").isEmpty() )
+                        sample.addAll(result.get("attending"));
+                    LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
+                    attendingFriends.setLayoutManager(layoutManagerAttendees);
+                    attendingFriends.setFocusable(false);
+                    attendingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, sample));
+                }
+            }
+        });
+
+        final List<Party> events = new ArrayList<>();
+        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if ( result != null ) {
+                    events.addAll(result);  // TODO: 03/08/2017 Testing Purpose
+                }
+            }
+        });
         hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, events));
         hostedEvents.setOnTouchListener(new View.OnTouchListener() {
             @Override

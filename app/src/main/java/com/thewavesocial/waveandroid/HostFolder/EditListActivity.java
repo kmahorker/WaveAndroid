@@ -21,10 +21,13 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EditListActivity extends AppCompatActivity {
@@ -55,15 +58,34 @@ public class EditListActivity extends AppCompatActivity {
     private void initialize() {
         party = getIntent().getExtras().getParcelable("partyObj");
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
-        users = CurrentUser.getUsersListObjects(CurrentUser.theUser.getFollowing());
-        switch (LAYOUT_TYPE) {
-            case 1:
-                invites = CurrentUser.getUsersListObjects(party.getAttendingUsers());
-                break;
-            case 2:
-                invites = CurrentUser.getUsersListObjects(party.getBouncingUsers());
-                break;
-        }
+
+        //Get user followings
+        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                if ( result != null ) {
+                    users = result;
+                }
+            }
+        });
+
+        //Get attending or bouncing users
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                if ( result != null ) {
+                    switch (LAYOUT_TYPE) {
+                        case 1:
+                            invites = result.get("attending");
+                            break;
+                        case 2:
+                            invites = result.get("bouncing");
+                            break;
+                    }
+                }
+            }
+        });
+
     }
 
     private void setupActionBar(){
@@ -124,10 +146,15 @@ public class EditListActivity extends AppCompatActivity {
             public void onClick(View v) { //TODO: 5/7/2017 Update server with new invites list
                 switch (LAYOUT_TYPE){
                     case 1:
-                        party.setAttendingUsers(CurrentUser.getUserIDList(invites));
+                        for ( User user : invites ) {
+                            CurrentUser.server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
+                        }
                         break;
                     case 2:
-                        party.setBouncingUsers(CurrentUser.getUserIDList(invites));
+                        for ( User user : invites ) {
+                            CurrentUser.server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
+                        }
+                        break;
                 }
             }
         });

@@ -2,9 +2,11 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,12 +16,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserActionAdapter;
-import com.thewavesocial.waveandroid.AdaptersFolder.UserNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+
+import java.util.List;
 
 public class UserProfileFragment extends Fragment {
 
@@ -98,10 +103,19 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        if (CurrentUser.theUser.getProfilePic() != null) {
-            // TODO: 04/21/2017 Add Image with URL
-//            profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), CurrentUser.theUser.getProfilePic().getBitmap()));
-        }
+        Log.d("Bitmapppp", user.getProfilePic() + "");
+        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null) {
+                    try {
+                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +123,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(attendingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications1()));
+                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications()));
             }
         });
         attendingButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +133,14 @@ public class UserProfileFragment extends Fragment {
                 changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.getPartyListObjects(CurrentUser.theUser.getAttending()), 0));
+                CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+                    @Override
+                    public void onResultReady(List<Party> result) {
+                        if ( result != null ) {
+                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result, 0));
+                        }
+                    }
+                });
             }
         });
 

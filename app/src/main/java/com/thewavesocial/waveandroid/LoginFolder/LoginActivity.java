@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity
         Intent intentSignup = new Intent(mainActivity, SignupActivity.class);
         try
         {
-            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
+            if ( json.getString("id") == "100000000000" )
             {
                 //login
                 Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity
             if ( Integer.parseInt(json.getString("age_range").substring(
                     json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 18 )
             {
-                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 18+ (College Students) only.", true);
+                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 18+ (College Students) only.", "Underage!", true);
                 return;
             }
             else
@@ -179,16 +179,15 @@ public class LoginActivity extends AppCompatActivity
                         Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
                         startActivity(intent);
                         finish();
-                        // TODO: 02/21/2017 Reset CurrentUser info
                     }
                     else
                     {
-                        UtilityClass.printAlertMessage(mainActivity, "Incorrect Password. Please try again.", true);
+                        UtilityClass.printAlertMessage(mainActivity, "Incorrect Password. Please try again.", "Error: ", true);
                     }
                 }
                 else
                 {
-                    UtilityClass.printAlertMessage(mainActivity, "Unrecognized Email. Please create an account.", true);
+                    UtilityClass.printAlertMessage(mainActivity, "Unrecognized Email. Please create an account.", "Error: ", true);
                 }
             }
         });

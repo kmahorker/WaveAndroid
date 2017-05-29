@@ -9,35 +9,37 @@ import android.os.Parcelable;
 
 public class BestFriend implements Parcelable {
     String name;
-    int phoneNumber;
+    String phoneNumber;
 
     public BestFriend(){
         name = "";
-        phoneNumber = 0;
+        phoneNumber = "0";
     }
 
-    public BestFriend(String name, int num){
+    public BestFriend(String name, String num){
         this.name = name;
         phoneNumber = num;
     }
 
-    public BestFriend(String name, String numString){
+    public void setName(String name) {
         this.name = name;
-        String str = numString.replaceAll("[^\\d]", "");
-        phoneNumber = Integer.parseInt(str);
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
     protected BestFriend(Parcel in) {
         name = in.readString();
-        phoneNumber = in.readInt();
+        phoneNumber = in.readString();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class BestFriend implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
-        dest.writeInt(phoneNumber);
+        dest.writeString(phoneNumber);
     }
 
     @SuppressWarnings("unused")

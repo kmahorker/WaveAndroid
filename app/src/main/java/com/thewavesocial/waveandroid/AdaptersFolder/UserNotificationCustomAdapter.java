@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -65,45 +67,59 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
             holder = (Holder) layoutView.getTag();
         }
 
-        final User sender = CurrentUser.getUserObject(getItem(position).getSenderID());
-
-        holder.senderImage = (ImageView) layoutView.findViewById(R.id.eachNotif_senderPhoto);
-        holder.sender = (TextView) layoutView.findViewById(R.id.eachNotif_sender);
-        holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachNotif_message);
-        holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
-
-        if (sender.getProfilePic() != null) {
-            // TODO: 04/21/2017 Add image by url
-//            holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
-        }
-        holder.sender.setText(sender.getFirstName());
-        holder.notifmessage.setText(getItem(position).getMessage());
-        holder.timeAgo.setText("28m");
-
-        holder.senderImage.setOnClickListener(new View.OnClickListener() {
+        final User[] sender = {new User()};
+        final View finalLayoutView = layoutView;
+        CurrentUser.server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", sender.getUserID());
-                mainActivity.startActivity(intent);
-            }
-        });
+            public void onResultReady(User result) {
+                if ( result != null ) {
+                    sender[0] = result;
 
-        holder.sender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userObject", sender);
-                mainActivity.startActivity(intent);
-            }
-        });
+                    holder.senderImage = (ImageView) finalLayoutView.findViewById(R.id.eachNotif_senderPhoto);
+                    holder.sender = (TextView) finalLayoutView.findViewById(R.id.eachNotif_sender);
+                    holder.notifmessage = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
+                    holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
 
-        holder.notifmessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userObject", sender);
-                mainActivity.startActivity(intent);
+                    UtilityClass.getBitmapFromURL(mainActivity, sender[0].getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                        @Override
+                        public void onResultReady(Bitmap image) {
+                            if (image != null)
+                                holder.senderImage.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+                        }
+                    });
+
+                    holder.sender.setText(sender[0].getFirstName());
+                    holder.notifmessage.setText(getItem(position).getMessage());
+                    holder.timeAgo.setText("28m");
+
+                    holder.senderImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userIDLong", sender[0].getUserID());
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+
+                    holder.sender.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userIDLong", sender[0].getUserID());
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+
+                    holder.notifmessage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userIDLong", sender[0].getUserID());
+                            mainActivity.startActivity(intent);
+                        }
+                    });
+                }
+
             }
         });
 

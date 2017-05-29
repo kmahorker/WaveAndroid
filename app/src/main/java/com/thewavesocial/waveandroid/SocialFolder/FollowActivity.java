@@ -1,16 +1,11 @@
 package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -19,6 +14,7 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.AdaptersFolder.SearchPeopleCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -54,13 +50,26 @@ public class FollowActivity extends AppCompatActivity {
 
     public void createViews() {
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
+        final List<User> follows = new ArrayList<>();
 
-        List<User> follows = new ArrayList<>();
-        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) //Changed to getUsersListObjects()
-            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowers() );
-        else if (pageType == UserProfileFragment.PopupPage.FOLLOWING)
-            follows = CurrentUser.getUsersListObjects( CurrentUser.theUser.getFollowing() );
-        followUsersList.setAdapter(new SearchPeopleCustomAdapter(this, follows));
+        if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+                @Override
+                public void onResultReady(List<User> result) {
+                    follows.addAll(result);
+                    Log.d("Sizeeeeeeeeeeeeeeee", follows.size() + "" );
+                    followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
+                }
+            });
+        } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
+            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+                @Override
+                public void onResultReady(List<User> result) {
+                    follows.addAll(result);
+                    followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
+                }
+            });
+        }
 
         final List<User> finalFollows = follows;
         searchField = (SearchView) findViewById(R.id.sf_follow_search_field);
@@ -124,11 +133,23 @@ public class FollowActivity extends AppCompatActivity {
 
                 final ImageView userImage = (ImageView) v.findViewById(R.id.iv_follow_row_user_image);
                 if (userImage != null) {
+<<<<<<< HEAD
+                    UtilityClass.getBitmapFromURL(followActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                        @Override
+                        public void onResultReady(Bitmap result) {
+                            Bitmap image = result;
+                            if (image != null) {
+                                userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
+                            }
+                        }
+                    });
+=======
                     // TODO: 04/21/2017 Add image by url
 //                    BitmapDrawable pic = user.getProfilePic();
 //                    if (pic != null) {
 //                        userImage.setImageDrawable(UtilityClass.toRoundImage(getResources(), pic.getBitmap()));
 //                    }
+>>>>>>> master
                 }
 
                 final TextView name = (TextView) v.findViewById(R.id.iv_follow_row_user_name);

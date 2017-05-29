@@ -2,7 +2,6 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 //import android.media.Image;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,20 +25,18 @@ public class User implements Parcelable {
     private String password;
     private String college;
     private String gender;
-    private String phone;
-    private MapAddress mapAddress;
     private Calendar birthday;
     private List<BestFriend> bestFriends;
     private List<String> followers;
     private List<String> following;
+
     //Below contain list of PartyIDs
+    private List<String> hosted;
     private List<String> hosting;
     private List<String> attended;
-    private List<String> hosted;
-    private List<String> bounced;
     private List<String> attending;
-    private List<Notification> notifications1;
-    private List<Notification> notifications2;
+    private List<String> bouncing;
+    private List<Notification> notifications;
     private String profilePic;
 
     public User()
@@ -51,8 +48,6 @@ public class User implements Parcelable {
         password = "";
         college = "";
         gender = "";
-        phone = "0";
-        mapAddress = new MapAddress();
         birthday = Calendar.getInstance();
         bestFriends = new ArrayList<>();
         followers = new ArrayList<>();
@@ -60,10 +55,9 @@ public class User implements Parcelable {
         hosting = new ArrayList<>();
         attended = new ArrayList<>();
         hosted = new ArrayList<>();
-        bounced = new ArrayList<>();
+        bouncing = new ArrayList<>();
         attending = new ArrayList<>();
-        notifications1 = new ArrayList<>();
-        notifications2 = new ArrayList<>();
+        notifications = new ArrayList<>();
         profilePic = ""; //TODO Use different constructor
     }
 
@@ -74,8 +68,6 @@ public class User implements Parcelable {
                 String password,
                 String college,
                 String gender,
-                String phone,
-                MapAddress mapAddress,
                 Calendar birthday,
                 List<String> followers,
                 List<String> following,
@@ -83,10 +75,9 @@ public class User implements Parcelable {
                 List<String> hosting,
                 List<String> attended,
                 List<String> hosted,
-                List<String> bounced,
+                List<String> bouncing,
                 List<String> attending,
-                List<Notification> notifications1,
-                List<Notification> notifications2,
+                List<Notification> notifications,
                 String profilePic)
     {
         this.userID = userID;
@@ -96,19 +87,16 @@ public class User implements Parcelable {
         this.password = password;
         this.college = college;
         this.gender = gender;
-        this.phone = phone;
-        this.mapAddress = mapAddress;
         this.birthday = birthday;
         this.followers = followers;
         this.following = following;
         this.bestFriends = bestFriends;
         this.hosting = hosting;
-        this.attended = attended;
         this.hosted = hosted;
-        this.bounced = bounced;
         this.attending = attending;
-        this.notifications1 = notifications1;
-        this.notifications2 = notifications2;
+        this.attended = attended;
+        this.bouncing = bouncing;
+        this.notifications = notifications;
         this.profilePic = profilePic;
     }
 
@@ -148,11 +136,6 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
-    public void setMapAddress(MapAddress mapAddress)
-    {
-        this.mapAddress = mapAddress;
-    }
-
     public void setBirthday(Calendar birthday)
     {
         this.birthday = Calendar.getInstance();
@@ -173,9 +156,9 @@ public class User implements Parcelable {
         this.hosted = hosted;
     }
 
-    public void setBounced(List<String> bounced)
+    public void setBouncing(List<String> bouncing)
     {
-        this.bounced = bounced;
+        this.bouncing = bouncing;
     }
 
     public void setAttending(List<String> attending) {
@@ -220,11 +203,6 @@ public class User implements Parcelable {
         return gender;
     }
 
-    public MapAddress getMapAddress()
-    {
-        return mapAddress;
-    }
-
     public Calendar getBirthday()
     {
         return birthday;
@@ -245,9 +223,9 @@ public class User implements Parcelable {
         return hosted;
     }
 
-    public List<String> getBounced()
+    public List<String> getBouncing()
     {
-        return bounced;
+        return bouncing;
     }
 
 
@@ -261,34 +239,14 @@ public class User implements Parcelable {
         return profilePic;
     }
 
-    public List<Notification> getNotifications1()
+    public List<Notification> getNotifications()
     {
-        return notifications1;
+        return notifications;
     }
 
-    public void setNotifications1(List<Notification> notifications1)
+    public void setNotifications(List<Notification> notifications)
     {
-        this.notifications1 = notifications1;
-    }
-
-    public List<Notification> getNotifications2()
-    {
-        return notifications2;
-    }
-
-    public void setNotifications2(List<Notification> notifications2)
-    {
-        this.notifications2 = notifications2;
-    }
-
-    public String getPhone()
-    {
-        return phone;
-    }
-
-    public void setPhone(String phone)
-    {
-        this.phone = phone;
+        this.notifications = notifications;
     }
 
     public List<String> getFollowers()
@@ -316,6 +274,14 @@ public class User implements Parcelable {
         return firstName + " " + lastName;
     }
 
+    public List<String> getHosting() {
+        return hosting;
+    }
+
+    public void setHosting(List<String> hosting) {
+        this.hosting = hosting;
+    }
+
     protected User(Parcel in) {
         userID = in.readString();
         firstName = in.readString();
@@ -324,8 +290,6 @@ public class User implements Parcelable {
         password = in.readString();
         college = in.readString();
         gender = in.readString();
-        phone = in.readString();
-        mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
         birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
             bestFriends = new ArrayList<BestFriend>();
@@ -364,10 +328,10 @@ public class User implements Parcelable {
             hosted = null;
         }
         if (in.readByte() == 0x01) {
-            bounced = new ArrayList<String>();
-            in.readList(bounced, String.class.getClassLoader());
+            bouncing = new ArrayList<String>();
+            in.readList(bouncing, String.class.getClassLoader());
         } else {
-            bounced = null;
+            bouncing = null;
         }
         if (in.readByte() == 0x01) {
             attending = new ArrayList<String>();
@@ -376,16 +340,10 @@ public class User implements Parcelable {
             attending = null;
         }
         if (in.readByte() == 0x01) {
-            notifications1 = new ArrayList<Notification>();
-            in.readList(notifications1, Notification.class.getClassLoader());
+            notifications = new ArrayList<Notification>();
+            in.readList(notifications, Notification.class.getClassLoader());
         } else {
-            notifications1 = null;
-        }
-        if (in.readByte() == 0x01) {
-            notifications2 = new ArrayList<Notification>();
-            in.readList(notifications2, Notification.class.getClassLoader());
-        } else {
-            notifications2 = null;
+            notifications = null;
         }
         profilePic = in.readString();
     }
@@ -404,8 +362,6 @@ public class User implements Parcelable {
         dest.writeString(password);
         dest.writeString(college);
         dest.writeString(gender);
-        dest.writeString(phone);
-        dest.writeValue(mapAddress);
         dest.writeValue(birthday);
         if (bestFriends == null) {
             dest.writeByte((byte) (0x00));
@@ -443,11 +399,11 @@ public class User implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(hosted);
         }
-        if (bounced == null) {
+        if (bouncing == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(bounced);
+            dest.writeList(bouncing);
         }
         if (attending == null) {
             dest.writeByte((byte) (0x00));
@@ -455,17 +411,11 @@ public class User implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(attending);
         }
-        if (notifications1 == null) {
+        if (notifications == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(notifications1);
-        }
-        if (notifications2 == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(notifications2);
+            dest.writeList(notifications);
         }
         dest.writeString(profilePic);
     }

@@ -27,8 +27,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
     private List<Party> partyList;
     private static LayoutInflater inflater;
 
-    public ManagePartyCustomAdapter(Activity mainActivity, List<Party> partyList)
-    {
+    public ManagePartyCustomAdapter(Activity mainActivity, List<Party> partyList) {
         super();
         this.partyList = partyList;
         this.mainActivity = mainActivity;
@@ -36,20 +35,17 @@ public class ManagePartyCustomAdapter extends BaseAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return partyList.size();
     }
 
     @Override
-    public Party getItem(int position)
-    {
+    public Party getItem(int position) {
         return partyList.get(position);
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
@@ -61,18 +57,14 @@ public class ManagePartyCustomAdapter extends BaseAdapter
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Holder holder;
         View layoutView = convertView;
-        if(convertView == null)
-        {
+        if (convertView == null) {
             layoutView = inflater.inflate(R.layout.each_manageevent_item, null);
             holder = new Holder();
             layoutView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (Holder) layoutView.getTag();
         }
 
@@ -81,13 +73,11 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
 
-        if ( party.getPartyEmoji() != "" ) {
+        if ( party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
             holder.partyEmoji.setText(party.getPartyEmoji());
-            // TODO: 04/21/2017 Add image by url
-//            holder.partyEmoji.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), party.getPartyEmoji().getBitmap()));
         }
         holder.partyname.setText(party.getName());
-        holder.partyInfo.setText( getCustomInfoText( party ) );
+        holder.partyInfo.setText(getCustomInfoText(party));
 
         layoutView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,19 +92,17 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         return layoutView;
     }
 
-    private String getCustomInfoText(Party party)
-    {
+    private String getCustomInfoText(Party party) {
         String compose = "";
         compose += getDays(party.getStartingDateTime()) + " days  ";
         compose += party.getAttendingUsers().size() + " going";
         return compose;
     }
 
-    private int getDays(Calendar startingDateTime)
-    {
+    private int getDays(Calendar startingDateTime) {
         int sum = 0;
-        sum += (startingDateTime.get(Calendar.YEAR) - Calendar.getInstance().get(Calendar.YEAR))*365;
-        sum += (startingDateTime.get(Calendar.MONTH) - Calendar.getInstance().get(Calendar.MONTH))*30;
+        sum += (startingDateTime.get(Calendar.YEAR) - Calendar.getInstance().get(Calendar.YEAR)) * 365;
+        sum += (startingDateTime.get(Calendar.MONTH) - Calendar.getInstance().get(Calendar.MONTH)) * 30;
         sum += (startingDateTime.get(Calendar.DATE) - Calendar.getInstance().get(Calendar.DATE));
         return sum;
     }

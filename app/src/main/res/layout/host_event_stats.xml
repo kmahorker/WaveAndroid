@@ -177,6 +177,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
+                    android:gravity="end"
                     android:text="1234 Mario Dr. Santa Barbara, CA"
                     android:textColor="@color/grey_solid"
                     android:textSize="@dimen/text_normal"
@@ -184,8 +185,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginEnd="15dp"
-                    android:lines="1"
-                    android:ellipsize="end"/>
+                    android:lines="1"/>
 
             </RelativeLayout>
 

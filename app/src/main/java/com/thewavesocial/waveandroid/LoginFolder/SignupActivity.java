@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
+import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
@@ -29,9 +30,9 @@ public class SignupActivity extends FragmentActivity
     private ImageView dot1, dot2, dot3, dot4, dot5, dot6;
     public ViewPager mPager;
     public String name = "", email = "", password = "", gender = "", friendname = "";
-    public String friendphone = "0", userID;
+    public String friendphone = "", userID;
     public Calendar birthday;
-    public BitmapDrawable profilePic;
+    public String profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -103,7 +104,7 @@ public class SignupActivity extends FragmentActivity
                     .setCancelable(true)
                     .show();
         }
-        else if ( friendphone == "0" )
+        else if ( friendphone.equals("0") )
         {
             fieldAlert.setMessage("Please specify your emergency friend's phone number.")
                     .setCancelable(true)
@@ -118,31 +119,15 @@ public class SignupActivity extends FragmentActivity
         }
         else
         {
-            User bestFriend = new User();
-            friendname = friendname.trim();
-            if ( friendname.contains(" ") )
-            {
-                bestFriend.setFirstName(friendname.substring(0, friendname.lastIndexOf(' ')).trim());
-                bestFriend.setLastName(friendname.substring(friendname.lastIndexOf(' ') + 1).trim());
-            }
-            else if ( friendname.contains(",") )
-            {
-                bestFriend.setFirstName(friendname.substring(0, friendname.lastIndexOf(',')).trim());
-                bestFriend.setLastName(friendname.substring(friendname.lastIndexOf(',') + 1).trim());
-            }
-            else
-            {
-                bestFriend.setFirstName(friendname);
-                bestFriend.setLastName("");
-            }
-            bestFriend.setPhone(friendphone);
-            bestFriend.setUserID("1000");
+            //Changed from User to BestFriend object, on 5/27 Wei
+            BestFriend bestFriend = new BestFriend();
+            bestFriend.setName(friendname.trim());
+            bestFriend.setPhoneNumber(friendphone.trim());
 
             User user = new User("0",
                     "Noname", "Duh",
                     email, password,
                     "", gender,
-                    "0", new MapAddress(),
                     birthday,
                     new ArrayList<String>(), //best friend list
                     new ArrayList<String>(), //followers list
@@ -152,7 +137,6 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<String>(), //party hosted list
                     new ArrayList<String>(), //party bounced list
                     new ArrayList<String>(),
-                    new ArrayList<Notification>(),
                     new ArrayList<Notification>(),
                     "");
             //user.getBestFriends().add(bestFriend.getUserID());

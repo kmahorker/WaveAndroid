@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendsListFragment;
 import com.thewavesocial.waveandroid.SocialFolder.InviteFriendsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -76,12 +78,17 @@ public class AddFriendCustomAdapter extends BaseAdapter {
             holder.img = (ImageView) rowView.findViewById(R.id.addFriendImage);
             holder.btn = (ImageView) rowView.findViewById(R.id.addFriendButton);
             holder.tv.setText(userList.get(position).getFullName());
-            // TODO: 04/21/2017 Add image by URL
-//            holder.img.setImageDrawable(UtilityClass.toRoundImage(context.getResources(), userList.get(position).getProfilePic().getBitmap())); //TODO Double check this imp
+
+            UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap image) {
+                    if (image != null)
+                        holder.img.setImageDrawable( UtilityClass.toRoundImage(context.getResources(), image));
+                }
+            });
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO Not sure if this is right imp
                     context.showFriendProfileActivity(v,userList.get(position));
                 }
             });
@@ -89,7 +96,6 @@ public class AddFriendCustomAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     holder.btn.setImageResource(R.drawable.checkmark);
-                    //TODO: SEND Notification to recepient user
                 }
             });
             return rowView;

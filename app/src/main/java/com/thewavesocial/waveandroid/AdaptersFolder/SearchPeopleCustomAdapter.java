@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.facebook.internal.Utility;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -64,10 +66,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
-        if (user.getProfilePic() != null) {
-            // TODO: 04/21/2017 Add image by url
-//            holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), user.getProfilePic().getBitmap()));
-        }
+        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap image) {
+                if (image != null)
+                    holder.image.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+            }
+        });
         holder.name.setText(user.getFullName());
 
         if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {

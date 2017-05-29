@@ -40,11 +40,12 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="70dp"
         android:cursorVisible="false"
+
         android:drawableRight="@drawable/plus_button"
         android:ems="10"
         android:focusableInTouchMode="true"
         android:hint="Phone Number: 18053212972"
-        android:inputType="phone"
+        android:inputType = "phone"
         android:text=""
         android:textColor="@color/black_solid"
         android:textSize="18dp" />

@@ -17,16 +17,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -36,6 +37,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
@@ -116,9 +118,19 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                // TODO: 04/20/2017 Remove party from server 
-                // TODO: 04/20/2017 Notify all users 
-                // TODO: 04/20/2017 Back to hostFragment
+                CurrentUser.server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        // TODO: 04/20/2017 Remove party from server
+                        // TODO: 04/20/2017 Notify all users
+                        if ( !result.equals("success") ) {
+                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG ).show();
+                        } else {
+                            Intent intent = new Intent(mainActivity, HostControllerFragment.class);
+                            startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
+                        }
+                    }
+                });
             }
         });
     }
@@ -272,37 +284,55 @@ public class EditStatsActivity extends AppCompatActivity {
         bouncingRecylcerView.setLayoutManager(bouncingListManager);
 
         //TODO: Call Server function instead
-        List<User> invitedUsers = new ArrayList<User>();
-        invitedUsers.addAll(CurrentUser.getUsersListObjects(party.getAttendingUsers()));
-        invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invitedUsers));
-
-        List<User> bouncingUsers = new ArrayList<User>();
-        bouncingUsers.addAll(CurrentUser.getUsersListObjects(party.getBouncingUsers()));
-        bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, bouncingUsers));
-
+        final List<User> invitedUsers = new ArrayList<>();
+        List<String> userIds = new ArrayList<>();
+        for(Attendee a : party.getAttendingUsers()) {
+            if(a.getStatus().equals("invited")) {
+                userIds.add(a.getUserId());
+            }
+        }
         inviteTextView = (TextView)findViewById(R.id.invite_text);
         inviteTextView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
         inviteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditListActivity.class);
-                intent.putExtra("partyObj", party);
+                intent.putExtra("partyObject", party);
                 intent.putExtra("layout", 1);
                 startActivity(intent);
             }
         });
-        bouncingTextView = (TextView)findViewById(R.id.bouncing_text);
-        bouncingTextView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
-        bouncingTextView.setOnClickListener(new View.OnClickListener() {
+        // TODO: 05/28/2017 Get Invited List
+//        CurrentUser.server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
+//            @Override
+//            public void onResultReady(List<User> result) {
+//                if ( result != null ) {
+//                    invitedUsers.addAll(result);
+//                    invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invitedUsers));
+//                }
+//            }
+//        });
+
+        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mainActivity, EditListActivity.class);
-                intent.putExtra("partyObj", party);
-                intent.putExtra("layout", 2);
-                startActivity(intent);
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                if ( result != null ) {
+                    bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, result.get("bouncing")));
+
+                    bouncingTextView = (TextView)findViewById(R.id.bouncing_text);
+                    bouncingTextView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
+                    bouncingTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mainActivity, EditListActivity.class);
+                            intent.putExtra("partyObject", party);
+                            intent.putExtra("layout", 2);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
         });
-
     }
 
     private void setUpEmojicon(){
@@ -391,24 +421,24 @@ public class EditStatsActivity extends AppCompatActivity {
         //Log.d("Address", locationEditText.getText().toString());
         //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
         if(emojiconEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Editing Party", true);
             return false;
         }
         else if(titleEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Editing Party", true);
             return false;
         }
         else if(locationEditText.getText().toString().isEmpty()){
-            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Editing Party", true);
             return false;
         }
         else if(startCalendar.compareTo(endCalendar) >= 0){
             Log.d("Date", startCalendar.get(Calendar.DATE) + ", " + endCalendar.get(Calendar.DATE) + "");
-            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", true);
+            UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Editing Party", true);
             return false;
         }
         else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
-            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", true);
+            UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Editing Party", true);
             return false;
         }
         else{
@@ -449,7 +479,7 @@ public class EditStatsActivity extends AppCompatActivity {
         static MapAddress mapAddress;
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
-        static List<String> attendingUsers;
+        static List<Attendee> attendingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
@@ -471,7 +501,7 @@ public class EditStatsActivity extends AppCompatActivity {
         public static void composeParty(){
 //            Party party = new Party(
 //                    0, name, price, hostName, startingDateTime, endingDateTime, mapAddress,
-//                    hostingUsers, bouncingUsers, attendingUsers, isPublic, partyEmoji, minAge, maxAge);
+//                    hostingUsers, bouncingUsers, invitingUsers, isPublic, partyEmoji, minAge, maxAge);
             // TODO: 03/31/2017 Send to database and create new party with new ID
             // TODO: 04/23/2017 Refresh hosting event list
         }
