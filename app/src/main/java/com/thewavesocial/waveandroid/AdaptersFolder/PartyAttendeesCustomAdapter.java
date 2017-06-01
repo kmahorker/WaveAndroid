@@ -71,7 +71,7 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
             public void onClick(View v)
             {
                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", userList.get(position).getUserID());
+                intent.putExtra("userObject", userList.get(position));
                 mainActivity.startActivity(intent);
             }
         });
