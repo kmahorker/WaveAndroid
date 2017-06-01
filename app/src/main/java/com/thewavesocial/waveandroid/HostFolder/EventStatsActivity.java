@@ -159,34 +159,16 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
                     if ( callerType == activityHostFragment ) {
-                        invitedGoingView.setText("INVITED (" + party.getAttendingUsers().size() + ")");
-                        invitedGoingView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //TODO: Intent Start Activty Put Extra party
-                            }
-                        });
+                        invitedGoingView.setText("INVITED (" + 0 + ")");
                         // TODO: 05/28/2017 Get Invited List
                     } else {
-                        invitedGoingView.setText("FRIENDS GOING (" + party.getAttendingUsers().size() + ")");
-                        invitedGoingView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //TODO: Intent Start Activty Put Extra party
-                            }
-                        });
+                        invitedGoingView.setText("FRIENDS GOING (" + result.get("attending").size() + ")");
                         populateHorizontalList(result.get("going"), listGoing);
                     }
-
-                    bounceView.setText("BOUNCERS (" + party.getBouncingUsers().size() + ")");
-                    bounceView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO: intent start edit bouncers put extra party
-                        }
-                    });
-                    hostView.setText(result.get("hosting").get(0).getFullName());
+                    bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
                     populateHorizontalList(result.get("bouncing"), listBouncing);
+
+                    hostView.setText(result.get("hosting").get(0).getFullName());
                 }
             }
         });
