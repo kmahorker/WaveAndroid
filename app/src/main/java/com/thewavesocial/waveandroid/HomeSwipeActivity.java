@@ -49,7 +49,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        DatabaseAccess.saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
+        DatabaseAccess.saveTokentoLocal(mainActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
         if ( CurrentUser.context == null ) {
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
@@ -80,7 +80,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
     }
 
     private void setupServerDummies() {
-
+        String uv = "4", pv = "7";
         //Main User ID=10
         HashMap<String, String> body = new HashMap<>();
         body.put("first_name", "Main");
@@ -90,7 +90,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body.put("password", "main_user");
         body.put("gender", "Male");
         body.put("birthday", "1990-12-12");
-        CurrentUser.server_updateUser("10", body, null);
+        CurrentUser.server_updateUser(uv+"0", body, null);
 
         //Friend 1-5
         HashMap<String, String> body1 = new HashMap<>();
@@ -101,7 +101,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body1.put("password", "one");
         body1.put("gender", "Female");
         body1.put("birthday", "1990-01-01");
-        CurrentUser.server_updateUser("11", body1, null);
+        CurrentUser.server_updateUser(uv+"1", body1, null);
 
         HashMap<String, String> body2 = new HashMap<>();
         body2.put("first_name", "Two");
@@ -111,7 +111,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body2.put("password", "two");
         body2.put("gender", "Male");
         body2.put("birthday", "1990-02-02");
-        CurrentUser.server_updateUser("12", body2, null);
+        CurrentUser.server_updateUser(uv+"2", body2, null);
 
         HashMap<String, String> body3 = new HashMap<>();
         body3.put("first_name", "Three");
@@ -121,7 +121,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body3.put("password", "three");
         body3.put("gender", "Female");
         body3.put("birthday", "1990-03-03");
-        CurrentUser.server_updateUser("13", body3, null);
+        CurrentUser.server_updateUser(uv+"3", body3, null);
 
         HashMap<String, String> body4 = new HashMap<>();
         body4.put("first_name", "Four");
@@ -131,7 +131,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body4.put("password", "four");
         body4.put("gender", "Male");
         body4.put("birthday", "1990-04-04");
-        CurrentUser.server_updateUser("14", body4, null);
+        CurrentUser.server_updateUser(uv+"4", body4, null);
 
         HashMap<String, String> body5 = new HashMap<>();
         body5.put("first_name", "Five");
@@ -141,44 +141,44 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body5.put("password", "five");
         body5.put("gender", "Male");
         body5.put("birthday", "1990-05-05");
-        CurrentUser.server_updateUser("15", body5, null);
+        CurrentUser.server_updateUser(uv+"5", body5, null);
 
         //Follow Each Other
-        CurrentUser.server_followUser("10", "11", null);
-        CurrentUser.server_followUser("10", "12", null);
-        CurrentUser.server_followUser("10", "13", null);
-        CurrentUser.server_followUser("10", "14", null);
-        CurrentUser.server_followUser("10", "15", null);
+        CurrentUser.server_followUser(uv+"0", uv+"1", null);
+        CurrentUser.server_followUser(uv+"0", uv+"2", null);
+        CurrentUser.server_followUser(uv+"0", uv+"3", null);
+        CurrentUser.server_followUser(uv+"0", uv+"4", null);
+        CurrentUser.server_followUser(uv+"0", uv+"5", null);
 
-        CurrentUser.server_followUser("11", "10", null);
-        CurrentUser.server_followUser("11", "12", null);
-        CurrentUser.server_followUser("11", "13", null);
-        CurrentUser.server_followUser("11", "14", null);
-        CurrentUser.server_followUser("11", "15", null);
+        CurrentUser.server_followUser(uv+"1", uv+"0", null);
+        CurrentUser.server_followUser(uv+"1", uv+"2", null);
+        CurrentUser.server_followUser(uv+"1", uv+"3", null);
+        CurrentUser.server_followUser(uv+"1", uv+"4", null);
+        CurrentUser.server_followUser(uv+"1", uv+"5", null);
 
-        CurrentUser.server_followUser("12", "10", null);
-        CurrentUser.server_followUser("12", "11", null);
-        CurrentUser.server_followUser("12", "13", null);
-        CurrentUser.server_followUser("12", "14", null);
-        CurrentUser.server_followUser("12", "15", null);
+        CurrentUser.server_followUser(uv+"2", uv+"0", null);
+        CurrentUser.server_followUser(uv+"2", uv+"1", null);
+        CurrentUser.server_followUser(uv+"2", uv+"3", null);
+        CurrentUser.server_followUser(uv+"2", uv+"4", null);
+        CurrentUser.server_followUser(uv+"2", uv+"5", null);
 
-        CurrentUser.server_followUser("13", "10", null);
-        CurrentUser.server_followUser("13", "11", null);
-        CurrentUser.server_followUser("13", "12", null);
-        CurrentUser.server_followUser("13", "14", null);
-        CurrentUser.server_followUser("13", "15", null);
+        CurrentUser.server_followUser(uv+"3", uv+"0", null);
+        CurrentUser.server_followUser(uv+"3", uv+"1", null);
+        CurrentUser.server_followUser(uv+"3", uv+"2", null);
+        CurrentUser.server_followUser(uv+"3", uv+"4", null);
+        CurrentUser.server_followUser(uv+"3", uv+"5", null);
 
-        CurrentUser.server_followUser("14", "10", null);
-        CurrentUser.server_followUser("14", "11", null);
-        CurrentUser.server_followUser("14", "12", null);
-        CurrentUser.server_followUser("14", "13", null);
-        CurrentUser.server_followUser("14", "15", null);
+        CurrentUser.server_followUser(uv+"4", uv+"0", null);
+        CurrentUser.server_followUser(uv+"4", uv+"1", null);
+        CurrentUser.server_followUser(uv+"4", uv+"2", null);
+        CurrentUser.server_followUser(uv+"4", uv+"3", null);
+        CurrentUser.server_followUser(uv+"4", uv+"5", null);
 
-        CurrentUser.server_followUser("15", "10", null);
-        CurrentUser.server_followUser("15", "11", null);
-        CurrentUser.server_followUser("15", "12", null);
-        CurrentUser.server_followUser("15", "13", null);
-        CurrentUser.server_followUser("15", "14", null);
+        CurrentUser.server_followUser(uv+"5", uv+"0", null);
+        CurrentUser.server_followUser(uv+"5", uv+"1", null);
+        CurrentUser.server_followUser(uv+"5", uv+"2", null);
+        CurrentUser.server_followUser(uv+"5", uv+"3", null);
+        CurrentUser.server_followUser(uv+"5", uv+"4", null);
 
         //Create Parties
         Calendar startDate = Calendar.getInstance(), endDate = Calendar.getInstance();
@@ -197,7 +197,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body6.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body6.put("min_age", 18 + "");
         body6.put("max_age", 40 + "");
-        CurrentUser.server_updateParty("11", body6, null );
+        CurrentUser.server_updateParty(pv+"1", body6, null );
 
         HashMap<String, String> body7 = new HashMap<>();
         body7.put("name", "Party2");
@@ -211,7 +211,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body7.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body7.put("min_age", 18 + "");
         body7.put("max_age", 40 + "");
-        CurrentUser.server_updateParty("12", body7, null );
+        CurrentUser.server_updateParty(pv+"2", body7, null );
 
         HashMap<String, String> body8 = new HashMap<>();
         body8.put("name", "Party3");
@@ -225,7 +225,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body8.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body8.put("min_age", 18 + "");
         body8.put("max_age", 40 + "");
-        CurrentUser.server_updateParty("13", body8, null );
+        CurrentUser.server_updateParty(pv+"3", body8, null );
 
         HashMap<String, String> body9 = new HashMap<>();
         body9.put("name", "Party4");
@@ -239,7 +239,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body9.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body9.put("min_age", 18 + "");
         body9.put("max_age", 40 + "");
-        CurrentUser.server_updateParty("14", body9, null );
+        CurrentUser.server_updateParty(pv+"4", body9, null );
 
         HashMap<String, String> body10 = new HashMap<>();
         body10.put("name", "Party5");
@@ -253,44 +253,44 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body10.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
         body10.put("min_age", 18 + "");
         body10.put("max_age", 40 + "");
-        CurrentUser.server_updateParty("15", body10, null );
+        CurrentUser.server_updateParty(pv+"5", body10, null );
 
         //Add user event relationship
-        CurrentUser.server_manageUserForParty("10", "11", "hosting", "POST", null);
-        CurrentUser.server_manageUserForParty("10", "12", "hosting", "POST", null);
-        CurrentUser.server_manageUserForParty("10", "13", "hosting", "POST", null);
-        CurrentUser.server_manageUserForParty("10", "14", "hosting", "POST", null);
-        CurrentUser.server_manageUserForParty("10", "15", "hosting", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"0", pv+"1", "hosting", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"0", pv+"2", "hosting", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"0", pv+"3", "hosting", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"0", pv+"4", "hosting", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"0", pv+"5", "hosting", "POST", null);
 
-        CurrentUser.server_manageUserForParty("11", "11", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("11", "12", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("11", "13", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("11", "14", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("11", "15", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"1", pv+"1", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"1", pv+"2", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"1", pv+"3", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"1", pv+"4", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"1", pv+"5", "bouncing", "POST", null);
 
-        CurrentUser.server_manageUserForParty("12", "11", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("12", "12", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("12", "13", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("12", "14", "bouncing", "POST", null);
-        CurrentUser.server_manageUserForParty("12", "15", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"2", pv+"1", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"2", pv+"2", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"2", pv+"3", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"2", pv+"4", "bouncing", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"2", pv+"5", "bouncing", "POST", null);
 
-        CurrentUser.server_manageUserForParty("13", "11", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("13", "12", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("13", "13", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("13", "14", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("13", "15", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"1", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"2", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"3", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"4", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"5", "attending", "POST", null);
 
-        CurrentUser.server_manageUserForParty("14", "11", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("14", "12", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("14", "13", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("14", "14", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("14", "15", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"1", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"2", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"3", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"4", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"5", "attending", "POST", null);
 
-        CurrentUser.server_manageUserForParty("15", "11", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("15", "12", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("15", "13", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("15", "14", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty("15", "15", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"1", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"2", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"3", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"4", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"5", "attending", "POST", null);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
