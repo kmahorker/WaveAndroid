@@ -56,7 +56,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(Boolean result) {
                     if (result) {
-//                        setupServerDummies();
+                        setupServerDummies();
                         setupMapActionbar();
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -274,23 +274,23 @@ public class HomeSwipeActivity extends AppCompatActivity {
         CurrentUser.server_manageUserForParty(uv+"2", pv+"4", "bouncing", "POST", null);
         CurrentUser.server_manageUserForParty(uv+"2", pv+"5", "bouncing", "POST", null);
 
-        CurrentUser.server_manageUserForParty(uv+"3", pv+"1", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"3", pv+"2", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"3", pv+"3", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"3", pv+"4", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"3", pv+"5", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"1", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"2", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"3", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"4", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"3", pv+"5", "going", "POST", null);
 
-        CurrentUser.server_manageUserForParty(uv+"4", pv+"1", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"4", pv+"2", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"4", pv+"3", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"4", pv+"4", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"4", pv+"5", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"1", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"2", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"3", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"4", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"4", pv+"5", "going", "POST", null);
 
-        CurrentUser.server_manageUserForParty(uv+"5", pv+"1", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"5", pv+"2", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"5", pv+"3", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"5", pv+"4", "attending", "POST", null);
-        CurrentUser.server_manageUserForParty(uv+"5", pv+"5", "attending", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"1", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"2", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"3", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"4", "going", "POST", null);
+        CurrentUser.server_manageUserForParty(uv+"5", pv+"5", "going", "POST", null);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

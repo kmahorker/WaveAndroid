@@ -170,7 +170,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
-                    if ( callerType == activitySocialFragment ) {
+                    if ( callerType == activityHostFragment ) {
                         invitedGoingView.setText("INVITED (" + 0 + ")");
                         // TODO: 05/28/2017 Get Invited List
                     } else {
