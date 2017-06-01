@@ -69,6 +69,11 @@ public class HostControllerFragment extends Fragment {
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {
                     manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
+
+                    if ( !result.isEmpty() )
+                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
+                    else
+                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
                 }
             }
         });
