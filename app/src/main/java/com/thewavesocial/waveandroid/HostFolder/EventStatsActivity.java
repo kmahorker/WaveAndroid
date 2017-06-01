@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -84,13 +87,40 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }, 500);
     }
 
+
     private void setupSpecialFields(int callerType) {
-        if ( callerType == activityHostFragment ) {
+        if ( callerType == activityHostFragment) {
             editView.setVisibility(View.VISIBLE);
             qrAction.setText("Open QR Scanner");
+            qrAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        Log.d("Camera", "Deny");
+                        ActivityCompat.requestPermissions(mainActivity,
+                                new String[]{Manifest.permission.CAMERA},
+                                CAMERA_PERMISSION);
+                        return;
+                    }
+                    openScanner();
+                }
+            });
         } else if ( callerType == activitySocialFragment ){
             editView.setVisibility(View.INVISIBLE);
             qrAction.setText("Open QR Code");
+            qrAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
+                    ((ImageView)view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode("ID: " + party.getPartyID()));
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+                    dialog.setTitle("QR Code")
+                            .setPositiveButton("Close", null)
+                            .setView(view)
+                            .show();
+                }
+            });
         }
     }
 
@@ -138,21 +168,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         locView.setText(loc + "");
         dateView.setText(date + "");
         timeView.setText(time + "");
-        qrCodeView.setImageBitmap(getQRCode("WOWOW"));
-        qrAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-//                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
-                    Log.d("Camera", "Deny");
-                    ActivityCompat.requestPermissions(mainActivity,
-                            new String[]{Manifest.permission.CAMERA},
-                            CAMERA_PERMISSION);
-                    return;
-                }
-                openScanner();
-            }
-        });
 
         CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
@@ -172,7 +187,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 }
             }
         });
-
     }
 
 
