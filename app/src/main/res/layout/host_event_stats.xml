@@ -273,21 +273,38 @@
                 android:background="@color/grey_solid" />
 
             <TextView
-                android:id="@+id/hostEventStats_attendeetext"
+                android:id="@+id/hostEventStats_invitedtext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#8e8e8e"
                 android:textSize="@dimen/text_small"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"/> <!--Attendee Label-->
+                android:layout_marginStart="15dp"/> <!--Invited Label-->
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/hostEventStats_attendeelist"
+                android:id="@+id/hostEventStats_invitedlist"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"/> <!--Attendee List-->
+                android:layout_marginStart="15dp"/> <!--Invited List-->
+
+            <TextView
+                android:id="@+id/hostEventStats_goingtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#8e8e8e"
+                android:textSize="@dimen/text_small"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"/> <!--Going Label-->
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/hostEventStats_goinglist"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"/> <!--Going List-->
 
             <TextView
                 android:id="@+id/hostEventStats_bouncertext"

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -54,9 +53,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
-    private TextView goingView, genderView, hostView, locView, dateView, timeView, editView, qrAction, bounceView, invitedGoingView;
+    private TextView attendingView, genderView, hostView, locView, dateView, timeView, editView, qrAction, bounceView, invitedView, goingView;
 
-    private RecyclerView invitedGoingFriends, bouncingFriends;
+    private RecyclerView invitedFriends, bouncingFriends, goingFriends;
     private String loc, date, time;
     private int going, male, female, callerType;
     private EventStatsActivity mainActivity;
@@ -145,22 +144,24 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupReferences() {
-        goingView = (TextView) findViewById(R.id.hostEventStats_totalGoing_count);
+        attendingView = (TextView) findViewById(R.id.hostEventStats_totalGoing_count);
         genderView = (TextView) findViewById(R.id.hostEventStats_femaleMale_count);
         hostView = (TextView) findViewById(R.id.hostEventStats_hostname);
         locView = (TextView) findViewById(R.id.hostEventStats_locname);
         dateView = (TextView) findViewById(R.id.hostEventStats_datename);
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
-        invitedGoingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
-        invitedGoingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
         qrAction = (TextView) findViewById(R.id.hostEventStats_qr_button);
+        invitedView = (TextView) findViewById(R.id.hostEventStats_invitedtext);
+        invitedFriends = (RecyclerView) findViewById(R.id.hostEventStats_invitedlist);
+        goingView = (TextView) findViewById(R.id.hostEventStats_goingtext);
+        goingFriends = (RecyclerView) findViewById(R.id.hostEventStats_goinglist);
         bounceView = (TextView) findViewById(R.id.hostEventStats_bouncertext);
         bouncingFriends = (RecyclerView) findViewById(R.id.hostEventStats_bouncerlist);
     }
 
 
     private void setupFunctionalities() {
-        goingView.setText(going + "");
+        attendingView.setText(going + "");
         genderView.setText(female + "/" + male);
         locView.setText(loc + "");
         dateView.setText(date + "");
@@ -171,12 +172,12 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
                     if ( callerType == activityHostFragment ) {
-                        invitedGoingView.setText("INVITED (" + 0 + ")");
+                        invitedView.setText("INVITED (" + 0 + ")");
                         // TODO: 05/28/2017 Get Invited List
-                    } else {
-                        invitedGoingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
-                        populateHorizontalList(result.get("going"), listGoing);
                     }
+                    goingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
+                    populateHorizontalList(result.get("going"), listGoing);
+
                     bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
                     populateHorizontalList(result.get("bouncing"), listBouncing);
 
@@ -189,10 +190,14 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private void populateHorizontalList(List<User> list, int type) {
         LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
 
-        if (type == listGoing || type == listInvited) {
-            invitedGoingFriends.setLayoutManager(layoutManagerAttendees);
-            invitedGoingFriends.setFocusable(false);
-            invitedGoingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
+        if (type == listInvited) {
+            invitedFriends.setLayoutManager(layoutManagerAttendees);
+            invitedFriends.setFocusable(false);
+            invitedFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
+        } else if (type == listGoing) {
+            goingFriends.setLayoutManager(layoutManagerAttendees);
+            goingFriends.setFocusable(false);
+            goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
         } else if ( type == listBouncing ) {
             bouncingFriends.setLayoutManager(layoutManagerAttendees);
             bouncingFriends.setFocusable(false);
