@@ -56,9 +56,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private Party party;
     private TextView goingView, genderView, hostView, locView, dateView, timeView, editView, qrAction, bounceView, invitedGoingView;
 
-    private ImageView qrCodeView;
     private RecyclerView invitedGoingFriends, bouncingFriends;
-    private String host, loc, date, time;
+    private String loc, date, time;
     private int going, male, female, callerType;
     private EventStatsActivity mainActivity;
 
@@ -152,7 +151,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         locView = (TextView) findViewById(R.id.hostEventStats_locname);
         dateView = (TextView) findViewById(R.id.hostEventStats_datename);
         timeView = (TextView) findViewById(R.id.hostEventStats_timename);
-        qrCodeView = (ImageView) findViewById(R.id.hostEventStats_qrcode);
         invitedGoingView = (TextView) findViewById(R.id.hostEventStats_attendeetext);
         invitedGoingFriends = (RecyclerView) findViewById(R.id.hostEventStats_attendeelist);
         qrAction = (TextView) findViewById(R.id.hostEventStats_qr_button);
@@ -164,7 +162,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private void setupFunctionalities() {
         goingView.setText(going + "");
         genderView.setText(female + "/" + male);
-        hostView.setText(host + "");
         locView.setText(loc + "");
         dateView.setText(date + "");
         timeView.setText(time + "");
