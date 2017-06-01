@@ -170,11 +170,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
-                    if ( callerType == activityHostFragment ) {
+                    if ( callerType == activitySocialFragment ) {
                         invitedGoingView.setText("INVITED (" + 0 + ")");
                         // TODO: 05/28/2017 Get Invited List
                     } else {
-                        invitedGoingView.setText("FRIENDS GOING (" + result.get("attending").size() + ")");
+                        invitedGoingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
                         populateHorizontalList(result.get("going"), listGoing);
                     }
                     bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
@@ -185,7 +185,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
     }
-
 
     private void populateHorizontalList(List<User> list, int type) {
         LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);

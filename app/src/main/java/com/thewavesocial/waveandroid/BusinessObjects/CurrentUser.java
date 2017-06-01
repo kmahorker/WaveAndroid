@@ -563,6 +563,7 @@ public final class CurrentUser {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<User> attending = new ArrayList<>();
+                ArrayList<User> going = new ArrayList<>();
                 ArrayList<User> hosting = new ArrayList<>();
                 ArrayList<User> bouncing = new ArrayList<>();
                 try {
@@ -581,6 +582,9 @@ public final class CurrentUser {
                             hosting.add(constructUser(body));
                         else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
                             bouncing.add(constructUser(body));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("going"))
+                            going.add(constructUser(body));
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -589,6 +593,7 @@ public final class CurrentUser {
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
                 parties.put("bouncing", bouncing);
+                parties.put("going", going);
                 Log.d("Get User Events", result.get(0));
                 if ( delegate != null )
                     delegate.onResultReady(parties);
