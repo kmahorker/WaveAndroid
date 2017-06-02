@@ -27,11 +27,11 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.getTo
 
 //Nothing changed
 public final class CurrentUser {
-    public static Activity context;
+    public static Activity mainActivity;
     public static User theUser = new User();
 
     private CurrentUser() {
-        context = null;
+        mainActivity = null;
         server_getUserObject("10", new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
@@ -42,7 +42,7 @@ public final class CurrentUser {
 
     //Initialize user object
     public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
-        context = (Activity) cont;
+        mainActivity = (Activity) cont;
         server_getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
@@ -87,7 +87,7 @@ public final class CurrentUser {
                                              int maxAge,
                                              final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> event_info = new HashMap();
         event_info.put("name", name);
         event_info.put("emoji", emoji);
@@ -102,7 +102,7 @@ public final class CurrentUser {
         event_info.put("max_age", maxAge + "");
 
         comps[0] = new RequestComponents(url, "POST", event_info);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 try {
@@ -146,7 +146,7 @@ public final class CurrentUser {
         event_info.put("birthday", birthday);
 
         comps[0] = new RequestComponents(url, "POST", event_info);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 try {
@@ -171,7 +171,7 @@ public final class CurrentUser {
     //Parameter action must be either "POST" or "DELETE"
     public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
-        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> about = new HashMap();
         about.put("relationship", relationship);
 
@@ -182,7 +182,7 @@ public final class CurrentUser {
         else
             Log.d("Action", "Illegal passed action argument: " + action);
 
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -202,11 +202,11 @@ public final class CurrentUser {
 
     //Update user in server
     public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);
 
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -224,11 +224,11 @@ public final class CurrentUser {
 
     //Update party in server
     public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);
 
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -246,10 +246,10 @@ public final class CurrentUser {
 
     //Follow a user
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "POST", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -267,13 +267,13 @@ public final class CurrentUser {
 
     //Add Best Friend on server
     public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
-        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
+        String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
         body.put("contact", number);
         RequestComponents comp = new RequestComponents(url, "POST", body);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 try{
@@ -291,11 +291,11 @@ public final class CurrentUser {
 
     /** Invite User to event. Return either "success" or "error" */
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + eventID + "/invites/"
-                + userID + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "POST", null);
 
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -319,11 +319,11 @@ public final class CurrentUser {
     public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
-            String url = context.getString(R.string.server_url) + "users/" + userIdList.get(i)
-                    + "?access_token=" + getTokenFromLocal(context).get("jwt");
+            String url = mainActivity.getString(R.string.server_url) + "users/" + userIdList.get(i)
+                    + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>(){
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>(){
             @Override
             public void onResultReady(ArrayList<String> result) {
                 List<User> friends = new ArrayList<>();
@@ -355,11 +355,11 @@ public final class CurrentUser {
     public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < partyIdList.size(); i++ ) {
-            String url = context.getString(R.string.server_url) + "events/" + partyIdList.get(i)
-                    + "?access_token=" + getTokenFromLocal(context).get("jwt");
+            String url = mainActivity.getString(R.string.server_url) + "events/" + partyIdList.get(i)
+                    + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 Map<Long, Party> raw_parties = new TreeMap<>();
@@ -395,10 +395,10 @@ public final class CurrentUser {
 
     //Get user information
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>(){
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>(){
             @Override
             public void onResultReady(ArrayList<String> result) {
                 HashMap<String, String> body = new HashMap<>();
@@ -435,11 +435,11 @@ public final class CurrentUser {
 
     //Get party information from server
     public static void server_getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + partyID
-                + "?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
+                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 HashMap<String, String> body = new HashMap<>();
@@ -463,11 +463,11 @@ public final class CurrentUser {
 
     //Get user following from server
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followers?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<String> followers = new ArrayList<>();
@@ -491,11 +491,11 @@ public final class CurrentUser {
 
     //Get user following from server
     public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID
-                + "/followings?access_token=" + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<String> followings = new ArrayList<>();
@@ -520,10 +520,10 @@ public final class CurrentUser {
 
     //Get User's events from server
     public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
-        String url = context.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
-                + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<String> attending = new ArrayList<>();
@@ -555,11 +555,11 @@ public final class CurrentUser {
     }
 
     //Get User's events from server
-    public static void server_getUsersOfEvent(String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
-        String url = context.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
-                + getTokenFromLocal(context).get("jwt");
+    public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<User> attending = new ArrayList<>();
@@ -584,30 +584,39 @@ public final class CurrentUser {
                             bouncing.add(constructUser(body));
                         else if ( data.getJSONObject(i).getString("relationship").equals("going"))
                             going.add(constructUser(body));
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                HashMap<String, ArrayList<User>> parties = new HashMap();
+
+                //Parties will have: attending, hosting, bouncing, going, and inviting
+                final HashMap<String, ArrayList<User>> parties = new HashMap();
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
                 parties.put("bouncing", bouncing);
                 parties.put("going", going);
+                server_getInvitesOfEvent(eventID, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        if ( result != null )
+                            parties.put("inviting", result);
+                        if ( delegate != null )
+                            delegate.onResultReady(parties);
+                    }
+                });
+
                 Log.d("Get User Events", result.get(0));
-                if ( delegate != null )
-                    delegate.onResultReady(parties);
             }
         }).execute();
     }
 
     //Get Best Friend from server
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
-        String url =  context.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
+        String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
 
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 List<BestFriend> bestFriends = new ArrayList<BestFriend>();
@@ -634,11 +643,11 @@ public final class CurrentUser {
 
     //Get events in specified distance
     public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        String url = context.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+        String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
-                + "&access_token=" + DatabaseAccess.getTokenFromLocal(context).get("jwt");
+                + "&access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<Party> parties = new ArrayList<>();
@@ -664,16 +673,49 @@ public final class CurrentUser {
         }).execute();
     }
 
+    //Get event's invited users from server
+    public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
+                + "/invites?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<User> invites = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        invites.add(constructUser(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Get Invites of Event", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(invites);
+            }
+        }).execute();
+    }
+
 //----------------------------------------------------------------------------------DELETE Requests
 
     //Delete Best Friend on server
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
-        String url = context.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
         body.put("contact", number);
         RequestComponents comp = new RequestComponents(url, "DELETE", body);
-        new DatabaseAccess.HttpRequestTask(context, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;
@@ -694,11 +736,11 @@ public final class CurrentUser {
     //Delete party from server
     public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
-        String url = context.getString(R.string.server_url) + "events/" + partyID + "?access_token="
-                + getTokenFromLocal(context).get("jwt");
+        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");
         String result = null;
         comps[0] = new RequestComponents(url, "DELETE", null);
-        new DatabaseAccess.HttpRequestTask(context, comps, new OnResultReadyListener<ArrayList<String>>() {
+        new DatabaseAccess.HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 String status = null;

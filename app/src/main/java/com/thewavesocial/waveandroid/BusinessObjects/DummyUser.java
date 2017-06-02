@@ -20,9 +20,9 @@ public class DummyUser extends User
     }
 //    private User friend1, friend2, friend3, friend4, friend5;
 //    private Party party1, party2, party3, party4, party5;
-//    private Context context;
+//    private Context mainActivity;
 //
-//    public DummyUser(Context context)
+//    public DummyUser(Context mainActivity)
 //    {
 //        super(  "0",
 //                "DummyLongNAME",
@@ -46,9 +46,9 @@ public class DummyUser extends User
 //                new ArrayList<Notification>(), //notifications2
 //                new BitmapDrawable());
 //
-//        setupDummy(context);
-//        setupUserObjects(context);
-//        setupPartyObjects(context);
+//        setupDummy(mainActivity);
+//        setupUserObjects(mainActivity);
+//        setupPartyObjects(mainActivity);
 //        setupNotifications1();
 //    }
 //
@@ -140,7 +140,7 @@ public class DummyUser extends User
 //        }
 //    }
 //
-//    private void setupDummy(Context context)
+//    private void setupDummy(Context mainActivity)
 //    {
 //        //setup best friend list
 //        this.getBirthday().set(1997, 4, 1);
@@ -191,10 +191,10 @@ public class DummyUser extends User
 //        this.getAttending().add("4");
 //        this.getAttending().add("5");
 //
-//        this.setProfilePic(new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_sample)));
+//        this.setProfilePic(new BitmapDrawable(mainActivity.getResources(),BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.profile_sample)));
 //    }
 //
-//    private void setupPartyObjects(Context context)
+//    private void setupPartyObjects(Context mainActivity)
 //    {
 //        party1 = new Party(
 //                "1",
@@ -205,7 +205,7 @@ public class DummyUser extends User
 //                Calendar.getInstance(),
 //                new MapAddress("6612 Sueno Rd Goleta, CA 93117", new LatLng(34.412923, -119.859315)),
 //                this.getFollowing(), this.getFollowing(), this.getFollowing(),
-//                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
+//                true, new BitmapDrawable(mainActivity.getResources(),BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.plug_icon)));
 //        party2 = new Party(
 //                "2",
 //                "Super Party 2",
@@ -215,7 +215,7 @@ public class DummyUser extends User
 //                Calendar.getInstance(),
 //                new MapAddress("6555 Segovia Rd Goleta, CA 93117", new LatLng(34.414241, -119.856559)),
 //                this.getFollowing(), this.getFollowing(), this.getFollowing(),
-//                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.plug_icon)));
+//                true, new BitmapDrawable(mainActivity.getResources(),BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.plug_icon)));
 //        party3 = new Party(
 //                "3",
 //                "Super Party 3",
@@ -235,7 +235,7 @@ public class DummyUser extends User
 //                Calendar.getInstance(),
 //                new MapAddress("895 Camino Del Sur Goleta, CA 93117", new LatLng(34.412938, -119.862853)),
 //                this.getFollowing(), this.getFollowing(), this.getFollowing(),
-//                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.checkmark)));
+//                true, new BitmapDrawable(mainActivity.getResources(),BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.checkmark)));
 //        party5 = new Party(
 //                "5",
 //                "Super Party 5",
@@ -245,7 +245,7 @@ public class DummyUser extends User
 //                Calendar.getInstance(),
 //                new MapAddress("6628 Pasado Rd Goleta, CA 93117", new LatLng(34.411962, -119.859848)),
 //                this.getFollowing(), this.getFollowing(), this.getFollowing(),
-//                true, new BitmapDrawable(context.getResources(),BitmapFactory.decodeResource(context.getResources(), R.drawable.happy_house)));
+//                true, new BitmapDrawable(mainActivity.getResources(),BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.happy_house)));
 //
 //        party1.getStartingDateTime().set(2017, 2, 6);
 //        party2.getStartingDateTime().set(2017, 3, 7);
@@ -260,7 +260,7 @@ public class DummyUser extends User
 //        party5.getEndingDateTime().set(2018, 2, 5);
 //    }
 //
-//    private void setupUserObjects(Context context)
+//    private void setupUserObjects(Context mainActivity)
 //    {
 //        friend1 = new User("1",
 //                "Happy",

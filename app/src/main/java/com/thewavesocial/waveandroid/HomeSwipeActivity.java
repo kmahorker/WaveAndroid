@@ -1,13 +1,9 @@
 package com.thewavesocial.waveandroid;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
@@ -29,7 +25,6 @@ import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -51,7 +46,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mainActivity = this;
         DatabaseAccess.saveTokentoLocal(mainActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
-        if ( CurrentUser.context == null ) {
+        if ( CurrentUser.mainActivity == null ) {
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
@@ -291,6 +286,30 @@ public class HomeSwipeActivity extends AppCompatActivity {
         CurrentUser.server_manageUserForParty(uv+"5", pv+"3", "going", "POST", null);
         CurrentUser.server_manageUserForParty(uv+"5", pv+"4", "going", "POST", null);
         CurrentUser.server_manageUserForParty(uv+"5", pv+"5", "going", "POST", null);
+
+        CurrentUser.server_inviteUserToEvent(uv+"1", pv+"1", null);
+        CurrentUser.server_inviteUserToEvent(uv+"1", pv+"2", null);
+        CurrentUser.server_inviteUserToEvent(uv+"1", pv+"3", null);
+        CurrentUser.server_inviteUserToEvent(uv+"1", pv+"4", null);
+        CurrentUser.server_inviteUserToEvent(uv+"1", pv+"5", null);
+
+        CurrentUser.server_inviteUserToEvent(uv+"2", pv+"1", null);
+        CurrentUser.server_inviteUserToEvent(uv+"2", pv+"2", null);
+        CurrentUser.server_inviteUserToEvent(uv+"2", pv+"3", null);
+        CurrentUser.server_inviteUserToEvent(uv+"2", pv+"4", null);
+        CurrentUser.server_inviteUserToEvent(uv+"2", pv+"5", null);
+
+        CurrentUser.server_inviteUserToEvent(uv+"3", pv+"1", null);
+        CurrentUser.server_inviteUserToEvent(uv+"3", pv+"2", null);
+        CurrentUser.server_inviteUserToEvent(uv+"3", pv+"3", null);
+        CurrentUser.server_inviteUserToEvent(uv+"3", pv+"4", null);
+        CurrentUser.server_inviteUserToEvent(uv+"3", pv+"5", null);
+
+        CurrentUser.server_inviteUserToEvent(uv+"4", pv+"1", null);
+        CurrentUser.server_inviteUserToEvent(uv+"4", pv+"2", null);
+        CurrentUser.server_inviteUserToEvent(uv+"4", pv+"3", null);
+        CurrentUser.server_inviteUserToEvent(uv+"4", pv+"4", null);
+        CurrentUser.server_inviteUserToEvent(uv+"4", pv+"5", null);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

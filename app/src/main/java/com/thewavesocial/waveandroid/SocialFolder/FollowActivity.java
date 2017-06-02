@@ -111,8 +111,8 @@ public class FollowActivity extends AppCompatActivity {
 /*
     private class FollowersAdapter extends ArrayAdapter<User> {
 
-        public FollowersAdapter(Context context, int textViewResourceId, List<User> follows) {
-            super(context, textViewResourceId, follows);
+        public FollowersAdapter(Context mainActivity, int textViewResourceId, List<User> follows) {
+            super(mainActivity, textViewResourceId, follows);
         }
 
         @Override

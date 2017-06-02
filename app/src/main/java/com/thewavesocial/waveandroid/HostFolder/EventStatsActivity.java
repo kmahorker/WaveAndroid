@@ -172,8 +172,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
                     if ( callerType == activityHostFragment ) {
-                        invitedView.setText("INVITED (" + 0 + ")");
-                        // TODO: 05/28/2017 Get Invited List
+                        invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
+                        populateHorizontalList(result.get("inviting"), listInvited);
                     }
                     goingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
                     populateHorizontalList(result.get("going"), listGoing);
@@ -205,7 +205,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    //        http://stackoverflow.com/a/25283174
+    //http://stackoverflow.com/a/25283174
     private Bitmap getQRCode(String qrInput) {
         QRCodeWriter writer = new QRCodeWriter();
         try {

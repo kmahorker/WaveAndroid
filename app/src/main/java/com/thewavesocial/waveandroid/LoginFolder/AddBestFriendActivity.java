@@ -10,15 +10,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +26,6 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +50,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_best_friend);
         DatabaseAccess.saveTokentoLocal(thisActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
-        if ( CurrentUser.context == null ) {
+        if ( CurrentUser.mainActivity == null ) {
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
@@ -116,7 +111,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
-                    //CurrentUser.context = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
+                    //CurrentUser.mainActivity = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
                     CurrentUser.server_getBestFriends(theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
