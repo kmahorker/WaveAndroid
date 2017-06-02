@@ -137,6 +137,7 @@ public class SignupActivity extends FragmentActivity
                     new ArrayList<String>(), //party hosted list
                     new ArrayList<String>(), //party bounced list
                     new ArrayList<String>(),
+                    new ArrayList<String>(),
                     new ArrayList<Notification>(),
                     "");
             //user.getBestFriends().add(bestFriend.getUserID());

@@ -53,6 +53,7 @@ public final class CurrentUser {
                         theUser.getAttending().addAll(result.get("attending"));
                         theUser.getHosting().addAll(result.get("hosting"));
                         theUser.getBouncing().addAll(result.get("bouncing"));
+                        theUser.getGoing().addAll(result.get("going"));
 
                         if ( delegate == null )
                             return;
@@ -558,6 +559,7 @@ public final class CurrentUser {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<String> attending = new ArrayList<>();
+                ArrayList<String> going = new ArrayList<>();
                 ArrayList<String> hosting = new ArrayList<>();
                 ArrayList<String> bouncing = new ArrayList<>();
                 try {
@@ -570,6 +572,8 @@ public final class CurrentUser {
                             hosting.add(data.getJSONObject(i).getString("event_id"));
                         else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
                             bouncing.add(data.getJSONObject(i).getString("event_id"));
+                        else if ( data.getJSONObject(i).getString("relationship").equals("going"))
+                            going.add(data.getJSONObject(i).getString("event_id"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -578,6 +582,7 @@ public final class CurrentUser {
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
                 parties.put("bouncing", bouncing);
+                parties.put("going", going);
                 Log.d("Get User Events", result.get(0));
                 if ( delegate != null )
                     delegate.onResultReady(parties);
@@ -971,7 +976,7 @@ public final class CurrentUser {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "", profilePic = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
                 hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
-                attended = new ArrayList(), bounced = new ArrayList();
+                attended = new ArrayList(), bounced = new ArrayList(), going = new ArrayList();
         List notifications = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
@@ -1016,7 +1021,7 @@ public final class CurrentUser {
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,
-                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, notifications,
+                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going, notifications,
                 "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
     }

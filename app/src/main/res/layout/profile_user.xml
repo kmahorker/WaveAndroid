@@ -60,7 +60,7 @@
             android:textSize="@dimen/button_text_normal"/>
 
         <TextView
-            android:id="@+id/user_attending_button"
+            android:id="@+id/user_going_button"
             android:layout_width="120dp"
             android:layout_height="@dimen/button_height"
             android:layout_margin="10dp"
@@ -68,7 +68,7 @@
             android:background="@drawable/round_corner_red_edge"
             android:elevation="3dp"
             android:gravity="center"
-            android:text="Attending"
+            android:text="Going"
             android:textColor="@color/appColor"
             android:textSize="@dimen/button_text_normal"/>
 

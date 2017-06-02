@@ -250,6 +250,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         new ArrayList<String>(), //hosted
                         new ArrayList<String>(), //bounced
                         new ArrayList<String>(), //attending
+                        new ArrayList<String>(), //going
                         new ArrayList<Notification>(),
                         profilePic);
                 //TODO: Add user object to Database

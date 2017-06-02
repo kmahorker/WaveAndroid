@@ -28,7 +28,7 @@ import java.util.List;
 
 public class UserProfileFragment extends Fragment {
 
-    public static TextView activityButton, attendingButton;
+    public static TextView activityButton, goingButton;
 
     public enum PopupPage {
         FOLLOWERS,
@@ -92,7 +92,7 @@ public class UserProfileFragment extends Fragment {
         profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
         action_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
         activityButton = (TextView) mainActivity.findViewById(R.id.user_activity_button);
-        attendingButton = (TextView) mainActivity.findViewById(R.id.user_attending_button);
+        goingButton = (TextView) mainActivity.findViewById(R.id.user_going_button);
 
         followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
@@ -121,19 +121,18 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
-                changeButton(attendingButton, R.color.appColor, R.drawable.round_corner_red_edge);
+                changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
                 action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications()));
             }
         });
-        attendingButton.setOnClickListener(new View.OnClickListener() {
+        goingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attendingButton.setText("Attending");
-                changeButton(attendingButton, R.color.white_solid, R.drawable.round_corner_red);
+                changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttending(), new OnResultReadyListener<List<Party>>() {
+                CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getGoing(), new OnResultReadyListener<List<Party>>() {
                     @Override
                     public void onResultReady(List<Party> result) {
                         if ( result != null ) {

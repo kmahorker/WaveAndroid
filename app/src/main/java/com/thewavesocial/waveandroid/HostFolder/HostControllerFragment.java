@@ -71,6 +71,8 @@ public class HostControllerFragment extends Fragment {
                 if ( result != null ) {
                     manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
 
+                    if ( mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null )
+                        return;
                     if ( !result.isEmpty() )
                         mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
                     else

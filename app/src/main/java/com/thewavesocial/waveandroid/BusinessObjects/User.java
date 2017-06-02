@@ -36,6 +36,7 @@ public class User implements Parcelable {
     private List<String> attended;
     private List<String> attending;
     private List<String> bouncing;
+    private List<String> going;
     private List<Notification> notifications;
     private String profilePic;
 
@@ -57,6 +58,7 @@ public class User implements Parcelable {
         hosted = new ArrayList<>();
         bouncing = new ArrayList<>();
         attending = new ArrayList<>();
+        going = new ArrayList<>();
         notifications = new ArrayList<>();
         profilePic = ""; //TODO Use different constructor
     }
@@ -77,6 +79,7 @@ public class User implements Parcelable {
                 List<String> hosted,
                 List<String> bouncing,
                 List<String> attending,
+                List<String> going,
                 List<Notification> notifications,
                 String profilePic)
     {
@@ -96,6 +99,7 @@ public class User implements Parcelable {
         this.attending = attending;
         this.attended = attended;
         this.bouncing = bouncing;
+        this.going = going;
         this.notifications = notifications;
         this.profilePic = profilePic;
     }
@@ -282,6 +286,14 @@ public class User implements Parcelable {
         this.hosting = hosting;
     }
 
+    public List<String> getGoing() {
+        return going;
+    }
+
+    public void setGoing(List<String> going) {
+        this.going = going;
+    }
+
     protected User(Parcel in) {
         userID = in.readString();
         firstName = in.readString();
@@ -338,6 +350,12 @@ public class User implements Parcelable {
             in.readList(attending, String.class.getClassLoader());
         } else {
             attending = null;
+        }
+        if (in.readByte() == 0x01) {
+            going = new ArrayList<String>();
+            in.readList(going, String.class.getClassLoader());
+        } else {
+            going = null;
         }
         if (in.readByte() == 0x01) {
             notifications = new ArrayList<Notification>();
@@ -410,6 +428,12 @@ public class User implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(attending);
+        }
+        if (going == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(going);
         }
         if (notifications == null) {
             dest.writeByte((byte) (0x00));
