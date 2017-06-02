@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class DatabaseAccess{
+    private static boolean progressShowing = false;
 
 //--------------------------------------------------------------------Testing Caller Functions------
 
@@ -311,12 +312,15 @@ public final class DatabaseAccess{
         protected void onPreExecute() {
             super.onPreExecute();
 //            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
-//            progress = new ProgressDialog(mainActivity);
-//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progress.setTitle("Please wait");
-//            progress.setMessage("Connecting to Server...");
-//            progress.setCancelable(false);
-//
+            if (progressShowing)
+                return;
+            progress = new ProgressDialog(mainActivity);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setTitle("Please wait");
+            progress.setMessage("Connecting to Server...");
+            progress.setCancelable(false);
+            progress.show();
+            progressShowing = true;
 //            handler = new Handler();
 //            run = new Runnable() {
 //                @Override
@@ -338,8 +342,9 @@ public final class DatabaseAccess{
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-//            if ( progress.isShowing() )
-//                progress.dismiss();
+            if ( progress != null && progress.isShowing() )
+                progress.dismiss();
+            progressShowing = false;
 //            handler.removeCallbacks(run);
             if ( delegate != null )
                 delegate.onResultReady(result);
@@ -387,13 +392,13 @@ public final class DatabaseAccess{
                 reader.close();
                 return buffer.toString();
             } catch (IOException e) {
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", "Network Error", true);
-                    }
-                });
+//                Handler handler = new Handler(Looper.getMainLooper());
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", "Network Error", true);
+//                    }
+//                });
             }
 
             //Close connection and reader and writer (Just in case things don't go well...)

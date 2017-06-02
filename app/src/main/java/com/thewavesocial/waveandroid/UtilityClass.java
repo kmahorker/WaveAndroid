@@ -59,6 +59,7 @@ import java.util.concurrent.RunnableFuture;
 
 public final class UtilityClass {
     private static LatLng loc = null, mapLoc = null;
+    private static boolean dialogShowing = false;
 
     private UtilityClass() {
         //Add Needed
@@ -112,6 +113,8 @@ public final class UtilityClass {
     }
 
     public static void printAlertMessage(Activity activity, String message, String header, boolean cancelable) {
+        if ( dialogShowing )
+            return;
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
                 .setCancelable(cancelable)
@@ -120,9 +123,17 @@ public final class UtilityClass {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        dialogShowing = false;
                     }
                 })
-                .show();
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                        dialogShowing = false;
+                    }
+                }).show();
+        dialogShowing = true;
     }
 
     public static Bitmap getBitmapFromURL(Activity mainActivity, String url, final OnResultReadyListener<Bitmap> delegate) {
@@ -189,6 +200,8 @@ public final class UtilityClass {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
+                connection.setConnectTimeout(10000);//10 seconds time out
+                connection.setReadTimeout(10000);
                 InputStream input = connection.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 return myBitmap;
