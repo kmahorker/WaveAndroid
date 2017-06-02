@@ -163,8 +163,8 @@ public class UserActionAdapter extends BaseAdapter {
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachUser_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachUser_partyInfo_item);
 
-        if (!party.getPartyEmoji().isEmpty()) {
-            holder.partyEmoji.setText(party.getPartyEmoji().substring(0,1));
+        if ( party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
+            holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());
         holder.partyInfo.setText(getCustomInfoText(party));
