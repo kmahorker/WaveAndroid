@@ -200,8 +200,8 @@ public final class UtilityClass {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
-                connection.setConnectTimeout(10000);//10 seconds time out
-                connection.setReadTimeout(10000);
+                connection.setConnectTimeout(5000);//5 seconds time out
+                connection.setReadTimeout(5000);
                 InputStream input = connection.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
                 return myBitmap;

@@ -359,8 +359,8 @@ public final class DatabaseAccess{
             try {
                 URL request_url = new URL(url);
                 connection = (HttpURLConnection) request_url.openConnection();
-                connection.setReadTimeout(10000); //Time out both at 10 seconds
-                connection.setConnectTimeout(10000);
+                connection.setReadTimeout(5000); //Time out both at 5 seconds
+                connection.setConnectTimeout(5000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
                 if ( body != null ) {
