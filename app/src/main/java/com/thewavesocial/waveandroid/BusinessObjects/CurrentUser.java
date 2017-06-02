@@ -41,9 +41,9 @@ public final class CurrentUser {
     }
 
     //Initialize user object
-    public static void setContext(Activity cont, final OnResultReadyListener<Boolean> delegate) {
-        mainActivity = (Activity) cont;
-        server_getUserObject(getTokenFromLocal(cont).get("id"), new OnResultReadyListener<User>() {
+    public static void setContext(Activity activity, final OnResultReadyListener<Boolean> delegate) {
+        mainActivity = activity;
+        server_getUserObject(getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 theUser = result;

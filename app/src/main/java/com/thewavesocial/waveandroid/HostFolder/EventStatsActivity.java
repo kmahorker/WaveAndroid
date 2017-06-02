@@ -172,10 +172,15 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
-                    hostView.setText(result.get("hosting").get(0).getFullName());
+                    String hostname = "", hostID = "";
+                    if (!result.get("hosting").isEmpty()) {
+                        hostname = result.get("hosting").get(0).getFullName();
+                        hostID = result.get("hosting").get(0).getUserID();
+                    }
+                    hostView.setText(hostname);
 
                     //If coming from hostFragment and you are a host
-                    if ( callerType == activityHostFragment && result.get("hosting").get(0).getUserID().equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) ) {
+                    if ( callerType == activityHostFragment && hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) ) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
@@ -186,7 +191,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
                     populateHorizontalList(result.get("bouncing"), listBouncing);
 
-                    setupSpecialFields(callerType, result.get("hosting").get(0).getUserID());
+                    setupSpecialFields(callerType, hostID);
                 }
             }
         });
