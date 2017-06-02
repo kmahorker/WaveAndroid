@@ -312,15 +312,15 @@ public final class DatabaseAccess{
         protected void onPreExecute() {
             super.onPreExecute();
 //            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
-            if (progressShowing)
-                return;
-            progress = new ProgressDialog(mainActivity);
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setTitle("Please wait");
-            progress.setMessage("Connecting to Server...");
-            progress.setCancelable(false);
-            progress.show();
-            progressShowing = true;
+//            if (progressShowing)
+//                return;
+//            progress = new ProgressDialog(mainActivity);
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setTitle("Please wait");
+//            progress.setMessage("Connecting to Server...");
+//            progress.setCancelable(false);
+//            progress.show();
+//            progressShowing = true;
 //            handler = new Handler();
 //            run = new Runnable() {
 //                @Override
@@ -342,9 +342,9 @@ public final class DatabaseAccess{
 
         @Override
         protected void onPostExecute(ArrayList<String> result) {
-            if ( progress != null && progress.isShowing() )
-                progress.dismiss();
-            progressShowing = false;
+//            if ( progress != null && progress.isShowing() )
+//                progress.dismiss();
+//            progressShowing = false;
 //            handler.removeCallbacks(run);
             if ( delegate != null )
                 delegate.onResultReady(result);

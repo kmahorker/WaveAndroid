@@ -57,7 +57,7 @@ public final class CurrentUser {
 
                         if ( delegate == null )
                             return;
-                        if ( result != null)
+                        if ( result != null && theUser.getUserID() != null )
                             delegate.onResultReady(true);
                         else
                             delegate.onResultReady(false);

@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -47,11 +48,13 @@ public class HomeSwipeActivity extends AppCompatActivity {
         DatabaseAccess.saveTokentoLocal(mainActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
         if ( CurrentUser.mainActivity == null ) {
+            UtilityClass.startProgressbar(mainActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
+                    UtilityClass.endProgressbar(mainActivity, result);
                     if (result) {
-                        setupServerDummies();
+//                        setupServerDummies();
                         setupMapActionbar();
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());

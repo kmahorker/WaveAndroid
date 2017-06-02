@@ -60,6 +60,7 @@ import java.util.concurrent.RunnableFuture;
 public final class UtilityClass {
     private static LatLng loc = null, mapLoc = null;
     private static boolean dialogShowing = false;
+    private static ProgressDialog progressDialog;
 
     private UtilityClass() {
         //Add Needed
@@ -322,5 +323,21 @@ public final class UtilityClass {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime);
         return calendar;
+    }
+
+    public static void startProgressbar(Activity activity) {
+        progressDialog = new ProgressDialog(activity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setMessage("Connecting to Server...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public static void endProgressbar(Activity activity, boolean success) {
+        if ( progressDialog != null && progressDialog.isShowing() )
+            progressDialog.dismiss();
+        if ( !success )
+            printAlertMessage(activity, "Sorry. Internet Connection Error.", "Network Error", true);
     }
 }

@@ -30,6 +30,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thewavesocial.waveandroid.BusinessObjects.CurrentUser.mainActivity;
 import static com.thewavesocial.waveandroid.BusinessObjects.CurrentUser.theUser;
 
 public class AddBestFriendActivity extends AppCompatActivity {
@@ -51,9 +52,11 @@ public class AddBestFriendActivity extends AppCompatActivity {
         DatabaseAccess.saveTokentoLocal(thisActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
         if ( CurrentUser.mainActivity == null ) {
+            UtilityClass.startProgressbar(thisActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
+                    UtilityClass.endProgressbar(thisActivity, result);
                     if (result) {
                         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
                         linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -62,9 +65,9 @@ public class AddBestFriendActivity extends AppCompatActivity {
                                 UtilityClass.hideKeyboard(thisActivity);
                             }
                         });
+                        setUpEditText();
                         setUpActionBar();
                         setUpTextViews();
-                        setUpEditText();
                     } else {
                         Log.d("HomeSwipeActivity", "Set User Context Failed...");
                     }
@@ -103,6 +106,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 startActivity(intent);
+                finish();
             }
         });
 
