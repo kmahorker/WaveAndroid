@@ -34,6 +34,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -74,7 +75,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         setupReferences();
         setupPartyInfos();
         setupFunctionalities();
-        setupSpecialFields(callerType);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -86,9 +86,10 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     }
 
 
-    private void setupSpecialFields(int callerType) {
+    private void setupSpecialFields(int callerType, String hostID) {
         if ( callerType == activityHostFragment) {
-            editView.setVisibility(View.VISIBLE);
+            if ( hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) )
+                editView.setVisibility(View.VISIBLE);
             qrAction.setText("Open QR Scanner");
             qrAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -171,17 +172,21 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
-                    if ( callerType == activityHostFragment ) {
+                    hostView.setText(result.get("hosting").get(0).getFullName());
+
+                    //If coming from hostFragment and you are a host
+                    if ( callerType == activityHostFragment && result.get("hosting").get(0).getUserID().equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) ) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
+
                     goingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
                     populateHorizontalList(result.get("going"), listGoing);
 
                     bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
                     populateHorizontalList(result.get("bouncing"), listBouncing);
 
-                    hostView.setText(result.get("hosting").get(0).getFullName());
+                    setupSpecialFields(callerType, result.get("hosting").get(0).getUserID());
                 }
             }
         });

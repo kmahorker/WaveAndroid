@@ -152,7 +152,7 @@ public final class UtilityClass {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(mainActivity, "Loading.....", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mainActivity, "Loading Image...", Toast.LENGTH_SHORT).show();
 //            progress = new ProgressDialog(mainActivity);
 //            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //            progress.setTitle("Please wait");
