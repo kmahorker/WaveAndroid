@@ -36,6 +36,17 @@ public class SearchEventFragment extends Fragment {
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
 
+        //Auto-search database for existing query on start
+        if (!searchbar.getQuery().toString().isEmpty()) {
+            CurrentUser.server_getEventsByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<Party>>() {
+                @Override
+                public void onResultReady(ArrayList<Party> result) {
+                    if (result != null)
+                        eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result));
+                }
+            });
+        }
+
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

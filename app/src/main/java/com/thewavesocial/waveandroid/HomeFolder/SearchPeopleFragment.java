@@ -36,6 +36,15 @@ public class SearchPeopleFragment extends Fragment {
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
 
+        //Auto-search database for existing query on start
+        if (!searchbar.getQuery().toString().isEmpty()) {
+            CurrentUser.server_getUsersByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<User>>() {
+                @Override
+                public void onResultReady(ArrayList<User> result) {
+                    peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, result));
+                }
+            });
+        }
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
