@@ -922,7 +922,7 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> notifications = new ArrayList<>();
+                ArrayList<Party> parties = new ArrayList<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
@@ -933,7 +933,7 @@ public final class CurrentUser {
                             String key = (String) iterKey.next();
                             body.put(key, data.getJSONObject(i).getString(key));
                         }
-                        notifications.add(constructParty(body));
+                        parties.add(constructParty(body));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -941,7 +941,41 @@ public final class CurrentUser {
 
                 Log.d("Get Events by Keyword", result.get(0));
                 if (delegate != null)
-                    delegate.onResultReady(notifications);
+                    delegate.onResultReady(parties);
+            }
+        }).execute();
+
+    }
+
+    /**Get users by keyword*/
+    public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/find-by-keyword?keyword="
+                + keyword + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<User> users = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        users.add(constructUser(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Get Users by Keyword", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(users);
             }
         }).execute();
 

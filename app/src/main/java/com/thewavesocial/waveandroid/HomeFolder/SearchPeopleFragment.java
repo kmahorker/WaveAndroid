@@ -35,45 +35,26 @@ public class SearchPeopleFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
-        final List<User> userList = new ArrayList<>();
-        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(List<User> result) {
-                if ( result != null ) {
-                    userList.addAll(result);
-                    peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, searchPeople(userList, searchbar.getQuery().toString())));
-                }
-            }
-        });
-        // TODO: 04/19/2017 How to search database?
 
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
-                        searchPeople(userList, query)));
-                return false;
+                if ( query.isEmpty() )
+                    return false;
+                CurrentUser.server_getUsersByKeyword(query, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,result));
+                    }
+                });
+                return true;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
-                        searchPeople(userList, newText)));
+//                peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
+//                        searchPeople(userList, newText)));
                 return false;
             }
         });
-    }
-
-
-    private List<User> searchPeople(List<User> users, String query) {
-        if (query == "") {
-            return users;
-        }
-        List<User> newUsers = new ArrayList<>();
-        for (User user : users) {
-            if ( user.getFullName().toLowerCase().contains( query.toLowerCase() ) ) {
-                newUsers.add(user);
-            }
-        }
-        return newUsers;
     }
 }
