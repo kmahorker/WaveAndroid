@@ -956,7 +956,7 @@ public final class CurrentUser {
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> users = new ArrayList<>();
+                final ArrayList<User> users = new ArrayList<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
@@ -973,9 +973,40 @@ public final class CurrentUser {
                     e.printStackTrace();
                 }
 
+                //Light-weight threads management
+                class ThreadManager{
+                    private int max, completes;
+                    public ThreadManager(int max){
+                        this.max = max;
+                    }
+                    void completeThreads(){
+                        completes++;
+                        if ( completes >= max && delegate != null )
+                            delegate.onResultReady(users);
+                    }
+                }
+                final ThreadManager threadManager = new ThreadManager(users.size()*2);
+
+                for(final User user : users){
+                    CurrentUser.server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                        @Override
+                        public void onResultReady(List<String> result) {
+                            if (result != null)
+                                user.getFollowing().addAll(result);
+                            threadManager.completeThreads();
+                        }
+                    });
+                    CurrentUser.server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                        @Override
+                        public void onResultReady(List<String> result) {
+                            if (result != null)
+                                user.getFollowers().addAll(result);
+                            threadManager.completeThreads();
+                        }
+                    });
+                }
+
                 Log.d("Get Users by Keyword", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(users);
             }
         }).execute();
 
