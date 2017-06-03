@@ -916,7 +916,7 @@ public final class CurrentUser {
     /**Get events by keyword*/
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
-                + "&start_after=1400000000&end_after=1400000000&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis()/1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
 
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
