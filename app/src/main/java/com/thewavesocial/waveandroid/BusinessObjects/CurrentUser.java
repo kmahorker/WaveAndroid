@@ -913,6 +913,41 @@ public final class CurrentUser {
         }).execute();
     }
 
+    /**Get events by keyword*/
+    public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
+                + "&start_after=1400000000&end_after=1400000000&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<Party> notifications = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        notifications.add(constructParty(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Get Events by Keyword", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(notifications);
+            }
+        }).execute();
+
+    }
+
+
 //----------------------------------------------------------------------------------DELETE Requests
 
     /**Delete Best Friend on server*/
