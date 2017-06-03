@@ -106,7 +106,6 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 startActivity(intent);
-                finish();
             }
         });
 

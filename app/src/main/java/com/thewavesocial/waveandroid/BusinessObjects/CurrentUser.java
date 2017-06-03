@@ -40,7 +40,7 @@ public final class CurrentUser {
         });
     }
 
-    //Initialize user object
+    /**Initialize user object*/
     public static void setContext(Activity activity, final OnResultReadyListener<Boolean> delegate) {
         mainActivity = activity;
         server_getUserObject(getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
@@ -67,14 +67,14 @@ public final class CurrentUser {
         });
     }
 
-    //Set main user object
+    /**Set main user object*/
     public static void setTheUser(User theUser) {
         CurrentUser.theUser = theUser;
     }
 
 //------------------------------------------------------------------------------------POST Requests
 
-    //Create new party in server
+    /**Create new party in server*/
     public static void server_createNewParty(String name,
                                              String emoji,
                                              double price,
@@ -124,7 +124,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Create new user in server
+    /**Create new user in server*/
     public static void server_createNewUser(String first_name,
                                             String last_name,
                                             String email,
@@ -169,7 +169,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Parameter action must be either "POST" or "DELETE"
+    /**Parameter action must be either "POST" or "DELETE"*/
     public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
         RequestComponents[] comps = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -201,7 +201,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Update user in server
+    /**Update user in server*/
     public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
@@ -223,7 +223,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Update party in server
+    /**Update party in server*/
     public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
@@ -245,7 +245,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Follow a user
+    /**Follow a user*/
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -266,7 +266,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Add Best Friend on server
+    /**Add Best Friend on server*/
     public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
         String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
@@ -290,7 +290,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    /** Invite User to event. Return either "success" or "error" */
+    /** Invite user to event. Return either "success" or "error" */
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -314,9 +314,37 @@ public final class CurrentUser {
         }).execute();
     }
 
+    /** Create new notification. Return either "success" or "error" */
+    public static void server_createNotification(String userID, String message, String type, final OnResultReadyListener<String> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        HashMap<String, String> body = new HashMap<>();
+        body.put("message", message);
+        body.put("type", type);
+        RequestComponents comp = new RequestComponents(url, "POST", body);
+
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CreateNotification", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+
+    }
+
 //-------------------------------------------------------------------------------------GET Requests
 
-    //Get list of user information from server
+    /**Get list of user information from server*/
     public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
         for ( int i = 0; i < comps.length; i++ ) {
@@ -383,7 +411,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get list of party information from server
+    /**Get list of party information from server*/
     public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
         for ( int i = 0; i < partyIdList.size(); i++ ) {
@@ -425,7 +453,7 @@ public final class CurrentUser {
             }}).execute();
     }
 
-    //Get user information
+    /**Get user information*/
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -465,7 +493,7 @@ public final class CurrentUser {
         }}).execute();
     }
 
-    //Get party information from server
+    /**Get party information from server*/
     public static void server_getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -493,7 +521,7 @@ public final class CurrentUser {
             }}).execute();
     }
 
-    //Get user following from server
+    /**Get user following from server*/
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -521,7 +549,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get user following from server
+    /**Get user following from server*/
     public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -550,7 +578,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get User's events from server
+    /**Get User's events from server*/
     public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
@@ -590,7 +618,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get User's events from server
+    /**Get User's events from server*/
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
@@ -756,7 +784,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get Best Friend from server
+    /**Get Best Friend from server*/
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
         String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
@@ -787,7 +815,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get events in specified distance
+    /**Get events in specified distance*/
     public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
@@ -819,7 +847,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Get event's invited users from server
+    /**Get event's invited users from server*/
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
                 + "/invites?access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
@@ -852,9 +880,42 @@ public final class CurrentUser {
         }).execute();
     }
 
+    /** Get Notification by UserID */
+    public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+
+        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                ArrayList<Notification> notifications = new ArrayList<>();
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    JSONArray data = main_json.getJSONArray("data");
+                    for ( int i = 0; i < data.length(); i++ ) {
+                        HashMap<String, String> body = new HashMap<>();
+                        Iterator iterKey = data.getJSONObject(i).keys();
+                        while (iterKey.hasNext()) {
+                            String key = (String) iterKey.next();
+                            body.put(key, data.getJSONObject(i).getString(key));
+                        }
+                        notifications.add(constructNotification(body));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Get Notifications", result.get(0));
+                if (delegate != null)
+                    delegate.onResultReady(notifications);
+            }
+        }).execute();
+    }
+
 //----------------------------------------------------------------------------------DELETE Requests
 
-    //Delete Best Friend on server
+    /**Delete Best Friend on server*/
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
         String url = mainActivity.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
@@ -879,7 +940,7 @@ public final class CurrentUser {
         }).execute();
     }
 
-    //Delete party from server
+    /**Delete party from server*/
     public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token="
@@ -907,7 +968,7 @@ public final class CurrentUser {
 
 //-----------------------------------------------------------------------------------Helper Methods
 
-    //Fill in all party information locally
+    /**Fill in all party information locally*/
     private static Party constructParty(HashMap<String, String> info) {
         String partyID = "", name = "", emoji = "", startDateTime = "", endDateTime = "", address = "", str_isPublic = "", hostName = "",
                 min_age = "", max_age = "";
@@ -971,7 +1032,7 @@ public final class CurrentUser {
         return party;
     }
 
-    //Fill in all user information locally
+    /**Fill in all user information locally*/
     private static User constructUser(HashMap<String, String> info) {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "", profilePic = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
@@ -1024,5 +1085,11 @@ public final class CurrentUser {
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going, notifications,
                 "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
         return user;
+    }
+
+    /**Fill in notification information locally*/
+    private static Notification constructNotification(HashMap<String, String> info) {
+        // TODO: 06/02/2017 Wait for notification implementation
+        return new Notification();
     }
 }
