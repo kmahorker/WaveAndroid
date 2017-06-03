@@ -323,12 +323,13 @@ public final class CurrentUser {
     }
 
     /** Create new notification. Return either "success" or "error" */
-    public static void server_createNotification(String userID, String message, String type, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+    public static void server_createNotification(String receiverID, String senderID, String eventID, String message, String type, final OnResultReadyListener<String> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
-        body.put("message", message);
         body.put("type", type);
+        body.put("sender_id", senderID);
+        body.put("event_id", eventID);
         RequestComponents comp = new RequestComponents(url, "POST", body);
 
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
