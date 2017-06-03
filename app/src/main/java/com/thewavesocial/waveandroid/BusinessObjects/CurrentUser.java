@@ -54,13 +54,21 @@ public final class CurrentUser {
                         theUser.getHosting().addAll(result.get("hosting"));
                         theUser.getBouncing().addAll(result.get("bouncing"));
                         theUser.getGoing().addAll(result.get("going"));
+                        server_getBestFriends(getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<List<BestFriend>>() {
+                            @Override
+                            public void onResultReady(List<BestFriend> result) {
+                                theUser.setBestFriends( new ArrayList<BestFriend>() );
+                                if ( result != null )
+                                    theUser.getBestFriends().addAll(result);
 
-                        if ( delegate == null )
-                            return;
-                        if ( result != null && theUser.getUserID() != null )
-                            delegate.onResultReady(true);
-                        else
-                            delegate.onResultReady(false);
+                                if ( delegate == null )
+                                    return;
+                                if ( theUser.getUserID() != null )
+                                    delegate.onResultReady(true);
+                                else
+                                    delegate.onResultReady(false);
+                            }
+                        });
                     }
                 });
             }

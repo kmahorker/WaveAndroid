@@ -449,22 +449,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     private void askToSendSOSMessage() {
-        AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
-        fieldAlert.setTitle("Send an alert to " +
-                (CurrentUser.theUser.getBestFriends().get(0)).getName())
-                .setMessage("A text will be sent to your friend notifying your current location.")
-                .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sendSOSMessage();
-                    }
-                })
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .show();
+        if ( CurrentUser.theUser.getBestFriends().isEmpty() ) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+            dialog.setTitle("Error")
+                    .setMessage("No best friend contact specified")
+                    .setPositiveButton("Go to Settings", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mainActivity.mPager.setCurrentItem(2);
+                            mainActivity.findViewById(R.id.actionbar_user_setting).performClick();
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else {
+            AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
+            fieldAlert.setTitle("Send an alert to " +
+                    (CurrentUser.theUser.getBestFriends().get(0)).getName())
+                    .setMessage("A text will be sent to your friend notifying your current location.")
+                    .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            sendSOSMessage();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .show();
+        }
     }
 
 
