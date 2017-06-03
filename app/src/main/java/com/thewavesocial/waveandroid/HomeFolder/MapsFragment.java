@@ -260,8 +260,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
         LatLng loc = UtilityClass.getUserLocation();
         if ( loc != null ) {
-            CurrentUser.server_getEventsInDistance(loc.latitude - 200 + "", loc.latitude + 200 + "",
-                    loc.longitude - 200 + "", loc.longitude + 200 + "",
+            CurrentUser.server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
+                    loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
                     new OnResultReadyListener<ArrayList<Party>>() {
                         @Override
                         public void onResultReady(ArrayList<Party> result) {

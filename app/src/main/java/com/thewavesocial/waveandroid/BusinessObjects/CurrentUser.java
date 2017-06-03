@@ -827,6 +827,7 @@ public final class CurrentUser {
     public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
+                + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis()/1000
                 + "&access_token=" + DatabaseAccess.getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
