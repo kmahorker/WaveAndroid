@@ -35,47 +35,27 @@ public class SearchEventFragment extends Fragment {
 
         final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
-        final List<Party> eventList = new ArrayList<>();
-        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getAttended(), new OnResultReadyListener<List<Party>>() {
-            @Override
-            public void onResultReady(List<Party> result) {
-                eventList.addAll(result);
-            }
-        });
-        // TODO: 04/19/2017 How to search database?
-
-        eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
-                searchEvents(eventList, searchbar.getQuery().toString())));
 
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
-                        searchEvents(eventList, query)));
-                return false;
+                if ( query.isEmpty() )
+                    return false;
+                CurrentUser.server_getEventsByKeyword(query, new OnResultReadyListener<ArrayList<Party>>() {
+                    @Override
+                    public void onResultReady(ArrayList<Party> result) {
+                        if (result != null)
+                            eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result));
+                    }
+                });
+                return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
-                eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
-                        searchEvents(eventList, newText)));
+//                eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
+//                        searchEvents(eventList, newText)));
                 return false;
             }
         });
-    }
-
-
-    private List<Party> searchEvents(List<Party> parties, String query) {
-        if (query == "") {
-            return parties;
-        }
-        List<Party> newParties = new ArrayList<>();
-        for (Party party : parties) {
-            if ( party.getName().toLowerCase().contains( query.toLowerCase()))
-            {
-                newParties.add(party);
-            }
-        }
-        return newParties;
     }
 }
