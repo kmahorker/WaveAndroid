@@ -45,7 +45,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        DatabaseAccess.saveTokentoLocal(mainActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
+        DatabaseAccess.saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
         if ( CurrentUser.mainActivity == null ) {
             UtilityClass.startProgressbar(mainActivity);
@@ -78,7 +78,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
     }
 
     private void setupServerDummies() {
-        String uv = "4", pv = "7";
+        String uv = "1", pv = "1";
         //Main User ID=10
         HashMap<String, String> body = new HashMap<>();
         body.put("first_name", "Main");
