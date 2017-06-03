@@ -115,7 +115,9 @@ public class FriendProfileActivity extends AppCompatActivity {
         notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
                 friend.getNotifications()));
 
-        if (!CurrentUser.theUser.getFollowing().contains(userID)) {
+        if (userID.equals(CurrentUser.theUser.getUserID())) {
+            follow_button.setVisibility(View.INVISIBLE);
+        } else if (!CurrentUser.theUser.getFollowing().contains(userID)) {
             changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);

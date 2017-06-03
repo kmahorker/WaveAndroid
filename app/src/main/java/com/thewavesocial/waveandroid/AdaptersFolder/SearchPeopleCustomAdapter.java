@@ -70,12 +70,14 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             @Override
             public void onResultReady(Bitmap image) {
                 if (image != null)
-                    holder.image.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+                    holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), image));
             }
         });
         holder.name.setText(user.getFullName());
 
-        if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
+        if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
+            holder.follow.setVisibility(View.INVISIBLE);
+        } else if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
             changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
