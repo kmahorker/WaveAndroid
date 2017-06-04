@@ -18,6 +18,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class UserNotificationCustomAdapter extends BaseAdapter {
 
         final User[] sender = {new User()};
         final View finalLayoutView = layoutView;
-        CurrentUser.server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
+        server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 if ( result != null ) {

@@ -15,6 +15,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.List;
 
@@ -82,7 +83,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         {
             final User[] senderUser = {new User()};
             final View finalLayoutView = layoutView;
-            CurrentUser.server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
+            server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
                     if ( result != null ) {
@@ -107,7 +108,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         {
             final Party[] senderParty = {new Party()};
             final View finalLayoutView1 = layoutView;
-            CurrentUser.server_getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
+            server_getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
                 @Override
                 public void onResultReady(Party result) {
                     if ( result != null ) {

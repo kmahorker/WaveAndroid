@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class LoginTutorialActivity extends AppCompatActivity {
 
@@ -287,7 +288,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String user_id = jsonObject.getJSONObject("data").getString("id");
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {
@@ -319,7 +320,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String user_id = jsonObject.getJSONObject("data").getString("id");
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {
@@ -351,7 +352,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
                     DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
 
-                    CurrentUser.server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
                             if ( result != null ) {

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.widget.ImageView;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;

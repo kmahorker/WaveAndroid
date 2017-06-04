@@ -16,6 +16,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SearchPeopleFragment extends Fragment {
 
         //Auto-search database for existing query on start
         if (!searchbar.getQuery().toString().isEmpty()) {
-            CurrentUser.server_getUsersByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<User>>() {
+            server_getUsersByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<User>>() {
                 @Override
                 public void onResultReady(ArrayList<User> result) {
                     peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, result));
@@ -50,7 +51,7 @@ public class SearchPeopleFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 if ( query.isEmpty() )
                     return false;
-                CurrentUser.server_getUsersByKeyword(query, new OnResultReadyListener<ArrayList<User>>() {
+                server_getUsersByKeyword(query, new OnResultReadyListener<ArrayList<User>>() {
                     @Override
                     public void onResultReady(ArrayList<User> result) {
                         peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,result));

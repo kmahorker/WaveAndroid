@@ -25,6 +25,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getUsersListObjects;
+
 public class FriendsListFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private FragmentActivity mainActivity;
@@ -64,7 +66,7 @@ public class FriendsListFragment extends Fragment {
         final ListView friendsListView = (ListView) getActivity().findViewById(R.id.friendsList);
 
         final List<User> friendsUsers = new ArrayList<>();
-        CurrentUser.server_getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
+        server_getUsersListObjects(dummy.getFollowers(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {

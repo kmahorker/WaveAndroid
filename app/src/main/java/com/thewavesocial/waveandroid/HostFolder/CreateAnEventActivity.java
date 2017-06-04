@@ -50,6 +50,7 @@ import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -71,7 +72,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         openFirstPage();
         NewPartyInfo.initialize();
 
-        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+        server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 followings = new ArrayList<>();
@@ -947,7 +948,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 mapAddress.setAddress_latlng(new LatLng(0,0));
 
             try {
-                CurrentUser.server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
+                server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
                         mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
                         isPublic, startingDateTime.getTimeInMillis() / 1000L, endingDateTime.getTimeInMillis() / 1000L,
                         minAge, maxAge, new OnResultReadyListener<String>() {
@@ -963,7 +964,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 final String eventId = result.substring(commaIndex + 1);
 
                                 for(User user : getUsersFromFollowing(invitingUsers)){
-                                    CurrentUser.server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
+                                    server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
@@ -976,7 +977,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 }
 
                                 for(User user : getUsersFromFollowing(bouncingUsers)){
-                                    CurrentUser.server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                    server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addBouncingUser", result + "");
@@ -989,7 +990,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 }
 
                                 for(String hostingId : hostingUsers){
-                                    CurrentUser.server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                    server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addHostingUser", result + "");

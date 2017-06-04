@@ -17,6 +17,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class FollowActivity extends AppCompatActivity {
         final List<User> follows = new ArrayList<>();
 
         if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
+            server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     follows.addAll(result);
@@ -62,7 +63,7 @@ public class FollowActivity extends AppCompatActivity {
                 }
             });
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+            server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
                 @Override
                 public void onResultReady(List<User> result) {
                     follows.addAll(result);

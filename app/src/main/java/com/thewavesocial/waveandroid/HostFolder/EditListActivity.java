@@ -25,6 +25,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class EditListActivity extends AppCompatActivity {
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
 
         //Get user followings
-        CurrentUser.server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+        server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 if ( result != null ) {
@@ -70,7 +71,7 @@ public class EditListActivity extends AppCompatActivity {
         });
 
         //Get attending or bouncing users
-        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
@@ -147,12 +148,12 @@ public class EditListActivity extends AppCompatActivity {
                 switch (LAYOUT_TYPE){
                     case 1:
                         for ( User user : invites ) {
-                            CurrentUser.server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
+                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
                         }
                         break;
                     case 2:
                         for ( User user : invites ) {
-                            CurrentUser.server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
+                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
                         }
                         break;
                 }

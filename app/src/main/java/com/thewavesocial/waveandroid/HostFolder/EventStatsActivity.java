@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+
 public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
     public static final int activityHostFragment = 1, activitySocialFragment = 2, listInvited = 3, listGoing = 4, listBouncing = 5;
     private static final int CAMERA_PERMISSION = 3;
@@ -168,7 +170,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         dateView.setText(date + "");
         timeView.setText(time + "");
 
-        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {

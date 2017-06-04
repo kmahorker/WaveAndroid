@@ -26,6 +26,8 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+
 public class UserProfileFragment extends Fragment {
 
     public static TextView activityButton, goingButton;
@@ -132,7 +134,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getGoing(), new OnResultReadyListener<List<Party>>() {
+                server_getPartyListObjects(CurrentUser.theUser.getGoing(), new OnResultReadyListener<List<Party>>() {
                     @Override
                     public void onResultReady(List<Party> result) {
                         if ( result != null ) {

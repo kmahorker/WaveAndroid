@@ -1,5 +1,4 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
-
 import java.util.HashMap;
 
 /**

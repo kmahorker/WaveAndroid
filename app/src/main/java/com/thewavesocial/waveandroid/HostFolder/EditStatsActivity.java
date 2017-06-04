@@ -44,6 +44,7 @@ import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class EditStatsActivity extends AppCompatActivity {
     private Activity mainActivity;
@@ -118,7 +119,7 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                CurrentUser.server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         // TODO: 04/20/2017 Remove party from server
@@ -303,7 +304,7 @@ public class EditStatsActivity extends AppCompatActivity {
             }
         });
         // TODO: 05/28/2017 Get Invited List
-//        CurrentUser.server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
+//        server_getUsersListObjects(userIds, new OnResultReadyListener<List<User>>() {
 //            @Override
 //            public void onResultReady(List<User> result) {
 //                if ( result != null ) {
@@ -313,7 +314,7 @@ public class EditStatsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {

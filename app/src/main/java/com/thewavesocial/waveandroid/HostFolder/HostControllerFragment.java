@@ -19,6 +19,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,7 @@ public class HostControllerFragment extends Fragment {
         final List<String> list = new ArrayList<>();
         list.addAll(CurrentUser.theUser.getHosting());
         list.addAll(CurrentUser.theUser.getBouncing());
-        CurrentUser.server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
+        server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {

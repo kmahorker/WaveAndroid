@@ -26,12 +26,12 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thewavesocial.waveandroid.BusinessObjects.CurrentUser.mainActivity;
-import static com.thewavesocial.waveandroid.BusinessObjects.CurrentUser.theUser;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class AddBestFriendActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -51,7 +51,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_best_friend);
         DatabaseAccess.saveTokentoLocal(thisActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
-        if ( CurrentUser.mainActivity == null ) {
+        if ( mainActivity == null ) {
             UtilityClass.startProgressbar(thisActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
@@ -114,9 +114,9 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
-                    //CurrentUser.mainActivity = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
+                    //mainActivity = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                    CurrentUser.server_getBestFriends(theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                    server_getBestFriends(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(List<BestFriend> result) {
                             boolean duplicate = false;
@@ -127,7 +127,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                                 }
                             }
                             if(!duplicate){ //Add best friend to server if not a duplicate
-                                CurrentUser.server_addBestFriend(name, phoneNumber, theUser.getUserID(), new OnResultReadyListener<String>() {
+                                server_addBestFriend(name, phoneNumber, CurrentUser.theUser.getUserID(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         if(result.equals("success")){

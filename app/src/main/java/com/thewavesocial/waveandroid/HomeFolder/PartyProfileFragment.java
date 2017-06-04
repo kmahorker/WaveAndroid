@@ -26,6 +26,7 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,7 +137,7 @@ public class PartyProfileFragment extends Fragment {
 
         sample = new ArrayList();
 
-        CurrentUser.server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
@@ -155,7 +156,7 @@ public class PartyProfileFragment extends Fragment {
         });
 
         final List<Party> events = new ArrayList<>();
-        CurrentUser.server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
+        server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {

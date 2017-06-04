@@ -35,7 +35,7 @@
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
 //        user = CurrentUser.theUser;
-//        CurrentUser.setContext(getActivity(), new OnResultReadyListener<Boolean>() {
+//        setContext(getActivity(), new OnResultReadyListener<Boolean>() {
 //            @Override
 //            public void onResultReady(Boolean result) {
 //                if ( result )

@@ -15,6 +15,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +92,7 @@ public class ManageEventsActivity extends AppCompatActivity
         searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
         searchView.setIconifiedByDefault(false);
         partyList = new ArrayList<>();
-        CurrentUser.server_getPartyListObjects(dummy.getHosted(), new OnResultReadyListener<List<Party>>() {
+        server_getPartyListObjects(dummy.getHosted(), new OnResultReadyListener<List<Party>>() {
             @Override
             public void onResultReady(List<Party> result) {
                 if ( result != null ) {

@@ -15,6 +15,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class SearchEventFragment extends Fragment {
 
         //Auto-search database for existing query on start
         if (!searchbar.getQuery().toString().isEmpty()) {
-            CurrentUser.server_getEventsByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<Party>>() {
+            server_getEventsByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<Party>>() {
                 @Override
                 public void onResultReady(ArrayList<Party> result) {
                     if (result != null)
@@ -52,7 +53,7 @@ public class SearchEventFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 if ( query.isEmpty() )
                     return false;
-                CurrentUser.server_getEventsByKeyword(query, new OnResultReadyListener<ArrayList<Party>>() {
+                server_getEventsByKeyword(query, new OnResultReadyListener<ArrayList<Party>>() {
                     @Override
                     public void onResultReady(ArrayList<Party> result) {
                         if (result != null)

@@ -65,6 +65,8 @@ import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getEventsInDistance;
+
 public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
         GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
@@ -260,7 +262,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
         LatLng loc = UtilityClass.getUserLocation();
         if ( loc != null ) {
-            CurrentUser.server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
+            server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
                     loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
                     new OnResultReadyListener<ArrayList<Party>>() {
                         @Override

@@ -18,6 +18,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.Calendar;
 import java.util.List;
@@ -102,7 +103,7 @@ public class UserActionAdapter extends BaseAdapter {
         }
 
         final View finalLayoutView = layoutView;
-        CurrentUser.server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
+        server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(final User sender) {
                 if ( sender != null ) {
