@@ -484,9 +484,7 @@ public final class DatabaseAccess{
 
     }
 
-
-
-    //Create new user account
+    /**Create new user account*/
     private void server_create_user(String last_name, String first_name, String email, String college, String password) {
         String url = mainActivity.getString(R.string.server_url) + "users";
         HashMap<String, String> body = new HashMap<>();
@@ -521,8 +519,8 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    //Login using email and password
-    private void server_login_email(String email, String password) {
+    /**Login using email and password. Return either success or error*/
+    private void server_login_email(String email, String password, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url)+"auth";
         HashMap<String, String> body = new HashMap<>();
         body.put("email", email);
@@ -546,18 +544,20 @@ public final class DatabaseAccess{
                             }
                         }
                     });
+                    delegate.onResultReady("success");
                 } catch (JSONException e) {
                     UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", "Sign in Error", true);
+                    delegate.onResultReady("error");
                 }
             }
         }).execute();
     }
 
-    //Login using facebook token
-    private void server_login_facebook(String fbtoken) {
+    /**Login using facebook token. Return either success or error*/
+    private void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url)+"FBauth";
         HashMap<String, String> body = new HashMap<>();
-        body.put("fb_token", fbtoken);
+        body.put("fb_token", fb_token);
 
         RequestComponents comp = new RequestComponents(url, "POST", body);
         new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -578,8 +578,10 @@ public final class DatabaseAccess{
                             }
                         }
                     });
+                    delegate.onResultReady("success");
                 } catch (JSONException e) {
                     UtilityClass.printAlertMessage(mainActivity, "Could not authorize facebook", "Facebook Login Error", true);
+                    delegate.onResultReady("error");
                 }
             }
         }).execute();

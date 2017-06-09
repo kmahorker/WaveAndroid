@@ -275,5 +275,4 @@ public class LoginTutorialActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-
 }
