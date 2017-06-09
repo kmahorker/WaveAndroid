@@ -485,7 +485,7 @@ public final class DatabaseAccess{
     }
 
     /**Create new user account*/
-    private void server_create_user(String last_name, String first_name, String email, String college, String password) {
+    public static void server_create_user(String last_name, String first_name, String email, String college, String password) {
         String url = mainActivity.getString(R.string.server_url) + "users";
         HashMap<String, String> body = new HashMap<>();
         body.put("last_name", last_name);
@@ -520,7 +520,7 @@ public final class DatabaseAccess{
     }
 
     /**Login using email and password. Return either success or error*/
-    private void server_login_email(String email, String password, final OnResultReadyListener<String> delegate) {
+    public static void server_login_email(String email, String password, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url)+"auth";
         HashMap<String, String> body = new HashMap<>();
         body.put("email", email);
@@ -554,7 +554,7 @@ public final class DatabaseAccess{
     }
 
     /**Login using facebook token. Return either success or error*/
-    private void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
+    public static void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url)+"FBauth";
         HashMap<String, String> body = new HashMap<>();
         body.put("fb_token", fb_token);
