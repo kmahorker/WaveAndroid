@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserActionAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -24,6 +25,7 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
@@ -125,7 +127,13 @@ public class UserProfileFragment extends Fragment {
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
-                action_listview.setAdapter( new UserActionAdapter(getActivity(), CurrentUser.theUser.getNotifications()));
+                server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
+                    @Override
+                    public void onResultReady(ArrayList<Notification> result) {
+                        if ( result != null )
+                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
+                    }
+                });
             }
         });
         goingButton.setOnClickListener(new View.OnClickListener() {

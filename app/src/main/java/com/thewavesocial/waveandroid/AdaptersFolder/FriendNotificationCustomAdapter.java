@@ -13,9 +13,11 @@ import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 import java.util.List;
 
@@ -79,16 +81,15 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachFriendNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachFriendNotif_timeAgo);
 
-        if ( getItem(position).getRequestType() == Notification.type4FriendFollowingNotice ) //Friend type notification
+        if ( getItem(position).getRequestType() == Notification.TYPE_FOLLOWERS ||
+                getItem(position).getRequestType() == Notification.TYPE_FOLLOWING ) //Friend type notification
         {
-            final User[] senderUser = {new User()};
             final View finalLayoutView = layoutView;
             server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
                 @Override
-                public void onResultReady(User result) {
+                public void onResultReady(final User result) {
                     if ( result != null ) {
-                        senderUser[0] = result;
-                        holder.sender.setText(senderUser[0].getFirstName() + ".");
+                        holder.sender.setText(result.getFirstName() + ".");
                         holder.notifmessage.setText(getItem(position).getMessage());
                         holder.timeAgo.setText("28m");
 
@@ -96,7 +97,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                                intent.putExtra("userObject", senderUser);
+                                intent.putExtra("userObject", result);
                                 mainActivity.startActivity(intent);
                             }
                         });
@@ -104,23 +105,25 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                 }
             });
         }
-        else //Party type notification
+        else if ( getItem(position).getRequestType() == Notification.TYPE_GOING ||
+                getItem(position).getRequestType() == Notification.TYPE_HOSTING ) //Friend type notification
         {
-            final Party[] senderParty = {new Party()};
             final View finalLayoutView1 = layoutView;
             server_getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
                 @Override
-                public void onResultReady(Party result) {
+                public void onResultReady(final Party result) {
                     if ( result != null ) {
-                        senderParty[0] = result;
-                        holder.sender.setText("\"" + senderParty[0].getName() + "\".");
+                        holder.sender.setText("\"" + result.getName() + "\".");
                         holder.notifmessage.setText(getItem(position).getMessage());
                         holder.timeAgo.setText("28min");
 
                         finalLayoutView1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                // TODO: 04/19/2017 pop up party profile activity
+                                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                                intent.putExtra("partyObject", result);
+                                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                                mainActivity.startActivity(intent);
                             }
                         });
                     }
