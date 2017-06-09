@@ -117,6 +117,7 @@ public class FriendProfileActivity extends AppCompatActivity {
             }
         });
 
+        UtilityClass.startProgressbar(mainActivity);
         server_getNotificationsOfUser(userID, new OnResultReadyListener<ArrayList<Notification>>() {
             @Override
             public void onResultReady(ArrayList<Notification> result) {
@@ -124,6 +125,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                     extractValues(result, new OnResultReadyListener<NotificationPair>() {
                         @Override
                         public void onResultReady(NotificationPair result) {
+                            UtilityClass.endProgressbar(mainActivity, true);
                             ArrayList<Notification> notifications = result.notifications;
                             ArrayList<Object> objects = result.objects;
                             notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity, notifications, objects));

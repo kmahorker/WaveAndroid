@@ -130,6 +130,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
+                UtilityClass.startProgressbar(mainActivity);
                 server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
@@ -137,6 +138,7 @@ public class UserProfileFragment extends Fragment {
                             extractValues(result, new OnResultReadyListener<NotificationPair>() {
                                 @Override
                                 public void onResultReady(NotificationPair result) {
+                                    UtilityClass.endProgressbar(mainActivity, true);
                                     ArrayList<Notification> notifications = result.notifications;
                                     ArrayList<Object> objects = result.objects;
                                     action_listview.setAdapter( new UserActionAdapter(getActivity(), notifications, objects));
