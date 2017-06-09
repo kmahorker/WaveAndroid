@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.facebook.internal.Utility;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.R;
@@ -86,11 +87,27 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 if (holder.follow.getText().equals("Following")) {
-                    CurrentUser.theUser.getFollowing().remove(user.getUserID());
-                    changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                    //If delete from server is successful, then delete locally and change button.
+                    DatabaseAccess.server_unfollow(user.getUserID(), new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if ( result.equals("success") ) {
+                                CurrentUser.theUser.getFollowing().remove(user.getUserID());
+                                changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                            }
+                        }
+                    });
                 } else {
-                    CurrentUser.theUser.getFollowing().add(user.getUserID());
-                    changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
+                    //If follow from server is successful, then follow locally and change button.
+                    DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), user.getUserID(), new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if ( result.equals("success") ) {
+                                CurrentUser.theUser.getFollowing().add(user.getUserID());
+                                changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
+                            }
+                        }
+                    });
                 }
             }
         });
