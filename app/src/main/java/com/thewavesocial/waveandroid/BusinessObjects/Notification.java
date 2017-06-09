@@ -8,93 +8,56 @@ import android.os.Parcelable;
  * Stores all notifications:
  */
 public class Notification implements Parcelable {
-    public static final int type1FollowingNotice = 1;
-    public static final int type2HostingNotice = 2;
-    public static final int type3AttendingNotice = 3;
-    public static final int type4FriendFollowingNotice = 4;
-    public static final int type5FriendHostingNotice = 5;
-    public static final int type6FriendHostedNotice = 6;
-    public static final int type7FriendAttendingNotice = 7;
-    public static final int type8FriendAttendedNotice = 8;
+    public static final int TYPE_FOLLOWING = 1;
+    public static final int TYPE_FOLLOWERS = 2;
+    public static final int TYPE_HOSTING = 3;
+    public static final int TYPE_GOING = 4;
     private String message;
     private int requestType;
     private String senderID;
 
-    public Notification()
-    {
+    public Notification() {
         message = "";
         requestType = 0;
     }
 
-    public Notification( String senderID, int requestType )
-    {
-        if ( requestType == type1FollowingNotice )
-        {
-            message = "started following you.";
-        }
-        else if ( requestType == type2HostingNotice )
-        {
-            message = "is hosting a party.";
-        }
-        else if ( requestType == type3AttendingNotice )
-        {
-            message = "is going to a party near you.";
-        }
-        else if ( requestType == type4FriendFollowingNotice )
-        {
+    public Notification(String senderID, int requestType) {
+        if (requestType == TYPE_FOLLOWING)
             message = "Started following";
-        }
-        else if ( requestType == type5FriendHostingNotice)
-        {
+        else if (requestType == TYPE_FOLLOWERS)
+            message = "Followed by";
+        else if (requestType == TYPE_HOSTING)
             message = "Hosting";
-        }
-        else if ( requestType == type6FriendHostedNotice )
-        {
-            message = "Hosted";
-        }
-        else if ( requestType == type7FriendAttendingNotice )
-        {
+        else if (requestType == TYPE_GOING)
             message = "Going to";
-        }
-        else if ( requestType == type8FriendAttendedNotice )
-        {
-            message = "Went to";
-        }
         else
-        {
-            message = "No Content";
-        }
+            message = "No Message";
+
         this.requestType = requestType;
         this.senderID = senderID;
     }
 
-    public String getMessage()
-    {
+    public String getMessage() {
         return message;
     }
 
-    public int getRequestType()
-    {
+    public int getRequestType() {
         return requestType;
     }
 
-    public void setMessage(String message)
-    {
+    public void setMessage(String message) {
         this.message = message;
     }
 
-    public void setRequestType(int requestType)
-    {
+    public void setRequestType(int requestType) {
         this.requestType = requestType;
     }
 
-    public String getSenderID()
-    {
+    public String getSenderID() {
         return senderID;
     }
 
-    public void setSenderID(String senderID)
-    {
+    public void setSenderID(String senderID) {
         this.senderID = senderID;
     }
 
