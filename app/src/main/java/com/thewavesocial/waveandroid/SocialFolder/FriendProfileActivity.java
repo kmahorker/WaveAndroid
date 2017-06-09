@@ -147,11 +147,27 @@ public class FriendProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (follow_button.getText().equals("Following")) {
-                    CurrentUser.theUser.getFollowing().remove(userID);
-                    changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                    //If delete from server is successful, then delete locally and change button.
+                    DatabaseAccess.server_unfollow(userID, new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if ( result.equals("success") ) {
+                                CurrentUser.theUser.getFollowing().remove(userID);
+                                changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                            }
+                        }
+                    });
                 } else {
-                    CurrentUser.theUser.getFollowing().add(userID);
-                    changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
+                    //If follow from server is successful, then follow locally and change button.
+                    DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), userID, new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if ( result.equals("success") ) {
+                                CurrentUser.theUser.getFollowing().add(userID);
+                                changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
+                            }
+                        }
+                    });
                 }
             }
         });
