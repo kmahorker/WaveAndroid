@@ -457,7 +457,7 @@ public final class DatabaseAccess{
     }
 
     /** Create new notification. Return either "success" or "error" */
-    public static void server_createNotification(String receiverID, String senderID, String eventID, String message, String type, final OnResultReadyListener<String> delegate) {
+    public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();

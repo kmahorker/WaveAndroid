@@ -163,6 +163,8 @@ public class FriendProfileActivity extends AppCompatActivity {
                             if ( result.equals("success") ) {
                                 CurrentUser.theUser.getFollowing().add(userID);
                                 changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
+                                DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, null, "following", null);
+                                DatabaseAccess.server_createNotification(userID, CurrentUser.theUser.getUserID(), null, "followed", null);
                             }
                         }
                     });

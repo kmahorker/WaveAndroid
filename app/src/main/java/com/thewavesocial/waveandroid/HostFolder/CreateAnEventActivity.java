@@ -963,41 +963,35 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                                 final String eventId = result.substring(commaIndex + 1);
 
-                                for(User user : getUsersFromFollowing(invitingUsers)){
+                                for(final User user : getUsersFromFollowing(invitingUsers)){
                                     server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
+                                            DatabaseAccess.server_createNotification(user.getUserID(), null, eventId, "invite_going", null);
                                             completeThreads();
-                                            if(result.equals("error")){
-                                                // TODO: 05/27/2017 Alert Message
-                                            }
                                         }
                                     });
                                 }
 
-                                for(User user : getUsersFromFollowing(bouncingUsers)){
+                                for(final User user : getUsersFromFollowing(bouncingUsers)){
                                     server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addBouncingUser", result + "");
+                                            DatabaseAccess.server_createNotification(user.getUserID(), null, eventId, "invite_bouncing", null);
                                             completeThreads();
-                                            if(result.equals("error")){
-                                                // TODO: 05/27/2017 Alert Message
-                                            }
                                         }
                                     });
                                 }
 
-                                for(String hostingId : hostingUsers){
+                                for(final String hostingId : hostingUsers){
                                     server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addHostingUser", result + "");
+                                            DatabaseAccess.server_createNotification(hostingId, null, eventId, "hosting", null);
                                             completeThreads();
-                                            if(result.equals("error")){
-                                                // TODO: 05/27/2017 Alert Message
-                                            }
                                         }
                                     });
                                 }
