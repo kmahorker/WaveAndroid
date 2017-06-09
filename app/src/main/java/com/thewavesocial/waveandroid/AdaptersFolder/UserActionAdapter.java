@@ -20,6 +20,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class UserActionAdapter extends BaseAdapter {
     private List<Notification> notifList;
     private List<Party> partyList;
     private int type;
+    private ArrayList<Integer> readyItems;
     private static LayoutInflater inflater;
     public static final int type1Notification = 1, type2Attending = 2;
 
@@ -38,6 +40,7 @@ public class UserActionAdapter extends BaseAdapter {
         this.notifList = notifList;
         this.mainActivity = mainActivity;
         this.type = type1Notification;
+        this.readyItems = new ArrayList<>();
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -46,6 +49,7 @@ public class UserActionAdapter extends BaseAdapter {
         this.partyList = partyList;
         this.mainActivity = mainActivity;
         this.type = type2Attending;
+        this.readyItems = new ArrayList<>();
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -100,31 +104,63 @@ public class UserActionAdapter extends BaseAdapter {
         } else {
             holder = (Holder1) layoutView.getTag();
         }
+        holder.sender = (TextView) layoutView.findViewById(R.id.eachNotif_sender);
+        holder.message = (TextView) layoutView.findViewById(R.id.eachNotif_message);
+        holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
-        final View finalLayoutView = layoutView;
-        server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
-            @Override
-            public void onResultReady(final User sender) {
-                if ( sender != null ) {
-                    holder.sender = (TextView) finalLayoutView.findViewById(R.id.eachNotif_sender);
-                    holder.message = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
-                    holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
+        if ( (notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
+                notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) &&
+                !readyItems.contains(position)) //Friend type notification
+        {
+            final View finalLayoutView = layoutView;
+            server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
+                @Override
+                public void onResultReady(final User result) {
+                    if ( result != null ) {
+                        holder.sender.setText(result.getFirstName());
+                        holder.message.setText(notifList.get(position).getMessage());
+                        holder.timeAgo.setText(". 28m");
 
-                    holder.sender.setText(sender.getFirstName());
-                    holder.message.setText(notifList.get(position).getMessage());
-                    holder.timeAgo.setText(". 28min");
-
-                    finalLayoutView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                            intent.putExtra("userObject", sender);
-                            mainActivity.startActivity(intent);
-                        }
-                    });
+                        finalLayoutView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                                intent.putExtra("userObject", result);
+                                mainActivity.startActivity(intent);
+                            }
+                        });
+                        readyItems.add(position);
+                    }
                 }
-             }
-        });
+            });
+        }
+        else if ( notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
+                notifList.get(position).getRequestType() == Notification.TYPE_HOSTING &&
+                !readyItems.contains(position) ) //Friend type notification
+        {
+            final View finalLayoutView1 = layoutView;
+            server_getPartyObject(notifList.get(position).getSenderID(), new OnResultReadyListener<Party>() {
+                @Override
+                public void onResultReady(final Party result) {
+                    if ( result != null ) {
+                        holder.sender.setText("\"" + result.getName() + "\".");
+                        holder.message.setText(notifList.get(position).getMessage());
+                        holder.timeAgo.setText("28min");
+
+                        finalLayoutView1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                                intent.putExtra("partyObject", result);
+                                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                                mainActivity.startActivity(intent);
+                            }
+                        });
+                        readyItems.add(position);
+                    }
+                }
+            });
+        }
 
         return layoutView;
     }

@@ -52,7 +52,7 @@
 //    public class Holder {
 //        ImageView senderImage;
 //        TextView sender;
-//        TextView notifmessage;
+//        TextView message;
 //        TextView timeAgo;
 //    }
 //
@@ -77,7 +77,7 @@
 //                    sender[0] = result;
 //
 //                    holder.sender = (TextView) finalLayoutView.findViewById(R.id.eachNotif_sender);
-//                    holder.notifmessage = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
+//                    holder.message = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
 //                    holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
 //
 //                    UtilityClass.getBitmapFromURL(mainActivity, sender[0].getProfilePic(), new OnResultReadyListener<Bitmap>() {
@@ -89,7 +89,7 @@
 //                    });
 //
 //                    holder.sender.setText(sender[0].getFirstName());
-//                    holder.notifmessage.setText(getItem(position).getMessage());
+//                    holder.message.setText(getItem(position).getMessage());
 //                    holder.timeAgo.setText(".  28min");
 //
 //                    holder.sender.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +101,7 @@
 //                        }
 //                    });
 //
-//                    holder.notifmessage.setOnClickListener(new View.OnClickListener() {
+//                    holder.message.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
 //                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
