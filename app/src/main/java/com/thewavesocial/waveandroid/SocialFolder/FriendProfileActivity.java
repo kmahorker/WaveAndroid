@@ -21,6 +21,10 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.ArrayList;
+
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getNotificationsOfUser;
+
 public class FriendProfileActivity extends AppCompatActivity {
     private User friend; //TODO: Remove Empty User
     private String userID;
@@ -112,8 +116,13 @@ public class FriendProfileActivity extends AppCompatActivity {
             }
         });
 
-        notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity,
-                friend.getNotifications()));
+        server_getNotificationsOfUser(userID, new OnResultReadyListener<ArrayList<Notification>>() {
+            @Override
+            public void onResultReady(ArrayList<Notification> result) {
+                if ( result != null )
+                    notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity, result));
+            }
+        });
 
         if (userID.equals(CurrentUser.theUser.getUserID())) {
             follow_button.setVisibility(View.INVISIBLE);

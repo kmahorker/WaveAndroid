@@ -87,9 +87,9 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                 @Override
                 public void onResultReady(final User result) {
                     if ( result != null ) {
-                        holder.sender.setText(result.getFirstName() + ".");
+                        holder.sender.setText(result.getFirstName());
                         holder.notifmessage.setText(getItem(position).getMessage());
-                        holder.timeAgo.setText("28m");
+                        holder.timeAgo.setText(". 28m");
 
                         finalLayoutView.setOnClickListener(new View.OnClickListener() {
                             @Override

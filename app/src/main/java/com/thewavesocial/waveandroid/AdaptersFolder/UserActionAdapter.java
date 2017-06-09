@@ -71,9 +71,8 @@ public class UserActionAdapter extends BaseAdapter {
     }
 
     public class Holder1 {
-        ImageView senderImage;
         TextView sender;
-        TextView notifmessage;
+        TextView message;
         TextView timeAgo;
     }
 
@@ -107,35 +106,17 @@ public class UserActionAdapter extends BaseAdapter {
             @Override
             public void onResultReady(final User sender) {
                 if ( sender != null ) {
-                    holder.senderImage = (ImageView) finalLayoutView.findViewById(R.id.eachNotif_senderPhoto);
                     holder.sender = (TextView) finalLayoutView.findViewById(R.id.eachNotif_sender);
-                    holder.notifmessage = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
+                    holder.message = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
                     holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
-                    if (sender.getProfilePic() != null)
-                        //TODO: Get Image from URL
-                        //holder.senderImage.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), sender.getProfilePic().getBitmap()));
-                        holder.sender.setText(sender.getFirstName());
-                    holder.notifmessage.setText(notifList.get(position).getMessage());
-                    holder.timeAgo.setText("28m");
-                    holder.senderImage.setOnClickListener(new View.OnClickListener() {
+
+                    holder.sender.setText(sender.getFirstName());
+                    holder.message.setText(notifList.get(position).getMessage());
+                    holder.timeAgo.setText(". 28min");
+
+                    finalLayoutView.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                            intent.putExtra("userObject", sender);
-                            mainActivity.startActivity(intent);
-                        }
-                    });
-                    holder.sender.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                            intent.putExtra("userObject", sender);
-                            mainActivity.startActivity(intent);
-                        }
-                    });
-                    holder.notifmessage.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                        public void onClick(View v) {
                             Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                             intent.putExtra("userObject", sender);
                             mainActivity.startActivity(intent);
