@@ -9,9 +9,10 @@ import android.os.Parcelable;
  */
 public class Notification implements Parcelable {
     public static final int TYPE_FOLLOWING = 1;
-    public static final int TYPE_FOLLOWERS = 2;
+    public static final int TYPE_FOLLOWED = 2;
     public static final int TYPE_HOSTING = 3;
     public static final int TYPE_GOING = 4;
+    public static final int TYPE_BOUNCING = 4;
     private String message;
     private int requestType;
     private String senderID;
@@ -24,12 +25,14 @@ public class Notification implements Parcelable {
     public Notification(String senderID, int requestType) {
         if (requestType == TYPE_FOLLOWING)
             message = "Started following";
-        else if (requestType == TYPE_FOLLOWERS)
+        else if (requestType == TYPE_FOLLOWED)
             message = "Followed by";
         else if (requestType == TYPE_HOSTING)
             message = "Hosting";
         else if (requestType == TYPE_GOING)
             message = "Going to";
+        else if (requestType == TYPE_BOUNCING)
+            message = "Bouncing";
         else
             message = "No Message";
 

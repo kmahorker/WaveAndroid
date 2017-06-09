@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -17,7 +16,6 @@ import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 import java.util.List;
 
@@ -81,7 +79,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         holder.notifmessage = (TextView) layoutView.findViewById(R.id.eachFriendNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachFriendNotif_timeAgo);
 
-        if ( getItem(position).getRequestType() == Notification.TYPE_FOLLOWERS ||
+        if ( getItem(position).getRequestType() == Notification.TYPE_FOLLOWED ||
                 getItem(position).getRequestType() == Notification.TYPE_FOLLOWING ) //Friend type notification
         {
             final View finalLayoutView = layoutView;

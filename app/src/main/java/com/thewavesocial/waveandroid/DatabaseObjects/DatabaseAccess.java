@@ -1403,8 +1403,32 @@ public final class DatabaseAccess{
 
     /**Fill in notification information locally*/
     private static Notification constructNotification(HashMap<String, String> info) {
-        // TODO: 06/02/2017 Wait for notification implementation
-        return new Notification();
+        int type;
+        String sender_id;
+        if ( info == null )
+            return new Notification();
+
+        if ( info.get("type").equals("following") ) { //user notification
+            type = Notification.TYPE_FOLLOWING;
+            sender_id = info.get("sender_id");
+        } else if ( info.get("type").equals("followed") ) {
+            type = Notification.TYPE_FOLLOWED;
+            sender_id = info.get("sender_id");
+        } else if ( info.get("type").equals("hosting") ) { //event notification
+            type = Notification.TYPE_HOSTING;
+            sender_id = info.get("event_id");
+        } else if ( info.get("type").equals("going") ) {
+            type = Notification.TYPE_GOING;
+            sender_id = info.get("event_id");
+        } else if ( info.get("type").equals("bouncing") ) {
+            type = Notification.TYPE_BOUNCING;
+            sender_id = info.get("event_id");
+        } else {
+            type = 0;
+            sender_id = "";
+        }
+
+        return new Notification(sender_id, type);
     }
 
 }
