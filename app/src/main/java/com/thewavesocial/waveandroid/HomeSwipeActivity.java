@@ -40,6 +40,9 @@ public class HomeSwipeActivity extends AppCompatActivity {
     public ViewPager mPager;
     private static final int NUM_PAGES = 3;
     private HomeSwipeActivity mainActivity;
+    private HostControllerFragment hostControllerFragment;
+    private UserProfileFragment userProfileFragment;
+    private MapsFragment mapsFragment;
     //private IntentIntegrator qrScanner;
 
     @Override
@@ -387,11 +390,14 @@ public class HomeSwipeActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new HostControllerFragment();
+                    hostControllerFragment = new HostControllerFragment();
+                    return hostControllerFragment;
                 case 1:
-                    return new MapsFragment();
+                    mapsFragment = new MapsFragment();
+                    return mapsFragment;
                 default:
-                    return new UserProfileFragment();
+                    userProfileFragment = new UserProfileFragment();
+                    return userProfileFragment;
             }
         }
 
@@ -410,12 +416,13 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            Log.d("Position", position + "");
             switch (position) {
                 case 0:
+                    hostControllerFragment.populateListView();
                     setupHostActionbar();
                     break;
                 case 2:
+                    userProfileFragment.setupProfileInfo();
                     setupUserActionbar();
                     break;
                 case 1:

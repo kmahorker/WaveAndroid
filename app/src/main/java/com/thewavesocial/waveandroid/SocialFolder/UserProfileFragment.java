@@ -87,7 +87,7 @@ public class UserProfileFragment extends Fragment {
 //-------------------------------------------------------------------------------OnCreate Sub-tasks
 
     //initialize user information
-    private void setupProfileInfo() {
+    public void setupProfileInfo() {
         followers_textview = (TextView) mainActivity.findViewById(R.id.user_followers_count);
         followers_textview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +139,7 @@ public class UserProfileFragment extends Fragment {
                                 public void onResultReady(NotificationPair result) {
                                     ArrayList<Notification> notifications = result.notifications;
                                     ArrayList<Object> objects = result.objects;
-                                    action_listview.setAdapter( new UserActionAdapter(getActivity(), notifications, objects));
+                                    action_listview.setAdapter( new UserActionAdapter(mainActivity, notifications, objects));
                                 }
                             });
                         }
@@ -165,6 +165,22 @@ public class UserProfileFragment extends Fragment {
         });
 
         activityButton.performClick();
+    }
+
+    private void showPopup(PopupPage popup) {
+        switch (popup) {
+            case FOLLOWERS:
+            case FOLLOWING:
+                Intent intent = new Intent(mainActivity, FollowActivity.class);
+                intent.putExtra(FollowActivity.FOLLOW_POPUP_TYPE_ARG, popup.name());
+                mainActivity.startActivity(intent);
+                break;
+        }
+    }
+
+    private void changeButton(TextView view, int textColor, int backgroundColor) {
+        view.setTextColor(mainActivity.getResources().getColor(textColor));
+        view.setBackgroundResource(backgroundColor);
     }
 
     private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
@@ -213,23 +229,6 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-
-    private void showPopup(PopupPage popup) {
-        switch (popup) {
-            case FOLLOWERS:
-            case FOLLOWING:
-                Intent intent = new Intent(mainActivity, FollowActivity.class);
-                intent.putExtra(FollowActivity.FOLLOW_POPUP_TYPE_ARG, popup.name());
-                mainActivity.startActivity(intent);
-                break;
-        }
-    }
-
-    private void changeButton(TextView view, int textColor, int backgroundColor) {
-        view.setTextColor(mainActivity.getResources().getColor(textColor));
-        view.setBackgroundResource(backgroundColor);
-    }
-
     class NotificationPair {
         public ArrayList<Notification> notifications;
         public ArrayList<Object> objects;
@@ -238,4 +237,5 @@ public class UserProfileFragment extends Fragment {
             this.objects = objects;
         }
     }
+
 }
