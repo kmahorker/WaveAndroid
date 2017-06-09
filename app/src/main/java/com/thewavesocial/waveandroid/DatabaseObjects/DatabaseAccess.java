@@ -272,6 +272,7 @@ public final class DatabaseAccess{
                                             String college,
                                             String password,
                                             String fb_id,
+                                            String fb_token,
                                             String gender,
                                             String birthday,
                                             final OnResultReadyListener<String> delegate) {
@@ -482,41 +483,6 @@ public final class DatabaseAccess{
             }
         }).execute();
 
-    }
-
-    /**Create new user account*/
-    public static void server_create_user(String last_name, String first_name, String email, String college, String password) {
-        String url = mainActivity.getString(R.string.server_url) + "users";
-        HashMap<String, String> body = new HashMap<>();
-        body.put("last_name", last_name);
-        body.put("first_name", first_name);
-        body.put("email", email);
-        body.put("college", college);
-        body.put("password", password);
-
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                Log.d("Create New User Account", result.get(0));
-                try {
-                    JSONObject jsonObject = new JSONObject(result.get(0));
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
-                        @Override
-                        public void onResultReady(User result) {
-                            if ( result != null ) {
-                                CurrentUser.theUser = result;
-                            }
-                        }
-                    });
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Sorry, we couldn't create your account!", "Create Account Error", true);
-                }
-            }
-        }).execute();
     }
 
     /**Login using email and password. Return either success or error*/

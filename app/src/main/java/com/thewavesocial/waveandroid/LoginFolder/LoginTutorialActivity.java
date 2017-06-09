@@ -67,10 +67,12 @@ public class LoginTutorialActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseAccess.setContext(mainActivity);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_tutorial);
         setupReferences();
     }
+
 
     private void setupReferences(){
         mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
@@ -119,6 +121,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
@@ -176,25 +179,67 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
-    private void processJSONObject(String token, JSONObject json) {
-        Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
-        Log.d("Facebook JSON", token + "\n" + json);
-        try
-        {
-            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
-            {
-                //login
-                intentLogin.putExtra("userIDLong", json.getString("id"));
-                startActivity(intentLogin);
-                finish();
+    private void processJSONObject(final String token, final JSONObject json) {
+        Log.d("FacebookLogin", json.toString());
+        DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
+            //If login not successful, create new user and login again
+            @Override
+            public void onResultReady(String result) {
+                if ( result.equals("success") ) {
+                    Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+                    startActivity(intent);
+                } else {
+                    String fname, lname, email, college, password, fb_id, fb_token, gender, birthday;
+                    try {
+                        fname = (!json.has("name"))? "N/A":json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
+                        lname = (!json.has("name"))? "N/A":json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
+                        email = "N/A";
+                        college = "N/A";
+                        password = "N/A";
+                        fb_id = (!json.has("id"))? "N/A":json.getString("id");
+                        fb_token = token;
+                        gender = (!json.has("gender"))? "N/A":json.getString("gender");
+                        birthday = (!json.has("birthday"))? "":json.getString("birthday");
+
+                        DatabaseAccess.server_createNewUser(fname, lname, email, college, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                if ( result != null ) {
+                                    DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            if ( result.equals("success") ) {
+                                                Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+                    } catch (JSONException|NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            if ( Integer.parseInt(json.getString("age_range").substring(
-                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
-                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", "Underage!", true);
-                return;
-            }
-            else
-            {
+        });
+//        try
+//        {
+//            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
+//            {
+//                //login
+//                intentLogin.putExtra("userIDLong", json.getString("id"));
+//                startActivity(intentLogin);
+//                finish();
+//            }
+//            if ( Integer.parseInt(json.getString("age_range").substring(
+//                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
+//                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", "Underage!", true);
+//                return;
+//            }
+//            else
+//            {
                 /*
                 //signup
                 intentSignup.putExtra("userIDLong", json.getString("id"));
@@ -204,70 +249,69 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 intentSignup.putExtra("userBirthday", json.getString("birthday"));*/
 
                 //Parse Birthdays
-                String string = json.getString("birthday");
-                String pattern1 = "MM/dd/yyyy";
-                String pattern2 = "MM/dd";
-                String pattern3 = "yyyy";
-                Date date = null;
-                Calendar calendar = null;
-                try {
-                    if(string.length() == pattern1.length()) {
-                        date = new SimpleDateFormat(pattern1).parse(string);
-                    }
-                    else if(string.length() == pattern2.length()){
-                        date = new SimpleDateFormat(pattern2).parse(string);
-                    }
-                    else{
-                        date = new SimpleDateFormat(pattern3).parse(string);
-                    }
-                    if(date != null) {
-                        calendar = Calendar.getInstance();
-                        calendar.setTime(date);
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                //Get profile pic and convert to bitmapdrawable
-                String id = json.getString("id");
-                URL img_value = null;
-                try {
-                    img_value = new URL("http://graph.facebook.com/"+id+"/picture?type=large");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-
-                // TODO: 04/21/2017 Add image by url
-                String profilePic = "";
-//                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-//                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
-                User newUser = new User(json.getString("id"),
-                        json.getString("first_name"),
-                        json.getString("last_name"),
-                        json.getString("email"),
-                        "password" /*TODO: delete password field*/,
-                        "UCSB" /*TODO: delete college field*/,
-                        json.getString("gender"),
-                        calendar,
-                        new ArrayList<String>(), //followers
-                        new ArrayList<String>(), //following
-                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-                        new ArrayList<String>(), //hosting
-                        new ArrayList<String>(), //attended
-                        new ArrayList<String>(), //hosted
-                        new ArrayList<String>(), //bounced
-                        new ArrayList<String>(), //attending
-                        new ArrayList<String>(), //going
-                        new ArrayList<Notification>(),
-                        profilePic);
-                //TODO: Add user object to Database
-            }
-        }
-        catch (JSONException e) {
-            System.out.println("Error with JSON LOL" + e.getLocalizedMessage());
-        }
-        startActivity(intentLogin);
+//                String string = json.getString("birthday");
+//                String pattern1 = "MM/dd/yyyy";
+//                String pattern2 = "MM/dd";
+//                String pattern3 = "yyyy";
+//                Date date = null;
+//                Calendar calendar = null;
+//                try {
+//                    if(string.length() == pattern1.length()) {
+//                        date = new SimpleDateFormat(pattern1).parse(string);
+//                    }
+//                    else if(string.length() == pattern2.length()){
+//                        date = new SimpleDateFormat(pattern2).parse(string);
+//                    }
+//                    else{
+//                        date = new SimpleDateFormat(pattern3).parse(string);
+//                    }
+//                    if(date != null) {
+//                        calendar = Calendar.getInstance();
+//                        calendar.setTime(date);
+//                    }
+//
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                //Get profile pic and convert to bitmapdrawable
+//                String id = json.getString("id");
+//                URL img_value = null;
+//                try {
+//                    img_value = new URL("http://graph.facebook.com/"+id+"/picture?type=large");
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                // TODO: 04/21/2017 Add image by url
+//                String profilePic = "";
+////                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
+////                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
+//                User newUser = new User(json.getString("id"),
+//                        json.getString("first_name"),
+//                        json.getString("last_name"),
+//                        json.getString("email"),
+//                        "password" /*TODO: delete password field*/,
+//                        "UCSB" /*TODO: delete college field*/,
+//                        json.getString("gender"),
+//                        calendar,
+//                        new ArrayList<String>(), //followers
+//                        new ArrayList<String>(), //following
+//                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
+//                        new ArrayList<String>(), //hosting
+//                        new ArrayList<String>(), //attended
+//                        new ArrayList<String>(), //hosted
+//                        new ArrayList<String>(), //bounced
+//                        new ArrayList<String>(), //attending
+//                        new ArrayList<String>(), //going
+//                        new ArrayList<Notification>(),
+//                        profilePic);
+//                //TODO: Add user object to Database
+//            }
+//        }
+//        catch (JSONException e) {
+//            System.out.println("Error with JSON LOL" + e.getLocalizedMessage());
+//        }
     }
 
     @Override
