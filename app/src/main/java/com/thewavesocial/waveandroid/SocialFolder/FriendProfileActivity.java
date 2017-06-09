@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.FriendNotificationCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.*;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -119,8 +120,16 @@ public class FriendProfileActivity extends AppCompatActivity {
         server_getNotificationsOfUser(userID, new OnResultReadyListener<ArrayList<Notification>>() {
             @Override
             public void onResultReady(ArrayList<Notification> result) {
-                if ( result != null )
-                    notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity, result));
+                if ( result != null ) {
+                    extractValues(result, new OnResultReadyListener<NotificationPair>() {
+                        @Override
+                        public void onResultReady(NotificationPair result) {
+                            ArrayList<Notification> notifications = result.notifications;
+                            ArrayList<Object> objects = result.objects;
+                            notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity, notifications, objects));
+                        }
+                    });
+                }
             }
         });
 
@@ -151,5 +160,60 @@ public class FriendProfileActivity extends AppCompatActivity {
         follow_button.setText(text);
         follow_button.setTextColor(mainActivity.getResources().getColor(textColor));
         follow_button.setBackgroundResource(backgroundColor);
+    }
+
+    private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
+        final NotificationPair senderObjects = new NotificationPair(new ArrayList<Notification>(), new ArrayList<>());
+
+        //Light-weight threads management
+        class ThreadManager{
+            private int max, completes;
+            public ThreadManager(int max){
+                this.max = max;
+            }
+            void completeThreads(){
+                completes++;
+                if ( completes >= max && delegate != null )
+                    delegate.onResultReady(senderObjects);
+            }
+        }
+        final ThreadManager threadManager = new ThreadManager(result.size());
+
+        for ( final Notification each : result ) {
+            if ( each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED ) {
+                DatabaseAccess.server_getUserObject(each.getSenderID(), new OnResultReadyListener<User>() {
+                    @Override
+                    public void onResultReady(User result) {
+                        if (result != null) {
+                            senderObjects.notifications.add(each);
+                            senderObjects.objects.add(result);
+                        }
+                        threadManager.completeThreads();
+                    }
+                });
+            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING ) {
+                DatabaseAccess.server_getPartyObject(each.getSenderID(), new OnResultReadyListener<Party>() {
+                    @Override
+                    public void onResultReady(Party result) {
+                        if (result != null) {
+                            senderObjects.notifications.add(each);
+                            senderObjects.objects.add(result);
+                        }
+                        threadManager.completeThreads();
+                    }
+                });
+            } else {
+                threadManager.completeThreads();
+            }
+        }
+    }
+
+    class NotificationPair {
+        public ArrayList<Notification> notifications;
+        public ArrayList<Object> objects;
+        public NotificationPair(ArrayList<Notification> notifications, ArrayList<Object> objects) {
+            this.notifications = notifications;
+            this.objects = objects;
+        }
     }
 }

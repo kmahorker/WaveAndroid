@@ -38,7 +38,6 @@
         android:gravity="center_vertical"
         android:textSize="15dp"
         android:textColor="#636363"
-        android:layout_marginLeft="5dp"
         android:lines="1"
         android:ellipsize="end"/>
 

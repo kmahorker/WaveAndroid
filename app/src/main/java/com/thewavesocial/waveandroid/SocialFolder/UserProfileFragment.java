@@ -20,13 +20,16 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
@@ -130,8 +133,16 @@ public class UserProfileFragment extends Fragment {
                 server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
-                        if ( result != null )
-                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
+                        if ( result != null ) {
+                            extractValues(result, new OnResultReadyListener<NotificationPair>() {
+                                @Override
+                                public void onResultReady(NotificationPair result) {
+                                    ArrayList<Notification> notifications = result.notifications;
+                                    ArrayList<Object> objects = result.objects;
+                                    action_listview.setAdapter( new UserActionAdapter(getActivity(), notifications, objects));
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -146,7 +157,7 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(List<Party> result) {
                         if ( result != null ) {
-                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result, 0));
+                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
                         }
                     }
                 });
@@ -154,6 +165,52 @@ public class UserProfileFragment extends Fragment {
         });
 
         activityButton.performClick();
+    }
+
+    private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
+        final NotificationPair senderObjects = new NotificationPair(new ArrayList<Notification>(), new ArrayList<>());
+
+        //Light-weight threads management
+        class ThreadManager{
+            private int max, completes;
+            public ThreadManager(int max){
+                this.max = max;
+            }
+            void completeThreads(){
+                completes++;
+                if ( completes >= max && delegate != null )
+                    delegate.onResultReady(senderObjects);
+            }
+        }
+        final ThreadManager threadManager = new ThreadManager(result.size());
+
+        for ( final Notification each : result ) {
+            if ( each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED ) {
+                DatabaseAccess.server_getUserObject(each.getSenderID(), new OnResultReadyListener<User>() {
+                    @Override
+                    public void onResultReady(User result) {
+                        if (result != null) {
+                            senderObjects.notifications.add(each);
+                            senderObjects.objects.add(result);
+                        }
+                        threadManager.completeThreads();
+                    }
+                });
+            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING ) {
+                DatabaseAccess.server_getPartyObject(each.getSenderID(), new OnResultReadyListener<Party>() {
+                    @Override
+                    public void onResultReady(Party result) {
+                        if (result != null) {
+                            senderObjects.notifications.add(each);
+                            senderObjects.objects.add(result);
+                        }
+                        threadManager.completeThreads();
+                    }
+                });
+            } else {
+                threadManager.completeThreads();
+            }
+        }
     }
 
 
@@ -171,5 +228,14 @@ public class UserProfileFragment extends Fragment {
     private void changeButton(TextView view, int textColor, int backgroundColor) {
         view.setTextColor(mainActivity.getResources().getColor(textColor));
         view.setBackgroundResource(backgroundColor);
+    }
+
+    class NotificationPair {
+        public ArrayList<Notification> notifications;
+        public ArrayList<Object> objects;
+        public NotificationPair(ArrayList<Notification> notifications, ArrayList<Object> objects) {
+            this.notifications = notifications;
+            this.objects = objects;
+        }
     }
 }

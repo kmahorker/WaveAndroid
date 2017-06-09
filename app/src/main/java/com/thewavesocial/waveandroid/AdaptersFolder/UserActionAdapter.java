@@ -22,34 +22,34 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class UserActionAdapter extends BaseAdapter {
     private Activity mainActivity;
-    private List<Notification> notifList;
+    private ArrayList<Notification> notifList;
+    private ArrayList<Object> senderObjects;
     private List<Party> partyList;
     private int type;
-    private ArrayList<Integer> readyItems;
     private static LayoutInflater inflater;
     public static final int type1Notification = 1, type2Attending = 2;
 
-    public UserActionAdapter(Activity mainActivity, List<Notification> notifList) {
+    public UserActionAdapter(Activity mainActivity, ArrayList<Notification> notifList, ArrayList<Object> senderObjects) {
         super();
         this.notifList = notifList;
+        this.senderObjects = senderObjects;
         this.mainActivity = mainActivity;
         this.type = type1Notification;
-        this.readyItems = new ArrayList<>();
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public UserActionAdapter(Activity mainActivity, List<Party> partyList, int random) {
+    public UserActionAdapter(Activity mainActivity, List<Party> partyList) {
         super();
         this.partyList = partyList;
         this.mainActivity = mainActivity;
         this.type = type2Attending;
-        this.readyItems = new ArrayList<>();
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -109,55 +109,37 @@ public class UserActionAdapter extends BaseAdapter {
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
 
         if ( (notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
-                notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) &&
-                !readyItems.contains(position)) //Friend type notification
+                notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
         {
-            final View finalLayoutView = layoutView;
-            server_getUserObject(notifList.get(position).getSenderID(), new OnResultReadyListener<User>() {
-                @Override
-                public void onResultReady(final User result) {
-                    if ( result != null ) {
-                        holder.sender.setText(result.getFirstName());
-                        holder.message.setText(notifList.get(position).getMessage());
-                        holder.timeAgo.setText(". 28m");
+            final User sender = (User) senderObjects.get(position);
+            holder.sender.setText(sender.getFirstName());
+            holder.message.setText(notifList.get(position).getMessage());
+            holder.timeAgo.setText(". 28m");
 
-                        finalLayoutView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                                intent.putExtra("userObject", result);
-                                mainActivity.startActivity(intent);
-                            }
-                        });
-                        readyItems.add(position);
-                    }
+            layoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                    intent.putExtra("userObject", sender);
+                    mainActivity.startActivity(intent);
                 }
             });
         }
-        else if ( notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
-                notifList.get(position).getRequestType() == Notification.TYPE_HOSTING &&
-                !readyItems.contains(position) ) //Friend type notification
+        else if ( (notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
+                notifList.get(position).getRequestType() == Notification.TYPE_HOSTING) ) //Friend type notification
         {
-            final View finalLayoutView1 = layoutView;
-            server_getPartyObject(notifList.get(position).getSenderID(), new OnResultReadyListener<Party>() {
-                @Override
-                public void onResultReady(final Party result) {
-                    if ( result != null ) {
-                        holder.sender.setText("\"" + result.getName() + "\".");
-                        holder.message.setText(notifList.get(position).getMessage());
-                        holder.timeAgo.setText("28min");
+            final Party party = (Party) senderObjects.get(position);
+            holder.sender.setText("\"" + party.getName() + "\".");
+            holder.message.setText(notifList.get(position).getMessage());
+            holder.timeAgo.setText("28min");
 
-                        finalLayoutView1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
-                                intent.putExtra("partyObject", result);
-                                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
-                                mainActivity.startActivity(intent);
-                            }
-                        });
-                        readyItems.add(position);
-                    }
+            layoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                    intent.putExtra("partyObject", party);
+                    intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                    mainActivity.startActivity(intent);
                 }
             });
         }

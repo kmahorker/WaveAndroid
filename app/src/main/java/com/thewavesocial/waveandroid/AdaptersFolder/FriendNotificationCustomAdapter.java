@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +26,14 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
     private FriendProfileActivity mainActivity ;
     private List<Notification> notifList;
     private static LayoutInflater inflater;
-    private ArrayList<Integer> readyItems;
+    private List<Object> senderObjects;
 
-    public FriendNotificationCustomAdapter(FriendProfileActivity mainActivity, List<Notification> notifList)
+    public FriendNotificationCustomAdapter(FriendProfileActivity mainActivity, List<Notification> notifList, List<Object> senderObjects)
     {
         super();
         this.notifList = notifList;
+        this.senderObjects = senderObjects;
         this.mainActivity = mainActivity;
-        readyItems = new ArrayList<>();
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -77,61 +78,43 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
             holder = (Holder) layoutView.getTag();
         }
 
-
         holder.sender = (TextView) layoutView.findViewById(R.id.eachFriendNotif_sender);
         holder.message = (TextView) layoutView.findViewById(R.id.eachFriendNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachFriendNotif_timeAgo);
 
         if ( (getItem(position).getRequestType() == Notification.TYPE_FOLLOWED ||
-                getItem(position).getRequestType() == Notification.TYPE_FOLLOWING) &&
-                !readyItems.contains(position)) //Friend type notification
+                getItem(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
         {
-            final View finalLayoutView = layoutView;
-            server_getUserObject(getItem(position).getSenderID(), new OnResultReadyListener<User>() {
-                @Override
-                public void onResultReady(final User result) {
-                    if ( result != null ) {
-                        holder.sender.setText(result.getFirstName());
-                        holder.message.setText(getItem(position).getMessage());
-                        holder.timeAgo.setText(". 28m");
+            final User user = (User) senderObjects.get(position);
+            holder.sender.setText(user.getFirstName());
+            holder.message.setText(getItem(position).getMessage());
+            holder.timeAgo.setText(". 28m");
 
-                        finalLayoutView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                                intent.putExtra("userObject", result);
-                                mainActivity.startActivity(intent);
-                            }
-                        });
-                        readyItems.add(position);
-                    }
+            layoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                    intent.putExtra("userObject", user);
+                    mainActivity.startActivity(intent);
+                    Log.d("Position", position+"");
                 }
             });
         }
         else if ( (getItem(position).getRequestType() == Notification.TYPE_GOING ||
-                getItem(position).getRequestType() == Notification.TYPE_HOSTING) &&
-                !readyItems.contains(position) ) //Friend type notification
+                getItem(position).getRequestType() == Notification.TYPE_HOSTING)) //Friend type notification
         {
-            final View finalLayoutView1 = layoutView;
-            server_getPartyObject(getItem(position).getSenderID(), new OnResultReadyListener<Party>() {
-                @Override
-                public void onResultReady(final Party result) {
-                    if ( result != null ) {
-                        holder.sender.setText("\"" + result.getName() + "\".");
-                        holder.message.setText(getItem(position).getMessage());
-                        holder.timeAgo.setText("28min");
+            final Party party = (Party)senderObjects.get(position);
+            holder.sender.setText("\"" + party.getName() + "\"");
+            holder.message.setText(getItem(position).getMessage());
+            holder.timeAgo.setText(". 28min");
 
-                        finalLayoutView1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(mainActivity, EventStatsActivity.class);
-                                intent.putExtra("partyObject", result);
-                                intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
-                                mainActivity.startActivity(intent);
-                            }
-                        });
-                        readyItems.add(position);
-                    }
+            layoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mainActivity, EventStatsActivity.class);
+                    intent.putExtra("partyObject", party);
+                    intent.putExtra("callerActivity", EventStatsActivity.activitySocialFragment);
+                    mainActivity.startActivity(intent);
                 }
             });
         }
