@@ -59,7 +59,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 public void onResultReady(Boolean result) {
                     UtilityClass.endProgressbar(mainActivity, result);
                     if (result) {
-                        setupServerDummies();
+//                        setupServerDummies();
                         setupMapActionbar();
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
