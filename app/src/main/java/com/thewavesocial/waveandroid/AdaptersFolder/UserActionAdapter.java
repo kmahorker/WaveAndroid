@@ -177,7 +177,7 @@ public class UserActionAdapter extends BaseAdapter {
                                                 UtilityClass.endProgressbar(mainActivity, false);
                                         }
                                     });
-                                    
+
                                 } else
                                     UtilityClass.endProgressbar(mainActivity, false);
                             }

@@ -1328,6 +1328,31 @@ public final class DatabaseAccess{
         }).execute();
     }
 
+    /**Uninvite user to event. Return success or error.*/
+    public static void server_uninviteUser(String userID, String eventID, final OnResultReadyListener<String> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+
+        RequestComponents comp = new RequestComponents(url, "DELETE", null);
+
+        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_UninviteUser", result.get(0) + "");
+                if ( delegate != null)
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
+
 //todo -------------------------------------------------------------------------------Helper Methods
 
     /**Fill in all party information locally*/
