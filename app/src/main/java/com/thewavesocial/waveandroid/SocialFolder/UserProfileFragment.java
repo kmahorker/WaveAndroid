@@ -134,6 +134,7 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
                         if ( result != null ) {
+                            Log.d("READY", result.size() + "");
                             extractValues(result, new OnResultReadyListener<NotificationPair>() {
                                 @Override
                                 public void onResultReady(NotificationPair result) {
@@ -227,7 +228,7 @@ public class UserProfileFragment extends Fragment {
                         threadManager.completeThreads();
                     }
                 });
-            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_INVITE_GOING || each.getRequestType() == Notification.TYPE_INVITE_BOUNCING) {
+            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_BOUNCING || each.getRequestType() == Notification.TYPE_INVITE_GOING || each.getRequestType() == Notification.TYPE_INVITE_BOUNCING) {
                 DatabaseAccess.server_getPartyObject(each.getSenderID(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {

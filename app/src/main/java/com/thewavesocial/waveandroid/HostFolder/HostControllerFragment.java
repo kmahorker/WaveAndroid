@@ -22,6 +22,7 @@ import com.thewavesocial.waveandroid.R;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -63,21 +64,28 @@ public class HostControllerFragment extends Fragment {
     }
 
     public void populateListView(){
-        final List<String> list = new ArrayList<>();
-        list.addAll(CurrentUser.theUser.getHosting());
-        list.addAll(CurrentUser.theUser.getBouncing());
-        server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
+        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
             @Override
-            public void onResultReady(List<Party> result) {
+            public void onResultReady(HashMap<String, ArrayList<String>> result) {
                 if ( result != null ) {
-                    manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
+                    final List<String> list = new ArrayList<>();
+                    list.addAll(result.get("hosting"));
+                    list.addAll(result.get("bouncing"));
+                    server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
+                        @Override
+                        public void onResultReady(List<Party> result) {
+                            if ( result != null ) {
+                                manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
 
-                    if ( mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null )
-                        return;
-                    if ( !result.isEmpty() )
-                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
-                    else
-                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
+                                if ( mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null )
+                                    return;
+                                if ( !result.isEmpty() )
+                                    mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
+                                else
+                                    mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
                 }
             }
         });

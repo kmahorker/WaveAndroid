@@ -133,6 +133,7 @@ public class UserActionAdapter extends BaseAdapter {
         }
         else if ( (notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
                 notifList.get(position).getRequestType() == Notification.TYPE_HOSTING) ||
+                notifList.get(position).getRequestType() == Notification.TYPE_BOUNCING) ||
                 notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING ||
                 notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING ) //Friend type notification
         {
