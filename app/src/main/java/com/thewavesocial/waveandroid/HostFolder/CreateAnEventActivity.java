@@ -968,7 +968,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
-                                            DatabaseAccess.server_createNotification(user.getUserID(), null, eventId, "invite_going", null);
+                                            DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_going", null);
                                             completeThreads();
                                         }
                                     });
@@ -979,7 +979,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addBouncingUser", result + "");
-                                            DatabaseAccess.server_createNotification(user.getUserID(), null, eventId, "invite_bouncing", null);
+                                            DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_bouncing", null);
                                             completeThreads();
                                         }
                                     });
@@ -990,7 +990,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addHostingUser", result + "");
-                                            DatabaseAccess.server_createNotification(hostingId, null, eventId, "hosting", null);
+                                            DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
                                             completeThreads();
                                         }
                                     });
