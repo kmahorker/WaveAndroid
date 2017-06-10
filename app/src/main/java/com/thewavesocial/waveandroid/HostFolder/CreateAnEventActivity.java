@@ -946,6 +946,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
             Log.d("Compose Party", "EEntered");
             if ( mapAddress.getAddress_latlng() == null )
                 mapAddress.setAddress_latlng(new LatLng(0,0));
+            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
+            for ( int bouncer_index : bouncingUsers ){
+                if ( invitingUsers.contains(bouncer_index) ) {
+                    invitingUsers.remove(Integer.valueOf(bouncer_index));
+                }
+            }
+            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
 
             try {
                 server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
