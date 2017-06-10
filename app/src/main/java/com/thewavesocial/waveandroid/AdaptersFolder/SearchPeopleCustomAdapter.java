@@ -105,8 +105,8 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                             if ( result.equals("success") ) {
                                 CurrentUser.theUser.getFollowing().add(user.getUserID());
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
-                                DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), null, "following", null);
-                                DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.theUser.getUserID(), null, "followed", null);
+                                DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), "", "following", null);
+                                DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.theUser.getUserID(), "", "followed", null);
                             }
                         }
                     });
