@@ -67,13 +67,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
-        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
-            @Override
-            public void onResultReady(Bitmap image) {
-                if (image != null)
-                    holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), image));
-            }
-        });
+//        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+//            @Override
+//            public void onResultReady(Bitmap image) {
+//                if (image != null)
+//                    holder.image.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), image));
+//            }
+//        });
         holder.name.setText(user.getFullName());
 
         if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {

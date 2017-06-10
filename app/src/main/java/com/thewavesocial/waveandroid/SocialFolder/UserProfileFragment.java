@@ -111,18 +111,18 @@ public class UserProfileFragment extends Fragment {
         });
 
         Log.d("Bitmapppp", user.getProfilePic() + "");
-        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
-            @Override
-            public void onResultReady(Bitmap image) {
-                if (image != null) {
-                    try {
-                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+//        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+//            @Override
+//            public void onResultReady(Bitmap image) {
+//                if (image != null) {
+//                    try {
+//                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
 
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
