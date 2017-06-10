@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,9 +76,7 @@ public class UserActionAdapter extends BaseAdapter {
     }
 
     public class Holder1 {
-        TextView sender;
-        TextView message;
-        TextView timeAgo;
+        TextView sender, message, timeAgo, accept, decline;
     }
 
     public class Holder2 {
@@ -107,6 +106,8 @@ public class UserActionAdapter extends BaseAdapter {
         holder.sender = (TextView) layoutView.findViewById(R.id.eachNotif_sender);
         holder.message = (TextView) layoutView.findViewById(R.id.eachNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachNotif_timeAgo);
+        holder.accept = (TextView) layoutView.findViewById(R.id.eachNotif_accept);
+        holder.decline = (TextView) layoutView.findViewById(R.id.eachNotif_decline);
 
         if ( (notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
                 notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
@@ -115,6 +116,8 @@ public class UserActionAdapter extends BaseAdapter {
             holder.sender.setText(sender.getFirstName());
             holder.message.setText(notifList.get(position).getMessage());
             holder.timeAgo.setText(". 28m");
+            holder.accept.setVisibility(View.INVISIBLE);
+            holder.decline.setVisibility(View.INVISIBLE);
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,12 +129,35 @@ public class UserActionAdapter extends BaseAdapter {
             });
         }
         else if ( (notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
-                notifList.get(position).getRequestType() == Notification.TYPE_HOSTING) ) //Friend type notification
+                notifList.get(position).getRequestType() == Notification.TYPE_HOSTING) ||
+                notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING ||
+                notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING ) //Friend type notification
         {
             final Party party = (Party) senderObjects.get(position);
             holder.sender.setText("\"" + party.getName() + "\".");
             holder.message.setText(notifList.get(position).getMessage());
             holder.timeAgo.setText("28min");
+            holder.accept.setVisibility(View.INVISIBLE);
+            holder.decline.setVisibility(View.INVISIBLE);
+
+            if ( notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING || notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING  ) {
+                holder.accept.setVisibility(View.VISIBLE);
+                holder.decline.setVisibility(View.VISIBLE);
+
+                holder.accept.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                holder.decline.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

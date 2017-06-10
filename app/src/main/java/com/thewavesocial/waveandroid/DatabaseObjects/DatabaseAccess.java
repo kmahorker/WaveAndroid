@@ -1447,6 +1447,12 @@ public final class DatabaseAccess{
         } else if ( info.get("type").equals("bouncing") ) {
             type = Notification.TYPE_BOUNCING;
             sender_id = info.get("event_id");
+        } else if ( info.get("type").equals("invite_going") ) {
+            type = Notification.TYPE_INVITE_GOING;
+            sender_id = info.get("event_id");
+        } else if ( info.get("type").equals("invite_bouncing") ) {
+            type = Notification.TYPE_INVITE_BOUNCING;
+            sender_id = info.get("event_id");
         } else {
             type = 0;
             sender_id = "";

@@ -643,7 +643,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                         } else {
-                            invite_index.remove(position);
+                            invite_index.remove(invite_index.indexOf(position));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                         }
