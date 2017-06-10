@@ -16,16 +16,17 @@ public class Notification implements Parcelable {
     public static final int TYPE_INVITE_GOING = 6;
     public static final int TYPE_INVITE_BOUNCING = 7;
 
-    private String message;
+    private String message, senderID, notificationID;
     private int requestType;
-    private String senderID;
 
     public Notification() {
         message = "";
         requestType = 0;
+        senderID = "";
+        notificationID = "";
     }
 
-    public Notification(String senderID, int requestType) {
+    public Notification(String notificationID, String senderID, int requestType) {
         if (requestType == TYPE_FOLLOWING)
             message = "Started following";
         else if (requestType == TYPE_FOLLOWED)
@@ -45,6 +46,7 @@ public class Notification implements Parcelable {
 
         this.requestType = requestType;
         this.senderID = senderID;
+        this.notificationID = notificationID;
     }
 
     public String getMessage() {
@@ -101,4 +103,8 @@ public class Notification implements Parcelable {
             return new Notification[size];
         }
     };
+
+    public String getNotificationID() {
+        return notificationID;
+    }
 }

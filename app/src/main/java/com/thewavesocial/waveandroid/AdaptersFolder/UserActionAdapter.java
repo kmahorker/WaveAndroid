@@ -15,10 +15,13 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
+import com.thewavesocial.waveandroid.UtilityClass;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -147,14 +150,47 @@ public class UserActionAdapter extends BaseAdapter {
                 holder.accept.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        UtilityClass.startProgressbar(mainActivity);
+                        String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING)? "going" : "bouncing";
+                        DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                if ( result.equals("success") ){
+                                    server_deleteNotification(CurrentUser.theUser.getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            if ( result.equals("success") ) {
+                                                notifList.remove(position);
+                                                senderObjects.remove(position);
+                                                UserActionAdapter.this.notifyDataSetChanged();
+                                                UtilityClass.endProgressbar(mainActivity, true);
+                                            } else
+                                                UtilityClass.endProgressbar(mainActivity, false);
+                                        }
+                                    });
+                                } else
+                                    UtilityClass.endProgressbar(mainActivity, false);
+                            }
+                        });
                     }
                 });
 
                 holder.decline.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        UtilityClass.startProgressbar(mainActivity);
+                        server_deleteNotification(CurrentUser.theUser.getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                            @Override
+                            public void onResultReady(String result) {
+                                if ( result.equals("success") ) {
+                                    notifList.remove(position);
+                                    senderObjects.remove(position);
+                                    UserActionAdapter.this.notifyDataSetChanged();
+                                    UtilityClass.endProgressbar(mainActivity, true);
+                                } else
+                                    UtilityClass.endProgressbar(mainActivity, false);
+                            }
+                        });
                     }
                 });
             }

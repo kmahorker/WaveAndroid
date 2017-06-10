@@ -1303,6 +1303,30 @@ public final class DatabaseAccess{
         }).execute();
     }
 
+    /**Delete notification. Return success or error.*/
+    public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
+        RequestComponents comps[] = new RequestComponents[1];
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/notifications/"
+                + notificationID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+
+        comps[0] = new RequestComponents(url, "DELETE", null);
+        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
+            @Override
+            public void onResultReady(ArrayList<String> result) {
+                String status = null;
+                try {
+                    JSONObject main_json = new JSONObject(result.get(0));
+                    status = main_json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("CurUser_DeleteNotif", result.get(0));
+                if ( delegate != null)
+                    delegate.onResultReady(status);
+            }
+        }).execute();
+    }
 
 //todo -------------------------------------------------------------------------------Helper Methods
 
@@ -1428,10 +1452,11 @@ public final class DatabaseAccess{
     /**Fill in notification information locally*/
     private static Notification constructNotification(HashMap<String, String> info) {
         int type;
-        String sender_id;
+        String sender_id, notification_id;
         if ( info == null )
             return new Notification();
 
+        notification_id = info.get("id");
         if ( info.get("type").equals("following") ) { //user notification
             type = Notification.TYPE_FOLLOWING;
             sender_id = info.get("sender_id");
@@ -1458,7 +1483,7 @@ public final class DatabaseAccess{
             sender_id = "";
         }
 
-        return new Notification(sender_id, type);
+        return new Notification(notification_id, sender_id, type);
     }
 
 }
