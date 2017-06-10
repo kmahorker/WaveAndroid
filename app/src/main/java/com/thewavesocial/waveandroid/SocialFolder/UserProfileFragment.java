@@ -27,9 +27,11 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
@@ -138,8 +140,8 @@ public class UserProfileFragment extends Fragment {
                             extractValues(result, new OnResultReadyListener<NotificationPair>() {
                                 @Override
                                 public void onResultReady(NotificationPair result) {
-                                    ArrayList<Notification> notifications = result.notifications;
-                                    ArrayList<Object> objects = result.objects;
+                                    ArrayList<Notification> notifications = result.getNotifications();
+                                    ArrayList<Object> objects = result.getSenderObjects();
                                     action_listview.setAdapter( new UserActionAdapter(mainActivity, notifications, objects));
                                 }
                             });
@@ -200,7 +202,8 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
-        final NotificationPair senderObjects = new NotificationPair(new ArrayList<Notification>(), new ArrayList<>());
+        final NotificationPair senderObjects = new NotificationPair(new TreeMap<Long, Notification>(Collections.reverseOrder()),
+                new TreeMap<Long, Object>(Collections.reverseOrder()));
 
         //Light-weight threads management
         class ThreadManager{
@@ -222,8 +225,8 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(User result) {
                         if (result != null) {
-                            senderObjects.notifications.add(each);
-                            senderObjects.objects.add(result);
+                            senderObjects.notifications.put(each.getCreate_time(), each);
+                            senderObjects.objects.put(each.getCreate_time(), result);
                         }
                         threadManager.completeThreads();
                     }
@@ -233,8 +236,8 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(Party result) {
                         if (result != null) {
-                            senderObjects.notifications.add(each);
-                            senderObjects.objects.add(result);
+                            senderObjects.notifications.put(each.getCreate_time(), each);
+                            senderObjects.objects.put(each.getCreate_time(), result);
                         }
                         threadManager.completeThreads();
                     }
@@ -246,11 +249,27 @@ public class UserProfileFragment extends Fragment {
     }
 
     class NotificationPair {
-        public ArrayList<Notification> notifications;
-        public ArrayList<Object> objects;
-        public NotificationPair(ArrayList<Notification> notifications, ArrayList<Object> objects) {
+        private TreeMap<Long, Notification> notifications;
+        private TreeMap<Long, Object> objects;
+        public NotificationPair(TreeMap<Long, Notification> notifications, TreeMap<Long, Object> objects) {
             this.notifications = notifications;
             this.objects = objects;
+        }
+
+        public ArrayList<Notification> getNotifications() {
+            ArrayList<Notification> list = new ArrayList<>();
+            for ( Long key : notifications.keySet() ) {
+                list.add(notifications.get(key));
+            }
+            return list;
+        }
+
+        public ArrayList<Object> getSenderObjects() {
+            ArrayList<Object> list = new ArrayList<>();
+            for ( Long key : notifications.keySet() ) {
+                list.add(objects.get(key));
+            }
+            return list;
         }
     }
 

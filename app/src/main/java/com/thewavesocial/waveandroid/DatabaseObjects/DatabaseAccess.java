@@ -1104,37 +1104,23 @@ public final class DatabaseAccess{
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                Map<Long, Notification> rawNotifications = new TreeMap<>();
+                ArrayList<Notification> notifications = new ArrayList<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for ( int i = 0; i < data.length(); i++ ) {
-                        long date_key = 0;
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
                             String key = (String) iterKey.next();
                             body.put(key, data.getJSONObject(i).getString(key));
                         }
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-                        Date date = sdf.parse(body.get("creation_time"));
-                        date_key = date.getTime();
-                        while (rawNotifications.keySet().contains(date_key))
-                            date_key += 1;
-
-                        rawNotifications.put(date_key, constructNotification(body));
+                        notifications.add(constructNotification(body));
                     }
-                } catch (JSONException | ParseException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                ArrayList<Notification> notifications = new ArrayList<>();
-                for ( Long key : rawNotifications.keySet() ) {
-                    notifications.add(rawNotifications.get(key));
-                    Log.d("Date_Key", key + ", " + rawNotifications.get(key).getMessage());
-                }
-                for ( Notification each : notifications ) {
-                    Log.d("Date_Key", each.getMessage());
-                }
+
                 Log.d("Get Notifications", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(notifications);
@@ -1524,7 +1510,15 @@ public final class DatabaseAccess{
             sender_id = "";
         }
 
-        return new Notification(notification_id, sender_id, type);
+        long time = 0;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            Date date = sdf.parse(info.get("creation_time"));
+            time = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Notification(notification_id, sender_id, type, time);
     }
 
 }

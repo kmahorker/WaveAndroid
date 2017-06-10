@@ -100,8 +100,9 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                 }
             });
         }
-        else if ( (getItem(position).getRequestType() == Notification.TYPE_GOING ||
-                getItem(position).getRequestType() == Notification.TYPE_HOSTING)) //Friend type notification
+        else if ( getItem(position).getRequestType() == Notification.TYPE_GOING ||
+                getItem(position).getRequestType() == Notification.TYPE_HOSTING ||
+                getItem(position).getRequestType() == Notification.TYPE_BOUNCING ) //Friend type notification
         {
             final Party party = (Party)senderObjects.get(position);
             holder.sender.setText("\"" + party.getName() + "\"");

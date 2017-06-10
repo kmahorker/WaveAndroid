@@ -17,6 +17,7 @@ public class Notification implements Parcelable {
     public static final int TYPE_INVITE_BOUNCING = 7;
 
     private String message, senderID, notificationID;
+    private long create_time;
     private int requestType;
 
     public Notification() {
@@ -24,9 +25,10 @@ public class Notification implements Parcelable {
         requestType = 0;
         senderID = "";
         notificationID = "";
+        create_time = 0;
     }
 
-    public Notification(String notificationID, String senderID, int requestType) {
+    public Notification(String notificationID, String senderID, int requestType, long create_time) {
         if (requestType == TYPE_FOLLOWING)
             message = "Started following";
         else if (requestType == TYPE_FOLLOWED)
@@ -47,6 +49,7 @@ public class Notification implements Parcelable {
         this.requestType = requestType;
         this.senderID = senderID;
         this.notificationID = notificationID;
+        this.create_time = create_time;
     }
 
     public String getMessage() {
@@ -106,5 +109,9 @@ public class Notification implements Parcelable {
 
     public String getNotificationID() {
         return notificationID;
+    }
+
+    public long getCreate_time() {
+        return create_time;
     }
 }
