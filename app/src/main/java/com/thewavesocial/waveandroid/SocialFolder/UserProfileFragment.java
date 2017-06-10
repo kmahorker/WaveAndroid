@@ -153,6 +153,21 @@ public class UserProfileFragment extends Fragment {
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
+                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+                    @Override
+                    public void onResultReady(HashMap<String, ArrayList<String>> result) {
+                        if ( result != null ) {
+                            server_getPartyListObjects(result.get("going"), new OnResultReadyListener<List<Party>>() {
+                                @Override
+                                public void onResultReady(List<Party> result) {
+                                    if ( result != null ) {
+                                        action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
                 server_getPartyListObjects(CurrentUser.theUser.getGoing(), new OnResultReadyListener<List<Party>>() {
                     @Override
                     public void onResultReady(List<Party> result) {

@@ -177,7 +177,7 @@ public class UserActionAdapter extends BaseAdapter {
                                                 UtilityClass.endProgressbar(mainActivity, false);
                                         }
                                     });
-
+                                    server_uninviteUser(CurrentUser.theUser.getUserID(), notifList.get(position).getSenderID(), null);
                                 } else
                                     UtilityClass.endProgressbar(mainActivity, false);
                             }
