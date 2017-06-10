@@ -12,7 +12,10 @@ public class Notification implements Parcelable {
     public static final int TYPE_FOLLOWED = 2;
     public static final int TYPE_HOSTING = 3;
     public static final int TYPE_GOING = 4;
-    public static final int TYPE_BOUNCING = 4;
+    public static final int TYPE_BOUNCING = 5;
+    public static final int TYPE_INVITE_GOING = 6;
+    public static final int TYPE_INVITE_BOUNCING = 7;
+
     private String message;
     private int requestType;
     private String senderID;
@@ -33,6 +36,10 @@ public class Notification implements Parcelable {
             message = "Going to";
         else if (requestType == TYPE_BOUNCING)
             message = "Bouncing";
+        else if (requestType == TYPE_INVITE_GOING)
+            message = "You are invited to";
+        else if (requestType == TYPE_INVITE_BOUNCING)
+            message = "You are invited to bounce";
         else
             message = "No Message";
 
