@@ -151,23 +151,33 @@ public class UserActionAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         UtilityClass.startProgressbar(mainActivity);
-                        String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING)? "going" : "bouncing";
-                        DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
+                        final String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING)? "going" : "bouncing";
+
+                        server_manageUserForParty(CurrentUser.theUser.getUserID(), notifList.get(position).getSenderID(), type, "POST", new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
-                                if ( result.equals("success") ){
-                                    server_deleteNotification(CurrentUser.theUser.getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                                if (result.equals("success")) {
+                                    server_createNotification(CurrentUser.theUser.getUserID(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
-                                            if ( result.equals("success") ) {
-                                                notifList.remove(position);
-                                                senderObjects.remove(position);
-                                                UserActionAdapter.this.notifyDataSetChanged();
-                                                UtilityClass.endProgressbar(mainActivity, true);
+                                            if (result.equals("success")) {
+                                                server_deleteNotification(CurrentUser.theUser.getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                                                    @Override
+                                                    public void onResultReady(String result) {
+                                                        if (result.equals("success")) {
+                                                            notifList.remove(position);
+                                                            senderObjects.remove(position);
+                                                            UserActionAdapter.this.notifyDataSetChanged();
+                                                            UtilityClass.endProgressbar(mainActivity, true);
+                                                        } else
+                                                            UtilityClass.endProgressbar(mainActivity, false);
+                                                    }
+                                                });
                                             } else
                                                 UtilityClass.endProgressbar(mainActivity, false);
                                         }
                                     });
+                                    
                                 } else
                                     UtilityClass.endProgressbar(mainActivity, false);
                             }
