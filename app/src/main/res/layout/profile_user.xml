@@ -85,4 +85,13 @@
         android:elevation="-6dp"
         android:layout_below="@id/user_button_panel"/> <!--notifications(list)-->
 
+    <ProgressBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/user_notification_progressbar"
+        android:layout_centerHorizontal="true"
+        android:padding="100dp"
+        android:visibility="invisible"
+        android:layout_below="@id/user_button_panel"/> <!--notifications(list)-->
+
 </RelativeLayout>

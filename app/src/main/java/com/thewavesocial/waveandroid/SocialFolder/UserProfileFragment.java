@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.UserActionAdapter;
@@ -52,6 +53,7 @@ public class UserProfileFragment extends Fragment {
     private User user;
     private TextView followers_textview, following_textview;
     private ListView action_listview;
+    private ProgressBar progressBar;
     private static ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
     private static HomeSwipeActivity mainActivity;
@@ -107,6 +109,7 @@ public class UserProfileFragment extends Fragment {
         action_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
         activityButton = (TextView) mainActivity.findViewById(R.id.user_activity_button);
         goingButton = (TextView) mainActivity.findViewById(R.id.user_going_button);
+        progressBar = (ProgressBar) mainActivity.findViewById(R.id.user_notification_progressbar);
 
         followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
         following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
@@ -133,6 +136,7 @@ public class UserProfileFragment extends Fragment {
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
@@ -147,8 +151,11 @@ public class UserProfileFragment extends Fragment {
                                     ArrayList<Notification> notifications = result.getNotifications();
                                     ArrayList<Object> objects = result.getSenderObjects();
                                     action_listview.setAdapter( new UserActionAdapter(mainActivity, notifications, objects));
+                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
                             });
+                        } else {
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -157,6 +164,7 @@ public class UserProfileFragment extends Fragment {
         goingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 UtilityClass.hideKeyboard(mainActivity);
@@ -170,16 +178,11 @@ public class UserProfileFragment extends Fragment {
                                     if ( result != null ) {
                                         action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
                                     }
+                                    progressBar.setVisibility(View.INVISIBLE);
                                 }
                             });
-                        }
-                    }
-                });
-                server_getPartyListObjects(CurrentUser.theUser.getGoing(), new OnResultReadyListener<List<Party>>() {
-                    @Override
-                    public void onResultReady(List<Party> result) {
-                        if ( result != null ) {
-                            action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
+                        } else {
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
