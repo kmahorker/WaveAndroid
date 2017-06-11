@@ -66,6 +66,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                         mPager.setAdapter(mPagerAdapter);
                         mPager.setCurrentItem(1);
                         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+                        new ImageUploadTask().execute();
                     } else {
                         Log.d("HomeSwipeActivity", "Set User Context Failed...");
                     }

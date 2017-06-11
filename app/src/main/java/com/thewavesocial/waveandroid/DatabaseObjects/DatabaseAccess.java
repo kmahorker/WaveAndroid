@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
@@ -24,6 +27,10 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -44,6 +51,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public final class DatabaseAccess{
     public static Activity mainActivity;
 
@@ -53,7 +67,7 @@ public final class DatabaseAccess{
     }
 
     /**
-     * Given: url, endpoint, body, resultBack
+     * Given: url, endpoint, body, callBack
      * Result: all user information and login
      */
     public static class HttpRequestTask extends AsyncTask<String, String, ArrayList<String>> {
@@ -191,6 +205,91 @@ public final class DatabaseAccess{
                 result += URLEncoder.encode(params.get(key), "UTF-8");
             }
             return result.toString();
+        }
+    }
+
+    /**
+     * Given: bitmap, callBack
+     * Result: all user information and login
+     */
+    public static class ImageUploadTask extends AsyncTask<String, String, String> {
+        private static Activity mainActivity;
+        private Bitmap image;
+        private OnResultReadyListener<String> delegate;
+        public ImageUploadTask(Activity mainActivity, Bitmap image, OnResultReadyListener<String> delegate) {
+            this.mainActivity = mainActivity;
+            this.image = image;
+            this.delegate = delegate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return sendImageRequest(image);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            delegate.onResultReady(result);
+        }
+
+        /**Use OkHttpClient to upload image*/
+        private String sendImageRequest(Bitmap bitmap) {
+            File file = bitmapToFile(bitmap);
+            String content_type = getFileType(file.getPath());
+            String file_path = file.getAbsolutePath();
+
+            OkHttpClient client = new OkHttpClient();
+            RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
+            RequestBody request_body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("type",content_type)
+                    .addFormDataPart("profile-photo", file_path.substring(file_path.lastIndexOf('/') + 1), file_body)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://api.theplugsocial.com/v1/users/10/profile-photo?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyNCwiaWF0IjoxNDk2OTg2ODc3LCJleHAiOjE0OTk1Nzg4Nzd9.28b9V0uvORmJtK4gjPiHHBzSPRNmoyhXkGbNFb_Q_mA")
+                    .post(request_body)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                return response.message();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "Error";
+        }
+
+        /**Convert bitmap to File.*/
+        private File bitmapToFile(Bitmap bitmap) {
+            File file = new File(mainActivity.getCacheDir(), "profile.jpg");
+            try {
+                //create a file to write bitmap data
+                file.createNewFile();
+
+                //Convert bitmap to byte array
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                byte[] bitmapdata = bos.toByteArray();
+
+                //write the bytes in file
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bitmapdata);
+                fos.flush();
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return file;
+        }
+
+        /**Get filetype of image*/
+        private static String getFileType(String path) {
+            String extention = MimeTypeMap.getFileExtensionFromUrl(path);
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extention);
         }
     }
 
