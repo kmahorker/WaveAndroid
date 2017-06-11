@@ -654,6 +654,16 @@ public final class DatabaseAccess{
         }).execute();
     }
 
+    /**Wrapper method for uploading image. Return either OK or Error.*/
+    public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
+        new ImageUploadTask(mainActivity, bitmap, new OnResultReadyListener<String>() {
+            @Override
+            public void onResultReady(String result) {
+                delegate.onResultReady(result);
+            }
+        }).execute();
+    }
+
 
 //todo ---------------------------------------------------------------------------------GET Requests
 
