@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -50,7 +51,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
+        saveTokentoLocal(mainActivity, "11", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
         if ( CurrentUser.mainActivity == null ) {
             UtilityClass.startProgressbar(mainActivity);
@@ -61,6 +62,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     if (result) {
 //                        setupServerDummies();
                         setupMapActionbar();
+                        server_upload_image(((BitmapDrawable) mainActivity.getDrawable(R.drawable.setting)).getBitmap(), null);
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
                         mPager.setAdapter(mPagerAdapter);

@@ -216,10 +216,12 @@ public final class DatabaseAccess{
         private static Activity mainActivity;
         private Bitmap image;
         private OnResultReadyListener<String> delegate;
-        public ImageUploadTask(Activity mainActivity, Bitmap image, OnResultReadyListener<String> delegate) {
+        private String url;
+        public ImageUploadTask(Activity mainActivity, String url, Bitmap image, OnResultReadyListener<String> delegate) {
             this.mainActivity = mainActivity;
             this.image = image;
             this.delegate = delegate;
+            this.url = url;
         }
 
         @Override
@@ -229,7 +231,7 @@ public final class DatabaseAccess{
 
         @Override
         protected String doInBackground(String... params) {
-            return sendImageRequest(image);
+            return sendImageRequest(url, image);
         }
 
         @Override
@@ -238,7 +240,7 @@ public final class DatabaseAccess{
         }
 
         /**Use OkHttpClient to upload image*/
-        private String sendImageRequest(Bitmap bitmap) {
+        private String sendImageRequest(String url, Bitmap bitmap) {
             File file = bitmapToFile(bitmap);
             String content_type = getFileType(file.getPath());
             String file_path = file.getAbsolutePath();
@@ -251,7 +253,7 @@ public final class DatabaseAccess{
                     .addFormDataPart("profile-photo", file_path.substring(file_path.lastIndexOf('/') + 1), file_body)
                     .build();
             Request request = new Request.Builder()
-                    .url("https://api.theplugsocial.com/v1/users/10/profile-photo?access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyNCwiaWF0IjoxNDk2OTg2ODc3LCJleHAiOjE0OTk1Nzg4Nzd9.28b9V0uvORmJtK4gjPiHHBzSPRNmoyhXkGbNFb_Q_mA")
+                    .url(url)
                     .post(request_body)
                     .build();
             try {
@@ -656,10 +658,13 @@ public final class DatabaseAccess{
 
     /**Wrapper method for uploading image. Return either OK or Error.*/
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
-        new ImageUploadTask(mainActivity, bitmap, new OnResultReadyListener<String>() {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
+                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        new ImageUploadTask(mainActivity, url, bitmap, new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
-                delegate.onResultReady(result);
+                if ( delegate != null)
+                    delegate.onResultReady(result);
             }
         }).execute();
     }
