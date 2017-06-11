@@ -112,19 +112,14 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
-        Log.d("Bitmapppp", user.getProfilePic() + "");
-//        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
-//            @Override
-//            public void onResultReady(Bitmap image) {
-//                if (image != null) {
-//                    try {
-//                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), image));
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
+        DatabaseAccess.server_getProfilePicture(CurrentUser.theUser.getUserID(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap result) {
+                if ( result != null ) {
+                    profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                }
+            }
+        });
 
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override

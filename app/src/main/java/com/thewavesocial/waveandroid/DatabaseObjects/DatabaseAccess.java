@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -189,6 +190,131 @@ public final class DatabaseAccess{
                 } catch (IOException e){e.printStackTrace();}
             }
             return "error";
+        }
+
+
+        private static String paramsToString(HashMap<String, String> params) throws UnsupportedEncodingException {
+            String result = "";
+            boolean first = true;
+            for (String key : params.keySet()) {
+                if (first)
+                    first = false;
+                else
+                    result += "&";
+                result += URLEncoder.encode(key, "UTF-8");
+                result += "=";
+                result += URLEncoder.encode(params.get(key), "UTF-8");
+            }
+            return result.toString();
+        }
+    }
+
+    /**
+     * Given: url, endpoint, body, callBack
+     * Result: all user information and login
+     */
+    public static class ImageDownloadTask extends AsyncTask<String, String, Bitmap> {
+        private RequestComponents comp;
+        private Activity mainActivity;
+        private ProgressDialog progress;
+        private Handler handler;
+        private Runnable run;
+        private OnResultReadyListener<Bitmap> delegate;
+
+        public ImageDownloadTask(Activity mainActivity, RequestComponents comp, OnResultReadyListener<Bitmap> delegate ) {
+            this.mainActivity = mainActivity;
+            this.comp = comp;
+            this.delegate = delegate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
+//            if (progressShowing)
+//                return;
+//            progress = new ProgressDialog(mainActivity);
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setTitle("Please wait");
+//            progress.setMessage("Connecting to Server...");
+//            progress.setCancelable(false);
+//            progress.show();
+//            progressShowing = true;
+//            handler = new Handler();
+//            run = new Runnable() {
+//                @Override
+//                public void run() {
+//                    progress.show();
+//                }
+//            };
+//            handler.postDelayed(run, 3000);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params){
+            return sendHttpRequest(comp.url, comp.endpoint, comp.body);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+//            if ( progress != null && progress.isShowing() )
+//                progress.dismiss();
+//            progressShowing = false;
+//            handler.removeCallbacks(run);
+            if ( delegate != null )
+                delegate.onResultReady(result);
+        }
+
+
+        private Bitmap sendHttpRequest(String url, String endpoint, HashMap<String, String> body) {
+            HttpURLConnection connection = null;
+            BufferedWriter writer = null;
+
+            try {
+                URL request_url = new URL(url);
+                connection = (HttpURLConnection) request_url.openConnection();
+                connection.setReadTimeout(5000); //Time out both at 5 seconds
+                connection.setConnectTimeout(5000);
+                connection.setRequestMethod(endpoint); //Set endpoint
+
+                if ( body != null ) {
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    HashMap<String, String> params = body;
+                    OutputStream output = connection.getOutputStream();
+                    writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+                    writer.write(paramsToString(params));
+                    writer.flush();
+                    writer.close();
+                    output.close();
+                }
+                connection.connect(); //Begin http request
+
+                //Now, read the JSON response from server and return
+                InputStream stream;
+                if ( connection.getResponseCode() == 500 )
+                    stream = connection.getErrorStream();
+                else
+                    stream = connection.getInputStream();
+
+                Bitmap bitmap = BitmapFactory.decodeStream(stream);
+
+                connection.disconnect();
+                return bitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Close connection and reader and writer (Just in case things don't go well...)
+            finally {
+                try {
+                    if ( connection != null )
+                        connection.disconnect();
+                    if ( writer != null )
+                        writer.close();
+                } catch (IOException e){e.printStackTrace();}
+            }
+            return null;
         }
 
 
@@ -658,7 +784,7 @@ public final class DatabaseAccess{
 
     /**Wrapper method for uploading image. Return either OK or Error.*/
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
+        String url = mainActivity.getString(R.string.server_url) + "users/" + "14"
                 + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         new ImageUploadTask(mainActivity, url, bitmap, new OnResultReadyListener<String>() {
             @Override
@@ -1339,6 +1465,22 @@ public final class DatabaseAccess{
             }
         }).execute();
 
+    }
+
+    /**Download Profile Picture from Server. Return bitmap or null.*/
+    public static void server_getProfilePicture(String userID, final OnResultReadyListener<Bitmap> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);
+        new ImageDownloadTask(mainActivity, comp, new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap result) {
+                if ( result != null && delegate != null ) {
+                    delegate.onResultReady(result);
+                    Log.d("Image_Download", "Success");
+                }
+            }
+        }).execute();
     }
 
 

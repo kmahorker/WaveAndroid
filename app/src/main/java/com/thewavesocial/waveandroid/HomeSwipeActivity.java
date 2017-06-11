@@ -62,6 +62,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     if (result) {
 //                        setupServerDummies();
                         setupMapActionbar();
+                        server_upload_image(((BitmapDrawable) mainActivity.getDrawable(R.drawable.profile_sample)).getBitmap(), null);
                         mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
                         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
                         mPager.setAdapter(mPagerAdapter);
