@@ -3,7 +3,9 @@ package com.thewavesocial.waveandroid.SocialFolder;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,6 +28,8 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +42,7 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 public class UserProfileFragment extends Fragment {
 
     public static TextView activityButton, goingButton;
+    public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 
     public enum PopupPage {
         FOLLOWERS,
@@ -47,9 +52,9 @@ public class UserProfileFragment extends Fragment {
     private User user;
     private TextView followers_textview, following_textview;
     private ListView action_listview;
-    private ImageView profilepic_imageview;
+    private static ImageView profilepic_imageview;
     private UserProfileFragment userProfileFragment;
-    private HomeSwipeActivity mainActivity;
+    private static HomeSwipeActivity mainActivity;
 
     @Override
     //get fragment layout reference
@@ -176,6 +181,16 @@ public class UserProfileFragment extends Fragment {
                 });
             }
         });
+        profilepic_imageview.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                mainActivity.startActivityForResult(i, ADD_PROFILEPIC_INTENT_ID);
+            }
+        });
 
         activityButton.performClick();
     }
@@ -268,4 +283,8 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
+    public static void updateProfileImage(Bitmap bitmap) {
+        profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage( mainActivity.getResources(), bitmap) );
+        server_upload_image(bitmap, null);
+    }
 }

@@ -1,8 +1,12 @@
 package com.thewavesocial.waveandroid;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -27,6 +31,7 @@ import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -547,7 +552,17 @@ public class HomeSwipeActivity extends AppCompatActivity {
             } 
             else
                 Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
-        }
+        } else if(requestCode==UserProfileFragment.ADD_PROFILEPIC_INTENT_ID && resultCode == Activity.RESULT_OK) {
+                Uri selectedImage = data.getData();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
+                    UserProfileFragment.updateProfileImage( bitmap );
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         else
             super.onActivityResult(requestCode, resultCode, data);
     }
