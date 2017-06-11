@@ -67,7 +67,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
-        if ( holder.image.getDrawable() != null ) {
+        if ( holder.image.getDrawable() == null ) {
             DatabaseAccess.server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {

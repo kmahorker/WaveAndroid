@@ -784,7 +784,7 @@ public final class DatabaseAccess{
 
     /**Wrapper method for uploading image. Return either OK or Error.*/
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + "14"
+        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
                 + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         new ImageUploadTask(mainActivity, url, bitmap, new OnResultReadyListener<String>() {
             @Override

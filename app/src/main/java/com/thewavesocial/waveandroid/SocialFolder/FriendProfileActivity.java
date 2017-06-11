@@ -111,11 +111,12 @@ public class FriendProfileActivity extends AppCompatActivity {
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
 
-        UtilityClass.getBitmapFromURL(mainActivity, friend.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+        if ( profilepic_imageview.getDrawable() == null )
+        DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
             @Override
-            public void onResultReady(Bitmap image) {
-                if (image != null)
-                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
+            public void onResultReady(Bitmap result) {
+                if (result != null)
+                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), result));
             }
         });
 
