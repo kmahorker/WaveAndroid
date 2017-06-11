@@ -121,7 +121,11 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onResultReady(Bitmap result) {
                 if ( result != null ) {
-                    profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                    try {
+                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                    } catch (IllegalStateException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

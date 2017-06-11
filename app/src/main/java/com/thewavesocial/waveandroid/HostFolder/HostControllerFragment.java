@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.thewavesocial.waveandroid.AdaptersFolder.ManagePartyCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
@@ -64,6 +65,8 @@ public class HostControllerFragment extends Fragment {
     }
 
     public void populateListView(){
+        final ProgressBar progressBar = (ProgressBar) mainActivity.findViewById(R.id.home_hostView_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
         server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<String>> result) {
@@ -84,8 +87,11 @@ public class HostControllerFragment extends Fragment {
                                 else
                                     mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
                             }
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     });
+                } else {
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });
