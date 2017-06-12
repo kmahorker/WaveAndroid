@@ -267,13 +267,14 @@ public class UserProfileFragment extends Fragment {
     }
 
     /**Get senders object of notification in sorted list. Either User or Party*/
-    private void getSenderObjects(int startingIndex, int items, final OnResultReadyListener<ArrayList<Object>> delegate) {
-        final TreeMap<Long, Object> loaded_objects = new TreeMap<>(Collections.reverseOrder());
-        if ( notifications.size() < startingIndex + items ) {
+    private void getSenderObjects(final int startingIndex, int items, final OnResultReadyListener<ArrayList<Object>> delegate) {
+        final HashMap<Long, Object> loaded_objects = new HashMap<>();
+
+        if ( notifications.size() < startingIndex + items )
             items = notifications.size() - startingIndex;
-        }
 
         //Light-weight threads management
+        final int finalItems = items;
         class ThreadManager{
             private int max, completes;
             private ThreadManager(int max){
@@ -283,9 +284,8 @@ public class UserProfileFragment extends Fragment {
                 completes++;
                 if ( completes >= max && delegate != null ) {
                     ArrayList<Object> objects = new ArrayList<>();
-                    for ( long key : loaded_objects.keySet() ) {
-                        objects.add(loaded_objects.get(key));
-                    }
+                    for (int i = startingIndex; i < startingIndex + finalItems; i++)
+                        objects.add(loaded_objects.get(notifications.get(i).getCreate_time()));
                     delegate.onResultReady(objects);
                 }
             }
