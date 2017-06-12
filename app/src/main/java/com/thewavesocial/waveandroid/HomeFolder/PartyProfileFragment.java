@@ -24,8 +24,9 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 import com.thewavesocial.waveandroid.UtilityClass;
+
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class PartyProfileFragment extends Fragment {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                     actionbar_social.setText("SOCIAL(1)");
-                    UserProfileFragment.goingButton.setText("Attending(1)");
+                    ((TextView)mainActivity.findViewById(R.id.user_going_button)).setText("Attending(1)");
                 }
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("partyObject", party);

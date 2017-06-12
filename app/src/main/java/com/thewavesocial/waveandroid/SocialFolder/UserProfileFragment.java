@@ -3,9 +3,7 @@ package com.thewavesocial.waveandroid.SocialFolder;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -29,34 +28,34 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.TreeMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class UserProfileFragment extends Fragment {
+    public final static int ADD_IMAGE_INTENT_ID = 5, LIST_ACTIVITY = 2, LIST_GOING = 1, LOAD_SIZE = 8;
+    private boolean flag_loading;
+    private int flag_list_type;
+    private int notifications_offset;
+    private HomeSwipeActivity mainActivity;
 
-    public static TextView activityButton, goingButton;
-    public final static int ADD_PROFILEPIC_INTENT_ID = 5;
+    public TextView activityButton, goingButton;
+    private ListView action_listView;
+    private ImageView profile_picture;
 
-    public enum PopupPage {
+    enum PopupPage {
         FOLLOWERS,
         FOLLOWING;
     }
 
-    private User user;
-    private TextView followers_textview, following_textview;
-    private ListView action_listview;
+    private UserActionAdapter adapter;
     private ProgressBar progressBar;
-    private static ImageView profilepic_imageview;
-    private UserProfileFragment userProfileFragment;
-    private static HomeSwipeActivity mainActivity;
+    private ArrayList<Notification> notifications;
+    private ArrayList<Object> senderObjects;
 
     @Override
     //get fragment layout reference
@@ -68,9 +67,8 @@ public class UserProfileFragment extends Fragment {
     //initialize everything
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userProfileFragment = this;
         mainActivity = (HomeSwipeActivity) getActivity();
-        user = CurrentUser.theUser;
+        flag_loading = false;
 
         setupProfileInfo();
 
@@ -97,23 +95,23 @@ public class UserProfileFragment extends Fragment {
 
     //initialize user information
     public void setupProfileInfo() {
-        followers_textview = (TextView) mainActivity.findViewById(R.id.user_followers_count);
-        followers_textview.setOnClickListener(new View.OnClickListener() {
+        TextView followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
+        followers_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(PopupPage.FOLLOWERS);
             }
         });
-        following_textview = (TextView) mainActivity.findViewById(R.id.user_following_count);
-        profilepic_imageview = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
-        action_listview = (ListView) mainActivity.findViewById(R.id.user_notification_list);
+        TextView following_text = (TextView) mainActivity.findViewById(R.id.user_following_count);
+        profile_picture = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
+        action_listView = (ListView) mainActivity.findViewById(R.id.user_notification_list);
         activityButton = (TextView) mainActivity.findViewById(R.id.user_activity_button);
         goingButton = (TextView) mainActivity.findViewById(R.id.user_going_button);
         progressBar = (ProgressBar) mainActivity.findViewById(R.id.user_notification_progressbar);
 
-        followers_textview.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
-        following_textview.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
-        following_textview.setOnClickListener(new View.OnClickListener() {
+        followers_text.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
+        following_text.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
+        following_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(PopupPage.FOLLOWING);
@@ -125,7 +123,7 @@ public class UserProfileFragment extends Fragment {
             public void onResultReady(Bitmap result) {
                 if ( result != null ) {
                     try {
-                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                        profile_picture.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
                     } catch (IllegalStateException e) {
                         e.printStackTrace();
                     }
@@ -133,29 +131,40 @@ public class UserProfileFragment extends Fragment {
             }
         });
 
+        profile_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                mainActivity.startActivityForResult(i, ADD_IMAGE_INTENT_ID);
+            }
+        });
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag_list_type = LIST_ACTIVITY;
+                UtilityClass.hideKeyboard(mainActivity);
                 progressBar.setVisibility(View.VISIBLE);
+
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
-                UtilityClass.hideKeyboard(mainActivity);
                 server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
                         if ( result != null ) {
-                            Log.d("READY", result.size() + "");
-                            extractValues(result, new OnResultReadyListener<NotificationPair>() {
+                            notifications_offset = 0; //eliminate off-by-one error
+                            notifications = sortNotifications(result);
+                            getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
                                 @Override
-                                public void onResultReady(NotificationPair result) {
-                                    ArrayList<Notification> notifications = result.getNotifications();
-                                    ArrayList<Object> objects = result.getSenderObjects();
-                                    action_listview.setAdapter( new UserActionAdapter(mainActivity, notifications, objects));
+                                public void onResultReady(ArrayList<Object> result) {
                                     progressBar.setVisibility(View.INVISIBLE);
+                                    flag_loading = false;
+                                    senderObjects = result;
+                                    adapter = new UserActionAdapter(mainActivity, notifications, senderObjects);
+                                    action_listView.setAdapter(adapter);
                                 }
                             });
-                        } else {
-                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -165,9 +174,11 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
+                flag_list_type = LIST_GOING;
+                UtilityClass.hideKeyboard(mainActivity);
+
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
-                UtilityClass.hideKeyboard(mainActivity);
                 server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<String>> result) {
@@ -176,7 +187,7 @@ public class UserProfileFragment extends Fragment {
                                 @Override
                                 public void onResultReady(List<Party> result) {
                                     if ( result != null ) {
-                                        action_listview.setAdapter( new UserActionAdapter(getActivity(), result));
+                                        action_listView.setAdapter( new UserActionAdapter(getActivity(), result));
                                     }
                                     progressBar.setVisibility(View.INVISIBLE);
                                 }
@@ -188,20 +199,23 @@ public class UserProfileFragment extends Fragment {
                 });
             }
         });
-        profilepic_imageview.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                mainActivity.startActivityForResult(i, ADD_PROFILEPIC_INTENT_ID);
+        action_listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+               if(flag_list_type == LIST_ACTIVITY && !flag_loading && totalItemCount != 0 &&
+                        firstVisibleItem + visibleItemCount == notifications_offset + LOAD_SIZE) {
+                    flag_loading = true;
+                    notifications_offset += LOAD_SIZE;
+                    loadNotifications();
+                }
             }
         });
 
         activityButton.performClick();
     }
 
+    /**Display follower/following list.*/
     private void showPopup(PopupPage popup) {
         switch (popup) {
             case FOLLOWERS:
@@ -213,37 +227,79 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
+    /**Update profile image with the given bitmap*/
+    public void updateProfileImage(Bitmap bitmap) {
+        profile_picture.setImageDrawable( UtilityClass.toRoundImage( mainActivity.getResources(), bitmap) );
+        server_upload_image(bitmap, null);
+    }
+
+    /**Change action buttons' color.*/
     private void changeButton(TextView view, int textColor, int backgroundColor) {
         view.setTextColor(mainActivity.getResources().getColor(textColor));
         view.setBackgroundResource(backgroundColor);
     }
 
-    private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
-        final NotificationPair senderObjects = new NotificationPair(new TreeMap<Long, Notification>(Collections.reverseOrder()),
-                new TreeMap<Long, Object>(Collections.reverseOrder()));
+    /**Sort notifications by creation time, using TreeMap.*/
+    private ArrayList<Notification> sortNotifications(ArrayList<Notification> notifications) {
+        TreeMap<Long, Notification> temp = new TreeMap<>(Collections.reverseOrder());
+        ArrayList<Notification> new_list = new ArrayList<>();
+        for ( Notification each : notifications ) {
+            temp.put(each.getCreate_time(), each);
+        }
+        for ( Long key : temp.keySet() ) {
+            new_list.add(temp.get(key));
+        }
+        return new_list;
+    }
+
+    /**Load the next LOAD_SIZE notifications.*/
+    private void loadNotifications() {
+        progressBar.setVisibility(View.VISIBLE);
+        getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
+            @Override
+            public void onResultReady(ArrayList<Object> result) {
+                progressBar.setVisibility(View.INVISIBLE);
+                flag_loading = false;
+                senderObjects.addAll(result);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**Get senders object of notification in sorted list. Either User or Party*/
+    private void getSenderObjects(int startingIndex, int items, final OnResultReadyListener<ArrayList<Object>> delegate) {
+        final TreeMap<Long, Object> loaded_objects = new TreeMap<>(Collections.reverseOrder());
+        if ( notifications.size() < startingIndex + items ) {
+            items = notifications.size() - startingIndex;
+        }
 
         //Light-weight threads management
         class ThreadManager{
             private int max, completes;
-            public ThreadManager(int max){
+            private ThreadManager(int max){
                 this.max = max;
             }
             void completeThreads(){
                 completes++;
-                if ( completes >= max && delegate != null )
-                    delegate.onResultReady(senderObjects);
+                if ( completes >= max && delegate != null ) {
+                    ArrayList<Object> objects = new ArrayList<>();
+                    for ( long key : loaded_objects.keySet() ) {
+                        objects.add(loaded_objects.get(key));
+                    }
+                    delegate.onResultReady(objects);
+                }
             }
         }
-        final ThreadManager threadManager = new ThreadManager(result.size());
+        final ThreadManager threadManager = new ThreadManager(items);
 
-        for ( final Notification each : result ) {
+        for ( int i = startingIndex; i < (items + startingIndex); i++ ) {
+            final Notification each = notifications.get(i);
             if ( each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED ) {
                 DatabaseAccess.server_getUserObject(each.getSenderID(), new OnResultReadyListener<User>() {
                     @Override
                     public void onResultReady(User result) {
                         if (result != null) {
-                            senderObjects.notifications.put(each.getCreate_time(), each);
-                            senderObjects.objects.put(each.getCreate_time(), result);
+                            loaded_objects.put(each.getCreate_time(), result);
                         }
                         threadManager.completeThreads();
                     }
@@ -253,8 +309,7 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(Party result) {
                         if (result != null) {
-                            senderObjects.notifications.put(each.getCreate_time(), each);
-                            senderObjects.objects.put(each.getCreate_time(), result);
+                            loaded_objects.put(each.getCreate_time(), result);
                         }
                         threadManager.completeThreads();
                     }
@@ -265,33 +320,4 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    class NotificationPair {
-        private TreeMap<Long, Notification> notifications;
-        private TreeMap<Long, Object> objects;
-        public NotificationPair(TreeMap<Long, Notification> notifications, TreeMap<Long, Object> objects) {
-            this.notifications = notifications;
-            this.objects = objects;
-        }
-
-        public ArrayList<Notification> getNotifications() {
-            ArrayList<Notification> list = new ArrayList<>();
-            for ( Long key : notifications.keySet() ) {
-                list.add(notifications.get(key));
-            }
-            return list;
-        }
-
-        public ArrayList<Object> getSenderObjects() {
-            ArrayList<Object> list = new ArrayList<>();
-            for ( Long key : notifications.keySet() ) {
-                list.add(objects.get(key));
-            }
-            return list;
-        }
-    }
-
-    public static void updateProfileImage(Bitmap bitmap) {
-        profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage( mainActivity.getResources(), bitmap) );
-        server_upload_image(bitmap, null);
-    }
 }

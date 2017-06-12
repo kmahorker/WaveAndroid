@@ -1,10 +1,8 @@
 package com.thewavesocial.waveandroid;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
@@ -552,12 +549,12 @@ public class HomeSwipeActivity extends AppCompatActivity {
             } 
             else
                 Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
-        } else if(requestCode==UserProfileFragment.ADD_PROFILEPIC_INTENT_ID && resultCode == Activity.RESULT_OK) {
+        } else if(requestCode==UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
                 Uri selectedImage = data.getData();
                 Bitmap bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
-                    UserProfileFragment.updateProfileImage( bitmap );
+                    userProfileFragment.updateProfileImage( bitmap );
 
                 } catch (IOException e) {
                     e.printStackTrace();

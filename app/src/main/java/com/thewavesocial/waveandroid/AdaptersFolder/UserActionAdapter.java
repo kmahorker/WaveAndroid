@@ -60,7 +60,7 @@ public class UserActionAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (type == type1Notification)
-            return notifList.size();
+            return senderObjects.size();
         else
             return partyList.size();
     }
