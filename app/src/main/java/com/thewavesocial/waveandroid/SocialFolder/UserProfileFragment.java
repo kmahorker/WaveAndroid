@@ -58,13 +58,13 @@ public class UserProfileFragment extends Fragment {
     private ArrayList<Object> senderObjects;
 
     @Override
-    //get fragment layout reference
+    /**get fragment layout reference*/
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.profile_user, container, false);
     }
 
     @Override
-    //initialize everything
+    /**initialize everything*/
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
@@ -82,7 +82,7 @@ public class UserProfileFragment extends Fragment {
     }
 
     @Override
-    //Update result after new user data is saved
+    /**Update result after new user data is saved*/
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == 1) {
@@ -93,7 +93,7 @@ public class UserProfileFragment extends Fragment {
 
 //-------------------------------------------------------------------------------OnCreate Sub-tasks
 
-    //initialize user information
+    /**initialize user information*/
     public void setupProfileInfo() {
         TextView followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
         followers_text.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +145,6 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
                 flag_list_type = LIST_ACTIVITY;
                 UtilityClass.hideKeyboard(mainActivity);
-                progressBar.setVisibility(View.VISIBLE);
 
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
@@ -153,7 +152,8 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
                         if ( result != null ) {
-                            notifications_offset = 0; //eliminate off-by-one error
+                            progressBar.setVisibility(View.VISIBLE);
+                            notifications_offset = 0;
                             notifications = sortNotifications(result);
                             getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
                                 @Override
