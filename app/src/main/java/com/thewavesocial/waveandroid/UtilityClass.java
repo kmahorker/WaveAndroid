@@ -16,6 +16,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -339,5 +341,21 @@ public final class UtilityClass {
             progressDialog.dismiss();
         if ( !success )
             printAlertMessage(activity, "Sorry. Internet Connection Error.", "Network Error", true);
+    }
+
+    public static List<String> userObjectToStringId(List<User> userList){
+        List<String> result  = new ArrayList<>();
+        for(User user : userList){
+            result.add((user.getUserID()));
+        }
+        return result;
+    }
+
+    public static List<Integer> userObjectToIntegerId(List<User> userList){
+        List<Integer> result = new ArrayList<>();
+        for(User user : userList){
+            result.add(Integer.parseInt(user.getUserID()));
+        }
+        return result;
     }
 }

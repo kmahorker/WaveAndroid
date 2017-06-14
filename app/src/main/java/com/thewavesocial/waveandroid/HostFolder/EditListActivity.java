@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,17 +40,19 @@ public class EditListActivity extends AppCompatActivity {
     private RecyclerView invite_list;
     private EditText editText;
     private static EditListActivity mainActivity;
-    private List<User> users;
-    private static List<User> invites;
+    public static ArrayList<User> users;
+    public static ArrayList<User> invites;
     private View view;
     private int LAYOUT_TYPE; //1: Attending
                              //2: Bouncing
+    private int requestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_list);
         mainActivity = this;
+
         initialize();
         setupActionBar();
         setupReferences();
@@ -57,15 +60,16 @@ public class EditListActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        party = getIntent().getExtras().getParcelable("partyObj");
+        party = getIntent().getExtras().getParcelable("partyObject");
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
 
         //Get user followings
         server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
+                users = new ArrayList<>();
                 if ( result != null ) {
-                    users = result;
+                    users.addAll(result);
                 }
             }
         });
@@ -77,7 +81,7 @@ public class EditListActivity extends AppCompatActivity {
                 if ( result != null ) {
                     switch (LAYOUT_TYPE) {
                         case 1:
-                            invites = result.get("attending");
+                            invites = result.get("inviting");
                             break;
                         case 2:
                             invites = result.get("bouncing");
@@ -104,7 +108,8 @@ public class EditListActivity extends AppCompatActivity {
                         .setPositiveButton("Discard", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                onBackPressed();
+                                Intent returnIntent = new Intent();
+                                setResult(Activity.RESULT_CANCELED, returnIntent);
                                 finish();
                             }
                         })
@@ -145,18 +150,26 @@ public class EditListActivity extends AppCompatActivity {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //TODO: 5/7/2017 Update server with new invites list
-                switch (LAYOUT_TYPE){
-                    case 1:
-                        for ( User user : invites ) {
-                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
-                        }
-                        break;
-                    case 2:
-                        for ( User user : invites ) {
-                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
-                        }
-                        break;
-                }
+                Intent returnIntent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("updatedList", invites);
+                returnIntent.putExtras(bundle);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
+//                switch (LAYOUT_TYPE){
+//                    case 1:
+//
+////                        for ( User user : invites ) {
+////                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
+////                        }
+//                        break;
+//                    case 2:
+////                        for ( User user : invites ) {
+////                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
+////                        }
+//                        break;
+//                }
             }
         });
         searchbar.clearFocus();
@@ -188,11 +201,24 @@ public class EditListActivity extends AppCompatActivity {
         });
     }
 
+    public static List<User> getUsersFromFollowing(List<Integer> indexes) {
+        ArrayList<User> users = new ArrayList<>();
+        for ( int i = 0; i < indexes.size(); i++ ) {
+            users.add(invites.get(indexes.get(i)));
+        }
+        return users;
+    }
+
     private class FriendListAdapter extends BaseAdapter {
         private List<User> users;
         private LayoutInflater inflater;
         private FriendListAdapter(List<User> friends) {
-            this.users = friends;
+            if(friends!= null) {
+                this.users = friends;
+            }
+            else{
+                this.users = new ArrayList<>();
+            }
             inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override public int getCount() {
@@ -271,7 +297,12 @@ public class EditListActivity extends AppCompatActivity {
         private LayoutInflater inflater;
         public SelectedAdapter(List<User> userList) {
             super();
-            this.userList = userList;
+            if(userList != null) {
+                this.userList = userList;
+            }
+            else{
+                this.userList = new ArrayList<>();
+            }
             inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

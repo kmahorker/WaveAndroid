@@ -68,7 +68,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
             holder = (Holder) layoutView.getTag();
         }
 
-        Party party = partyList.get(position);
+        final Party party = partyList.get(position);
         holder.partyEmoji = (EmojiconTextView) layoutView.findViewById(R.id.eachManage_partyEmoji_icon);
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
@@ -84,7 +84,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("callerActivity", EventStatsActivity.activityHostFragment);
-                intent.putExtra("partyObject", partyList.get(position));
+                intent.putExtra("partyObject", party);
                 mainActivity.startActivity(intent);
             }
         });

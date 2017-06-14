@@ -252,7 +252,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditStatsActivity.class);
                 intent.putExtra("partyObject", party);//TODO: XXX 4/25/17 Pass party object/id to next screen
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
