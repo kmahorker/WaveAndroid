@@ -588,50 +588,56 @@ public class EditStatsActivity extends AppCompatActivity {
             Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
 
             try {
-                server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
-                        mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
-                        isPublic, startingDateTime.getTimeInMillis() / 1000L, endingDateTime.getTimeInMillis() / 1000L,
-                        minAge, maxAge, new OnResultReadyListener<String>() {
 
-                            @Override
-                            public void onResultReady(String result) {
-                                int commaIndex = result.indexOf(',');
-                                if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
-                                    Log.d("Compose Party", "Unsuccessful");
-                                    return;
-                                }
+                HashMap<String, String> newParty = new HashMap<>();
+                newParty.put("name", name);
+                newParty.put("emoji", partyEmoji);
+                newParty.put("price", price + "");
+                newParty.put("address", mapAddress.getAddress_string());
+                newParty.put("lat", mapAddress.getAddress_latlng().latitude + "");
+                newParty.put("long", mapAddress.getAddress_latlng().longitude + "");
+                newParty.put("is_public", isPublic + "");
+                newParty.put("start_timestamp", startingDateTime.getTimeInMillis() / 1000L + "");
+                newParty.put("end_timestamp", endingDateTime.getTimeInMillis() / 1000L + "");
+                newParty.put("min_age", minAge + "");
+                newParty.put("max_age", maxAge + "");
 
-                                final String eventId = result.substring(commaIndex + 1);
+                final String eventId = party.getPartyID();
 
-                                for(final int userID : invitingUsers){
-                                    server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            Log.d("addInvitedUser", result + "");
-                                            DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
-                                            completeThreads();
-                                        }
-                                    });
-                                }
-
-                                for(final int userID: bouncingUsers){
-                                    DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_bouncing", null);
-                                    completeThreads();
-                                }
-
-                                for(final String hostingId : hostingUsers){
-                                    server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            Log.d("addHostingUser", result + "");
-                                            DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
-                                            completeThreads();
-                                        }
-                                    });
-                                }
-
+                server_updateParty(eventId, newParty, new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(result.equals("success")){
+                            for(final int userID : invitingUsers){
+                                server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        Log.d("addInvitedUser", result + "");
+                                        DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
+                                        completeThreads();
+                                    }
+                                });
                             }
-                        });
+
+                            for(final int userID: bouncingUsers){
+                                DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_bouncing", null);
+                                completeThreads();
+                            }
+
+                            for(final String hostingId : hostingUsers){
+                                server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        Log.d("addHostingUser", result + "");
+                                        DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
+                                        completeThreads();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
