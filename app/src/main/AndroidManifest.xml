@@ -29,12 +29,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".LoginFolder.LoginActivity" android:screenOrientation="portrait" />
-        <activity android:name=".LoginFolder.SignupActivity" android:screenOrientation="portrait"/>
         <activity android:name=".SocialFolder.FriendProfileActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".SocialFolder.InviteFriendsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".HostFolder.CreateEventActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".HostFolder.ManageEventsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".HostFolder.EventStatsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".LoginFolder.ForgotPasswordActivity" android:screenOrientation="portrait"/>
         <activity android:name=".LoginFolder.LaunchActivity" android:screenOrientation="portrait"/>
