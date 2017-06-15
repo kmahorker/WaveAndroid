@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ public class EditListActivity extends AppCompatActivity {
     private int LAYOUT_TYPE; //1: Attending
                              //2: Bouncing
     private int requestCode;
+    private SelectedAdapter invite_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,19 +65,7 @@ public class EditListActivity extends AppCompatActivity {
         party = getIntent().getExtras().getParcelable("partyObject");
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
 
-        //Get user followings
-        server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(List<User> result) {
-                users = new ArrayList<>();
-                if ( result != null ) {
-                    users.addAll(result);
-                    friend_list.setAdapter(new FriendListAdapter(users));
-                }
-            }
-        });
-
-        //Get attending or bouncing users
+        //Get follower, attending or bouncing users
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
@@ -88,9 +78,23 @@ public class EditListActivity extends AppCompatActivity {
                             invites = result.get("bouncing");
                             break;
                     }
+                    invite_adapter = new SelectedAdapter(invites);
                     LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
                     invite_list.setLayoutManager(layoutManager);
-                    invite_list.setAdapter(new SelectedAdapter(invites));
+                    invite_list.setAdapter(invite_adapter);
+
+                    //Get user followings
+                    server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+                        @Override
+                        public void onResultReady(List<User> result) {
+                            users = new ArrayList<>();
+                            if ( result != null ) {
+                                users.addAll(result);
+                                friend_list.setAdapter(new FriendListAdapter(users));
+                            }
+                        }
+                    });
+
                 }
             }
         });
@@ -245,9 +249,14 @@ public class EditListActivity extends AppCompatActivity {
             holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
             holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
             holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-            //TODO: Get image from URL
-            //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
             holder.name.setText(getItem(position).getFullName());
+            server_getProfilePicture(getItem(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));
+                }
+            });
+
             if ( invites.contains( getItem(position) ) )
                 holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
             else
@@ -257,11 +266,11 @@ public class EditListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if ( !invites.contains( getItem(position) ) ) {
                         invites.add(getItem(position));
-                        invite_list.setAdapter(new SelectedAdapter(invites));
+                        invite_adapter.notifyDataSetChanged();
                         holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                     } else {
                         invites.remove(getItem(position));
-                        invite_list.setAdapter(new SelectedAdapter(invites));
+                        invite_adapter.notifyDataSetChanged();
                         holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                     }
                 }
@@ -320,10 +329,13 @@ public class EditListActivity extends AppCompatActivity {
         }
 
 
-        @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-            //TODO: Get image from URL
-//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-//                        userList.get(position).getProfilePic().getBitmap()));
+        @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
+            server_getProfilePicture(userList.get(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));
+                }
+            });
             holder.imgView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
