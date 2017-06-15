@@ -484,7 +484,9 @@ public class EditStatsActivity extends AppCompatActivity {
                 if (checkInfo()) {
                     savePage();
                     NewPartyInfo.composeParty();
-                    onBackPressed();
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
                 }
             }
         });

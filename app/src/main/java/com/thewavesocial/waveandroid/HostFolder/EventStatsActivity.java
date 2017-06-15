@@ -63,6 +63,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private int going, male, female, callerType;
     private EventStatsActivity mainActivity;
 
+    private final int EDIT_STATS_REQUEST = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +74,10 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
         callerType = intent.getExtras().getInt("callerActivity");
+        loadActivity();
+    }
 
+    private void loadActivity(){
         setupActionbar();
         setupReferences();
         setupPartyInfos();
@@ -87,6 +92,24 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }, 500);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == EDIT_STATS_REQUEST){
+            if(resultCode == RESULT_OK){
+                server_getPartyObject(party.getPartyID(), new OnResultReadyListener<Party>() {
+                    @Override
+                    public void onResultReady(Party result) {
+                        party = result;
+                    }
+                });
+                loadActivity();
+            }
+            else{
+                //Do Nothing
+            }
+        }
+    }
 
     private void setupSpecialFields(int callerType, String hostID) {
         if ( callerType == activityHostFragment) {
@@ -252,7 +275,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditStatsActivity.class);
                 intent.putExtra("partyObject", party);//TODO: XXX 4/25/17 Pass party object/id to next screen
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, EDIT_STATS_REQUEST);
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
