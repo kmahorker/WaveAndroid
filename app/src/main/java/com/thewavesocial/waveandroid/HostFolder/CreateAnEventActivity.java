@@ -524,7 +524,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             NewPartyInfo.mapAddress = new MapAddress(partyAddress,
                     UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
             NewPartyInfo.isPublic = !privateParty;
-            NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
+            NewPartyInfo.partyEmoji = emojiconEditText.getText().toString();
             NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
             NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
             //getActivity().finish();

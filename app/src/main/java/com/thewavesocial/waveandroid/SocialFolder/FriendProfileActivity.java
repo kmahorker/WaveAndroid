@@ -29,7 +29,7 @@ import java.util.TreeMap;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getNotificationsOfUser;
 
 public class FriendProfileActivity extends AppCompatActivity {
-    private User friend; //TODO: Remove Empty User
+    private User friend;
     private String userID;
     private TextView followers_textview, following_textview, follow_button;
     private ListView notification_listview;

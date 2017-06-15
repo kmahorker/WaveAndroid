@@ -58,7 +58,7 @@
 //        final FriendsListFragment fragment = this;
 //        mainFragment = this;
 //        mainActivity = getActivity();
-//        DummyUser dummy = new DummyUser(getActivity()); //TODO: FOR TESTING ONLY
+//        DummyUser dummy = new DummyUser(getActivity());
 //
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_friends);

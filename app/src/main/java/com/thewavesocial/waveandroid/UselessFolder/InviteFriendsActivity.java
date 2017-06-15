@@ -36,7 +36,7 @@
 //            @Override
 //            public boolean onQueryTextSubmit(String query) {
 //
-//                List<User> userList = new ArrayList<User>(); //TODO: Search for users from database
+//                List<User> userList = new ArrayList<User>();
 //                userList.add(us);
 //                addFriendsResultListView.setAdapter(new AddFriendCustomAdapter(currentActivity, userList));
 //                inviteFriendSearchBar.clearFocus();

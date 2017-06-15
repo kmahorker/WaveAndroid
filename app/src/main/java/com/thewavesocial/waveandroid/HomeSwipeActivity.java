@@ -568,10 +568,4 @@ public class HomeSwipeActivity extends AppCompatActivity {
         Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
         // TODO: 04/02/2017 Check with database
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //Overriden in fragments
-    }
 }

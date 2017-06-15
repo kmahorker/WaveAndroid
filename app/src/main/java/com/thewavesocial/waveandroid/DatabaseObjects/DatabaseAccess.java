@@ -1704,26 +1704,7 @@ public final class DatabaseAccess{
             e.printStackTrace();
         }
 
-
-//        bestFriends = (ArrayList) info.get("best_friends");
-//        followers = (ArrayList) info.get("followers");
-//        following = (ArrayList) info.get("following");
-//        hosting = (ArrayList) info.get("hosting");
-//        hosted = (ArrayList) info.get("hosted");
-//        attending = (ArrayList) info.get("attending");
-//        attended = (ArrayList) info.get("attended");
-//        bounced = (ArrayList) info.get("bounced");
-
-//        List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
-//                hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
-//                attended = new ArrayList(), bounced = new ArrayList();
-//        List notifications1 = (ArrayList) info.get("notifications1");
-//        List notifications2 = (ArrayList) info.get("notifications2");
-//        String phone = (String) info.get("phone"); // TODO: 04/22/2017 Not provided
-//        String password = (String) info.get("password"); // TODO: 04/22/2017 Not provided
-
-        String phone = "", password = "";
-        MapAddress mapAddress = new MapAddress(); // TODO: 04/17/2017 what to store as address
+        String password = "";
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,

@@ -42,7 +42,7 @@
 //        setContentView(R.layout.signup_viewpager_layout);
 //
 //        Intent intent = getIntent();
-//        if(intent.getExtras() != null) { //TODO 3/8/2017 Only Get Extras if Login with Facebook
+//        if(intent.getExtras() != null) {
 //            userID = intent.getExtras().getString("userIDLong");
 //            name = intent.getExtras().getString("userName");
 //            email = intent.getExtras().getString("userEmail");
@@ -142,7 +142,6 @@
 //                    new ArrayList<Notification>(),
 //                    "");
 //            //user.getBestFriends().add(bestFriend.getUserID());
-//            // TODO: 04/21/2017 Add image by url
 ////            user.setProfilePic(profilePic);
 //
 //            CurrentUser.setTheUser(user);

@@ -84,15 +84,6 @@ public class PartyProfileFragment extends Fragment {
                 mainActivity.startActivity(intent);
             }
         });
-        hostname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                intent.putExtra("userIDLong", 0);
-                mainActivity.startActivity(intent);
-                // TODO: 02/24/2017 Change hostname to host user object
-            }
-        });
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,11 +131,20 @@ public class PartyProfileFragment extends Fragment {
 
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
-            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+            public void onResultReady(final HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
 
-                    if ( !result.get("hosting").isEmpty() )
+                    if ( !result.get("hosting").isEmpty() ) {
                         hostname.setText(result.get("hosting").get(0).getFullName());
+                        hostname.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                                intent.putExtra("userObject", result.get("hosting").get(0));
+                                mainActivity.startActivity(intent);
+                            }
+                        });
+                    }
 
                     if ( !result.get("attending").isEmpty() )
                         sample.addAll(result.get("attending"));

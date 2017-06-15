@@ -278,7 +278,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mainActivity, EditStatsActivity.class);
-                intent.putExtra("partyObject", party);//TODO: XXX 4/25/17 Pass party object/id to next screen
+                intent.putExtra("partyObject", party);
                 startActivityForResult(intent, EDIT_STATS_REQUEST);
             }
         });

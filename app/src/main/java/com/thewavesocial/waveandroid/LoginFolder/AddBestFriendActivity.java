@@ -114,7 +114,6 @@ public class AddBestFriendActivity extends AppCompatActivity {
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
                 if(contact) {
-                    //mainActivity = thisActivity; //TODO: 5/27/17 Shouldn't actually be set to this
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
                     server_getBestFriends(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override

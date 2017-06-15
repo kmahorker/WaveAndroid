@@ -31,6 +31,6 @@
         android:layout_centerVertical="true"
         android:layout_margin="5dp"
         android:translationY="1dp"
-        android:src="@drawable/setting"/> <!-- TODO: 4/27/17 Replace with actual pic -->
+        android:src="@drawable/setting"/>
 
 </RelativeLayout>
