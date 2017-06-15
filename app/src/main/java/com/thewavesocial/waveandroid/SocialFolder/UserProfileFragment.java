@@ -38,9 +38,9 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class UserProfileFragment extends Fragment {
     public final static int ADD_IMAGE_INTENT_ID = 5, LIST_ACTIVITY = 2, LIST_GOING = 1, LOAD_SIZE = 8;
-    private boolean flag_loading;
+    private boolean flag_loading_notif, flag_loading_going;
     private int flag_list_type;
-    private int notifications_offset;
+    private int notifications_offset, going_offset;
     private HomeSwipeActivity mainActivity;
 
     public TextView activityButton, goingButton;
@@ -56,6 +56,8 @@ public class UserProfileFragment extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<Notification> notifications;
     private ArrayList<Object> senderObjects;
+    private ArrayList<String> goingIDs;
+    private ArrayList<Party> goingParties;
 
     @Override
     /**get fragment layout reference*/
@@ -68,7 +70,8 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
-        flag_loading = false;
+        flag_loading_notif = false;
+        flag_loading_going = false;
 
         setupProfileInfo();
 
@@ -159,7 +162,7 @@ public class UserProfileFragment extends Fragment {
                                 @Override
                                 public void onResultReady(ArrayList<Object> result) {
                                     progressBar.setVisibility(View.INVISIBLE);
-                                    flag_loading = false;
+                                    flag_loading_notif = false;
                                     senderObjects = result;
                                     adapter = new UserActionAdapter(mainActivity, notifications, senderObjects);
                                     action_listView.setAdapter(adapter);
@@ -173,7 +176,6 @@ public class UserProfileFragment extends Fragment {
         goingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
                 flag_list_type = LIST_GOING;
                 UtilityClass.hideKeyboard(mainActivity);
 
@@ -182,18 +184,22 @@ public class UserProfileFragment extends Fragment {
                 server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<String>> result) {
-                        if ( result != null ) {
-                            server_getPartyListObjects(result.get("going"), new OnResultReadyListener<List<Party>>() {
+                        if (result != null) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            going_offset = 0;
+                            goingIDs = result.get("going");
+                            server_getPartyListObjects(goingIDs.subList(0, LOAD_SIZE), new OnResultReadyListener<List<Party>>() {
                                 @Override
                                 public void onResultReady(List<Party> result) {
-                                    if ( result != null ) {
-                                        action_listView.setAdapter( new UserActionAdapter(getActivity(), result));
+                                    if (result != null) {
+                                        flag_loading_going = false;
+                                        goingParties = new ArrayList<>(result);
+                                        adapter = new UserActionAdapter(mainActivity, goingParties);
+                                        action_listView.setAdapter(adapter);
                                     }
                                     progressBar.setVisibility(View.INVISIBLE);
                                 }
                             });
-                        } else {
-                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
@@ -203,11 +209,19 @@ public class UserProfileFragment extends Fragment {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-               if(flag_list_type == LIST_ACTIVITY && !flag_loading && totalItemCount != 0 &&
-                        firstVisibleItem + visibleItemCount == notifications_offset + LOAD_SIZE) {
-                    flag_loading = true;
+               if(flag_list_type == LIST_ACTIVITY && !flag_loading_notif && totalItemCount != 0 &&
+                        firstVisibleItem + visibleItemCount == notifications_offset + LOAD_SIZE &&
+                        notifications.size() > notifications_offset) {
+                    flag_loading_notif = true;
                     notifications_offset += LOAD_SIZE;
                     loadNotifications();
+                }
+                if(flag_list_type == LIST_GOING && !flag_loading_going && totalItemCount != 0 &&
+                        firstVisibleItem + visibleItemCount == going_offset + LOAD_SIZE &&
+                        goingIDs.size() > going_offset) {
+                    flag_loading_going = true;
+                    going_offset += LOAD_SIZE;
+                    loadGoing();
                 }
             }
         });
@@ -259,9 +273,26 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onResultReady(ArrayList<Object> result) {
                 progressBar.setVisibility(View.INVISIBLE);
-                flag_loading = false;
+                flag_loading_notif = false;
                 senderObjects.addAll(result);
                 adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**Load the next LOAD_SIZE notifications.*/
+    private void loadGoing() {
+        progressBar.setVisibility(View.VISIBLE);
+        int load_amount = (goingIDs.size() < going_offset + LOAD_SIZE)? goingIDs.size() - going_offset : LOAD_SIZE;
+        server_getPartyListObjects(goingIDs.subList(going_offset, going_offset + load_amount), new OnResultReadyListener<List<Party>>() {
+            @Override
+            public void onResultReady(List<Party> result) {
+                if (result != null) {
+                    flag_loading_going = false;
+                    goingParties.addAll(result);
+                    adapter.notifyDataSetChanged();
+                }
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
