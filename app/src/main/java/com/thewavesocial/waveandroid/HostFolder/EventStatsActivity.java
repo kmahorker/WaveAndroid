@@ -74,12 +74,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
         callerType = intent.getExtras().getInt("callerActivity");
+        setupReferences();
+
         loadActivity();
     }
 
     private void loadActivity(){
         setupActionbar();
-        setupReferences();
         setupPartyInfos();
         setupFunctionalities();
 
@@ -100,10 +101,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 server_getPartyObject(party.getPartyID(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {
-                        party = result;
+                        if(result != null) {
+                            party = result;
+                            loadActivity();
+                            //setupPartyInfos();
+                        }
                     }
                 });
-                loadActivity();
             }
             else{
                 //Do Nothing
