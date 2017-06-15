@@ -7,6 +7,7 @@ import android.content.Intent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -78,6 +80,15 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 followings = new ArrayList<>();
                 if ( result != null )
                     followings.addAll(result);
+
+                for ( final User user : followings ) {
+                    server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
+                        @Override
+                        public void onResultReady(Bitmap result) {
+                            user.setProfilePic(result);
+                        }
+                    });
+                }
             }
         });
     }
@@ -628,9 +639,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                //TODO: Get image from URL
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
+
+                holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if ( invite_index.contains( position ))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
@@ -686,9 +697,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return userList.size();
             }
             @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-                //TODO: Get image from URL
-//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-//                        userList.get(position).getProfilePic().getBitmap()));
+                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
@@ -813,12 +822,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-
-                //TODO: Get image from URL
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
                 holder.name.setText(getItem(position).getFullName());
 
-                Log.d("Contains?", invite_index.toString() );
+                holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if ( invite_index.contains( position ) )
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
@@ -826,17 +832,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("Position", position+"");
                         if ( !invite_index.contains( position ) ) {
                             invite_index.add(position);
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
-                            Log.d("Contains?", invite_index.toString() );
                         } else {
                             invite_index.remove(invite_index.indexOf(position));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
-                            Log.d("Contains?", invite_index.toString() );
                         }
                     }
                 });
@@ -878,8 +881,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 return userList.size();
             }
             @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-//                        userList.get(position).getProfilePic().getBitmap()));
+
+                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
