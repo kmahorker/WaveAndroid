@@ -47,6 +47,7 @@ public class EditListActivity extends AppCompatActivity {
     private int LAYOUT_TYPE; //1: Attending
                              //2: Bouncing
     private int requestCode;
+    private SelectedAdapter invite_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,10 @@ public class EditListActivity extends AppCompatActivity {
                             invites = result.get("bouncing");
                             break;
                     }
+                    invite_adapter = new SelectedAdapter(invites);
                     LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
                     invite_list.setLayoutManager(layoutManager);
-                    invite_list.setAdapter(new SelectedAdapter(invites));
+                    invite_list.setAdapter(invite_adapter);
 
                     //Get user followings
                     server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
@@ -264,11 +266,11 @@ public class EditListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if ( !invites.contains( getItem(position) ) ) {
                         invites.add(getItem(position));
-                        invite_list.setAdapter(new SelectedAdapter(invites));
+                        invite_adapter.notifyDataSetChanged();
                         holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                     } else {
                         invites.remove(getItem(position));
-                        invite_list.setAdapter(new SelectedAdapter(invites));
+                        invite_adapter.notifyDataSetChanged();
                         holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                     }
                 }
