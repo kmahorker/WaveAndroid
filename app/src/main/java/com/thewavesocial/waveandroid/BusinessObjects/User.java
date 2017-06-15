@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 //import android.media.Image;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -38,7 +39,7 @@ public class User implements Parcelable {
     private List<String> bouncing;
     private List<String> going;
     private List<Notification> notifications;
-    private String profilePic;
+    private Bitmap profilePic;
 
     public User() {
         userID = "0";
@@ -59,7 +60,7 @@ public class User implements Parcelable {
         attending = new ArrayList<>();
         going = new ArrayList<>();
         notifications = new ArrayList<>();
-        profilePic = ""; //TODO Use different constructor
+        profilePic = null; //TODO Use different constructor
     }
 
     public User(String userID,
@@ -80,7 +81,7 @@ public class User implements Parcelable {
                 List<String> attending,
                 List<String> going,
                 List<Notification> notifications,
-                String profilePic) {
+                Bitmap profilePic) {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -155,7 +156,7 @@ public class User implements Parcelable {
         this.attending = attending;
     }
 
-    public void setProfilePic(String profilePic) {
+    public void setProfilePic(Bitmap profilePic) {
         this.profilePic = profilePic;
     }
 
@@ -213,7 +214,7 @@ public class User implements Parcelable {
         return attending;
     }
 
-    public String getProfilePic() {
+    public Bitmap getProfilePic() {
         return profilePic;
     }
 
@@ -340,7 +341,7 @@ public class User implements Parcelable {
         } else {
             notifications = null;
         }
-        profilePic = in.readString();
+        profilePic = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
     }
 
     @Override
@@ -418,7 +419,7 @@ public class User implements Parcelable {
             dest.writeByte((byte) (0x01));
             dest.writeList(notifications);
         }
-        dest.writeString(profilePic);
+        dest.writeValue(profilePic);
     }
 
     @SuppressWarnings("unused")
