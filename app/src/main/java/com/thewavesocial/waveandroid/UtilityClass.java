@@ -108,6 +108,39 @@ public final class UtilityClass {
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }
 
+    public static String getNotificationTime(long time_period) {
+        String suffix = "";
+        int sec = 60, min = 60, hr = 24, mth = 30, yr = 12;
+
+        long num = time_period/(sec*min*hr*mth*yr);
+        if ( num != 0 ) {
+            suffix = (num == 1)? "" : "s";
+            return num + " year" + suffix + " ago.";
+        }
+        num = time_period/(sec*min*hr*mth);
+        if ( num != 0 ) {
+            suffix = (num == 1) ? "" : "s";
+            return num + " month" + suffix + " ago.";
+        }
+        num = time_period/(sec*min*hr);
+        if ( num != 0 ) {
+            suffix = (num == 1) ? "" : "s";
+            return num + " day" + suffix + " ago.";
+        }
+        num = time_period/(sec*min);
+        if ( num != 0 ) {
+            suffix = (num == 1) ? "" : "s";
+            return num + " hour" + suffix + " ago.";
+        }
+        num = time_period/(sec);
+        if ( num != 0 ) {
+            suffix = (num == 1) ? "" : "s";
+            return num + " min" + suffix + " ago.";
+        }
+        suffix = (time_period == 1) ? "" : "s";
+        return time_period + " sec" + suffix + " ago.";
+    }
+
     public static RoundedBitmapDrawable toRoundImage(Resources res, Bitmap bitmap) {
         //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
         RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(res, bitmap);
