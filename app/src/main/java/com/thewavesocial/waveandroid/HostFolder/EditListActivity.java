@@ -70,6 +70,7 @@ public class EditListActivity extends AppCompatActivity {
                 users = new ArrayList<>();
                 if ( result != null ) {
                     users.addAll(result);
+                    friend_list.setAdapter(new FriendListAdapter(users));
                 }
             }
         });
@@ -87,6 +88,9 @@ public class EditListActivity extends AppCompatActivity {
                             invites = result.get("bouncing");
                             break;
                     }
+                    LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+                    invite_list.setLayoutManager(layoutManager);
+                    invite_list.setAdapter(new SelectedAdapter(invites));
                 }
             }
         });
@@ -139,11 +143,9 @@ public class EditListActivity extends AppCompatActivity {
         create = (TextView)findViewById(R.id.edit_event_list_create);
         create.setText("Update List");
         friend_list = (ListView)findViewById(R.id.edit_event_list_list);
-        friend_list.setAdapter(new FriendListAdapter(users));
         invite_list = (RecyclerView)findViewById(R.id.edit_event_list_selectedList);
-        LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
-        invite_list.setLayoutManager(layoutManager);
-        invite_list.setAdapter(new SelectedAdapter(invites));
+        users = new ArrayList<>();
+        invites = new ArrayList<>();
     }
 
     private void setupFunctionality(){
