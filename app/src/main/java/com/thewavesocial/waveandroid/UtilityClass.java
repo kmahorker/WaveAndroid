@@ -391,4 +391,14 @@ public final class UtilityClass {
         }
         return result;
     }
+
+    public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b){
+        List<T> duplicates = new ArrayList<>();
+        for(T item : a){
+            if(b.contains(item)){
+                duplicates.add(item);
+            }
+        }
+        return duplicates;
+    }
 }

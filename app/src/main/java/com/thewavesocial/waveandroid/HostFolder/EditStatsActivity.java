@@ -27,6 +27,7 @@ import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
+import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
@@ -80,6 +81,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
     final int EDIT_BOUNCER_REQUEST = 2;
     final int EDIT_INVITE_REQUEST = 1;
+
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -564,6 +566,10 @@ public class EditStatsActivity extends AppCompatActivity {
         static int minAge;
         static int maxAge;
 
+        static List<String> originalHosting;
+        static List<Integer> originalBouncing;
+        static List<Integer> originalInviting;
+
         //Initialize party information
         public static void initialize() {
             name = party.getName();
@@ -576,8 +582,11 @@ public class EditStatsActivity extends AppCompatActivity {
                 public void onResultReady(HashMap<String, ArrayList<User>> result) {
                     if(result != null){
                         hostingUsers = UtilityClass.userObjectToStringId(result.get("hosting"));
+                        originalHosting = hostingUsers;
                         bouncingUsers = UtilityClass.userObjectToIntegerId(result.get("bouncing"));
+                        originalBouncing = bouncingUsers;
                         invitingUsers = UtilityClass.userObjectToIntegerId(result.get("inviting"));
+                        originalInviting = invitingUsers;
                     }
                 }
             });
@@ -628,6 +637,112 @@ public class EditStatsActivity extends AppCompatActivity {
                     public void onResultReady(String result) {
                         if(result.equals("success")){
                             //TODO: uninvite previous users
+                            List<String> hostingDuplicates = UtilityClass.findDuplicates(hostingUsers, originalHosting);
+                            List<Integer> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
+                            List<Integer> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
+
+                            originalHosting.removeAll(hostingDuplicates);
+                            originalBouncing.removeAll(bouncingDuplicates);
+                            originalInviting.removeAll(invitingDuplicates);
+
+                            hostingUsers.removeAll(hostingDuplicates);
+                            bouncingUsers.removeAll(bouncingDuplicates);
+                            invitingUsers.removeAll(invitingDuplicates);
+                            
+
+                            for(final String id : originalHosting){
+                                server_manageUserForParty(id, party.getPartyID(), "hosting", "DELETE", new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        if(result.equals("success")){
+                                            server_getNotificationsOfUser(id, new OnResultReadyListener<ArrayList<Notification>>() {
+                                                @Override
+                                                public void onResultReady(ArrayList<Notification> result) {
+                                                    if(result != null) {
+                                                        for(Notification notif : result){
+                                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                                server_deleteNotification(id, notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                                    @Override
+                                                                    public void onResultReady(String result) {
+                                                                        if (result.equals("success")) {
+                                                                            //Nothing to do
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+
+
+
+                                                    }
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                });
+                            }
+
+                            for(final int id : originalBouncing){
+                                server_manageUserForParty(id + "", party.getPartyID(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        if(result.equals("success")){
+                                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
+                                                @Override
+                                                public void onResultReady(ArrayList<Notification> result) {
+                                                    if(result != null) {
+                                                        for (Notification notif : result) {
+                                                            if (notif.getSenderID().equals(party.getPartyID())) {
+                                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                                    @Override
+                                                                    public void onResultReady(String result) {
+                                                                        if (result.equals("success")) {
+                                                                            //Do nothing
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+                            for(final int id : originalInviting){
+                                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        if(result.equals("success")){
+                                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
+                                                @Override
+                                                public void onResultReady(ArrayList<Notification> result) {
+                                                    if(result!= null) {
+                                                        for(Notification notif : result){
+                                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                                    @Override
+                                                                    public void onResultReady(String result) {
+                                                                        if(result.equals("success")){
+                                                                            //Do nothing
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                });
+                            }
                             for(final int userID : invitingUsers){
                                 server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
                                     @Override
@@ -686,4 +801,6 @@ public class EditStatsActivity extends AppCompatActivity {
             });
         }
     }
+
+
 }
