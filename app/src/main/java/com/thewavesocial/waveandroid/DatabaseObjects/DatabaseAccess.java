@@ -1679,7 +1679,7 @@ public final class DatabaseAccess{
 
     /**Fill in all user information locally*/
     private static User constructUser(HashMap<String, String> info) {
-        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "", profilePic = "";
+        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
                 hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
                 attended = new ArrayList(), bounced = new ArrayList(), going = new ArrayList();
@@ -1692,7 +1692,6 @@ public final class DatabaseAccess{
             email = info.get("email");
             college = info.get("college");
             gender = info.get("gender");
-            profilePic = info.get("image_path");
 
             date = info.get("birthday");
             if ( !date.equals("null") ) {
@@ -1728,7 +1727,7 @@ public final class DatabaseAccess{
         //Compose user
         User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going, notifications,
-                "https://cdn.pixabay.com/photo/2017/02/17/20/05/donald-2075124_960_720.png");
+                null);
         return user;
     }
 
