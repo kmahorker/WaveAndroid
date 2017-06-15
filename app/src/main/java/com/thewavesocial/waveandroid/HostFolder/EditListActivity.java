@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -246,9 +247,14 @@ public class EditListActivity extends AppCompatActivity {
             holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
             holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
             holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-            //TODO: Get image from URL
-            //holder.profile.setImageDrawable(UtilityClass.toRoundImage(getResources(), getItem(position).getProfilePic().getBitmap()));
             holder.name.setText(getItem(position).getFullName());
+            server_getProfilePicture(getItem(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));
+                }
+            });
+
             if ( invites.contains( getItem(position) ) )
                 holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
             else
@@ -321,10 +327,13 @@ public class EditListActivity extends AppCompatActivity {
         }
 
 
-        @Override public void onBindViewHolder(ViewHolder holder, final int position) {
-            //TODO: Get image from URL
-//                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(),
-//                        userList.get(position).getProfilePic().getBitmap()));
+        @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
+            server_getProfilePicture(userList.get(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));
+                }
+            });
             holder.imgView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
