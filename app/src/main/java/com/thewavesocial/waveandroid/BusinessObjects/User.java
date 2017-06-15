@@ -40,8 +40,7 @@ public class User implements Parcelable {
     private List<Notification> notifications;
     private String profilePic;
 
-    public User()
-    {
+    public User() {
         userID = "0";
         firstName = "";
         lastName = "";
@@ -81,8 +80,7 @@ public class User implements Parcelable {
                 List<String> attending,
                 List<String> going,
                 List<Notification> notifications,
-                String profilePic)
-    {
+                String profilePic) {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -105,63 +103,51 @@ public class User implements Parcelable {
     }
 
     //Setter Block
-    public void setUserID(String userID)
-    {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
-    public void setFirstName(String firstName)
-    {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public void setLastName(String lastName)
-    {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setCollege(String college)
-    {
+    public void setCollege(String college) {
         this.college = college;
     }
 
-    public void setGender(String gender)
-    {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public void setBirthday(Calendar birthday)
-    {
+    public void setBirthday(Calendar birthday) {
         this.birthday = Calendar.getInstance();
     }
 
-    public void setBestFriends(List<BestFriend> bestFriends)
-    {
+    public void setBestFriends(List<BestFriend> bestFriends) {
         this.bestFriends = bestFriends;
     }
 
-    public void setAttended(List<String> attended)
-    {
+    public void setAttended(List<String> attended) {
         this.attended = attended;
     }
 
-    public void setHosted(List<String> hosted)
-    {
+    public void setHosted(List<String> hosted) {
         this.hosted = hosted;
     }
 
-    public void setBouncing(List<String> bouncing)
-    {
+    public void setBouncing(List<String> bouncing) {
         this.bouncing = bouncing;
     }
 
@@ -169,107 +155,89 @@ public class User implements Parcelable {
         this.attending = attending;
     }
 
-    public void setProfilePic(String profilePic) { this.profilePic = profilePic; }
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
     //Getter Block
-    public String getUserID()
-    {
+    public String getUserID() {
         return userID;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return firstName;
     }
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return lastName;
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public String getCollege()
-    {
+    public String getCollege() {
         return college;
     }
 
-    public String getGender()
-    {
+    public String getGender() {
         return gender;
     }
 
-    public Calendar getBirthday()
-    {
+    public Calendar getBirthday() {
         return birthday;
     }
 
-    public List<BestFriend> getBestFriends()
-    {
+    public List<BestFriend> getBestFriends() {
         return bestFriends;
     }
 
-    public List<String> getAttended()
-    {
+    public List<String> getAttended() {
         return attended;
     }
 
-    public List<String> getHosted()
-    {
+    public List<String> getHosted() {
         return hosted;
     }
 
-    public List<String> getBouncing()
-    {
+    public List<String> getBouncing() {
         return bouncing;
     }
 
 
-    public List<String> getAttending()
-    {
+    public List<String> getAttending() {
         return attending;
     }
 
-    public String getProfilePic()
-    {
+    public String getProfilePic() {
         return profilePic;
     }
 
-    public List<Notification> getNotifications()
-    {
+    public List<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(List<Notification> notifications)
-    {
+    public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
 
-    public List<String> getFollowers()
-    {
+    public List<String> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<String> followers)
-    {
+    public void setFollowers(List<String> followers) {
         this.followers = followers;
     }
 
-    public List<String> getFollowing()
-    {
+    public List<String> getFollowing() {
         return following;
     }
 
-    public void setFollowing(List<String> following)
-    {
+    public void setFollowing(List<String> following) {
         this.following = following;
     }
 
@@ -292,6 +260,15 @@ public class User implements Parcelable {
 
     public void setGoing(List<String> going) {
         this.going = going;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof User)) {
+            return false;
+        }
+        User otherUser = (User) other;
+        return this.getUserID().equals(otherUser.getUserID());
     }
 
     protected User(Parcel in) {

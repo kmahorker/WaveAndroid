@@ -63,19 +63,7 @@ public class EditListActivity extends AppCompatActivity {
         party = getIntent().getExtras().getParcelable("partyObject");
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
 
-        //Get user followings
-        server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(List<User> result) {
-                users = new ArrayList<>();
-                if ( result != null ) {
-                    users.addAll(result);
-                    friend_list.setAdapter(new FriendListAdapter(users));
-                }
-            }
-        });
-
-        //Get attending or bouncing users
+        //Get follower, attending or bouncing users
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
@@ -91,6 +79,19 @@ public class EditListActivity extends AppCompatActivity {
                     LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
                     invite_list.setLayoutManager(layoutManager);
                     invite_list.setAdapter(new SelectedAdapter(invites));
+
+                    //Get user followings
+                    server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
+                        @Override
+                        public void onResultReady(List<User> result) {
+                            users = new ArrayList<>();
+                            if ( result != null ) {
+                                users.addAll(result);
+                                friend_list.setAdapter(new FriendListAdapter(users));
+                            }
+                        }
+                    });
+
                 }
             }
         });
