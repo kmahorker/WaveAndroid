@@ -52,6 +52,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
+
+import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RunnableFuture;
 
@@ -108,9 +110,10 @@ public final class UtilityClass {
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }
 
-    public static String getNotificationTime(long time_period) {
+    public static String getNotificationTime(long create_time) {
         String suffix = "";
         int sec = 60, min = 60, hr = 24, mth = 30, yr = 12;
+        long time_period = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - create_time)/1000;
 
         long num = time_period/(sec*min*hr*mth*yr);
         if ( num != 0 ) {

@@ -16,6 +16,8 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
+import com.thewavesocial.waveandroid.UtilityClass;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -82,13 +84,14 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         holder.message = (TextView) layoutView.findViewById(R.id.eachFriendNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachFriendNotif_timeAgo);
 
+        holder.message.setText(getItem(position).getMessage());
+        holder.timeAgo.setText( ". " + UtilityClass.getNotificationTime(notifList.get(position).getCreate_time()));
+
         if ( (getItem(position).getRequestType() == Notification.TYPE_FOLLOWED ||
                 getItem(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
         {
             final User user = (User) senderObjects.get(position);
             holder.sender.setText(user.getFirstName());
-            holder.message.setText(getItem(position).getMessage());
-            holder.timeAgo.setText(". 28m");
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,8 +109,6 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         {
             final Party party = (Party)senderObjects.get(position);
             holder.sender.setText("\"" + party.getName() + "\"");
-            holder.message.setText(getItem(position).getMessage());
-            holder.timeAgo.setText(". 28min");
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

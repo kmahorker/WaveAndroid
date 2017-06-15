@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
@@ -112,13 +113,14 @@ public class UserActionAdapter extends BaseAdapter {
         holder.accept = (TextView) layoutView.findViewById(R.id.eachNotif_accept);
         holder.decline = (TextView) layoutView.findViewById(R.id.eachNotif_decline);
 
+        holder.message.setText(notifList.get(position).getMessage());
+        holder.timeAgo.setText( ". " + UtilityClass.getNotificationTime(notifList.get(position).getCreate_time()));
+
         if ( (notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
                 notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
         {
             final User sender = (User) senderObjects.get(position);
             holder.sender.setText(sender.getFirstName());
-            holder.message.setText(notifList.get(position).getMessage());
-            holder.timeAgo.setText(". 28m");
             holder.accept.setVisibility(View.INVISIBLE);
             holder.decline.setVisibility(View.INVISIBLE);
 
@@ -138,9 +140,7 @@ public class UserActionAdapter extends BaseAdapter {
                 notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING ) //Friend type notification
         {
             final Party party = (Party) senderObjects.get(position);
-            holder.sender.setText("\"" + party.getName() + "\".");
-            holder.message.setText(notifList.get(position).getMessage());
-            holder.timeAgo.setText("28min");
+            holder.sender.setText("\"" + party.getName() + "\"");
             holder.accept.setVisibility(View.INVISIBLE);
             holder.decline.setVisibility(View.INVISIBLE);
 
