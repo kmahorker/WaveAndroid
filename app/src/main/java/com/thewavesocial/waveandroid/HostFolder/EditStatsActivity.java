@@ -309,10 +309,27 @@ public class EditStatsActivity extends AppCompatActivity {
         boolean isPrivate = !party.getIsPublic();
         if(isPrivate){
             privateSwitch.setChecked(true);
+            privateParty = true;
         }
         else{
             privateSwitch.setChecked(false);
+            privateParty = false;
         }
+
+        privateSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(privateParty == false){
+                    privateParty = true;
+                }
+                else{
+                    privateParty = false;
+                }
+                UtilityClass.hideKeyboard(getActivity());
+                popup.dismiss();
+            }
+        });
+
         rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.editEventAgeRestrictionSeekBar);
         rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
         rangeSeekBar.setSelectedMinValue(party.getMinAge());
@@ -596,7 +613,7 @@ public class EditStatsActivity extends AppCompatActivity {
                 newParty.put("address", mapAddress.getAddress_string());
                 newParty.put("lat", mapAddress.getAddress_latlng().latitude + "");
                 newParty.put("long", mapAddress.getAddress_latlng().longitude + "");
-                newParty.put("is_public", isPublic + "");
+                newParty.put("is_public", isPublic ? 1 + "" : 0 + "");
                 newParty.put("start_timestamp", startingDateTime.getTimeInMillis() / 1000L + "");
                 newParty.put("end_timestamp", endingDateTime.getTimeInMillis() / 1000L + "");
                 newParty.put("min_age", minAge + "");
@@ -608,6 +625,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
+                            //TODO: uninvite previous users
                             for(final int userID : invitingUsers){
                                 server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
                                     @Override
@@ -635,12 +653,17 @@ public class EditStatsActivity extends AppCompatActivity {
                                 });
                             }
                         }
+                        else{
+
+                        }
+                        Log.d("updateParty", result + "");
                     }
                 });
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         }
 
     }
