@@ -4,9 +4,11 @@ import android.app.Activity;
 
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 //Nothing changed
@@ -24,7 +26,9 @@ public final class CurrentUser {
         });
     }
 
-    /**Initialize user object*/
+    /**
+     * Initialize user object
+     */
     public static void setContext(Activity activity, final OnResultReadyListener<Boolean> delegate) {
         mainActivity = activity;
         DatabaseAccess.setContext(mainActivity);
@@ -42,13 +46,13 @@ public final class CurrentUser {
                         server_getBestFriends(getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<List<BestFriend>>() {
                             @Override
                             public void onResultReady(List<BestFriend> result) {
-                                CurrentUser.theUser.setBestFriends( new ArrayList<BestFriend>() );
-                                if ( result != null )
+                                CurrentUser.theUser.setBestFriends(new ArrayList<BestFriend>());
+                                if (result != null)
                                     CurrentUser.theUser.getBestFriends().addAll(result);
 
-                                if ( delegate == null )
+                                if (delegate == null)
                                     return;
-                                if ( CurrentUser.theUser.getUserID() != null )
+                                if (CurrentUser.theUser.getUserID() != null)
                                     delegate.onResultReady(true);
                                 else
                                     delegate.onResultReady(false);
@@ -60,7 +64,9 @@ public final class CurrentUser {
         });
     }
 
-    /**Set main user object*/
+    /**
+     * Set main user object
+     */
     public static void setTheUser(User theUser) {
         CurrentUser.theUser = theUser;
     }

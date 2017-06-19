@@ -13,35 +13,29 @@ public class MapAddress implements Parcelable {
     private String address_string;
     private LatLng address_latlng;
 
-    public MapAddress()
-    {
+    public MapAddress() {
         this.address_string = "";
         this.address_latlng = null;
     }
 
-    public MapAddress(String address_string, LatLng address_latlng )
-    {
+    public MapAddress(String address_string, LatLng address_latlng) {
         this.address_string = address_string;
         this.address_latlng = address_latlng;
     }
 
-    public String getAddress_string()
-    {
+    public String getAddress_string() {
         return address_string;
     }
 
-    public LatLng getAddress_latlng()
-    {
+    public LatLng getAddress_latlng() {
         return address_latlng;
     }
 
-    public void setAddress_string(String address_string)
-    {
+    public void setAddress_string(String address_string) {
         this.address_string = address_string;
     }
 
-    public void setAddress_latlng(LatLng address_latlng)
-    {
+    public void setAddress_latlng(LatLng address_latlng) {
         this.address_latlng = address_latlng;
     }
 
