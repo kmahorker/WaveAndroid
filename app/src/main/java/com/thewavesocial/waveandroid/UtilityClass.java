@@ -9,15 +9,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -31,31 +27,21 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
+
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by Kaushik on 2/5/2017.
@@ -113,30 +99,30 @@ public final class UtilityClass {
     public static String getNotificationTime(long create_time) {
         String suffix = "";
         int sec = 60, min = 60, hr = 24, mth = 30, yr = 12;
-        long time_period = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - create_time)/1000;
+        long time_period = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - create_time) / 1000;
 
-        long num = time_period/(sec*min*hr*mth*yr);
-        if ( num != 0 ) {
-            suffix = (num == 1)? "" : "s";
+        long num = time_period / (sec * min * hr * mth * yr);
+        if (num != 0) {
+            suffix = (num == 1) ? "" : "s";
             return num + " year" + suffix + " ago.";
         }
-        num = time_period/(sec*min*hr*mth);
-        if ( num != 0 ) {
+        num = time_period / (sec * min * hr * mth);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " month" + suffix + " ago.";
         }
-        num = time_period/(sec*min*hr);
-        if ( num != 0 ) {
+        num = time_period / (sec * min * hr);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " day" + suffix + " ago.";
         }
-        num = time_period/(sec*min);
-        if ( num != 0 ) {
+        num = time_period / (sec * min);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " hour" + suffix + " ago.";
         }
-        num = time_period/(sec);
-        if ( num != 0 ) {
+        num = time_period / (sec);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " min" + suffix + " ago.";
         }
@@ -152,7 +138,7 @@ public final class UtilityClass {
     }
 
     public static void printAlertMessage(Activity activity, String message, String header, boolean cancelable) {
-        if ( dialogShowing )
+        if (dialogShowing)
             return;
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
@@ -220,7 +206,7 @@ public final class UtilityClass {
         }
 
         @Override
-        protected Bitmap doInBackground(String... params){
+        protected Bitmap doInBackground(String... params) {
             return getBitmapFromURL(url);
         }
 
@@ -294,7 +280,9 @@ public final class UtilityClass {
 
         try {
             addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
         String city = addresses.get(0).getLocality();
@@ -357,7 +345,7 @@ public final class UtilityClass {
         return image;
     }
 
-    public static Calendar unixToCalendar(long unixTime){
+    public static Calendar unixToCalendar(long unixTime) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime);
         return calendar;
@@ -373,32 +361,32 @@ public final class UtilityClass {
     }
 
     public static void endProgressbar(Activity activity, boolean success) {
-        if ( progressDialog != null && progressDialog.isShowing() )
+        if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
-        if ( !success )
+        if (!success)
             printAlertMessage(activity, "Sorry. Internet Connection Error.", "Network Error", true);
     }
 
-    public static List<String> userObjectToStringId(List<User> userList){
-        List<String> result  = new ArrayList<>();
-        for(User user : userList){
+    public static List<String> userObjectToStringId(List<User> userList) {
+        List<String> result = new ArrayList<>();
+        for (User user : userList) {
             result.add((user.getUserID()));
         }
         return result;
     }
 
-    public static List<Integer> userObjectToIntegerId(List<User> userList){
+    public static List<Integer> userObjectToIntegerId(List<User> userList) {
         List<Integer> result = new ArrayList<>();
-        for(User user : userList){
+        for (User user : userList) {
             result.add(Integer.parseInt(user.getUserID()));
         }
         return result;
     }
 
-    public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b){
+    public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b) {
         List<T> duplicates = new ArrayList<>();
-        for(T item : a){
-            if(b.contains(item)){
+        for (T item : a) {
+            if (b.contains(item)) {
                 duplicates.add(item);
             }
         }

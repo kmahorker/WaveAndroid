@@ -55,7 +55,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mainActivity = this;
         saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
-        if ( CurrentUser.mainActivity == null ) {
+        if (CurrentUser.mainActivity == null) {
             UtilityClass.startProgressbar(mainActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
@@ -96,7 +96,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body.put("password", "main_user");
         body.put("gender", "Male");
         body.put("birthday", "1990-12-12");
-        server_updateUser(uv+"0", body, null);
+        server_updateUser(uv + "0", body, null);
 
         //Friend 1-5
         HashMap<String, String> body1 = new HashMap<>();
@@ -107,7 +107,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body1.put("password", "one");
         body1.put("gender", "Female");
         body1.put("birthday", "1990-01-01");
-        server_updateUser(uv+"1", body1, null);
+        server_updateUser(uv + "1", body1, null);
 
         HashMap<String, String> body2 = new HashMap<>();
         body2.put("first_name", "Two");
@@ -117,7 +117,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body2.put("password", "two");
         body2.put("gender", "Male");
         body2.put("birthday", "1990-02-02");
-        server_updateUser(uv+"2", body2, null);
+        server_updateUser(uv + "2", body2, null);
 
         HashMap<String, String> body3 = new HashMap<>();
         body3.put("first_name", "Three");
@@ -127,7 +127,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body3.put("password", "three");
         body3.put("gender", "Female");
         body3.put("birthday", "1990-03-03");
-        server_updateUser(uv+"3", body3, null);
+        server_updateUser(uv + "3", body3, null);
 
         HashMap<String, String> body4 = new HashMap<>();
         body4.put("first_name", "Four");
@@ -137,7 +137,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body4.put("password", "four");
         body4.put("gender", "Male");
         body4.put("birthday", "1990-04-04");
-        server_updateUser(uv+"4", body4, null);
+        server_updateUser(uv + "4", body4, null);
 
         HashMap<String, String> body5 = new HashMap<>();
         body5.put("first_name", "Five");
@@ -147,44 +147,44 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body5.put("password", "five");
         body5.put("gender", "Male");
         body5.put("birthday", "1990-05-05");
-        server_updateUser(uv+"5", body5, null);
+        server_updateUser(uv + "5", body5, null);
 
         //Follow Each Other
-        server_followUser(uv+"0", uv+"1", null);
-        server_followUser(uv+"0", uv+"2", null);
-        server_followUser(uv+"0", uv+"3", null);
-        server_followUser(uv+"0", uv+"4", null);
-        server_followUser(uv+"0", uv+"5", null);
+        server_followUser(uv + "0", uv + "1", null);
+        server_followUser(uv + "0", uv + "2", null);
+        server_followUser(uv + "0", uv + "3", null);
+        server_followUser(uv + "0", uv + "4", null);
+        server_followUser(uv + "0", uv + "5", null);
 
-        server_followUser(uv+"1", uv+"0", null);
-        server_followUser(uv+"1", uv+"2", null);
-        server_followUser(uv+"1", uv+"3", null);
-        server_followUser(uv+"1", uv+"4", null);
-        server_followUser(uv+"1", uv+"5", null);
+        server_followUser(uv + "1", uv + "0", null);
+        server_followUser(uv + "1", uv + "2", null);
+        server_followUser(uv + "1", uv + "3", null);
+        server_followUser(uv + "1", uv + "4", null);
+        server_followUser(uv + "1", uv + "5", null);
 
-        server_followUser(uv+"2", uv+"0", null);
-        server_followUser(uv+"2", uv+"1", null);
-        server_followUser(uv+"2", uv+"3", null);
-        server_followUser(uv+"2", uv+"4", null);
-        server_followUser(uv+"2", uv+"5", null);
+        server_followUser(uv + "2", uv + "0", null);
+        server_followUser(uv + "2", uv + "1", null);
+        server_followUser(uv + "2", uv + "3", null);
+        server_followUser(uv + "2", uv + "4", null);
+        server_followUser(uv + "2", uv + "5", null);
 
-        server_followUser(uv+"3", uv+"0", null);
-        server_followUser(uv+"3", uv+"1", null);
-        server_followUser(uv+"3", uv+"2", null);
-        server_followUser(uv+"3", uv+"4", null);
-        server_followUser(uv+"3", uv+"5", null);
+        server_followUser(uv + "3", uv + "0", null);
+        server_followUser(uv + "3", uv + "1", null);
+        server_followUser(uv + "3", uv + "2", null);
+        server_followUser(uv + "3", uv + "4", null);
+        server_followUser(uv + "3", uv + "5", null);
 
-        server_followUser(uv+"4", uv+"0", null);
-        server_followUser(uv+"4", uv+"1", null);
-        server_followUser(uv+"4", uv+"2", null);
-        server_followUser(uv+"4", uv+"3", null);
-        server_followUser(uv+"4", uv+"5", null);
+        server_followUser(uv + "4", uv + "0", null);
+        server_followUser(uv + "4", uv + "1", null);
+        server_followUser(uv + "4", uv + "2", null);
+        server_followUser(uv + "4", uv + "3", null);
+        server_followUser(uv + "4", uv + "5", null);
 
-        server_followUser(uv+"5", uv+"0", null);
-        server_followUser(uv+"5", uv+"1", null);
-        server_followUser(uv+"5", uv+"2", null);
-        server_followUser(uv+"5", uv+"3", null);
-        server_followUser(uv+"5", uv+"4", null);
+        server_followUser(uv + "5", uv + "0", null);
+        server_followUser(uv + "5", uv + "1", null);
+        server_followUser(uv + "5", uv + "2", null);
+        server_followUser(uv + "5", uv + "3", null);
+        server_followUser(uv + "5", uv + "4", null);
 
         //Create Parties
         Calendar startDate = Calendar.getInstance(), endDate = Calendar.getInstance();
@@ -199,11 +199,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body6.put("lat", 34.412923 + "");
         body6.put("lng", -119.859315 + "");
         body6.put("is_public", true ? "1" : "0");
-        body6.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body6.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body6.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body6.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body6.put("min_age", 18 + "");
         body6.put("max_age", 40 + "");
-        server_updateParty(pv+"1", body6, null );
+        server_updateParty(pv + "1", body6, null);
 
         HashMap<String, String> body7 = new HashMap<>();
         body7.put("name", "Party2");
@@ -213,11 +213,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body7.put("lat", 34.414241 + "");
         body7.put("lng", -119.856559 + "");
         body7.put("is_public", true ? "1" : "0");
-        body7.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body7.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body7.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body7.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body7.put("min_age", 18 + "");
         body7.put("max_age", 40 + "");
-        server_updateParty(pv+"2", body7, null );
+        server_updateParty(pv + "2", body7, null);
 
         HashMap<String, String> body8 = new HashMap<>();
         body8.put("name", "Party3");
@@ -227,11 +227,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body8.put("lat", 34.415500 + "");
         body8.put("lng", -119.860575 + "");
         body8.put("is_public", true ? "1" : "0");
-        body8.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body8.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body8.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body8.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body8.put("min_age", 18 + "");
         body8.put("max_age", 40 + "");
-        server_updateParty(pv+"3", body8, null );
+        server_updateParty(pv + "3", body8, null);
 
         HashMap<String, String> body9 = new HashMap<>();
         body9.put("name", "Party4");
@@ -241,11 +241,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body9.put("lat", 34.412938 + "");
         body9.put("lng", -119.862853 + "");
         body9.put("is_public", true ? "1" : "0");
-        body9.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body9.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body9.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body9.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body9.put("min_age", 18 + "");
         body9.put("max_age", 40 + "");
-        server_updateParty(pv+"4", body9, null );
+        server_updateParty(pv + "4", body9, null);
 
         HashMap<String, String> body10 = new HashMap<>();
         body10.put("name", "Party5");
@@ -255,11 +255,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body10.put("lat", 34.411962 + "");
         body10.put("lng", -119.859848 + "");
         body10.put("is_public", true ? "1" : "0");
-        body10.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body10.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body10.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body10.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body10.put("min_age", 18 + "");
         body10.put("max_age", 40 + "");
-        server_updateParty(pv+"5", body10, null );
+        server_updateParty(pv + "5", body10, null);
 
         HashMap<String, String> body11 = new HashMap<>();
         body11.put("name", "Party6");
@@ -269,11 +269,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body11.put("lat", 34.411962 + "");
         body11.put("lng", -119.859848 + "");
         body11.put("is_public", true ? "1" : "0");
-        body11.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body11.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body11.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body11.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body11.put("min_age", 18 + "");
         body11.put("max_age", 40 + "");
-        server_updateParty(pv+"6", body11, null );
+        server_updateParty(pv + "6", body11, null);
 
         HashMap<String, String> body12 = new HashMap<>();
         body12.put("name", "Party7");
@@ -283,11 +283,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body12.put("lat", 34.411962 + "");
         body12.put("lng", -119.859848 + "");
         body12.put("is_public", true ? "1" : "0");
-        body12.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body12.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body12.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body12.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body12.put("min_age", 18 + "");
         body12.put("max_age", 40 + "");
-        server_updateParty(pv+"7", body12, null );
+        server_updateParty(pv + "7", body12, null);
 
         HashMap<String, String> body13 = new HashMap<>();
         body13.put("name", "Party8");
@@ -297,11 +297,11 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body13.put("lat", 34.411962 + "");
         body13.put("lng", -119.859848 + "");
         body13.put("is_public", true ? "1" : "0");
-        body13.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body13.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body13.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body13.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body13.put("min_age", 18 + "");
         body13.put("max_age", 40 + "");
-        server_updateParty(pv+"8", body13, null );
+        server_updateParty(pv + "8", body13, null);
 
         HashMap<String, String> body14 = new HashMap<>();
         body14.put("name", "Party9");
@@ -311,77 +311,77 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body14.put("lat", 34.411962 + "");
         body14.put("lng", -119.859848 + "");
         body14.put("is_public", true ? "1" : "0");
-        body14.put("start_timestamp", startDate.getTime().getTime()/1000 + "");
-        body14.put("end_timestamp", endDate.getTime().getTime()/1000 + "");
+        body14.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
+        body14.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body14.put("min_age", 18 + "");
         body14.put("max_age", 40 + "");
-        server_updateParty(pv+"9", body14, null );
+        server_updateParty(pv + "9", body14, null);
 
         //Add user event relationship
-        server_manageUserForParty(uv+"0", pv+"1", "hosting", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"2", "hosting", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"3", "hosting", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"4", "hosting", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"5", "hosting", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "1", "hosting", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "2", "hosting", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "3", "hosting", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "4", "hosting", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "5", "hosting", "POST", null);
 
-        server_manageUserForParty(uv+"1", pv+"1", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"1", pv+"2", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"1", pv+"3", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"1", pv+"4", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"1", pv+"5", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "1", pv + "1", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "1", pv + "2", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "1", pv + "3", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "1", pv + "4", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "1", pv + "5", "bouncing", "POST", null);
 
-        server_manageUserForParty(uv+"2", pv+"1", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"2", pv+"2", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"2", pv+"3", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"2", pv+"4", "bouncing", "POST", null);
-        server_manageUserForParty(uv+"2", pv+"5", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "2", pv + "1", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "2", pv + "2", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "2", pv + "3", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "2", pv + "4", "bouncing", "POST", null);
+        server_manageUserForParty(uv + "2", pv + "5", "bouncing", "POST", null);
 
-        server_manageUserForParty(uv+"3", pv+"1", "going", "POST", null);
-        server_manageUserForParty(uv+"3", pv+"2", "going", "POST", null);
-        server_manageUserForParty(uv+"3", pv+"3", "going", "POST", null);
-        server_manageUserForParty(uv+"3", pv+"4", "going", "POST", null);
-        server_manageUserForParty(uv+"3", pv+"5", "going", "POST", null);
+        server_manageUserForParty(uv + "3", pv + "1", "going", "POST", null);
+        server_manageUserForParty(uv + "3", pv + "2", "going", "POST", null);
+        server_manageUserForParty(uv + "3", pv + "3", "going", "POST", null);
+        server_manageUserForParty(uv + "3", pv + "4", "going", "POST", null);
+        server_manageUserForParty(uv + "3", pv + "5", "going", "POST", null);
 
-        server_manageUserForParty(uv+"4", pv+"1", "going", "POST", null);
-        server_manageUserForParty(uv+"4", pv+"2", "going", "POST", null);
-        server_manageUserForParty(uv+"4", pv+"3", "going", "POST", null);
-        server_manageUserForParty(uv+"4", pv+"4", "going", "POST", null);
-        server_manageUserForParty(uv+"4", pv+"5", "going", "POST", null);
+        server_manageUserForParty(uv + "4", pv + "1", "going", "POST", null);
+        server_manageUserForParty(uv + "4", pv + "2", "going", "POST", null);
+        server_manageUserForParty(uv + "4", pv + "3", "going", "POST", null);
+        server_manageUserForParty(uv + "4", pv + "4", "going", "POST", null);
+        server_manageUserForParty(uv + "4", pv + "5", "going", "POST", null);
 
-        server_manageUserForParty(uv+"5", pv+"1", "going", "POST", null);
-        server_manageUserForParty(uv+"5", pv+"2", "going", "POST", null);
-        server_manageUserForParty(uv+"5", pv+"3", "going", "POST", null);
-        server_manageUserForParty(uv+"5", pv+"4", "going", "POST", null);
-        server_manageUserForParty(uv+"5", pv+"5", "going", "POST", null);
+        server_manageUserForParty(uv + "5", pv + "1", "going", "POST", null);
+        server_manageUserForParty(uv + "5", pv + "2", "going", "POST", null);
+        server_manageUserForParty(uv + "5", pv + "3", "going", "POST", null);
+        server_manageUserForParty(uv + "5", pv + "4", "going", "POST", null);
+        server_manageUserForParty(uv + "5", pv + "5", "going", "POST", null);
 
-        server_manageUserForParty(uv+"0", pv+"6", "going", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"7", "going", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"8", "going", "POST", null);
-        server_manageUserForParty(uv+"0", pv+"9", "going", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "6", "going", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "7", "going", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "8", "going", "POST", null);
+        server_manageUserForParty(uv + "0", pv + "9", "going", "POST", null);
 
-        server_inviteUserToEvent(uv+"1", pv+"1", null);
-        server_inviteUserToEvent(uv+"1", pv+"2", null);
-        server_inviteUserToEvent(uv+"1", pv+"3", null);
-        server_inviteUserToEvent(uv+"1", pv+"4", null);
-        server_inviteUserToEvent(uv+"1", pv+"5", null);
+        server_inviteUserToEvent(uv + "1", pv + "1", null);
+        server_inviteUserToEvent(uv + "1", pv + "2", null);
+        server_inviteUserToEvent(uv + "1", pv + "3", null);
+        server_inviteUserToEvent(uv + "1", pv + "4", null);
+        server_inviteUserToEvent(uv + "1", pv + "5", null);
 
-        server_inviteUserToEvent(uv+"2", pv+"1", null);
-        server_inviteUserToEvent(uv+"2", pv+"2", null);
-        server_inviteUserToEvent(uv+"2", pv+"3", null);
-        server_inviteUserToEvent(uv+"2", pv+"4", null);
-        server_inviteUserToEvent(uv+"2", pv+"5", null);
+        server_inviteUserToEvent(uv + "2", pv + "1", null);
+        server_inviteUserToEvent(uv + "2", pv + "2", null);
+        server_inviteUserToEvent(uv + "2", pv + "3", null);
+        server_inviteUserToEvent(uv + "2", pv + "4", null);
+        server_inviteUserToEvent(uv + "2", pv + "5", null);
 
-        server_inviteUserToEvent(uv+"3", pv+"1", null);
-        server_inviteUserToEvent(uv+"3", pv+"2", null);
-        server_inviteUserToEvent(uv+"3", pv+"3", null);
-        server_inviteUserToEvent(uv+"3", pv+"4", null);
-        server_inviteUserToEvent(uv+"3", pv+"5", null);
+        server_inviteUserToEvent(uv + "3", pv + "1", null);
+        server_inviteUserToEvent(uv + "3", pv + "2", null);
+        server_inviteUserToEvent(uv + "3", pv + "3", null);
+        server_inviteUserToEvent(uv + "3", pv + "4", null);
+        server_inviteUserToEvent(uv + "3", pv + "5", null);
 
-        server_inviteUserToEvent(uv+"4", pv+"1", null);
-        server_inviteUserToEvent(uv+"4", pv+"2", null);
-        server_inviteUserToEvent(uv+"4", pv+"3", null);
-        server_inviteUserToEvent(uv+"4", pv+"4", null);
-        server_inviteUserToEvent(uv+"4", pv+"5", null);
+        server_inviteUserToEvent(uv + "4", pv + "1", null);
+        server_inviteUserToEvent(uv + "4", pv + "2", null);
+        server_inviteUserToEvent(uv + "4", pv + "3", null);
+        server_inviteUserToEvent(uv + "4", pv + "4", null);
+        server_inviteUserToEvent(uv + "4", pv + "5", null);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -536,8 +536,8 @@ public class HomeSwipeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
-        if ( qrResult != null ){
-            if ( qrResult.getContents() != null ){
+        if (qrResult != null) {
+            if (qrResult.getContents() != null) {
                 try {
                     JSONObject json = new JSONObject(qrResult.getContents());
                     long party_id = json.getLong("party_id");
@@ -546,21 +546,19 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     Toast.makeText(this, "JSON Parsing Error", Toast.LENGTH_LONG).show();
                 }
-            } 
-            else
+            } else
                 Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
-        } else if(requestCode==UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
-                Uri selectedImage = data.getData();
-                Bitmap bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
-                    userProfileFragment.updateProfileImage( bitmap );
+        } else if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
+                userProfileFragment.updateProfileImage(bitmap);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        else
+        } else
             super.onActivityResult(requestCode, resultCode, data);
     }
 
