@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -93,7 +92,9 @@ public class UserProfileFragment extends Fragment {
 
 //-------------------------------------------------------------------------------OnCreate Sub-tasks
 
-    /**initialize user information*/
+    /**
+     * initialize user information
+     */
     public void setupProfileInfo() {
         TextView followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
         followers_text.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +122,7 @@ public class UserProfileFragment extends Fragment {
         DatabaseAccess.server_getProfilePicture(CurrentUser.theUser.getUserID(), new OnResultReadyListener<Bitmap>() {
             @Override
             public void onResultReady(Bitmap result) {
-                if ( result != null ) {
+                if (result != null) {
                     try {
                         profile_picture.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
                     } catch (IllegalStateException e) {
@@ -133,8 +134,7 @@ public class UserProfileFragment extends Fragment {
 
         profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 mainActivity.startActivityForResult(i, ADD_IMAGE_INTENT_ID);
@@ -151,7 +151,7 @@ public class UserProfileFragment extends Fragment {
                 server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
-                        if ( result != null ) {
+                        if (result != null) {
                             progressBar.setVisibility(View.VISIBLE);
                             notifications_offset = 0;
                             notifications = sortNotifications(result);
@@ -201,8 +201,9 @@ public class UserProfileFragment extends Fragment {
         action_listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
+
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-               if(flag_list_type == LIST_ACTIVITY && !flag_loading_notif && totalItemCount != 0 &&
+                if (flag_list_type == LIST_ACTIVITY && !flag_loading_notif && totalItemCount != 0 &&
                         firstVisibleItem + visibleItemCount == notifications_offset + LOAD_SIZE &&
                         notifications.size() > notifications_offset) {
                     flag_loading_notif = true;
@@ -215,7 +216,9 @@ public class UserProfileFragment extends Fragment {
         activityButton.performClick();
     }
 
-    /**Display follower/following list.*/
+    /**
+     * Display follower/following list.
+     */
     private void showPopup(PopupPage popup) {
         switch (popup) {
             case FOLLOWERS:
@@ -227,32 +230,40 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    /**Update profile image with the given bitmap*/
+    /**
+     * Update profile image with the given bitmap
+     */
     public void updateProfileImage(Bitmap bitmap) {
-        profile_picture.setImageDrawable( UtilityClass.toRoundImage( mainActivity.getResources(), bitmap) );
+        profile_picture.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), bitmap));
         server_upload_image(bitmap, null);
     }
 
-    /**Change action buttons' color.*/
+    /**
+     * Change action buttons' color.
+     */
     private void changeButton(TextView view, int textColor, int backgroundColor) {
         view.setTextColor(mainActivity.getResources().getColor(textColor));
         view.setBackgroundResource(backgroundColor);
     }
 
-    /**Sort notifications by creation time, using TreeMap.*/
+    /**
+     * Sort notifications by creation time, using TreeMap.
+     */
     private ArrayList<Notification> sortNotifications(ArrayList<Notification> notifications) {
         TreeMap<Long, Notification> temp = new TreeMap<>(Collections.reverseOrder());
         ArrayList<Notification> new_list = new ArrayList<>();
-        for ( Notification each : notifications ) {
+        for (Notification each : notifications) {
             temp.put(each.getCreate_time(), each);
         }
-        for ( Long key : temp.keySet() ) {
+        for (Long key : temp.keySet()) {
             new_list.add(temp.get(key));
         }
         return new_list;
     }
 
-    /**Load the next LOAD_SIZE notifications.*/
+    /**
+     * Load the next LOAD_SIZE notifications.
+     */
     private void loadNotifications() {
         progressBar.setVisibility(View.VISIBLE);
         getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
@@ -266,23 +277,27 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
-    /**Get senders object of notification in sorted list. Either User or Party*/
+    /**
+     * Get senders object of notification in sorted list. Either User or Party
+     */
     private void getSenderObjects(final int startingIndex, int items, final OnResultReadyListener<ArrayList<Object>> delegate) {
         final HashMap<Long, Object> loaded_objects = new HashMap<>();
 
-        if ( notifications.size() < startingIndex + items )
+        if (notifications.size() < startingIndex + items)
             items = notifications.size() - startingIndex;
 
         //Light-weight threads management
         final int finalItems = items;
-        class ThreadManager{
+        class ThreadManager {
             private int max, completes;
-            private ThreadManager(int max){
+
+            private ThreadManager(int max) {
                 this.max = max;
             }
-            void completeThreads(){
+
+            void completeThreads() {
                 completes++;
-                if ( completes >= max && delegate != null ) {
+                if (completes >= max && delegate != null) {
                     ArrayList<Object> objects = new ArrayList<>();
                     for (int i = startingIndex; i < startingIndex + finalItems; i++)
                         objects.add(loaded_objects.get(notifications.get(i).getCreate_time()));
@@ -292,9 +307,9 @@ public class UserProfileFragment extends Fragment {
         }
         final ThreadManager threadManager = new ThreadManager(items);
 
-        for ( int i = startingIndex; i < (items + startingIndex); i++ ) {
+        for (int i = startingIndex; i < (items + startingIndex); i++) {
             final Notification each = notifications.get(i);
-            if ( each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED ) {
+            if (each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED) {
                 DatabaseAccess.server_getUserObject(each.getSenderID(), new OnResultReadyListener<User>() {
                     @Override
                     public void onResultReady(User result) {
@@ -304,7 +319,7 @@ public class UserProfileFragment extends Fragment {
                         threadManager.completeThreads();
                     }
                 });
-            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_BOUNCING || each.getRequestType() == Notification.TYPE_INVITE_GOING || each.getRequestType() == Notification.TYPE_INVITE_BOUNCING) {
+            } else if (each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_BOUNCING || each.getRequestType() == Notification.TYPE_INVITE_GOING || each.getRequestType() == Notification.TYPE_INVITE_BOUNCING) {
                 DatabaseAccess.server_getPartyObject(each.getSenderID(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {

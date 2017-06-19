@@ -17,6 +17,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class FollowActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(List<User> result) {
                     follows.addAll(result);
-                    Log.d("Sizeeeeeeeeeeeeeeee", follows.size() + "" );
+                    Log.d("Sizeeeeeeeeeeeeeeee", follows.size() + "");
                     followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
                 }
             });
