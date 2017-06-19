@@ -37,17 +37,22 @@ import me.sudar.zxingorient.ZxingOrientResult;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
+/**
+ * Central activity that controls the swiping mechanism of host, map, and social fragments.
+ */
 public class HomeSwipeActivity extends AppCompatActivity {
-    private static final int CAMERA_PERMISSION = 1;
-    private PagerAdapter mPagerAdapter;
-    public ViewPager mPager;
     private static final int NUM_PAGES = 3;
+    public ViewPager mPager;
+    private PagerAdapter mPagerAdapter;
+
     private HomeSwipeActivity mainActivity;
     private HostControllerFragment hostControllerFragment;
     private UserProfileFragment userProfileFragment;
     private MapsFragment mapsFragment;
-    //private IntentIntegrator qrScanner;
 
+    /**
+     * Initialize logged-in user information and all UIs.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +90,206 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sliding mechanism for host, map, and social fragments.
+     */
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+        /**
+         * Default FragmentStatePagerAdapter constructor.
+         * @param fm fragment manager
+         */
+        ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        /**
+         * Returned fragment at the swiped position.
+         * @param position swiped screen position
+         * @return fragment at the swiped position
+         */
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    hostControllerFragment = new HostControllerFragment();
+                    return hostControllerFragment;
+                case 1:
+                    mapsFragment = new MapsFragment();
+                    return mapsFragment;
+                default:
+                    userProfileFragment = new UserProfileFragment();
+                    return userProfileFragment;
+            }
+        }
+
+        /**
+         * Return number of fragments available.
+         * @return number of fragments available
+         */
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
+    }
+
+    /**
+     * Provide accurate callback of the swiped screen.
+     */
+    private class ScreenSlideChangeListener implements ViewPager.OnPageChangeListener {
+
+        /**
+         * Default ViewPager constructor. (Empty)
+         */
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        /**
+         * Method called when swipe to a fragment
+         * @param position position of the swiped fragment
+         */
+        @Override
+        public void onPageSelected(int position) {
+            switch (position) {
+                case 0:
+                    hostControllerFragment.populateListView();
+                    setupHostActionbar();
+                    break;
+                case 2:
+                    userProfileFragment.setupProfileInfo();
+                    setupUserActionbar();
+                    break;
+                case 1:
+                    setupMapActionbar();
+                    break;
+            }
+        }
+
+        /**
+         * @param state scroll state
+         */
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    }
+
+    /**
+     * Setup actionbar for map fragment.
+     */
+    public void setupMapActionbar() {
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_activity_home);
+
+        TextView hostText = (TextView) findViewById(R.id.actionbar_activity_home_text_host);
+        TextView socialText = (TextView) findViewById(R.id.actionbar_activity_home_text_social);
+
+        hostText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+                UtilityClass.hideKeyboard(mainActivity);
+            }
+        });
+        socialText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                UtilityClass.hideKeyboard(mainActivity);
+            }
+        });
+    }
+
+    /**
+     * Setup actionbar for host fragment.
+     */
+    public void setupHostActionbar() {
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
+
+        ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_host_image_plug);
+        plug_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            }
+        });
+    }
+
+    /**
+     * Setup actionbar for user fragment.
+     */
+    public void setupUserActionbar() {
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.actionbar_user);
+
+        ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_user_image_plug);
+        ImageView settings = (ImageView) findViewById(R.id.actionbar_user_setting);
+
+        plug_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mainActivity, SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     * Activities include QR scanner and photo collection.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
+        if (qrResult != null) {
+            if (qrResult.getContents() != null) {
+                try {
+                    JSONObject json = new JSONObject(qrResult.getContents());
+                    long party_id = json.getLong("party_id");
+                    long user_id = json.getLong("user_id");
+                    validateUserAndParty(user_id, party_id);
+                } catch (JSONException e) {
+                    Toast.makeText(this, "JSON Parsing Error", Toast.LENGTH_LONG).show();
+                }
+            } else
+                Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
+        } else if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
+                userProfileFragment.updateProfileImage(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Check specified userID and partyID with server to see if they match.
+     * @param user_id scanned userID
+     * @param party_id scanned partyID
+     */
+    private void validateUserAndParty(long user_id, long party_id) {
+        Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
+        // TODO: 04/02/2017 Check with database
+    }
+
+    /**
+     * Setup server party, user dummies and their relationships.
+     */
     private void setupServerDummies() {
         String uv = "1", pv = "1";
+
         //Main User ID=10
         HashMap<String, String> body = new HashMap<>();
         body.put("first_name", "Main");
@@ -382,188 +585,5 @@ public class HomeSwipeActivity extends AppCompatActivity {
         server_inviteUserToEvent(uv + "4", pv + "3", null);
         server_inviteUserToEvent(uv + "4", pv + "4", null);
         server_inviteUserToEvent(uv + "4", pv + "5", null);
-    }
-
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    hostControllerFragment = new HostControllerFragment();
-                    return hostControllerFragment;
-                case 1:
-                    mapsFragment = new MapsFragment();
-                    return mapsFragment;
-                default:
-                    userProfileFragment = new UserProfileFragment();
-                    return userProfileFragment;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return NUM_PAGES;
-        }
-    }
-
-    private class ScreenSlideChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            switch (position) {
-                case 0:
-                    hostControllerFragment.populateListView();
-                    setupHostActionbar();
-                    break;
-                case 2:
-                    userProfileFragment.setupProfileInfo();
-                    setupUserActionbar();
-                    break;
-                case 1:
-                    setupMapActionbar();
-                    break;
-            }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-    }
-
-    //actionbar settings
-    public void setupMapActionbar() {
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.actionbar_activity_home);
-        TextView hostText = (TextView) findViewById(R.id.actionbar_activity_home_text_host);
-        TextView socialText = (TextView) findViewById(R.id.actionbar_activity_home_text_social);
-
-        hostText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-                UtilityClass.hideKeyboard(mainActivity);
-            }
-        });
-
-        socialText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-                UtilityClass.hideKeyboard(mainActivity);
-            }
-        });
-    }
-
-    public void setupHostActionbar() {
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.actionbar_hostcontroller);
-
-        //qrScanner = new IntentIntegrator(this);
-        ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_host_image_plug);
-        plug_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-            }
-        });
-//        ImageView qrButton = (ImageView) findViewById(R.id.actionbar_host_qrsymbol);
-//        qrButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (ContextCompat.checkSelfPermission(mainActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-////                    if (!ActivityCompat.shouldShowRequestPermissionRationale(mainActivity, Manifest.permission.CAMERA)) {
-//                        Log.d("Camera", "Deny");
-//                        ActivityCompat.requestPermissions(mainActivity,
-//                                new String[]{Manifest.permission.CAMERA},
-//                                CAMERA_PERMISSION);
-//                    return;
-//                }
-//                openScanner();
-//            }
-//        });
-    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-//        switch (requestCode) {
-//            case CAMERA_PERMISSION:
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-//                    openScanner();
-//        }
-//    }
-//
-//    private void openScanner() {
-//        ZxingOrient zxingOrient = new ZxingOrient(HomeSwipeActivity.this);
-//        zxingOrient.setInfo("Scan QR Code");
-//        zxingOrient.setToolbarColor("black");//getString(R.string.appColorHexString));
-//        zxingOrient.setInfoBoxColor("black");//getString(R.string.appColorHexString));
-//        zxingOrient.setIcon(R.drawable.plug_icon);
-//        zxingOrient.initiateScan();
-//    }
-
-    public void setupUserActionbar() {
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.actionbar_user);
-
-        ImageView plug_icon = (ImageView) findViewById(R.id.actionbar_user_image_plug);
-        plug_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-            }
-        });
-
-        ImageView settings = (ImageView) findViewById(R.id.actionbar_user_setting);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mainActivity, SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
-        if (qrResult != null) {
-            if (qrResult.getContents() != null) {
-                try {
-                    JSONObject json = new JSONObject(qrResult.getContents());
-                    long party_id = json.getLong("party_id");
-                    long user_id = json.getLong("user_id");
-                    validateUserAndParty(user_id, party_id);
-                } catch (JSONException e) {
-                    Toast.makeText(this, "JSON Parsing Error", Toast.LENGTH_LONG).show();
-                }
-            } else
-                Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
-        } else if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
-                userProfileFragment.updateProfileImage(bitmap);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void validateUserAndParty(long user_id, long party_id) {
-        Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
-        // TODO: 04/02/2017 Check with database
     }
 }
