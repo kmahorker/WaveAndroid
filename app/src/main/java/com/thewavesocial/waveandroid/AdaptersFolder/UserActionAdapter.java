@@ -3,19 +3,16 @@ package com.thewavesocial.waveandroid.AdaptersFolder;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
@@ -26,9 +23,7 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
@@ -114,10 +109,10 @@ public class UserActionAdapter extends BaseAdapter {
         holder.decline = (TextView) layoutView.findViewById(R.id.eachNotif_decline);
 
         holder.message.setText(notifList.get(position).getMessage());
-        holder.timeAgo.setText( ". " + UtilityClass.getNotificationTime(notifList.get(position).getCreate_time()));
+        holder.timeAgo.setText(". " + UtilityClass.getNotificationTime(notifList.get(position).getCreate_time()));
 
-        if ( (notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
-                notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
+        if ((notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWED ||
+                notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING)) //Friend type notification
         {
             final User sender = (User) senderObjects.get(position);
             holder.sender.setText(sender.getFirstName());
@@ -132,19 +127,18 @@ public class UserActionAdapter extends BaseAdapter {
                     mainActivity.startActivity(intent);
                 }
             });
-        }
-        else if ( notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
+        } else if (notifList.get(position).getRequestType() == Notification.TYPE_GOING ||
                 notifList.get(position).getRequestType() == Notification.TYPE_HOSTING ||
                 notifList.get(position).getRequestType() == Notification.TYPE_BOUNCING ||
                 notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING ||
-                notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING ) //Friend type notification
+                notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING) //Friend type notification
         {
             final Party party = (Party) senderObjects.get(position);
             holder.sender.setText("\"" + party.getName() + "\"");
             holder.accept.setVisibility(View.INVISIBLE);
             holder.decline.setVisibility(View.INVISIBLE);
 
-            if ( notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING || notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING  ) {
+            if (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING || notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING) {
                 holder.accept.setVisibility(View.VISIBLE);
                 holder.decline.setVisibility(View.VISIBLE);
 
@@ -152,7 +146,7 @@ public class UserActionAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         UtilityClass.startProgressbar(mainActivity);
-                        final String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING)? "going" : "bouncing";
+                        final String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING) ? "going" : "bouncing";
 
                         server_manageUserForParty(CurrentUser.theUser.getUserID(), notifList.get(position).getSenderID(), type, "POST", new OnResultReadyListener<String>() {
                             @Override
@@ -193,7 +187,7 @@ public class UserActionAdapter extends BaseAdapter {
                         server_deleteNotification(CurrentUser.theUser.getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
-                                if ( result.equals("success") ) {
+                                if (result.equals("success")) {
                                     notifList.remove(position);
                                     senderObjects.remove(position);
                                     UserActionAdapter.this.notifyDataSetChanged();
@@ -236,7 +230,7 @@ public class UserActionAdapter extends BaseAdapter {
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachUser_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachUser_partyInfo_item);
 
-        if ( party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
+        if (party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
             holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());

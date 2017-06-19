@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.internal.Utility;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
@@ -67,7 +66,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchPeople_name);
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
-        if ( holder.image.getDrawable() == null ) {
+        if (holder.image.getDrawable() == null) {
             DatabaseAccess.server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
@@ -95,7 +94,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                     DatabaseAccess.server_unfollow(user.getUserID(), new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
-                            if ( result.equals("success") ) {
+                            if (result.equals("success")) {
                                 CurrentUser.theUser.getFollowing().remove(user.getUserID());
                                 changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                             }
@@ -106,7 +105,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                     DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), user.getUserID(), new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
-                            if ( result.equals("success") ) {
+                            if (result.equals("success")) {
                                 CurrentUser.theUser.getFollowing().add(user.getUserID());
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
                                 DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), "", "following", null);

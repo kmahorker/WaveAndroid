@@ -7,23 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.Calendar;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
-public class ManagePartyCustomAdapter extends BaseAdapter
-{
-    private Activity mainActivity ;
+public class ManagePartyCustomAdapter extends BaseAdapter {
+    private Activity mainActivity;
     private List<Party> partyList;
     private static LayoutInflater inflater;
 
@@ -49,8 +45,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         return position;
     }
 
-    public class Holder
-    {
+    public class Holder {
         EmojiconTextView partyEmoji;
         TextView partyname;
         TextView partyInfo;
@@ -73,7 +68,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachManage_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachManage_partyInfo_item);
 
-        if ( party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
+        if (party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
             holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());

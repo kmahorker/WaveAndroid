@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,9 +20,8 @@ import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
-public class SearchEventCustomAdapter extends BaseAdapter
-{
-    private Activity mainActivity ;
+public class SearchEventCustomAdapter extends BaseAdapter {
+    private Activity mainActivity;
     private List<Party> partyList;
     private static LayoutInflater inflater;
 
@@ -49,8 +47,7 @@ public class SearchEventCustomAdapter extends BaseAdapter
         return position;
     }
 
-    public class Holder
-    {
+    public class Holder {
         EmojiconTextView image;
         TextView name;
         TextView go;
@@ -74,8 +71,7 @@ public class SearchEventCustomAdapter extends BaseAdapter
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchEvent_name);
         holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
-        if ( party.getPartyEmoji() != null )
-        {
+        if (party.getPartyEmoji() != null) {
             holder.image.setText(party.getPartyEmoji());
         }
 
@@ -83,7 +79,7 @@ public class SearchEventCustomAdapter extends BaseAdapter
         holder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
+                if (CurrentUser.theUser.getAttending().contains(party.getPartyID())) {
                     Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
                 } else {
                     CurrentUser.theUser.getAttending().add(0, party.getPartyID());
