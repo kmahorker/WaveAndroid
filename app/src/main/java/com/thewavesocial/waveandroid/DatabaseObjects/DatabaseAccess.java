@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
@@ -29,7 +28,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -60,10 +58,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public final class DatabaseAccess{
+public final class DatabaseAccess {
     public static Activity mainActivity;
 
-    /**Initialize mainActivity*/
+    /**
+     * Initialize mainActivity
+     */
     public static void setContext(Activity activity) {
         mainActivity = activity;
     }
@@ -80,7 +80,7 @@ public final class DatabaseAccess{
         private Runnable run;
         private OnResultReadyListener<ArrayList<String>> delegate;
 
-        public HttpRequestTask(Activity mainActivity, RequestComponents[] comps, OnResultReadyListener<ArrayList<String>> delegate ) {
+        public HttpRequestTask(Activity mainActivity, RequestComponents[] comps, OnResultReadyListener<ArrayList<String>> delegate) {
             this.mainActivity = mainActivity;
             this.comps = comps;
             this.delegate = delegate;
@@ -110,9 +110,9 @@ public final class DatabaseAccess{
         }
 
         @Override
-        protected ArrayList<String> doInBackground(String... params){
+        protected ArrayList<String> doInBackground(String... params) {
             ArrayList<String> results = new ArrayList<>();
-            for ( RequestComponents comp : comps ){
+            for (RequestComponents comp : comps) {
                 results.add(sendHttpRequest(comp.url, comp.endpoint, comp.body));
             }
             return results;
@@ -124,7 +124,7 @@ public final class DatabaseAccess{
 //                progress.dismiss();
 //            progressShowing = false;
 //            handler.removeCallbacks(run);
-            if ( delegate != null )
+            if (delegate != null)
                 delegate.onResultReady(result);
         }
 
@@ -141,7 +141,7 @@ public final class DatabaseAccess{
                 connection.setConnectTimeout(5000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
-                if ( body != null ) {
+                if (body != null) {
                     connection.setDoInput(true);
                     connection.setDoOutput(true);
                     HashMap<String, String> params = body;
@@ -156,14 +156,14 @@ public final class DatabaseAccess{
 
                 //Now, read the JSON response from server and return
                 InputStream stream;
-                if ( connection.getResponseCode() == 500 )
+                if (connection.getResponseCode() == 500)
                     stream = connection.getErrorStream();
                 else
                     stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
                 String line;
                 StringBuffer buffer = new StringBuffer();
-                while( (line = reader.readLine()) != null )
+                while ((line = reader.readLine()) != null)
                     buffer.append(line + "\n");
 
                 connection.disconnect();
@@ -182,13 +182,15 @@ public final class DatabaseAccess{
             //Close connection and reader and writer (Just in case things don't go well...)
             finally {
                 try {
-                    if ( connection != null )
+                    if (connection != null)
                         connection.disconnect();
-                    if ( reader != null )
+                    if (reader != null)
                         reader.close();
-                    if ( writer != null )
+                    if (writer != null)
                         writer.close();
-                } catch (IOException e){e.printStackTrace();}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return "error";
         }
@@ -222,7 +224,7 @@ public final class DatabaseAccess{
         private Runnable run;
         private OnResultReadyListener<Bitmap> delegate;
 
-        public ImageDownloadTask(Activity mainActivity, RequestComponents comp, OnResultReadyListener<Bitmap> delegate ) {
+        public ImageDownloadTask(Activity mainActivity, RequestComponents comp, OnResultReadyListener<Bitmap> delegate) {
             this.mainActivity = mainActivity;
             this.comp = comp;
             this.delegate = delegate;
@@ -252,7 +254,7 @@ public final class DatabaseAccess{
         }
 
         @Override
-        protected Bitmap doInBackground(String... params){
+        protected Bitmap doInBackground(String... params) {
             return sendHttpRequest(comp.url, comp.endpoint, comp.body);
         }
 
@@ -262,7 +264,7 @@ public final class DatabaseAccess{
 //                progress.dismiss();
 //            progressShowing = false;
 //            handler.removeCallbacks(run);
-            if ( delegate != null )
+            if (delegate != null)
                 delegate.onResultReady(result);
         }
 
@@ -278,7 +280,7 @@ public final class DatabaseAccess{
                 connection.setConnectTimeout(5000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
-                if ( body != null ) {
+                if (body != null) {
                     connection.setDoInput(true);
                     connection.setDoOutput(true);
                     HashMap<String, String> params = body;
@@ -293,7 +295,7 @@ public final class DatabaseAccess{
 
                 //Now, read the JSON response from server and return
                 InputStream stream;
-                if ( connection.getResponseCode() == 500 )
+                if (connection.getResponseCode() == 500)
                     stream = connection.getErrorStream();
                 else
                     stream = connection.getInputStream();
@@ -309,11 +311,13 @@ public final class DatabaseAccess{
             //Close connection and reader and writer (Just in case things don't go well...)
             finally {
                 try {
-                    if ( connection != null )
+                    if (connection != null)
                         connection.disconnect();
-                    if ( writer != null )
+                    if (writer != null)
                         writer.close();
-                } catch (IOException e){e.printStackTrace();}
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -344,6 +348,7 @@ public final class DatabaseAccess{
         private Bitmap image;
         private OnResultReadyListener<String> delegate;
         private String url;
+
         public ImageUploadTask(Activity mainActivity, String url, Bitmap image, OnResultReadyListener<String> delegate) {
             this.mainActivity = mainActivity;
             this.image = image;
@@ -366,7 +371,9 @@ public final class DatabaseAccess{
             delegate.onResultReady(result);
         }
 
-        /**Use OkHttpClient to upload image*/
+        /**
+         * Use OkHttpClient to upload image
+         */
         private String sendImageRequest(String url, Bitmap bitmap) {
             File file = bitmapToFile(bitmap);
             String content_type = getFileType(file.getPath());
@@ -376,7 +383,7 @@ public final class DatabaseAccess{
             RequestBody file_body = RequestBody.create(MediaType.parse(content_type), file);
             RequestBody request_body = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("type",content_type)
+                    .addFormDataPart("type", content_type)
                     .addFormDataPart("profile-photo", file_path.substring(file_path.lastIndexOf('/') + 1), file_body)
                     .build();
             Request request = new Request.Builder()
@@ -392,7 +399,9 @@ public final class DatabaseAccess{
             return "Error";
         }
 
-        /**Convert bitmap to File.*/
+        /**
+         * Convert bitmap to File.
+         */
         private File bitmapToFile(Bitmap bitmap) {
             File file = new File(mainActivity.getCacheDir(), "profile.jpg");
             try {
@@ -415,7 +424,9 @@ public final class DatabaseAccess{
             return file;
         }
 
-        /**Get filetype of image*/
+        /**
+         * Get filetype of image
+         */
         private static String getFileType(String path) {
             String extention = MimeTypeMap.getFileExtensionFromUrl(path);
             return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extention);
@@ -424,7 +435,9 @@ public final class DatabaseAccess{
 
 //todo -------------------------------------------------------------------------Local Save Functions
 
-    /**Save login info to phone.*/
+    /**
+     * Save login info to phone.
+     */
     public static void saveTokentoLocal(Activity mainActivity, String id, String jwt) {
         SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -433,7 +446,9 @@ public final class DatabaseAccess{
         editor.commit();
     }
 
-    /**Get login info from phone.*/
+    /**
+     * Get login info from phone.
+     */
     public static HashMap<String, String> getTokenFromLocal(Activity mainActivity) {
         SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         HashMap<String, String> tokens = new HashMap<>();
@@ -445,7 +460,9 @@ public final class DatabaseAccess{
 
 //todo --------------------------------------------------------------------------------POST Requests
 
-    /**Create new party in server*/
+    /**
+     * Create new party in server
+     */
     public static void server_createNewParty(String name,
                                              String emoji,
                                              double price,
@@ -457,7 +474,7 @@ public final class DatabaseAccess{
                                              double endingTimeStamp,
                                              int minAge,
                                              int maxAge,
-                                             final OnResultReadyListener<String> delegate){
+                                             final OnResultReadyListener<String> delegate) {
         RequestComponents[] comps = new RequestComponents[1];
         String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> event_info = new HashMap();
@@ -479,23 +496,27 @@ public final class DatabaseAccess{
             public void onResultReady(ArrayList<String> result) {
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
+                    String status = main_json.getString("status");
 
-                    if(!status.equals("error")) {
+                    if (!status.equals("error")) {
                         JSONObject data_json = main_json.getJSONObject("data");
                         String event_id = data_json.getString("insertId");
                         status += "," + event_id;
-                        if ( delegate != null )
+                        if (delegate != null)
                             delegate.onResultReady(status);
                     }
 
-                } catch (JSONException e) {e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.d("CreateNewParty", result.get(0));
             }
         }).execute();
     }
 
-    /**Create new user in server*/
+    /**
+     * Create new user in server
+     */
     public static void server_createNewUser(String first_name,
                                             String last_name,
                                             String email,
@@ -524,25 +545,29 @@ public final class DatabaseAccess{
             public void onResultReady(ArrayList<String> result) {
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
+                    String status = main_json.getString("status");
 
-                    if(!status.equals("error")) {
+                    if (!status.equals("error")) {
                         JSONObject data_json = main_json.getJSONObject("data");
                         String event_id = data_json.getString("insertId");
                         status += "," + event_id;
 
-                        if ( delegate != null )
+                        if (delegate != null)
                             delegate.onResultReady(status);
                     }
 
-                } catch (JSONException e) {e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.d("CreateNewUser", result.get(0));
             }
         }).execute();
     }
 
-    /**Parameter action must be either "POST" or "DELETE"*/
-    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate){
+    /**
+     * Parameter action must be either "POST" or "DELETE"
+     */
+    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate) {
         RequestComponents[] comps = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> about = new HashMap();
@@ -567,13 +592,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("ManageUserForParty", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Update user in server*/
+    /**
+     * Update user in server
+     */
     public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
@@ -586,16 +613,20 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 Log.d("UpdateUser", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Update party in server*/
+    /**
+     * Update party in server
+     */
     public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents[] comps = new RequestComponents[1];
@@ -608,16 +639,20 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 Log.d("UpdateParty", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Follow a user*/
+    /**
+     * Follow a user
+     */
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -629,18 +664,22 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     status = main_json.getString("status");
-                } catch (JSONException e) {e.printStackTrace();}
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 Log.d("Follow User", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Add Best Friend on server*/
-    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate){
-        String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+    /**
+     * Add Best Friend on server
+     */
+    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
         body.put("name", name);
@@ -649,12 +688,12 @@ public final class DatabaseAccess{
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                try{
+                try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    String status =  main_json.getString("status");
-                    if ( delegate != null )
+                    String status = main_json.getString("status");
+                    if (delegate != null)
                         delegate.onResultReady(status);
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 Log.d("addBestFriend", result.get(0) + "");
@@ -662,7 +701,9 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /** Invite user to event. Return either "success" or "error" */
+    /**
+     * Invite user to event. Return either "success" or "error"
+     */
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -680,13 +721,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("InviteUserToParty", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /** Create new notification. Return either "success" or "error" */
+    /**
+     * Create new notification. Return either "success" or "error"
+     */
     public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -708,16 +751,18 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CreateNotification", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
 
     }
 
-    /**Login using email and password. Return either success or error*/
+    /**
+     * Login using email and password. Return either success or error
+     */
     public static void server_login_email(String email, String password, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url)+"auth";
+        String url = mainActivity.getString(R.string.server_url) + "auth";
         HashMap<String, String> body = new HashMap<>();
         body.put("email", email);
         body.put("password", password);
@@ -735,7 +780,7 @@ public final class DatabaseAccess{
                     server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
-                            if ( result != null ) {
+                            if (result != null) {
                                 CurrentUser.theUser = result;
                             }
                         }
@@ -749,9 +794,11 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Login using facebook token. Return either success or error*/
+    /**
+     * Login using facebook token. Return either success or error
+     */
     public static void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url)+"FBauth";
+        String url = mainActivity.getString(R.string.server_url) + "FBauth";
         HashMap<String, String> body = new HashMap<>();
         body.put("fb_token", fb_token);
 
@@ -769,7 +816,7 @@ public final class DatabaseAccess{
                     server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
                         public void onResultReady(User result) {
-                            if ( result != null ) {
+                            if (result != null) {
                                 CurrentUser.theUser = result;
                             }
                         }
@@ -783,14 +830,16 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Wrapper method for uploading image. Return either OK or Error.*/
+    /**
+     * Wrapper method for uploading image. Return either OK or Error.
+     */
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
                 + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         new ImageUploadTask(mainActivity, url, bitmap, new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(result);
             }
         }).execute();
@@ -799,19 +848,21 @@ public final class DatabaseAccess{
 
 //todo ---------------------------------------------------------------------------------GET Requests
 
-    /**Get list of user information from server*/
+    /**
+     * Get list of user information from server
+     */
     public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
         RequestComponents[] comps = new RequestComponents[userIdList.size()];
-        for ( int i = 0; i < comps.length; i++ ) {
+        for (int i = 0; i < comps.length; i++) {
             String url = mainActivity.getString(R.string.server_url) + "users/" + userIdList.get(i)
                     + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
         }
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>(){
+        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 final List<User> friends = new ArrayList<>();
-                for ( int i = 0; i < result.size(); i++ ) {
+                for (int i = 0; i < result.size(); i++) {
                     HashMap<String, String> body = new HashMap<>();
                     try {
                         JSONObject main_json = new JSONObject(result.get(i));
@@ -831,20 +882,22 @@ public final class DatabaseAccess{
                 }
 
                 //Light-weight threads management
-                class ThreadManager{
+                class ThreadManager {
                     private int max, completes;
-                    public ThreadManager(int max){
+
+                    public ThreadManager(int max) {
                         this.max = max;
                     }
-                    void completeThreads(){
+
+                    void completeThreads() {
                         completes++;
-                        if ( completes >= max && delegate != null )
+                        if (completes >= max && delegate != null)
                             delegate.onResultReady(friends);
                     }
                 }
-                final ThreadManager threadManager = new ThreadManager(friends.size()*2);
+                final ThreadManager threadManager = new ThreadManager(friends.size() * 2);
 
-                for(final User user : friends){
+                for (final User user : friends) {
                     server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                         @Override
                         public void onResultReady(List<String> result) {
@@ -866,10 +919,12 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Get list of party information from server*/
+    /**
+     * Get list of party information from server
+     */
     public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
         RequestComponents[] comps = new RequestComponents[partyIdList.size()];
-        for ( int i = 0; i < partyIdList.size(); i++ ) {
+        for (int i = 0; i < partyIdList.size(); i++) {
             String url = mainActivity.getString(R.string.server_url) + "events/" + partyIdList.get(i)
                     + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
             comps[i] = new RequestComponents(url, "GET", null);
@@ -878,7 +933,7 @@ public final class DatabaseAccess{
             @Override
             public void onResultReady(ArrayList<String> result) {
                 Map<Long, Party> raw_parties = new TreeMap<>();
-                for ( int i = 0; i < result.size(); i++ ) {
+                for (int i = 0; i < result.size(); i++) {
                     long date_key = 0;
                     HashMap<String, String> body = new HashMap<>();
                     try {
@@ -890,7 +945,9 @@ public final class DatabaseAccess{
                             body.put(key, data.getString(key));
                         }
                         date_key = Long.parseLong(data.getString("start_timestamp"));
-                    } catch (JSONException e) {e.printStackTrace();}
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                     Log.d("CurUser_GetPartyInfo", result.get(i));
                     while (raw_parties.keySet().contains(date_key))
@@ -899,21 +956,24 @@ public final class DatabaseAccess{
                     raw_parties.put(date_key, constructParty(body));
                 }
                 ArrayList<Party> parties = new ArrayList<>();
-                for ( Long key : raw_parties.keySet() ) {
+                for (Long key : raw_parties.keySet()) {
                     parties.add(raw_parties.get(key));
                 }
 
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(parties);
-            }}).execute();
+            }
+        }).execute();
     }
 
-    /**Get user information*/
+    /**
+     * Get user information
+     */
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>(){
+        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 HashMap<String, String> body = new HashMap<>();
@@ -939,16 +999,19 @@ public final class DatabaseAccess{
                             @Override
                             public void onResultReady(List<String> result) {
                                 user.getFollowers().addAll(result);
-                                if ( delegate != null )
+                                if (delegate != null)
                                     delegate.onResultReady(user);
                             }
                         });
                     }
                 });
-            }}).execute();
+            }
+        }).execute();
     }
 
-    /**Get party information from server*/
+    /**
+     * Get party information from server
+     */
     public static void server_getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -971,12 +1034,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_GetPartyInfo", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(constructParty(body));
-            }}).execute();
+            }
+        }).execute();
     }
 
-    /**Get user following from server*/
+    /**
+     * Get user following from server
+     */
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -989,7 +1055,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject list = new JSONObject(result.get(0));
                     JSONArray main_json = list.getJSONArray("data");
-                    for ( int i = 0; i < main_json.length(); i++ ) {
+                    for (int i = 0; i < main_json.length(); i++) {
                         JSONObject data = main_json.getJSONObject(i);
                         String userID = data.getString("id");
                         followers.add(userID);
@@ -998,13 +1064,15 @@ public final class DatabaseAccess{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(followers);
             }
         }).execute();
     }
 
-    /**Get user following from server*/
+    /**
+     * Get user following from server
+     */
     public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1017,7 +1085,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject list = new JSONObject(result.get(0));
                     JSONArray main_json = list.getJSONArray("data");
-                    for ( int i = 0; i < main_json.length(); i++ ) {
+                    for (int i = 0; i < main_json.length(); i++) {
                         JSONObject data = main_json.getJSONObject(i);
                         String userID = data.getString("id");
                         followings.add(userID);
@@ -1027,14 +1095,16 @@ public final class DatabaseAccess{
                     e.printStackTrace();
                 }
                 Log.d("User Following", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(followings);
             }
         }).execute();
     }
 
-    /**Get User's events from server*/
-    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String,ArrayList<String>>> delegate) {
+    /**
+     * Get User's events from server
+     */
+    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<String>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -1048,14 +1118,14 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
-                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                    for (int i = 0; i < data.length(); i++) {
+                        if (data.getJSONObject(i).getString("relationship").equals("attending"))
                             attending.add(data.getJSONObject(i).getString("event_id"));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
                             hosting.add(data.getJSONObject(i).getString("event_id"));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("bouncing"))
                             bouncing.add(data.getJSONObject(i).getString("event_id"));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("going"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("going"))
                             going.add(data.getJSONObject(i).getString("event_id"));
                     }
                 } catch (JSONException e) {
@@ -1067,14 +1137,16 @@ public final class DatabaseAccess{
                 parties.put("bouncing", bouncing);
                 parties.put("going", going);
                 Log.d("Get User Events", result.get(0));
-                if ( delegate != null )
+                if (delegate != null)
                     delegate.onResultReady(parties);
             }
         }).execute();
     }
 
-    /**Get User's events from server*/
-    public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String,ArrayList<User>>> delegate) {
+    /**
+     * Get User's events from server
+     */
+    public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -1088,20 +1160,20 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
                             String key = (String) iterKey.next();
                             body.put(key, data.getJSONObject(i).getString(key));
                         }
-                        if ( data.getJSONObject(i).getString("relationship").equals("attending"))
+                        if (data.getJSONObject(i).getString("relationship").equals("attending"))
                             attending.add(constructUser(body));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("hosting"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
                             hosting.add(constructUser(body));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("bouncing"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("bouncing"))
                             bouncing.add(constructUser(body));
-                        else if ( data.getJSONObject(i).getString("relationship").equals("going"))
+                        else if (data.getJSONObject(i).getString("relationship").equals("going"))
                             going.add(constructUser(body));
                     }
                 } catch (JSONException e) {
@@ -1118,30 +1190,32 @@ public final class DatabaseAccess{
                 server_getInvitesOfEvent(eventID, new OnResultReadyListener<ArrayList<User>>() {
                     @Override
                     public void onResultReady(ArrayList<User> result) {
-                        if ( result != null )
+                        if (result != null)
                             users.get("inviting").addAll(result);
 
                         //Light-weight threads management
-                        class ThreadManager{
+                        class ThreadManager {
                             private int max, completes;
-                            public ThreadManager(int max){
+
+                            public ThreadManager(int max) {
                                 this.max = max;
                             }
-                            void completeThreads(){
+
+                            void completeThreads() {
                                 completes++;
                                 Log.d("Threads", "Completed: " + completes + ", Max" + max);
-                                if ( completes >= max && delegate != null )
+                                if (completes >= max && delegate != null)
                                     delegate.onResultReady(users);
                             }
                         }
-                        final ThreadManager threadManager = new ThreadManager((users.get("attending").size()+
-                                users.get("hosting").size()+
-                                users.get("bouncing").size()+
-                                users.get("going").size()+
-                                users.get("inviting").size())*2);
+                        final ThreadManager threadManager = new ThreadManager((users.get("attending").size() +
+                                users.get("hosting").size() +
+                                users.get("bouncing").size() +
+                                users.get("going").size() +
+                                users.get("inviting").size()) * 2);
 
                         //Get following/followers
-                        for(final User user : users.get("attending")){
+                        for (final User user : users.get("attending")) {
                             server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                                 @Override
                                 public void onResultReady(List<String> result) {
@@ -1159,7 +1233,7 @@ public final class DatabaseAccess{
                                 }
                             });
                         }
-                        for(final User user : users.get("hosting")){
+                        for (final User user : users.get("hosting")) {
                             server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                                 @Override
                                 public void onResultReady(List<String> result) {
@@ -1177,7 +1251,7 @@ public final class DatabaseAccess{
                                 }
                             });
                         }
-                        for(final User user : users.get("bouncing")){
+                        for (final User user : users.get("bouncing")) {
                             server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                                 @Override
                                 public void onResultReady(List<String> result) {
@@ -1195,7 +1269,7 @@ public final class DatabaseAccess{
                                 }
                             });
                         }
-                        for(final User user : users.get("going")){
+                        for (final User user : users.get("going")) {
                             server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                                 @Override
                                 public void onResultReady(List<String> result) {
@@ -1213,7 +1287,7 @@ public final class DatabaseAccess{
                                 }
                             });
                         }
-                        for(final User user : users.get("inviting")){
+                        for (final User user : users.get("inviting")) {
                             server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                                 @Override
                                 public void onResultReady(List<String> result) {
@@ -1239,9 +1313,11 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Get Best Friend from server*/
-    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate ){
-        String url =  mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+    /**
+     * Get Best Friend from server
+     */
+    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
 
@@ -1253,28 +1329,30 @@ public final class DatabaseAccess{
                     JSONObject list = new JSONObject(result.get(0));
                     JSONArray main_json = list.getJSONArray("data");
                     String name = "", number = "";
-                    for ( int i = 0; i < main_json.length(); i++ ) {
+                    for (int i = 0; i < main_json.length(); i++) {
                         JSONObject data = main_json.getJSONObject(i);
                         name = data.getString("name");
                         number = data.getString("contact");
                         bestFriends.add(new BestFriend(name, number));
                     }
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 Log.d("getBestFriends", result.get(0) + "");
-                if(delegate != null) {
+                if (delegate != null) {
                     delegate.onResultReady(bestFriends);
                 }
             }
         }).execute();
     }
 
-    /**Get events in specified distance*/
+    /**
+     * Get events in specified distance
+     */
     public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
-                + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis()/1000
+                + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
                 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -1284,7 +1362,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject json_result = new JSONObject(result.get(0));
                     JSONArray data = json_result.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
@@ -1303,7 +1381,9 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Get event's invited users from server*/
+    /**
+     * Get event's invited users from server
+     */
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
                 + "/invites?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1316,7 +1396,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
@@ -1336,7 +1416,9 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /** Get Notification by UserID */
+    /**
+     * Get Notification by UserID
+     */
     public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1349,7 +1431,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
@@ -1369,10 +1451,12 @@ public final class DatabaseAccess{
         }).execute();
     }
 
-    /**Get events by keyword*/
+    /**
+     * Get events by keyword
+     */
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
-                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis()/1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
 
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
@@ -1382,7 +1466,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
@@ -1403,7 +1487,9 @@ public final class DatabaseAccess{
 
     }
 
-    /**Get users by keyword*/
+    /**
+     * Get users by keyword
+     */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/find-by-keyword?keyword="
                 + keyword + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1416,7 +1502,7 @@ public final class DatabaseAccess{
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
-                    for ( int i = 0; i < data.length(); i++ ) {
+                    for (int i = 0; i < data.length(); i++) {
                         HashMap<String, String> body = new HashMap<>();
                         Iterator iterKey = data.getJSONObject(i).keys();
                         while (iterKey.hasNext()) {
@@ -1430,20 +1516,22 @@ public final class DatabaseAccess{
                 }
 
                 //Light-weight threads management
-                class ThreadManager{
+                class ThreadManager {
                     private int max, completes;
-                    public ThreadManager(int max){
+
+                    public ThreadManager(int max) {
                         this.max = max;
                     }
-                    void completeThreads(){
+
+                    void completeThreads() {
                         completes++;
-                        if ( completes >= max && delegate != null )
+                        if (completes >= max && delegate != null)
                             delegate.onResultReady(users);
                     }
                 }
-                final ThreadManager threadManager = new ThreadManager(users.size()*2);
+                final ThreadManager threadManager = new ThreadManager(users.size() * 2);
 
-                for(final User user : users){
+                for (final User user : users) {
                     server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
                         @Override
                         public void onResultReady(List<String> result) {
@@ -1468,7 +1556,9 @@ public final class DatabaseAccess{
 
     }
 
-    /**Download Profile Picture from Server. Return bitmap or null.*/
+    /**
+     * Download Profile Picture from Server. Return bitmap or null.
+     */
     public static void server_getProfilePicture(String userID, final OnResultReadyListener<Bitmap> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1476,7 +1566,7 @@ public final class DatabaseAccess{
         new ImageDownloadTask(mainActivity, comp, new OnResultReadyListener<Bitmap>() {
             @Override
             public void onResultReady(Bitmap result) {
-                if ( result != null && delegate != null ) {
+                if (result != null && delegate != null) {
                     delegate.onResultReady(result);
                     Log.d("Image_Download", "Success");
                 }
@@ -1487,9 +1577,11 @@ public final class DatabaseAccess{
 
 //todo ------------------------------------------------------------------------------DELETE Requests
 
-    /**Delete Best Friend on server*/
-    public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate){
-        String url = mainActivity.getString(R.string.server_url) + "users/"  + userId + "/bestfriends?access_token=" +
+    /**
+     * Delete Best Friend on server
+     */
+    public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate) {
+        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
                 getTokenFromLocal(mainActivity).get("jwt");
         HashMap<String, String> body = new HashMap<>();
         body.put("contact", number);
@@ -1506,13 +1598,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_DelBestFriend", result.get(0) + "");
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Delete party from server*/
+    /**
+     * Delete party from server
+     */
     public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token="
@@ -1531,14 +1625,16 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_DeleteEvent", result.get(0));
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
         Log.d("Delete Party", result);
     }
 
-    /**User unfollow user from server. Return either success or error.*/
+    /**
+     * User unfollow user from server. Return either success or error.
+     */
     public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
                 + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1556,13 +1652,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_UnfollowUser", result.get(0) + "");
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Delete notification. Return success or error.*/
+    /**
+     * Delete notification. Return success or error.
+     */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
         RequestComponents comps[] = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/notifications/"
@@ -1581,13 +1679,15 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_DeleteNotif", result.get(0));
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
     }
 
-    /**Uninvite user to event. Return success or error.*/
+    /**
+     * Uninvite user to event. Return success or error.
+     */
     public static void server_uninviteUser(String userID, String eventID, final OnResultReadyListener<String> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
@@ -1606,7 +1706,7 @@ public final class DatabaseAccess{
                 }
 
                 Log.d("CurUser_UninviteUser", result.get(0) + "");
-                if ( delegate != null)
+                if (delegate != null)
                     delegate.onResultReady(status);
             }
         }).execute();
@@ -1614,7 +1714,9 @@ public final class DatabaseAccess{
 
 //todo -------------------------------------------------------------------------------Helper Methods
 
-    /**Fill in all party information locally*/
+    /**
+     * Fill in all party information locally
+     */
     private static Party constructParty(HashMap<String, String> info) {
         String partyID = "", name = "", emoji = "", startDateTime = "", endDateTime = "", address = "", str_isPublic = "", hostName = "",
                 min_age = "", max_age = "";
@@ -1629,39 +1731,41 @@ public final class DatabaseAccess{
             partyID = info.get("id");
             name = info.get("name");
             emoji = info.get("emoji");
-            if ( info.get("price") != null )
+            if (info.get("price") != null)
                 price = Double.parseDouble(info.get("price") + "");
 
             startDateTime = info.get("start_timestamp");
             endDateTime = info.get("end_timestamp");
-            if ( startDateTime != null ) {
+            if (startDateTime != null) {
                 startingDateTimeCalendar.setTime(new Date(Long.parseLong(startDateTime) * 1000));
             }
-            if( endDateTime != null ){
+            if (endDateTime != null) {
                 endingDateTimeCalendar.setTime(new Date(Long.parseLong(endDateTime) * 1000));
             }
-            Log.d("Calendar", startingDateTimeCalendar.get(Calendar.MONTH)+"");
+            Log.d("Calendar", startingDateTimeCalendar.get(Calendar.MONTH) + "");
 
             address = info.get("address");
             mapAddress.setAddress_string(address);
-            if ( info.get("lat") != null && info.get("lng") != null ) {
+            if (info.get("lat") != null && info.get("lng") != null) {
                 mapAddress.setAddress_latlng(new LatLng(Double.parseDouble(info.get("lat")), Double.parseDouble(info.get("lng"))));
                 Log.d("MyLatLng", mapAddress.getAddress_latlng().toString());
             }
 
             str_isPublic = info.get("is_public") + "";
-            if ( !str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1 ) {
+            if (!str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1) {
                 isPublic = true;
             }
 
             hostName = info.get("host_name");
             min_age = info.get("min_age");
             max_age = info.get("max_age");
-            if(!min_age.equals("null") && !max_age.equals("null")){
+            if (!min_age.equals("null") && !max_age.equals("null")) {
                 minAge = Integer.parseInt(min_age);
                 maxAge = Integer.parseInt(max_age);
             }
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 //        hostingUsers = (ArrayList) info.get("hosting");
@@ -1678,7 +1782,9 @@ public final class DatabaseAccess{
         return party;
     }
 
-    /**Fill in all user information locally*/
+    /**
+     * Fill in all user information locally
+     */
     private static User constructUser(HashMap<String, String> info) {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
@@ -1695,7 +1801,7 @@ public final class DatabaseAccess{
             gender = info.get("gender");
 
             date = info.get("birthday");
-            if ( !date.equals("null") ) {
+            if (!date.equals("null")) {
                 birthday.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
                 birthday.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)));
                 birthday.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
@@ -1713,33 +1819,35 @@ public final class DatabaseAccess{
         return user;
     }
 
-    /**Fill in notification information locally*/
+    /**
+     * Fill in notification information locally
+     */
     private static Notification constructNotification(HashMap<String, String> info) {
         int type;
         String sender_id, notification_id;
-        if ( info == null )
+        if (info == null)
             return new Notification();
 
         notification_id = info.get("id");
-        if ( info.get("type").equals("following") ) { //user notification
+        if (info.get("type").equals("following")) { //user notification
             type = Notification.TYPE_FOLLOWING;
             sender_id = info.get("sender_id");
-        } else if ( info.get("type").equals("followed") ) {
+        } else if (info.get("type").equals("followed")) {
             type = Notification.TYPE_FOLLOWED;
             sender_id = info.get("sender_id");
-        } else if ( info.get("type").equals("hosting") ) { //event notification
+        } else if (info.get("type").equals("hosting")) { //event notification
             type = Notification.TYPE_HOSTING;
             sender_id = info.get("event_id");
-        } else if ( info.get("type").equals("going") ) {
+        } else if (info.get("type").equals("going")) {
             type = Notification.TYPE_GOING;
             sender_id = info.get("event_id");
-        } else if ( info.get("type").equals("bouncing") ) {
+        } else if (info.get("type").equals("bouncing")) {
             type = Notification.TYPE_BOUNCING;
             sender_id = info.get("event_id");
-        } else if ( info.get("type").equals("invite_going") ) {
+        } else if (info.get("type").equals("invite_going")) {
             type = Notification.TYPE_INVITE_GOING;
             sender_id = info.get("event_id");
-        } else if ( info.get("type").equals("invite_bouncing") ) {
+        } else if (info.get("type").equals("invite_bouncing")) {
             type = Notification.TYPE_INVITE_BOUNCING;
             sender_id = info.get("event_id");
         } else {
