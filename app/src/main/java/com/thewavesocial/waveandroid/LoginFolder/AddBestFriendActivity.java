@@ -26,12 +26,11 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class AddBestFriendActivity extends AppCompatActivity {
     ActionBar actionBar;
@@ -51,7 +50,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_best_friend);
         DatabaseAccess.saveTokentoLocal(thisActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
 
-        if ( mainActivity == null ) {
+        if (mainActivity == null) {
             UtilityClass.startProgressbar(thisActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
@@ -73,8 +72,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-        else{
+        } else {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,14 +86,15 @@ public class AddBestFriendActivity extends AppCompatActivity {
         }
 
     }
-    private void setUpActionBar(){
+
+    private void setUpActionBar() {
         actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(R.layout.actionbar_addbestfriend);
     }
 
-    private void setUpTextViews(){
-        skipTextView = (TextView)findViewById(R.id.skipTextView);
+    private void setUpTextViews() {
+        skipTextView = (TextView) findViewById(R.id.skipTextView);
 
         doneTextView = (TextView) findViewById(R.id.doneTextView);
         doneTextView.setEnabled(false);
@@ -113,45 +112,41 @@ public class AddBestFriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UtilityClass.hideKeyboard(thisActivity);
-                if(contact) {
+                if (contact) {
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
                     server_getBestFriends(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(List<BestFriend> result) {
                             boolean duplicate = false;
-                            for(BestFriend bf : result){
-                                if(bf.getPhoneNumber().equals(phoneNumber)){
+                            for (BestFriend bf : result) {
+                                if (bf.getPhoneNumber().equals(phoneNumber)) {
                                     duplicate = true;
                                     break; //no need to check others once one duplicate found
                                 }
                             }
-                            if(!duplicate){ //Add best friend to server if not a duplicate
+                            if (!duplicate) { //Add best friend to server if not a duplicate
                                 server_addBestFriend(name, phoneNumber, CurrentUser.theUser.getUserID(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
-                                        if(result.equals("success")){
+                                        if (result.equals("success")) {
                                             // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
                                             //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
                                             startActivity(intent);
-                                        }
-                                        else{
+                                        } else {
                                             Toast.makeText(getApplicationContext(), "Error adding a best friend", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
 
-                            }
-                            else{ //Alert that this is a duplicate contact
+                            } else { //Alert that this is a duplicate contact
 
                                 final AlertDialog.Builder confirmMessage = new AlertDialog.Builder(thisActivity);
                                 confirmMessage.setTitle("Duplicate Contact")
                                         .setMessage("This contact is already in your best friend's list!")
                                         .setCancelable(true)
-                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener()
-                                        {
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialogInterface, int i)
-                                            {
+                                            public void onClick(DialogInterface dialogInterface, int i) {
                                                 dialogInterface.dismiss();
                                             }
                                         })
@@ -161,15 +156,15 @@ public class AddBestFriendActivity extends AppCompatActivity {
                         }
                     });
 
-                }
-                else{
+                } else {
                     //TODO: When contact is manually entered
                 }
 
             }
         });
     }
-    private void setUpEditText(){
+
+    private void setUpEditText() {
         phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
         //phoneTextKeyListener = phoneNumberEditText.getKeyListener();
         phoneNumberEditText.setKeyListener(null);
@@ -181,14 +176,13 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (phoneNumberEditText.getRight() - phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (phoneNumberEditText.getRight() - phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         //fire contact picker
-                        if(phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_button).getConstantState())){ //TODO: Change with actual pics
+                        if (phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_button).getConstantState())) { //TODO: Change with actual pics
                             UtilityClass.hideKeyboard(thisActivity);
                             pickContact(v);
-                        }
-                        else{
+                        } else {
                             UtilityClass.hideKeyboard(thisActivity);
                             phoneNumberEditText.clearFocus();
                             phoneNumberEditText.setText("");
@@ -231,8 +225,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
 
     }
 
-    public void pickContact(View v)
-    {
+    public void pickContact(View v) {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
         startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
@@ -253,44 +246,44 @@ public class AddBestFriendActivity extends AppCompatActivity {
         }
     }
 
-    private void contactPicked(Intent data){
+    private void contactPicked(Intent data) {
         Cursor cursor = null;
-        try{
+        try {
             Uri uri = data.getData();
             cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
-            int  phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+            int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
             // column index of the contact name
-            int  nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+            int nameIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
             String numberText = cursor.getString(phoneIndex);
-            phoneNumber = numberText.replaceAll("\\D+","");
+            phoneNumber = numberText.replaceAll("\\D+", "");
             name = cursor.getString(nameIndex);
             phoneNumberEditText.setText(name);
             phoneNumberEditText.setKeyListener(null);
             drawableToDelete();
             enableDoneTextView();
             contact = true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void disableDoneTextView(){
+    private void disableDoneTextView() {
         doneTextView.setTextColor(getResources().getColor(R.color.cardview_dark_background));
         doneTextView.setEnabled(false);
     }
 
-    private void enableDoneTextView(){
+    private void enableDoneTextView() {
         doneTextView.setTextColor(getResources().getColor(R.color.appColor));
         doneTextView.setEnabled(true);
     }
 
-    private void drawableToDelete(){
-        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.cross_button, 0);
+    private void drawableToDelete() {
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.cross_button, 0);
     }
 
-    private void drawableToPlus(){
-        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.plus_button, 0);
+    private void drawableToPlus() {
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.plus_button, 0);
     }
 
 

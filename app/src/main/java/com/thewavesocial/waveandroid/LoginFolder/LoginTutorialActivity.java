@@ -1,10 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -12,7 +8,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,32 +22,16 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
-import com.thewavesocial.waveandroid.BusinessObjects.Notification;
-import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
-import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class LoginTutorialActivity extends AppCompatActivity {
 
@@ -74,7 +53,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
-    private void setupReferences(){
+    private void setupReferences() {
         mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -92,20 +71,22 @@ public class LoginTutorialActivity extends AppCompatActivity {
             public void onSuccess(final LoginResult loginResult) {
                 final GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                        processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
-                    }
-                });
+                            @Override
+                            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                                processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
+                            }
+                        });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id, name, email, gender, age_range, birthday, location, education");
                 request.setParameters(parameters);
                 request.executeAsync();
             }
+
             @Override
             public void onCancel() {
                 Toast.makeText(mainActivity, "Cancel", Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(mainActivity, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
@@ -145,7 +126,8 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private class ScreenSlideChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
 
         @Override
         public void onPageSelected(int position) {
@@ -153,12 +135,13 @@ public class LoginTutorialActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onPageScrollStateChanged(int state) {}
+        public void onPageScrollStateChanged(int state) {
+        }
     }
 
 
     private void resetDots(int position) {
-        switch(position) {
+        switch (position) {
             case 1:
                 dot1.setImageResource(R.drawable.pink_full_dot);
                 dot2.setImageResource(R.drawable.pink_hollow_dot);
@@ -185,30 +168,30 @@ public class LoginTutorialActivity extends AppCompatActivity {
             //If login not successful, create new user and login again
             @Override
             public void onResultReady(String result) {
-                if ( result.equals("success") ) {
+                if (result.equals("success")) {
                     Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
                     startActivity(intent);
                 } else {
                     String fname, lname, email, college, password, fb_id, fb_token, gender, birthday;
                     try {
-                        fname = (!json.has("name"))? "N/A":json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
-                        lname = (!json.has("name"))? "N/A":json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
+                        fname = (!json.has("name")) ? "N/A" : json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
+                        lname = (!json.has("name")) ? "N/A" : json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
                         email = "N/A";
                         college = "N/A";
                         password = "N/A";
-                        fb_id = (!json.has("id"))? "N/A":json.getString("id");
+                        fb_id = (!json.has("id")) ? "N/A" : json.getString("id");
                         fb_token = token;
-                        gender = (!json.has("gender"))? "N/A":json.getString("gender");
-                        birthday = (!json.has("birthday"))? "":json.getString("birthday");
+                        gender = (!json.has("gender")) ? "N/A" : json.getString("gender");
+                        birthday = (!json.has("birthday")) ? "" : json.getString("birthday");
 
                         DatabaseAccess.server_createNewUser(fname, lname, email, college, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
-                                if ( result != null ) {
+                                if (result != null) {
                                     DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
-                                            if ( result.equals("success") ) {
+                                            if (result.equals("success")) {
                                                 Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
                                                 startActivity(intent);
                                             }
@@ -218,7 +201,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
                             }
                         });
-                    } catch (JSONException|NullPointerException e) {
+                    } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
@@ -248,7 +231,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 intentSignup.putExtra("userGender", json.getString("gender"));
                 intentSignup.putExtra("userBirthday", json.getString("birthday"));*/
 
-                //Parse Birthdays
+        //Parse Birthdays
 //                String string = json.getString("birthday");
 //                String pattern1 = "MM/dd/yyyy";
 //                String pattern2 = "MM/dd";
