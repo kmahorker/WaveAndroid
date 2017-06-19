@@ -1259,13 +1259,13 @@ public final class DatabaseAccess{
                         number = data.getString("contact");
                         bestFriends.add(new BestFriend(name, number));
                     }
-                    if(delegate != null) {
-                        delegate.onResultReady(bestFriends);
-                    }
                 }catch(JSONException e){
                     e.printStackTrace();
                 }
                 Log.d("getBestFriends", result.get(0) + "");
+                if(delegate != null) {
+                    delegate.onResultReady(bestFriends);
+                }
             }
         }).execute();
     }
