@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class TimePickerDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+public class TimePickerDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_HOUR = "hour";
@@ -48,9 +48,9 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param hour Current hour value in the Calendar
-     * @param min Current minute value in the Calendar
-     * @param timeFormat Format to display the time in the textView
+     * @param hour             Current hour value in the Calendar
+     * @param min              Current minute value in the Calendar
+     * @param timeFormat       Format to display the time in the textView
      * @param alertDialogStyle id of the type of Style to display
      * @return A new instance of fragment TimePickerDialogFragment.
      */
@@ -76,16 +76,14 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
             timeFormat = new SimpleDateFormat(getArguments().getString(ARG_TIME_FORMAT));
             alertDialogStyle = getArguments().getInt(ARG_STYLE);
             calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR,hour);
-            calendar.set(Calendar.MINUTE,minute);
+            calendar.set(Calendar.HOUR, hour);
+            calendar.set(Calendar.MINUTE, minute);
             String theClass = getArguments().getString(ARG_CALLING_CLASS);
-            if(theClass.equals("CreateAnEvent")){
+            if (theClass.equals("CreateAnEvent")) {
                 callingClass = 1;
-            }
-            else if(theClass.equals("EditEvent")){
+            } else if (theClass.equals("EditEvent")) {
                 callingClass = 2;
-            }
-            else{
+            } else {
                 callingClass = -1;
             }
         }
@@ -103,32 +101,32 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         this.hour = hourOfDay;
         this.minute = minute;
-        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
-        calendar.set(Calendar.MINUTE,minute);
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
         //timeTextView.setText(timeFormat.format(CreateAnEventActivity.CreateEventPage1.startCalendar.getTime()));
-        switch (callingClass){
+        switch (callingClass) {
             case 1:
-                if(timeTextView.equals(getActivity().findViewById(R.id.startTimeTextView))) {
+                if (timeTextView.equals(getActivity().findViewById(R.id.startTimeTextView))) {
 
                     CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                     CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
-                }
-                else if(timeTextView.equals(getActivity().findViewById(R.id.endTimeTextView))) {
+                } else if (timeTextView.equals(getActivity().findViewById(R.id.endTimeTextView))) {
                     CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
                     CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 }
                 break;
-                case 2:
-                    if(timeTextView.equals(getActivity().findViewById(R.id.editEventStartTimeTextView))) {
-                        EditStatsActivity.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                        EditStatsActivity.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
-                    }
-                    else if(timeTextView.equals(getActivity().findViewById(R.id.editEventEndTimeTextView))) {
-                        EditStatsActivity.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                        EditStatsActivity.endCalendar.set(Calendar.MINUTE,calendar.get(Calendar.MINUTE));
-                    }
-                    break;
-                default: Log.d("V", "Neither"); break;
+            case 2:
+                if (timeTextView.equals(getActivity().findViewById(R.id.editEventStartTimeTextView))) {
+                    EditStatsActivity.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    EditStatsActivity.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                } else if (timeTextView.equals(getActivity().findViewById(R.id.editEventEndTimeTextView))) {
+                    EditStatsActivity.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    EditStatsActivity.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                }
+                break;
+            default:
+                Log.d("V", "Neither");
+                break;
         }
 
         timeTextView.setText(timeFormat.format(calendar.getTime()));

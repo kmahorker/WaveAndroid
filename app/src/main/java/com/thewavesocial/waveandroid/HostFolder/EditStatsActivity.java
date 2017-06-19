@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.IntegerRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
-import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
@@ -36,7 +34,6 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,8 +45,8 @@ import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.HostFolder.EditListActivity.getUsersFromFollowing;
 
 public class EditStatsActivity extends AppCompatActivity {
     private static EditStatsActivity mainActivity;
@@ -100,8 +97,8 @@ public class EditStatsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         party = intent.getExtras().getParcelable("partyObject");
         NewPartyInfo.initialize();
-        startCalendar = (Calendar)NewPartyInfo.startingDateTime.clone();
-        endCalendar = (Calendar)NewPartyInfo.endingDateTime.clone();
+        startCalendar = (Calendar) NewPartyInfo.startingDateTime.clone();
+        endCalendar = (Calendar) NewPartyInfo.endingDateTime.clone();
 
         setupActionbar();
         setupReference();
@@ -113,31 +110,29 @@ public class EditStatsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         List<Integer> updatedListUserIds = new ArrayList<>();
-        List<User> updatedList  = new ArrayList<>();
-        if(resultCode == RESULT_OK) {
+        List<User> updatedList = new ArrayList<>();
+        if (resultCode == RESULT_OK) {
             updatedList = data.getExtras().getParcelableArrayList("updatedList");
             for (User user : updatedList) {
                 updatedListUserIds.add(Integer.parseInt(user.getUserID()));
             }
         }
-        switch (requestCode){
+        switch (requestCode) {
             case EDIT_INVITE_REQUEST:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     NewPartyInfo.invitingUsers = updatedListUserIds;
                     inviteTextView.setText("INVITED (" + updatedList.size() + ")");
                     invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
-                }
-                else{
+                } else {
                     //Do nothing
                 }
                 break;
             case EDIT_BOUNCER_REQUEST:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     NewPartyInfo.bouncingUsers = updatedListUserIds;
                     bouncingTextView.setText("BOUNCERS (" + updatedList.size() + ")");
                     bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
-                }
-                else{
+                } else {
                     //Do nothing
                 }
                 break;
@@ -155,7 +150,8 @@ public class EditStatsActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
-                            }})
+                            }
+                        })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -169,8 +165,8 @@ public class EditStatsActivity extends AppCompatActivity {
                     public void onResultReady(String result) {
                         // TODO: 04/20/2017 Remove party from server
                         // TODO: 04/20/2017 Notify all users
-                        if ( !result.equals("success") ) {
-                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG ).show();
+                        if (!result.equals("success")) {
+                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(mainActivity, HostControllerFragment.class);
                             startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
@@ -184,24 +180,24 @@ public class EditStatsActivity extends AppCompatActivity {
     private void setupReference() {
         deleteButton = (TextView) findViewById(R.id.delete_button);
 
-        titleEditText = (EditText)findViewById(R.id.editEventEventTitleEditText);
+        titleEditText = (EditText) findViewById(R.id.editEventEventTitleEditText);
         titleEditText.setText(party.getName());
         titleEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(popup.isShowing()){
+                if (popup.isShowing()) {
                     popup.dismiss();
                 }
                 return false;
             }
         });
 
-        locationEditText = (EditText)findViewById(R.id.editEventLocationEditText);
+        locationEditText = (EditText) findViewById(R.id.editEventLocationEditText);
         locationEditText.setText(party.getMapAddress().getAddress_string());
         locationEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(popup.isShowing()){
+                if (popup.isShowing()) {
                     popup.dismiss();
                 }
                 return false;
@@ -277,11 +273,10 @@ public class EditStatsActivity extends AppCompatActivity {
         emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(!popup.isShowing()) {
-                    if(popup.isKeyBoardOpen()) {
+                if (!popup.isShowing()) {
+                    if (popup.isKeyBoardOpen()) {
                         popup.showAtBottom();
-                    }
-                    else {
+                    } else {
 
                         emojiconEditText.setFocusableInTouchMode(true);
                         emojiconEditText.requestFocus();
@@ -298,7 +293,7 @@ public class EditStatsActivity extends AppCompatActivity {
         emojiconEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus && popup.isShowing()){
+                if (!hasFocus && popup.isShowing()) {
                     popup.dismiss();
                 }
             }
@@ -309,11 +304,10 @@ public class EditStatsActivity extends AppCompatActivity {
 
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
         boolean isPrivate = !party.getIsPublic();
-        if(isPrivate){
+        if (isPrivate) {
             privateSwitch.setChecked(true);
             privateParty = true;
-        }
-        else{
+        } else {
             privateSwitch.setChecked(false);
             privateParty = false;
         }
@@ -321,10 +315,9 @@ public class EditStatsActivity extends AppCompatActivity {
         privateSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(privateParty == false){
+                if (privateParty == false) {
                     privateParty = true;
-                }
-                else{
+                } else {
                     privateParty = false;
                 }
                 UtilityClass.hideKeyboard(getActivity());
@@ -360,7 +353,7 @@ public class EditStatsActivity extends AppCompatActivity {
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 List<User> invited = result.get("inviting");
                 invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invited));
-                inviteTextView = (TextView)findViewById(R.id.invite_text);
+                inviteTextView = (TextView) findViewById(R.id.invite_text);
 
                 inviteTextView.setText("INVITED (" + invited.size() + ")");
                 inviteTextView.setOnClickListener(new View.OnClickListener() {
@@ -389,11 +382,11 @@ public class EditStatsActivity extends AppCompatActivity {
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                if ( result != null ) {
+                if (result != null) {
 
                     final List<User> bouncing = result.get("bouncing");
                     bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, bouncing));
-                    bouncingTextView = (TextView)findViewById(R.id.bouncing_text);
+                    bouncingTextView = (TextView) findViewById(R.id.bouncing_text);
                     bouncingTextView.setText("BOUNCERS (" + bouncing.size() + ")");
                     bouncingTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -410,7 +403,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpEmojicon(){
+    private void setUpEmojicon() {
         final View rootView = findViewById(R.id.scrollViewEditEvent);
         popup = new EmojiconsPopup(rootView, this);
         popup.setSizeForSoftKeyboard();
@@ -423,7 +416,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
             @Override
             public void onKeyboardClose() {
-                if(popup.isShowing())
+                if (popup.isShowing())
                     popup.dismiss();
             }
         });
@@ -433,8 +426,7 @@ public class EditStatsActivity extends AppCompatActivity {
             public void onEmojiconClicked(Emojicon emojicon) {
                 if (emojiconEditText == null || emojicon == null) {
                     return;
-                }
-                else{
+                } else {
                     emojiconEditText.setText(emojicon.getEmoji());
                 }
             }
@@ -494,36 +486,29 @@ public class EditStatsActivity extends AppCompatActivity {
         });
     }
 
-    private boolean checkInfo(){
+    private boolean checkInfo() {
         //Log.d("Address", locationEditText.getText().toString());
         //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
-        if(emojiconEditText.getText().toString().isEmpty()){
+        if (emojiconEditText.getText().toString().isEmpty()) {
             UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Editing Party", true);
             return false;
-        }
-        else if(titleEditText.getText().toString().isEmpty()){
+        } else if (titleEditText.getText().toString().isEmpty()) {
             UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Editing Party", true);
             return false;
-        }
-        else if(locationEditText.getText().toString().isEmpty()){
+        } else if (locationEditText.getText().toString().isEmpty()) {
             UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Editing Party", true);
             return false;
-        }
-        else if(startCalendar.compareTo(endCalendar) >= 0){
+        } else if (startCalendar.compareTo(endCalendar) >= 0) {
             Log.d("Date", startCalendar.get(Calendar.DATE) + ", " + endCalendar.get(Calendar.DATE) + "");
             UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Editing Party", true);
             return false;
-        }
-        else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
+        } else if (UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null) {
             UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Editing Party", true);
             return false;
-        }
-        else{
+        } else {
             return true;
         }
     }
-
-
 
 
     //ONLY called if all checks are passed
@@ -544,11 +529,9 @@ public class EditStatsActivity extends AppCompatActivity {
     }
 
 
-
     private Activity getActivity() {
         return this;
     }
-
 
 
     private static class NewPartyInfo {
@@ -580,7 +563,7 @@ public class EditStatsActivity extends AppCompatActivity {
             server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
                 @Override
                 public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                    if(result != null){
+                    if (result != null) {
                         hostingUsers = UtilityClass.userObjectToStringId(result.get("hosting"));
                         originalHosting = hostingUsers;
                         bouncingUsers = UtilityClass.userObjectToIntegerId(result.get("bouncing"));
@@ -603,13 +586,13 @@ public class EditStatsActivity extends AppCompatActivity {
         }
 
         //Compose all party information
-        public static void composeParty(){
+        public static void composeParty() {
             Log.d("Compose Party", "EEntered");
-            if ( mapAddress.getAddress_latlng() == null )
-                mapAddress.setAddress_latlng(new LatLng(0,0));
+            if (mapAddress.getAddress_latlng() == null)
+                mapAddress.setAddress_latlng(new LatLng(0, 0));
             Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
-            for ( int bouncer_index : bouncingUsers ){
-                if ( invitingUsers.contains(bouncer_index) ) {
+            for (int bouncer_index : bouncingUsers) {
+                if (invitingUsers.contains(bouncer_index)) {
                     invitingUsers.remove(Integer.valueOf(bouncer_index));
                 }
             }
@@ -635,7 +618,7 @@ public class EditStatsActivity extends AppCompatActivity {
                 server_updateParty(eventId, newParty, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
-                        if(result.equals("success")){
+                        if (result.equals("success")) {
                             //TODO: uninvite previous users
                             List<String> hostingDuplicates = UtilityClass.findDuplicates(hostingUsers, originalHosting);
                             List<Integer> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
@@ -648,19 +631,19 @@ public class EditStatsActivity extends AppCompatActivity {
                             hostingUsers.removeAll(hostingDuplicates);
                             bouncingUsers.removeAll(bouncingDuplicates);
                             invitingUsers.removeAll(invitingDuplicates);
-                            
 
-                            for(final String id : originalHosting){
+
+                            for (final String id : originalHosting) {
                                 server_manageUserForParty(id, party.getPartyID(), "hosting", "DELETE", new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
-                                        if(result.equals("success")){
+                                        if (result.equals("success")) {
                                             server_getNotificationsOfUser(id, new OnResultReadyListener<ArrayList<Notification>>() {
                                                 @Override
                                                 public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result != null) {
-                                                        for(Notification notif : result){
-                                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                    if (result != null) {
+                                                        for (Notification notif : result) {
+                                                            if (notif.getSenderID().equals(party.getPartyID())) {
                                                                 server_deleteNotification(id, notif.getNotificationID(), new OnResultReadyListener<String>() {
                                                                     @Override
                                                                     public void onResultReady(String result) {
@@ -673,7 +656,6 @@ public class EditStatsActivity extends AppCompatActivity {
                                                         }
 
 
-
                                                     }
                                                 }
                                             });
@@ -683,15 +665,15 @@ public class EditStatsActivity extends AppCompatActivity {
                                 });
                             }
 
-                            for(final int id : originalBouncing){
+                            for (final int id : originalBouncing) {
                                 server_manageUserForParty(id + "", party.getPartyID(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
-                                        if(result.equals("success")){
+                                        if (result.equals("success")) {
                                             server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
                                                 @Override
                                                 public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result != null) {
+                                                    if (result != null) {
                                                         for (Notification notif : result) {
                                                             if (notif.getSenderID().equals(party.getPartyID())) {
                                                                 server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
@@ -713,21 +695,21 @@ public class EditStatsActivity extends AppCompatActivity {
                                 });
                             }
 
-                            for(final int id : originalInviting){
+                            for (final int id : originalInviting) {
                                 server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
-                                        if(result.equals("success")){
+                                        if (result.equals("success")) {
                                             server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
                                                 @Override
                                                 public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result!= null) {
-                                                        for(Notification notif : result){
-                                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                    if (result != null) {
+                                                        for (Notification notif : result) {
+                                                            if (notif.getSenderID().equals(party.getPartyID())) {
                                                                 server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
                                                                     @Override
                                                                     public void onResultReady(String result) {
-                                                                        if(result.equals("success")){
+                                                                        if (result.equals("success")) {
                                                                             //Do nothing
                                                                         }
                                                                     }
@@ -743,23 +725,23 @@ public class EditStatsActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                            for(final int userID : invitingUsers){
+                            for (final int userID : invitingUsers) {
                                 server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         Log.d("addInvitedUser", result + "");
-                                        DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
+                                        DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_going", null);
                                         completeThreads();
                                     }
                                 });
                             }
 
-                            for(final int userID: bouncingUsers){
+                            for (final int userID : bouncingUsers) {
                                 DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_bouncing", null);
                                 completeThreads();
                             }
 
-                            for(final String hostingId : hostingUsers){
+                            for (final String hostingId : hostingUsers) {
                                 server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
@@ -769,8 +751,7 @@ public class EditStatsActivity extends AppCompatActivity {
                                     }
                                 });
                             }
-                        }
-                        else{
+                        } else {
 
                         }
                         Log.d("updateParty", result + "");
@@ -787,9 +768,9 @@ public class EditStatsActivity extends AppCompatActivity {
 
     //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
-        threads_completion ++;
+        threads_completion++;
         Log.d("Threads Complete", threads_completion + " out of " + (EditStatsActivity.NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()));
-        if ( threads_completion >= (EditStatsActivity.NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()) ) {
+        if (threads_completion >= (EditStatsActivity.NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size())) {
             //Finish task
             CurrentUser.setContext(mainActivity, new OnResultReadyListener<Boolean>() {
                 @Override

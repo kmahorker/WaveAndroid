@@ -51,8 +51,8 @@ import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -78,10 +78,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
             @Override
             public void onResultReady(List<User> result) {
                 followings = new ArrayList<>();
-                if ( result != null )
+                if (result != null)
                     followings.addAll(result);
 
-                for ( final User user : followings ) {
+                for (final User user : followings) {
                     server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
                         @Override
                         public void onResultReady(Bitmap result) {
@@ -180,7 +180,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
     }
 
     //Handle create event page 1
-    public static class CreateEventPage1 extends Fragment{
+    public static class CreateEventPage1 extends Fragment {
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
         EmojiconEditText emojiconEditText;
@@ -212,7 +212,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             try {
-                RelativeLayout relativeLayout = (RelativeLayout)(view.findViewById(R.id.emojiRelativeLayout));
+                RelativeLayout relativeLayout = (RelativeLayout) (view.findViewById(R.id.emojiRelativeLayout));
                 relativeLayout.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -255,14 +255,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
 
                 Log.d("V", "OnViewCreated");
-            }catch(Exception e){
+            } catch (Exception e) {
                 UtilityClass.printAlertMessage(getActivity(), e.getMessage(), "Error", true);
             }
         }
 
-        private void setUpEmojicon(View v){
+        private void setUpEmojicon(View v) {
             final View rootView = v.findViewById(R.id.scrollViewCreateAnEvent);
-            popup = new EmojiconsPopup(rootView, ((CreateAnEventActivity)(getActivity())));
+            popup = new EmojiconsPopup(rootView, ((CreateAnEventActivity) (getActivity())));
             popup.setSizeForSoftKeyboard();
             popup.setOnSoftKeyboardOpenCloseListener(new EmojiconsPopup.OnSoftKeyboardOpenCloseListener() {
 
@@ -273,7 +273,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                 @Override
                 public void onKeyboardClose() {
-                    if(popup.isShowing())
+                    if (popup.isShowing())
                         popup.dismiss();
                 }
             });
@@ -283,8 +283,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 public void onEmojiconClicked(Emojicon emojicon) {
                     if (emojiconEditText == null || emojicon == null) {
                         return;
-                    }
-                    else{
+                    } else {
                         emojiconEditText.setText(emojicon.getEmoji());
                     }
                 }
@@ -301,7 +300,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
         }
 
-        private void setUpTextViews(View v){
+        private void setUpTextViews(View v) {
             startDateTextView = (TextView) v.findViewById(R.id.startDateTextView);
             final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
             startDateTextView.setText(dateFormat.format(startCalendar.getTime()));
@@ -353,7 +352,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //            Calendar tempCalendar = Calendar.getInstance();
 //            tempCalendar.setTime(new Date());
 //            tempCalendar.add(Calendar.HOUR, 1);
-            if(NewPartyInfo.endingDateTime == null) {
+            if (NewPartyInfo.endingDateTime == null) {
                 endCalendar.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY) + 1);
             }
             endTimeTextView.setText(timeFormat.format(endCalendar.getTime()));
@@ -373,13 +372,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupEditText(View v) {
             titleEditText = (EditText) v.findViewById(R.id.eventTitleEditText);
-            if(!NewPartyInfo.name.isEmpty()) {
+            if (!NewPartyInfo.name.isEmpty()) {
                 titleEditText.setText(NewPartyInfo.name);
             }
             titleEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if(popup.isShowing()){
+                    if (popup.isShowing()) {
                         popup.dismiss();
                     }
                     return false;
@@ -387,13 +386,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
             MapAddress address = NewPartyInfo.mapAddress;
-            if(address != null){
+            if (address != null) {
                 locationEditText.setText(NewPartyInfo.mapAddress.getAddress_string());
             }
             locationEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if(popup.isShowing()){
+                    if (popup.isShowing()) {
                         popup.dismiss();
                     }
                     return false;
@@ -402,23 +401,21 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         }
 
-        private void setupSwitch(View v){
+        private void setupSwitch(View v) {
             privateSwitch = (SwitchCompat) v.findViewById(R.id.privateSwitch);
-            if(NewPartyInfo.isPublic == true) {
+            if (NewPartyInfo.isPublic == true) {
                 privateSwitch.setChecked(false);
                 privateParty = false;
-            }
-            else if(NewPartyInfo.isPublic == false){
+            } else if (NewPartyInfo.isPublic == false) {
                 privateSwitch.setChecked(true);
                 privateParty = true;
             }
             privateSwitch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(privateParty == false){
+                    if (privateParty == false) {
                         privateParty = true;
-                    }
-                    else{
+                    } else {
                         privateParty = false;
                     }
                     UtilityClass.hideKeyboard(getActivity());
@@ -427,23 +424,22 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
         }
 
-        private void setUpRangeSeekBar(View v){
+        private void setUpRangeSeekBar(View v) {
             //rangeSeekBar = new RangeSeekBar<>(getActivity());
-            rangeSeekBar =  (RangeSeekBar<Integer>) v.findViewById(R.id.ageRestrictionSeekBar);
+            rangeSeekBar = (RangeSeekBar<Integer>) v.findViewById(R.id.ageRestrictionSeekBar);
             rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
-            if(NewPartyInfo.minAge == -1 || NewPartyInfo.maxAge == -1) {
+            if (NewPartyInfo.minAge == -1 || NewPartyInfo.maxAge == -1) {
                 rangeSeekBar.setSelectedMinValue(RANGE_AGE_SELECTED_MIN);
                 rangeSeekBar.setSelectedMaxValue(RANGE_AGE_SELECTED_MAX);
-            }
-            else{
+            } else {
                 rangeSeekBar.setSelectedMinValue(NewPartyInfo.minAge);
                 rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
             }
         }
 
-        private void setupEmojiconEditText(View v){
+        private void setupEmojiconEditText(View v) {
             emojiconEditText = (EmojiconEditText) v.findViewById(R.id.emojiconEditText);
-            if(!NewPartyInfo.partyEmoji.isEmpty()){
+            if (!NewPartyInfo.partyEmoji.isEmpty()) {
                 emojiconEditText.setText(NewPartyInfo.partyEmoji);
             }
             //emojiconEditText.setEmojiconSize(150);
@@ -452,11 +448,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
             emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if(!popup.isShowing()) {
-                        if(popup.isKeyBoardOpen()) {
+                    if (!popup.isShowing()) {
+                        if (popup.isKeyBoardOpen()) {
                             popup.showAtBottom();
-                        }
-                        else {
+                        } else {
 
                             emojiconEditText.setFocusableInTouchMode(true);
                             emojiconEditText.requestFocus();
@@ -473,7 +468,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             emojiconEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    if(!hasFocus && popup.isShowing()){
+                    if (!hasFocus && popup.isShowing()) {
                         popup.dismiss();
                     }
                 }
@@ -482,35 +477,28 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
 
-        private boolean checkInfo(){
+        private boolean checkInfo() {
             //Log.d("Address", locationEditText.getText().toString());
             //Log.d("Address", UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) + "");
-            if(emojiconEditText.getText().toString().isEmpty()){
+            if (emojiconEditText.getText().toString().isEmpty()) {
                 UtilityClass.printAlertMessage(getActivity(), "Please select an Emoji for the event ", "Error Creating Party", true);
                 return false;
-            }
-            else if(titleEditText.getText().toString().isEmpty()){
+            } else if (titleEditText.getText().toString().isEmpty()) {
                 UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Creating Party", true);
                 return false;
-            }
-            else if(locationEditText.getText().toString().isEmpty()){
-                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location","Error Creating Party", true);
+            } else if (locationEditText.getText().toString().isEmpty()) {
+                UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Creating Party", true);
                 return false;
-            }
-            else if(startCalendar.compareTo(endCalendar) >= 0){
+            } else if (startCalendar.compareTo(endCalendar) >= 0) {
                 UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Creating Party", true);
                 return false;
-            }
-            else if(UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null){
+            } else if (UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null) {
                 UtilityClass.printAlertMessage(getActivity(), "Please enter a valid address", "Error Creating Party", true);
                 return true;
-            }
-            else{
+            } else {
                 return true;
             }
         }
-
-
 
 
         //ONLY called if all checks are passed
@@ -543,12 +531,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private View view;
 
         @Nullable
-        @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             view = inflater.inflate(R.layout.create_event_invite, container, false);
             return view;
         }
 
-        @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             mainActivity = (CreateAnEventActivity) getActivity();
             setupReferences();
             setupFunctionality();
@@ -564,7 +554,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private void setupFunctionality() {
             create.setText("Next");
             create.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     savePage2();
                     mainActivity.openThirdPage();
                 }
@@ -574,18 +565,21 @@ public class CreateAnEventActivity extends AppCompatActivity {
             friend_list.setAdapter(new FriendListAdapter(friends));
 
             invite_index = NewPartyInfo.invitingUsers;
-            LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
             invite_list.setLayoutManager(layoutManager);
             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override public boolean onQueryTextSubmit(String query) {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     searchbar.clearFocus();
                     return false;
                 }
-                @Override public boolean onQueryTextChange(String query) {
+
+                @Override
+                public boolean onQueryTextChange(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     return false;
                 }
@@ -613,20 +607,29 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private class FriendListAdapter extends BaseAdapter {
             private List<User> friends;
             private LayoutInflater inflater;
+
             private FriendListAdapter(List<User> friends) {
                 this.friends = friends;
                 inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-            @Override public int getCount() {
+
+            @Override
+            public int getCount() {
                 return friends.size();
             }
-            @Override public User getItem(int position) {
+
+            @Override
+            public User getItem(int position) {
                 return friends.get(position);
             }
-            @Override public long getItemId(int position) {
+
+            @Override
+            public long getItemId(int position) {
                 return position;
             }
-            @Override public View getView(final int position, View convertView, ViewGroup parent) {
+
+            @Override
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 final Holder holder;
                 View layoutView = convertView;
                 if (convertView == null) {
@@ -642,14 +645,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFullName());
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
-                if ( invite_index.contains( position ))
+                if (invite_index.contains(position))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invite_index.contains( position ) ) {
+                        if (!invite_index.contains(position)) {
                             invite_index.add(position);
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
@@ -664,12 +667,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userObject", getItem(position) );
+                        intent.putExtra("userObject", getItem(position));
                         startActivity(intent);
                     }
                 });
                 return layoutView;
             }
+
             private class Holder {
                 ImageView profile;
                 TextView name;
@@ -680,34 +684,46 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private class SelectedAdapter extends RecyclerView.Adapter<SelectedAdapter.ViewHolder> {
             private List<User> userList;
             private LayoutInflater inflater;
+
             public SelectedAdapter(List<User> userList) {
                 super();
                 this.userList = userList;
-                inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-            @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            @Override
+            public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
                 ViewHolder viewHolder = new ViewHolder(rowView);
                 return viewHolder;
             }
-            @Override public long getItemId(int position) {
+
+            @Override
+            public long getItemId(int position) {
                 return position;
             }
-            @Override public int getItemCount() {
+
+            @Override
+            public int getItemCount() {
                 return userList.size();
             }
-            @Override public void onBindViewHolder(ViewHolder holder, final int position) {
+
+            @Override
+            public void onBindViewHolder(ViewHolder holder, final int position) {
                 holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                         intent.putExtra("userObject", userList.get(position));
                         mainActivity.startActivity(intent);
                     }
                 });
             }
+
             public class ViewHolder extends RecyclerView.ViewHolder {
                 ImageView imgView;
+
                 ViewHolder(View itemView) {
                     super(itemView);
                     imgView = (ImageView) itemView.findViewById(R.id.each_statsfriend_image);
@@ -727,11 +743,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private static List<Integer> invite_index = new ArrayList<>();
 
         @Nullable
-        @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             return inflater.inflate(R.layout.create_event_invite, container, false);
         }
 
-        @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             mainActivity = (CreateAnEventActivity) getActivity();
             setupReferences();
@@ -747,7 +765,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupFunctionality() {
             create.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     savePage3();
                     NewPartyInfo.composeParty();
                 }
@@ -757,18 +776,21 @@ public class CreateAnEventActivity extends AppCompatActivity {
             friend_list.setAdapter(new FriendListAdapter(friends));
 
             invite_index = NewPartyInfo.bouncingUsers;
-            LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
             invite_list.setLayoutManager(layoutManager);
             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override public boolean onQueryTextSubmit(String query) {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     searchbar.clearFocus();
                     return false;
                 }
-                @Override public boolean onQueryTextChange(String query) {
+
+                @Override
+                public boolean onQueryTextChange(String query) {
                     friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
                     return false;
                 }
@@ -796,20 +818,29 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private class FriendListAdapter extends BaseAdapter {
             private List<User> friends;
             private LayoutInflater inflater;
+
             private FriendListAdapter(List<User> friends) {
                 this.friends = friends;
                 inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-            @Override public int getCount() {
+
+            @Override
+            public int getCount() {
                 return friends.size();
             }
-            @Override public User getItem(int position) {
+
+            @Override
+            public User getItem(int position) {
                 return friends.get(position);
             }
-            @Override public long getItemId(int position) {
+
+            @Override
+            public long getItemId(int position) {
                 return position;
             }
-            @Override public View getView(final int position, View convertView, ViewGroup parent) {
+
+            @Override
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 final Holder holder;
                 View layoutView = convertView;
                 if (convertView == null) {
@@ -825,14 +856,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFullName());
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
-                if ( invite_index.contains( position ) )
+                if (invite_index.contains(position))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ( !invite_index.contains( position ) ) {
+                        if (!invite_index.contains(position)) {
                             invite_index.add(position);
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
@@ -848,12 +879,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userObject", getItem(position) );
+                        intent.putExtra("userObject", getItem(position));
                         startActivity(intent);
                     }
                 });
                 return layoutView;
             }
+
             private class Holder {
                 ImageView profile;
                 TextView name;
@@ -864,35 +896,47 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private class SelectedAdapter extends RecyclerView.Adapter<SelectedAdapter.ViewHolder> {
             private List<User> userList;
             private LayoutInflater inflater;
+
             public SelectedAdapter(List<User> userList) {
                 super();
                 this.userList = userList;
-                inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-            @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            @Override
+            public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
                 ViewHolder viewHolder = new ViewHolder(rowView);
                 return viewHolder;
             }
-            @Override public long getItemId(int position) {
+
+            @Override
+            public long getItemId(int position) {
                 return position;
             }
-            @Override public int getItemCount() {
+
+            @Override
+            public int getItemCount() {
                 return userList.size();
             }
-            @Override public void onBindViewHolder(ViewHolder holder, final int position) {
+
+            @Override
+            public void onBindViewHolder(ViewHolder holder, final int position) {
 
                 holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                         intent.putExtra("userObject", userList.get(position));
                         mainActivity.startActivity(intent);
                     }
                 });
             }
+
             public class ViewHolder extends RecyclerView.ViewHolder {
                 ImageView imgView;
+
                 ViewHolder(View itemView) {
                     super(itemView);
                     imgView = (ImageView) itemView.findViewById(R.id.each_statsfriend_image);
@@ -903,7 +947,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
     public static List<User> getUsersFromFollowing(List<Integer> indexes) {
         ArrayList<User> users = new ArrayList<>();
-        for ( int i = 0; i < indexes.size(); i++ ) {
+        for (int i = 0; i < indexes.size(); i++) {
             users.add(followings.get(indexes.get(i)));
         }
         return users;
@@ -945,13 +989,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
 
         //Compose all party information
-        public static void composeParty(){
+        public static void composeParty() {
             Log.d("Compose Party", "EEntered");
-            if ( mapAddress.getAddress_latlng() == null )
-                mapAddress.setAddress_latlng(new LatLng(0,0));
+            if (mapAddress.getAddress_latlng() == null)
+                mapAddress.setAddress_latlng(new LatLng(0, 0));
             Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
-            for ( int bouncer_index : bouncingUsers ){
-                if ( invitingUsers.contains(bouncer_index) ) {
+            for (int bouncer_index : bouncingUsers) {
+                if (invitingUsers.contains(bouncer_index)) {
                     invitingUsers.remove(Integer.valueOf(bouncer_index));
                 }
             }
@@ -973,7 +1017,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                                 final String eventId = result.substring(commaIndex + 1);
 
-                                for(final User user : getUsersFromFollowing(invitingUsers)){
+                                for (final User user : getUsersFromFollowing(invitingUsers)) {
                                     server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
@@ -984,12 +1028,12 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                     });
                                 }
 
-                                for(final User user : getUsersFromFollowing(bouncingUsers)){
+                                for (final User user : getUsersFromFollowing(bouncingUsers)) {
                                     DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_bouncing", null);
                                     completeThreads();
                                 }
 
-                                for(final String hostingId : hostingUsers){
+                                for (final String hostingId : hostingUsers) {
                                     server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
@@ -1011,9 +1055,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
     //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
-        threads_completion ++;
+        threads_completion++;
         Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
-        if ( threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()) ) {
+        if (threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size())) {
             //Finish task
             CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
                 @Override

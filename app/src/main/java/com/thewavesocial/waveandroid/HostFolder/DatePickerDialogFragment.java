@@ -3,15 +3,12 @@ package com.thewavesocial.waveandroid.HostFolder;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.icu.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.provider.CalendarContract;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,9 +58,9 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param day Parameter 1.
+     * @param day   Parameter 1.
      * @param month Parameter 2.
-     * @param year Parameter 3
+     * @param year  Parameter 3
      * @return A new instance of fragment DatePickerDialogFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -82,7 +79,6 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,13 +92,11 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
             calendar = Calendar.getInstance();
             calendar.set(year, month, day);
             String theClass = getArguments().getString(ARG_PARAM7);
-            if(theClass.equals("CreateAnEvent")){
+            if (theClass.equals("CreateAnEvent")) {
                 callingClass = 1;
-            }
-            else if(theClass.equals("EditEvent")){
+            } else if (theClass.equals("EditEvent")) {
                 callingClass = 2;
-            }
-            else{
+            } else {
                 callingClass = -1;
             }
         }
@@ -119,45 +113,45 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         this.day = dayOfMonth;
-        this.month = month+1;
+        this.month = month + 1;
         this.year = year;
-        calendar= Calendar.getInstance();
+        calendar = Calendar.getInstance();
         calendar.set(year, month, day);
         dateDisplay.setText(dateFormat.format(calendar.getTime()));
         //Intent intent = new Intent(getActivity(), CreateAnEventActivity.class);
         //if(CreateAnEventActivity.class.isInstance(t)){
 
-            switch(callingClass){
-                case 1:
-                    if(dateDisplay.equals(getActivity().findViewById(R.id.startDateTextView))) {
-                        CreateAnEventActivity.CreateEventPage1.startCalendar.set(calendar.get(Calendar.YEAR),
-                                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                                CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR),
-                                CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));
-                    }
-                    else if(dateDisplay.equals(getActivity().findViewById((R.id.endDateTextView)))) {
-                        CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR),
-                                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                                CreateAnEventActivity.CreateEventPage1.endCalendar.get(Calendar.HOUR),
-                                CreateAnEventActivity.CreateEventPage1.endCalendar.get(Calendar.MINUTE));
-                    }
-                    break;
-                case 2:
-                    if(dateDisplay.equals(getActivity().findViewById(R.id.editEventStartDateTextView))) {
-                        EditStatsActivity.startCalendar.set(calendar.get(Calendar.YEAR),
-                                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                                EditStatsActivity.startCalendar.get(Calendar.HOUR),
-                                EditStatsActivity.startCalendar.get(Calendar.MINUTE));
-                    }
-                    else if(dateDisplay.equals(getActivity().findViewById((R.id.editEventEndDateTextView)))) {
-                        EditStatsActivity.endCalendar.set(calendar.get(Calendar.YEAR),
-                                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                                EditStatsActivity.endCalendar.get(Calendar.HOUR),
-                                EditStatsActivity.endCalendar.get(Calendar.MINUTE));
-                    }
-                    break;
-                default: Log.d("V", "Neither"); break;
-            }
+        switch (callingClass) {
+            case 1:
+                if (dateDisplay.equals(getActivity().findViewById(R.id.startDateTextView))) {
+                    CreateAnEventActivity.CreateEventPage1.startCalendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.HOUR),
+                            CreateAnEventActivity.CreateEventPage1.startCalendar.get(Calendar.MINUTE));
+                } else if (dateDisplay.equals(getActivity().findViewById((R.id.endDateTextView)))) {
+                    CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            CreateAnEventActivity.CreateEventPage1.endCalendar.get(Calendar.HOUR),
+                            CreateAnEventActivity.CreateEventPage1.endCalendar.get(Calendar.MINUTE));
+                }
+                break;
+            case 2:
+                if (dateDisplay.equals(getActivity().findViewById(R.id.editEventStartDateTextView))) {
+                    EditStatsActivity.startCalendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            EditStatsActivity.startCalendar.get(Calendar.HOUR),
+                            EditStatsActivity.startCalendar.get(Calendar.MINUTE));
+                } else if (dateDisplay.equals(getActivity().findViewById((R.id.editEventEndDateTextView)))) {
+                    EditStatsActivity.endCalendar.set(calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            EditStatsActivity.endCalendar.get(Calendar.HOUR),
+                            EditStatsActivity.endCalendar.get(Calendar.MINUTE));
+                }
+                break;
+            default:
+                Log.d("V", "Neither");
+                break;
+        }
 
             /*if(calendar.compareTo(CreateAnEventActivity.CreateEventPage1.endCalendar) >= 0){
                 CreateAnEventActivity.CreateEventPage1.endCalendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),

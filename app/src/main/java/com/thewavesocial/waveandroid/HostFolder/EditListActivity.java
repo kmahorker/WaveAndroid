@@ -27,6 +27,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class EditListActivity extends AppCompatActivity {
     public static ArrayList<User> invites;
     private View view;
     private int LAYOUT_TYPE; //1: Attending
-                             //2: Bouncing
+    //2: Bouncing
     private int requestCode;
     private SelectedAdapter invite_adapter;
 
@@ -69,7 +70,7 @@ public class EditListActivity extends AppCompatActivity {
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                if ( result != null ) {
+                if (result != null) {
                     switch (LAYOUT_TYPE) {
                         case 1:
                             invites = result.get("inviting");
@@ -79,7 +80,7 @@ public class EditListActivity extends AppCompatActivity {
                             break;
                     }
                     invite_adapter = new SelectedAdapter(invites);
-                    LinearLayoutManager layoutManager= new LinearLayoutManager(mainActivity,LinearLayoutManager.HORIZONTAL, false);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
                     invite_list.setLayoutManager(layoutManager);
                     invite_list.setAdapter(invite_adapter);
 
@@ -88,7 +89,7 @@ public class EditListActivity extends AppCompatActivity {
                         @Override
                         public void onResultReady(List<User> result) {
                             users = new ArrayList<>();
-                            if ( result != null ) {
+                            if (result != null) {
                                 users.addAll(result);
                                 friend_list.setAdapter(new FriendListAdapter(users));
                             }
@@ -101,11 +102,11 @@ public class EditListActivity extends AppCompatActivity {
 
     }
 
-    private void setupActionBar(){
+    private void setupActionBar() {
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.actionbar_edit_event_list);
-        TextView title = (TextView)findViewById(R.id.actionbar_editEvent_list_title);
-        ImageView backButton = (ImageView)findViewById(R.id.actionbar_editEvent_list_back);
+        TextView title = (TextView) findViewById(R.id.actionbar_editEvent_list_title);
+        ImageView backButton = (ImageView) findViewById(R.id.actionbar_editEvent_list_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +131,7 @@ public class EditListActivity extends AppCompatActivity {
                         .show();
             }
         });
-        switch (LAYOUT_TYPE){
+        switch (LAYOUT_TYPE) {
             case 1:
                 title.setText("Invite Friends");
                 break;
@@ -141,18 +142,18 @@ public class EditListActivity extends AppCompatActivity {
 
     }
 
-    private void setupReferences(){
-        searchbar = (SearchView)findViewById(R.id.edit_event_list_search);
+    private void setupReferences() {
+        searchbar = (SearchView) findViewById(R.id.edit_event_list_search);
         searchbar.setQueryHint("Search Name");
-        create = (TextView)findViewById(R.id.edit_event_list_create);
+        create = (TextView) findViewById(R.id.edit_event_list_create);
         create.setText("Update List");
-        friend_list = (ListView)findViewById(R.id.edit_event_list_list);
-        invite_list = (RecyclerView)findViewById(R.id.edit_event_list_selectedList);
+        friend_list = (ListView) findViewById(R.id.edit_event_list_list);
+        invite_list = (RecyclerView) findViewById(R.id.edit_event_list_selectedList);
         users = new ArrayList<>();
         invites = new ArrayList<>();
     }
 
-    private void setupFunctionality(){
+    private void setupFunctionality() {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //TODO: 5/7/2017 Update server with new invites list
@@ -180,12 +181,15 @@ public class EditListActivity extends AppCompatActivity {
         });
         searchbar.clearFocus();
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override public boolean onQueryTextSubmit(String query) {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
                 friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(users, query)));
                 searchbar.clearFocus();
                 return false;
             }
-            @Override public boolean onQueryTextChange(String query) {
+
+            @Override
+            public boolean onQueryTextChange(String query) {
                 friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(users, query)));
                 return false;
             }
@@ -209,7 +213,7 @@ public class EditListActivity extends AppCompatActivity {
 
     public static List<User> getUsersFromFollowing(List<Integer> indexes) {
         ArrayList<User> users = new ArrayList<>();
-        for ( int i = 0; i < indexes.size(); i++ ) {
+        for (int i = 0; i < indexes.size(); i++) {
             users.add(invites.get(indexes.get(i)));
         }
         return users;
@@ -218,25 +222,33 @@ public class EditListActivity extends AppCompatActivity {
     private class FriendListAdapter extends BaseAdapter {
         private List<User> users;
         private LayoutInflater inflater;
+
         private FriendListAdapter(List<User> friends) {
-            if(friends!= null) {
+            if (friends != null) {
                 this.users = friends;
-            }
-            else{
+            } else {
                 this.users = new ArrayList<>();
             }
             inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-        @Override public int getCount() {
+
+        @Override
+        public int getCount() {
             return users.size();
         }
-        @Override public User getItem(int position) {
+
+        @Override
+        public User getItem(int position) {
             return users.get(position);
         }
-        @Override public long getItemId(int position) {
+
+        @Override
+        public long getItemId(int position) {
             return position;
         }
-        @Override public View getView(final int position, View convertView, ViewGroup parent) {
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
             final Holder holder;
             View layoutView = convertView;
             if (convertView == null) {
@@ -257,14 +269,14 @@ public class EditListActivity extends AppCompatActivity {
                 }
             });
 
-            if ( invites.contains( getItem(position) ) )
+            if (invites.contains(getItem(position)))
                 holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
             else
                 holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
             holder.select.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ( !invites.contains( getItem(position) ) ) {
+                    if (!invites.contains(getItem(position))) {
                         invites.add(getItem(position));
                         invite_adapter.notifyDataSetChanged();
                         holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
@@ -279,12 +291,13 @@ public class EditListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                    intent.putExtra("userObject", getItem(position) );
+                    intent.putExtra("userObject", getItem(position));
                     startActivity(intent);
                 }
             });
             return layoutView;
         }
+
         private class Holder {
             ImageView profile;
             TextView name;
@@ -295,6 +308,7 @@ public class EditListActivity extends AppCompatActivity {
     private class SelectedAdapter extends RecyclerView.Adapter<SelectedAdapter.ViewHolder> {
         public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView imgView;
+
             ViewHolder(View itemView) {
                 super(itemView);
                 imgView = (ImageView) itemView.findViewById(R.id.each_statsfriend_image);
@@ -304,32 +318,40 @@ public class EditListActivity extends AppCompatActivity {
                 return imgView;
             }
         }
+
         private List<User> userList;
         private LayoutInflater inflater;
+
         public SelectedAdapter(List<User> userList) {
             super();
-            if(userList != null) {
+            if (userList != null) {
                 this.userList = userList;
-            }
-            else{
+            } else {
                 this.userList = new ArrayList<>();
             }
-            inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-        @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
             ViewHolder viewHolder = new ViewHolder(rowView);
             return viewHolder;
         }
-        @Override public long getItemId(int position) {
+
+        @Override
+        public long getItemId(int position) {
             return position;
         }
-        @Override public int getItemCount() {
+
+        @Override
+        public int getItemCount() {
             return userList.size();
         }
 
 
-        @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             server_getProfilePicture(userList.get(position).getUserID(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
@@ -337,7 +359,8 @@ public class EditListActivity extends AppCompatActivity {
                 }
             });
             holder.imgView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                     intent.putExtra("userObject", userList.get(position));
                     mainActivity.startActivity(intent);

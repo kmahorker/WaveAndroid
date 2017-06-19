@@ -32,7 +32,6 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
@@ -50,7 +49,7 @@ import java.util.List;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
-public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class EventStatsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static final int activityHostFragment = 1, activitySocialFragment = 2, listInvited = 3, listGoing = 4, listBouncing = 5;
     private static final int CAMERA_PERMISSION = 3;
     private GoogleMap mMap;
@@ -79,7 +78,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         loadActivity();
     }
 
-    private void loadActivity(){
+    private void loadActivity() {
         setupActionbar();
         setupPartyInfos();
         setupFunctionalities();
@@ -96,28 +95,27 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == EDIT_STATS_REQUEST){
-            if(resultCode == RESULT_OK){
+        if (requestCode == EDIT_STATS_REQUEST) {
+            if (resultCode == RESULT_OK) {
                 server_getPartyObject(party.getPartyID(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {
-                        if(result != null) {
+                        if (result != null) {
                             party = result;
                             loadActivity();
                             //setupPartyInfos();
                         }
                     }
                 });
-            }
-            else{
+            } else {
                 //Do Nothing
             }
         }
     }
 
     private void setupSpecialFields(int callerType, String hostID) {
-        if ( callerType == activityHostFragment) {
-            if ( hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) )
+        if (callerType == activityHostFragment) {
+            if (hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")))
                 editView.setVisibility(View.VISIBLE);
             qrAction.setText("Open QR Scanner");
             qrAction.setOnClickListener(new View.OnClickListener() {
@@ -133,14 +131,14 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     openScanner();
                 }
             });
-        } else if ( callerType == activitySocialFragment ){
+        } else if (callerType == activitySocialFragment) {
             editView.setVisibility(View.INVISIBLE);
             qrAction.setText("Open QR Code");
             qrAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
-                    ((ImageView)view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode("ID: " + party.getPartyID()));
+                    ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode("ID: " + party.getPartyID()));
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
                     dialog.setTitle("QR Code")
@@ -200,7 +198,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                if ( result != null ) {
+                if (result != null) {
                     String hostname = "", hostID = "";
                     if (!result.get("hosting").isEmpty()) {
                         hostname = result.get("hosting").get(0).getFullName();
@@ -209,7 +207,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     hostView.setText(hostname);
 
                     //If coming from hostFragment and you are a host
-                    if ( callerType == activityHostFragment && hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")) ) {
+                    if (callerType == activityHostFragment && hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"))) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
@@ -237,7 +235,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             goingFriends.setLayoutManager(layoutManagerAttendees);
             goingFriends.setFocusable(false);
             goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
-        } else if ( type == listBouncing ) {
+        } else if (type == listBouncing) {
             bouncingFriends.setLayoutManager(layoutManagerAttendees);
             bouncingFriends.setFocusable(false);
             bouncingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, list));
@@ -302,7 +300,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.hostEventStats_emoji);
-        emojiText.setText(party.getPartyEmoji().substring(0,1));
+        emojiText.setText(party.getPartyEmoji().substring(0, 1));
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions()
