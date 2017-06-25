@@ -1029,8 +1029,16 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 }
 
                                 for (final User user : getUsersFromFollowing(bouncingUsers)) {
-                                    DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_bouncing", null);
-                                    completeThreads();
+                                    server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                        @Override
+                                        public void onResultReady(String result) {
+                                            if(result.equals("success")){
+                                                DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_bouncing", null);
+                                                completeThreads();
+                                            }
+                                        }
+                                    });
+
                                 }
 
                                 for (final String hostingId : hostingUsers) {

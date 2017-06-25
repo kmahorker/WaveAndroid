@@ -685,9 +685,30 @@ public class EditStatsActivity extends AppCompatActivity {
             invitingUsers.removeAll(conflicts);
             Log.d("conflicts", conflicts + "");
 
-            RecyclerView invitedRecyclerView = (RecyclerView) EditStatsActivity.mainActivity.findViewById(R.id.invite_list);
             TextView invitedTextView = (TextView) EditStatsActivity.mainActivity.findViewById(R.id.invite_text);
-            invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(EditStatsActivity.mainActivity, UtilityClass.IntegerIdtoUserObject(invitingUsers)));
+
+
+            class UpdateInviteAdapter implements Runnable{
+                public UpdateInviteAdapter(){
+                }
+                @Override
+                public void run() {
+                    final List<User> updatedInvites = UtilityClass.IntegerIdtoUserObject(invitingUsers);
+                    final RecyclerView invitedRecyclerView = (RecyclerView) EditStatsActivity.mainActivity.findViewById(R.id.invite_list);
+                    mainActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(EditStatsActivity.mainActivity, updatedInvites));
+                        }
+                    });
+
+                }
+            }
+
+            UpdateInviteAdapter inv = new UpdateInviteAdapter();
+            Thread thread = new Thread(inv);
+            thread.start();
+
             invitedTextView.setText("INVITED (" + invitingUsers.size() + ")");
 
             //updateInvites();

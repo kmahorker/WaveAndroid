@@ -387,13 +387,14 @@ public final class UtilityClass {
             DatabaseAccess.server_getUserObject(i + "", new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
-                    if(result.equals("success")){
+                    if(result!= null){
                         //Good
                         resultList.add(result);
                     }
                     else{
                         //Error
                     }
+                    Log.d("IntegertoUser", result + "");
                 }
             });
         }

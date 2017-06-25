@@ -99,12 +99,16 @@ public class EditListActivity extends AppCompatActivity {
                                                 ArrayList<User> bouncers = result.get("bouncing");
                                                 List<User> conflicts = UtilityClass.findDuplicates(bouncers, users);
                                                 users.removeAll(conflicts);
+                                                friend_list.setAdapter(new FriendListAdapter(users));
                                             }
                                         });
                                         break;
+                                    case 2:
+                                        friend_list.setAdapter(new FriendListAdapter(users));
+                                        break;
 
                                 }
-                                friend_list.setAdapter(new FriendListAdapter(users));
+
                             }
                         }
                     });
