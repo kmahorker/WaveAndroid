@@ -1,4 +1,5 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
+
 import java.util.HashMap;
 
 /**
@@ -10,7 +11,7 @@ public class RequestComponents {
     public String endpoint;
     public HashMap<String, String> body;
 
-    public RequestComponents(String url, String endpoint, HashMap<String, String> body){
+    public RequestComponents(String url, String endpoint, HashMap<String, String> body) {
         this.url = url;
         this.endpoint = endpoint;
         this.body = body;

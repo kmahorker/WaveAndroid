@@ -1,10 +1,7 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,8 +30,7 @@ public class Party implements Parcelable {
     private int minAge;
     private int maxAge;
 
-    public Party()
-    {
+    public Party() {
         partyID = "0";
         name = "";
         price = 0;
@@ -63,8 +59,7 @@ public class Party implements Parcelable {
             boolean isPublic,
             String partyEmoji,
             int minAge,
-            int maxAge)
-    {
+            int maxAge) {
         this.partyID = partyID;
         this.name = name;
         this.price = price;
@@ -82,142 +77,115 @@ public class Party implements Parcelable {
     }
 
     //Delete
-    public boolean removeAttending(String userIDToRemove)
-    {
+    public boolean removeAttending(String userIDToRemove) {
         return attendingUsers.remove(userIDToRemove);
     }
 
     //Add
-    public void addAttending(Attendee attendeeToAdd)
-    {
+    public void addAttending(Attendee attendeeToAdd) {
         attendingUsers.add(attendeeToAdd);
     }
 
     //Setters
-    public void setPartyID(String partyID)
-    {
+    public void setPartyID(String partyID) {
         this.partyID = partyID;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setPrice(double price)
-    {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setHostName(String hostName)
-    {
+    public void setHostName(String hostName) {
         this.hostName = hostName;
     }
 
-    public void setStartingDateTime(Calendar dateTimeObj)
-    {
+    public void setStartingDateTime(Calendar dateTimeObj) {
         this.startingDateTime = dateTimeObj;
     }
 
-    public void setEndingDateTime(Calendar dateTimeObj)
-    {
+    public void setEndingDateTime(Calendar dateTimeObj) {
         this.endingDateTime = dateTimeObj;
     }
 
-    public void setMapAddress(MapAddress mapAddress)
-    {
+    public void setMapAddress(MapAddress mapAddress) {
         this.mapAddress = mapAddress;
     }
 
-    public void setHostingUsers(List<String> hostingUsers)
-    {
+    public void setHostingUsers(List<String> hostingUsers) {
         this.hostingUsers = hostingUsers;
     }
 
-    public void setBouncingUsers(List<String> bouncingUsers)
-    {
+    public void setBouncingUsers(List<String> bouncingUsers) {
         this.bouncingUsers = bouncingUsers;
     }
 
-    public void setAttendingUsers(List<Attendee> attendingUsers)
-    {
+    public void setAttendingUsers(List<Attendee> attendingUsers) {
         this.attendingUsers = attendingUsers;
     }
 
-    public void setIsPublic(boolean isPublic)
-    {
+    public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
     //Getters
-    public String getPartyID()
-    {
+    public String getPartyID() {
         return partyID;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public double getPrice()
-    {
+    public double getPrice() {
         return price;
     }
 
-    public String getHostName()
-    {
+    public String getHostName() {
         return hostName;
     }
 
-    public Calendar getStartingDateTime()
-    {
+    public Calendar getStartingDateTime() {
         return startingDateTime;
     }
 
-    public Calendar getEndingDateTime()
-    {
+    public Calendar getEndingDateTime() {
         return endingDateTime;
     }
 
-    public MapAddress getMapAddress()
-    {
+    public MapAddress getMapAddress() {
         return mapAddress;
     }
 
-    public List<String> getHostingUsers()
-    {
+    public List<String> getHostingUsers() {
         return hostingUsers;
     }
 
-    public List<String> getBouncingUsers()
-    {
+    public List<String> getBouncingUsers() {
         return bouncingUsers;
     }
 
-    public List<Attendee> getAttendingUsers()
-    {
+    public List<Attendee> getAttendingUsers() {
         return attendingUsers;
     }
 
-    public boolean getIsPublic()
-    {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return name;
     }
 
-    public String getPartyEmoji()
-    {
+    public String getPartyEmoji() {
         return partyEmoji;
     }
 
-    public void setPartyEmoji(String partyEmoji)
-    {
+    public void setPartyEmoji(String partyEmoji) {
         this.partyEmoji = partyEmoji;
     }
 
@@ -236,7 +204,6 @@ public class Party implements Parcelable {
     public void setMaxAge(int maxAge) {
         this.maxAge = maxAge;
     }
-
 
 
     protected Party(Parcel in) {

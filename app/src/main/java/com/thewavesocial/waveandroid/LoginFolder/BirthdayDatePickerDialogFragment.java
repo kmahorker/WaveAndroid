@@ -1,30 +1,26 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
+
 import com.thewavesocial.waveandroid.R;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class BirthdayDatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
     TextView dateDisplay;
     int day, month, year;
+
     //static BirthdayDatePickerDialogFragment fragment;
-    public BirthdayDatePickerDialogFragment(){
+    public BirthdayDatePickerDialogFragment() {
         dateDisplay = null;
         day = 0;
         month = 0;
@@ -67,7 +63,7 @@ public class BirthdayDatePickerDialogFragment extends DialogFragment implements 
         this.day = day;
         this.month = month;
         this.year = year;
-        dateDisplay.setText("" + (month+1) + "/" + day + "/" + year);
+        dateDisplay.setText("" + (month + 1) + "/" + day + "/" + year);
     }
 
     @Override
@@ -77,7 +73,7 @@ public class BirthdayDatePickerDialogFragment extends DialogFragment implements 
         return inflater.inflate(R.layout.fragment_birthday_date_picker_dialog, container, false);
     }
 
-    public int getDay(){
+    public int getDay() {
         return day;
     }
 
@@ -89,11 +85,11 @@ public class BirthdayDatePickerDialogFragment extends DialogFragment implements 
         return year;
     }
 
-    public TextView getDateDisplay(){
+    public TextView getDateDisplay() {
         return dateDisplay;
     }
 
-    public void setDateDisplay(TextView text){
+    public void setDateDisplay(TextView text) {
         dateDisplay = text;
     }
 

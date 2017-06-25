@@ -1,7 +1,5 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
-//import android.media.Image;
-
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;

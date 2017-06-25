@@ -11,12 +11,12 @@ public class BestFriend implements Parcelable {
     String name;
     String phoneNumber;
 
-    public BestFriend(){
+    public BestFriend() {
         name = "";
         phoneNumber = "0";
     }
 
-    public BestFriend(String name, String num){
+    public BestFriend(String name, String num) {
         this.name = name;
         phoneNumber = num;
     }

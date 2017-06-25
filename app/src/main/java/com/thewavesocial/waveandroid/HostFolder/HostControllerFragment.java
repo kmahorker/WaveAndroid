@@ -20,6 +20,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class HostControllerFragment extends Fragment {
     private HomeSwipeActivity mainActivity;
     private HostControllerFragment thisFragment = this;
     private ListView manageList = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.home_host_view, container, false);
@@ -64,25 +66,25 @@ public class HostControllerFragment extends Fragment {
         Log.d("Resume", "TRUE");
     }
 
-    public void populateListView(){
+    public void populateListView() {
         final ProgressBar progressBar = (ProgressBar) mainActivity.findViewById(R.id.home_hostView_progressbar);
         progressBar.setVisibility(View.VISIBLE);
         server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<String>> result) {
-                if ( result != null ) {
+                if (result != null) {
                     final List<String> list = new ArrayList<>();
                     list.addAll(result.get("hosting"));
                     list.addAll(result.get("bouncing"));
                     server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
                         @Override
                         public void onResultReady(List<Party> result) {
-                            if ( result != null ) {
+                            if (result != null) {
                                 manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
 
-                                if ( mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null )
+                                if (mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null)
                                     return;
-                                if ( !result.isEmpty() )
+                                if (!result.isEmpty())
                                     mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
                                 else
                                     mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);

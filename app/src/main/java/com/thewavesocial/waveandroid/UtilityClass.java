@@ -6,18 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -26,49 +17,35 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import com.thewavesocial.waveandroid.BusinessObjects.User;
 
 import java.io.IOException;
+
+import com.thewavesocial.waveandroid.BusinessObjects.User;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import static android.graphics.Paint.ANTI_ALIAS_FLAG;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
+import java.util.TimeZone;
 
 /**
- * Created by Kaushik on 2/5/2017.
+ * This class provides static, useful functions to other activities.
  */
-
 public final class UtilityClass {
     private static LatLng loc = null, mapLoc = null;
     private static boolean dialogShowing = false;
     private static ProgressDialog progressDialog;
 
-    private UtilityClass() {
-        //Add Needed
-    }
-
+    /**
+     * Hide input keyboard from the screen.
+     * @param activity keyboard's activity
+     */
     public static void hideKeyboard(Activity activity) {
         if (activity != null && activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
             InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -76,6 +53,11 @@ public final class UtilityClass {
         }
     }
 
+    /**
+     * Display date from a calender object.
+     * @param c calendar object
+     * @return string display of date
+     */
     public static String dateToString(Calendar c) {
         int m = c.get(Calendar.MONTH) + 1;
         int d = c.get(Calendar.DATE);
@@ -88,6 +70,11 @@ public final class UtilityClass {
         return (prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR) + "").substring(2));
     }
 
+    /**
+     * Display time from a calendar object.
+     * @param c calendar object
+     * @return string display of time
+     */
     public static String timeToString(Calendar c) {
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int min = c.get(Calendar.MINUTE);
@@ -109,32 +96,38 @@ public final class UtilityClass {
         return prefixH + hour + ":" + prefixM + min + " " + ampm;
     }
 
-    public static String getNotificationTime(long time_period) {
-        String suffix = "";
+    /**
+     * Display the difference in current time and notification-created time.
+     * @param create_time epoch time when notification is created
+     * @return string display of the time difference between now and created time
+     */
+    public static String getNotificationTime(long create_time) {
+        String suffix;
         int sec = 60, min = 60, hr = 24, mth = 30, yr = 12;
+        long time_period = (Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - create_time) / 1000;
 
-        long num = time_period/(sec*min*hr*mth*yr);
-        if ( num != 0 ) {
-            suffix = (num == 1)? "" : "s";
+        long num = time_period / (sec * min * hr * mth * yr);
+        if (num != 0) {
+            suffix = (num == 1) ? "" : "s";
             return num + " year" + suffix + " ago.";
         }
-        num = time_period/(sec*min*hr*mth);
-        if ( num != 0 ) {
+        num = time_period / (sec * min * hr * mth);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " month" + suffix + " ago.";
         }
-        num = time_period/(sec*min*hr);
-        if ( num != 0 ) {
+        num = time_period / (sec * min * hr);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " day" + suffix + " ago.";
         }
-        num = time_period/(sec*min);
-        if ( num != 0 ) {
+        num = time_period / (sec * min);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " hour" + suffix + " ago.";
         }
-        num = time_period/(sec);
-        if ( num != 0 ) {
+        num = time_period / (sec);
+        if (num != 0) {
             suffix = (num == 1) ? "" : "s";
             return num + " min" + suffix + " ago.";
         }
@@ -142,15 +135,28 @@ public final class UtilityClass {
         return time_period + " sec" + suffix + " ago.";
     }
 
+    /**
+     * Convert Bitmap to RoundedBitmapDrawable
+     * @param res activity resources
+     * @param bitmap specified bitmap
+     * @return RoundedBitmapDrawable object
+     * @see <a href="http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners">http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners</a>
+     */
     public static RoundedBitmapDrawable toRoundImage(Resources res, Bitmap bitmap) {
-        //http://stackoverflow.com/questions/2459916/how-to-make-an-imageview-with-rounded-corners
         RoundedBitmapDrawable dr = RoundedBitmapDrawableFactory.create(res, bitmap);
         dr.setCircular(true);
         return dr;
     }
 
+    /**
+     * Display alert dialog for error-handling.
+     * @param activity activity
+     * @param message dialog's message
+     * @param header dialog's header
+     * @param cancelable dialog's ability to be canceled
+     */
     public static void printAlertMessage(Activity activity, String message, String header, boolean cancelable) {
-        if ( dialogShowing )
+        if (dialogShowing)
             return;
         AlertDialog.Builder fieldAlert = new AlertDialog.Builder(activity);
         fieldAlert.setMessage(message)
@@ -173,100 +179,44 @@ public final class UtilityClass {
         dialogShowing = true;
     }
 
-    public static Bitmap getBitmapFromURL(Activity mainActivity, String url, final OnResultReadyListener<Bitmap> delegate) {
-        new ImageRequestTask(mainActivity, url, new OnResultReadyListener<Bitmap>() {
-            @Override
-            public void onResultReady(Bitmap result) {
-                delegate.onResultReady(result);
-            }
-        }).execute();
-        return null;
-    }
-
-    public static class ImageRequestTask extends AsyncTask<String, String, Bitmap> {
-        private String url;
-        private Activity mainActivity;
-        private ProgressDialog progress;
-        private Handler handler;
-        private Runnable run;
-        private OnResultReadyListener delegate;
-
-        public ImageRequestTask(Activity mainActivity, String url, OnResultReadyListener<Bitmap> delegate) {
-            this.url = url;
-            this.mainActivity = mainActivity;
-            this.delegate = delegate;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(mainActivity, "Loading Image...", Toast.LENGTH_SHORT).show();
-//            progress = new ProgressDialog(mainActivity);
-//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progress.setTitle("Please wait");
-//            progress.setMessage("Connecting to Server...");
-//            progress.setCancelable(false);
-
-//            handler = new Handler();
-//            run = new Runnable() {
-//                @Override
-//                public void run() {
-//                    progress.show();
-//                }
-//            };
-//            handler.postDelayed(run, 3000);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params){
-            return getBitmapFromURL(url);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-//            if ( progress.isShowing() )
-//                progress.dismiss();
-//            handler.removeCallbacks(run);
-            delegate.onResultReady(bitmap);
-        }
-
-        //http://stackoverflow.com/questions/8992964/android-load-from-url-to-bitmap
-        public static Bitmap getBitmapFromURL(String src) {
-            try {
-                URL url = new URL(src);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                connection.setConnectTimeout(5000);//5 seconds time out
-                connection.setReadTimeout(5000);
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
-            } catch (IOException e) {
-                // Log exception
-                return null;
-            }
-        }
-    }
-
-//------------------------------------------------------------------------------------Map Functions
-
+    /**
+     * Return current user GPS location
+     * @return LatLng position
+     */
     public static LatLng getUserLocation() {
         return loc;
     }
 
+    /**
+     * Update current user GPS location
+     * @param loc1 new LatLng position
+     */
     public static void updateUserLocation(LatLng loc1) {
         loc = loc1;
     }
 
+    /**
+     * Return current user Maps location
+     * @return LatLng position
+     */
     public static LatLng getMapLocation() {
         return mapLoc;
     }
 
+    /**
+     * Update current user Maps location
+     * @param loc1 new LatLng position
+     */
     public static void updateMapLocation(LatLng loc1) {
         mapLoc = loc1;
     }
 
+    /**
+     * Convert string address to LatLng position.
+     * @param activity activity
+     * @param strAddress string address
+     * @return LatLng position
+     */
     public static LatLng getLocationFromAddress(Activity activity, String strAddress) {
         Geocoder coder = new Geocoder(activity);
         List<Address> address;
@@ -285,6 +235,13 @@ public final class UtilityClass {
         return p1;
     }
 
+    /**
+     * Convert LatLng position to string address.
+     * @param activity activity
+     * @param lat latitude
+     * @param lng longitude
+     * @return string address
+     */
     public static String getAddressFromLocation(Activity activity, int lat, int lng) {
         Geocoder geocoder;
         List<Address> addresses = null;
@@ -292,7 +249,9 @@ public final class UtilityClass {
 
         try {
             addresses = geocoder.getFromLocation(lat, lng, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
         String city = addresses.get(0).getLocality();
@@ -301,6 +260,11 @@ public final class UtilityClass {
         return address + ", " + city + ", " + state + ", " + postalCode;
     }
 
+    /**
+     * Display price in string.
+     * @param price price
+     * @return string display
+     */
     public static String priceToString(double price) {
         if ((int) price == price) {
             return "$" + (int) price;
@@ -309,22 +273,46 @@ public final class UtilityClass {
         }
     }
 
+    /**
+     * Get the width of screen
+     * @param activity activity
+     * @return screen width
+     */
     public static int getScreenWidth(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.widthPixels;
     }
 
+    /**
+     * Get the height of screen
+     * @param activity activity
+     * @return screen height
+     */
     public static int getScreenHeight(Activity activity) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
+    /**
+     * Get xml view object with specified ID.
+     * @param v parent view
+     * @param resId resource id
+     * @param <T> view type
+     * @return view
+     */
     public static <T extends View> T getView(@NonNull View v, @IdRes int resId) {
         return (T) v.findViewById(resId);
     }
 
+    /**
+     * Search query from list.
+     * @param oldList old list
+     * @param query query
+     * @param <T> object type
+     * @return new list
+     */
     public static <T extends Object> List<T> search(List<T> oldList, String query) {
         if (query == "")
             return oldList;
@@ -341,26 +329,10 @@ public final class UtilityClass {
         return newList;
     }
 
-    public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
-        Paint paint = new Paint(ANTI_ALIAS_FLAG);
-        paint.setTextSize(textSize);
-        paint.setColor(textColor);
-        paint.setTextAlign(Paint.Align.LEFT);
-        float baseline = -paint.ascent(); // ascent() is negative
-        int width = (int) (paint.measureText(text) + 0.5f); // round
-        int height = (int) (baseline + paint.descent() + 0.5f);
-        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(image);
-        canvas.drawText(text, 0, baseline, paint);
-        return image;
-    }
-
-    public static Calendar unixToCalendar(long unixTime){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(unixTime);
-        return calendar;
-    }
-
+    /**
+     * Start loading progressbar.
+     * @param activity activity
+     */
     public static void startProgressbar(Activity activity) {
         progressDialog = new ProgressDialog(activity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -370,28 +342,44 @@ public final class UtilityClass {
         progressDialog.show();
     }
 
+    /**
+     * End loading progressbar with loading result.
+     * @param activity activity
+     * @param success loading result
+     */
     public static void endProgressbar(Activity activity, boolean success) {
-        if ( progressDialog != null && progressDialog.isShowing() )
+        if (progressDialog != null && progressDialog.isShowing())
             progressDialog.dismiss();
-        if ( !success )
+        if (!success)
             printAlertMessage(activity, "Sorry. Internet Connection Error.", "Network Error", true);
     }
 
-    public static List<String> userObjectToStringId(List<User> userList){
-        List<String> result  = new ArrayList<>();
-        for(User user : userList){
+    /**
+     * Get list of string IDs from list of users.
+     * @param userList list of users
+     * @return list of IDs
+     */
+    public static List<String> userObjectToStringId(List<User> userList) {
+        List<String> result = new ArrayList<>();
+        for (User user : userList) {
             result.add((user.getUserID()));
         }
         return result;
     }
 
-    public static List<Integer> userObjectToIntegerId(List<User> userList){
+    /**
+     * Get list of int IDs from list of users.
+     * @param userList list of users
+     * @return list of IDs
+     */
+    public static List<Integer> userObjectToIntegerId(List<User> userList) {
         List<Integer> result = new ArrayList<>();
-        for(User user : userList){
+        for (User user : userList) {
             result.add(Integer.parseInt(user.getUserID()));
         }
         return result;
     }
+
 
     public static List<User> IntegerIdtoUserObject(List<Integer> userIdList){
         final List<User> resultList = new ArrayList<>();
@@ -412,10 +400,17 @@ public final class UtilityClass {
         return resultList;
     }
 
-    public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b){
+    /**
+     * Get duplicated items in list a and b.
+     * @param a first list
+     * @param b second list
+     * @param <T> item type
+     * @return list of duplicated items
+     */
+    public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b) {
         List<T> duplicates = new ArrayList<>();
-        for(T item : a){
-            if(b.contains(item)){
+        for (T item : a) {
+            if (b.contains(item)) {
                 duplicates.add(item);
             }
         }

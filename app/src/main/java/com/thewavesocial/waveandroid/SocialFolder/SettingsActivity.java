@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.facebook.login.LoginManager;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
-import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
 

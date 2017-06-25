@@ -1,15 +1,12 @@
 package com.thewavesocial.waveandroid.SocialFolder;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,7 +26,7 @@ import java.util.TreeMap;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getNotificationsOfUser;
 
 public class FriendProfileActivity extends AppCompatActivity {
-    private User friend; //TODO: Remove Empty User
+    private User friend;
     private String userID;
     private TextView followers_textview, following_textview, follow_button;
     private ListView notification_listview;
@@ -88,7 +85,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if ( menuItem.getItemId() == R.id.friend_options_block )
+                        if (menuItem.getItemId() == R.id.friend_options_block)
                             Toast.makeText(mainActivity, "You are blocking this user.", Toast.LENGTH_LONG).show();
                         else
                             Toast.makeText(mainActivity, "You are reporting this user.", Toast.LENGTH_LONG).show();
@@ -111,19 +108,19 @@ public class FriendProfileActivity extends AppCompatActivity {
         followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
         following_textview.setText(friend.getFollowing().size() + "\nfollowing");
 
-        if ( profilepic_imageview.getDrawable() == null )
-        DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
-            @Override
-            public void onResultReady(Bitmap result) {
-                if (result != null)
-                    profilepic_imageview.setImageDrawable( UtilityClass.toRoundImage(getResources(), result));
-            }
-        });
+        if (profilepic_imageview.getDrawable() == null)
+            DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    if (result != null)
+                        profilepic_imageview.setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                }
+            });
 
         server_getNotificationsOfUser(userID, new OnResultReadyListener<ArrayList<Notification>>() {
             @Override
             public void onResultReady(ArrayList<Notification> result) {
-                if ( result != null ) {
+                if (result != null) {
                     extractValues(result, new OnResultReadyListener<NotificationPair>() {
                         @Override
                         public void onResultReady(NotificationPair result) {
@@ -152,7 +149,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                     DatabaseAccess.server_unfollow(userID, new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
-                            if ( result.equals("success") ) {
+                            if (result.equals("success")) {
                                 CurrentUser.theUser.getFollowing().remove(userID);
                                 changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                             }
@@ -163,7 +160,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                     DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), userID, new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
-                            if ( result.equals("success") ) {
+                            if (result.equals("success")) {
                                 CurrentUser.theUser.getFollowing().add(userID);
                                 changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
                                 DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, "", "following", null);
@@ -188,21 +185,23 @@ public class FriendProfileActivity extends AppCompatActivity {
                 new TreeMap<Long, Object>(Collections.reverseOrder()));
 
         //Light-weight threads management
-        class ThreadManager{
+        class ThreadManager {
             private int max, completes;
-            public ThreadManager(int max){
+
+            public ThreadManager(int max) {
                 this.max = max;
             }
-            void completeThreads(){
+
+            void completeThreads() {
                 completes++;
-                if ( completes >= max && delegate != null )
+                if (completes >= max && delegate != null)
                     delegate.onResultReady(senderObjects);
             }
         }
         final ThreadManager threadManager = new ThreadManager(result.size());
 
-        for ( final Notification each : result ) {
-            if ( each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED ) {
+        for (final Notification each : result) {
+            if (each.getRequestType() == Notification.TYPE_FOLLOWING || each.getRequestType() == Notification.TYPE_FOLLOWED) {
                 DatabaseAccess.server_getUserObject(each.getSenderID(), new OnResultReadyListener<User>() {
                     @Override
                     public void onResultReady(User result) {
@@ -213,7 +212,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                         threadManager.completeThreads();
                     }
                 });
-            } else if ( each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_BOUNCING) {
+            } else if (each.getRequestType() == Notification.TYPE_GOING || each.getRequestType() == Notification.TYPE_HOSTING || each.getRequestType() == Notification.TYPE_BOUNCING) {
                 DatabaseAccess.server_getPartyObject(each.getSenderID(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {
@@ -233,6 +232,7 @@ public class FriendProfileActivity extends AppCompatActivity {
     class NotificationPair {
         private TreeMap<Long, Notification> notifications;
         private TreeMap<Long, Object> objects;
+
         public NotificationPair(TreeMap<Long, Notification> notifications, TreeMap<Long, Object> objects) {
             this.notifications = notifications;
             this.objects = objects;
@@ -240,7 +240,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         public ArrayList<Notification> getNotifications() {
             ArrayList<Notification> list = new ArrayList<>();
-            for ( Long key : notifications.keySet() ) {
+            for (Long key : notifications.keySet()) {
                 list.add(notifications.get(key));
             }
             return list;
@@ -248,7 +248,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         public ArrayList<Object> getSenderObjects() {
             ArrayList<Object> list = new ArrayList<>();
-            for ( Long key : notifications.keySet() ) {
+            for (Long key : notifications.keySet()) {
                 list.add(objects.get(key));
             }
             return list;

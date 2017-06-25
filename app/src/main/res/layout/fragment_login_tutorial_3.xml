@@ -52,7 +52,6 @@
 
         </LinearLayout>
 
-        <!-- TODO Change to legit description -->
         <TextView
             android:id="@+id/tutorialDescription"
             android:layout_width="match_parent"

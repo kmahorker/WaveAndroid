@@ -84,7 +84,7 @@
 //            holder.tvName.setText(partyList.get(position).getName());
 //            Calendar cal =  partyList.get(position).getStartingDateTime();
 //            holder.tvDate.setText(UtilityClass.dateToString(cal));
-//            holder.tvDistance.setText("distHere"); //TODO: Add real distance function
+//            holder.tvDistance.setText("distHere");
 //            rowView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {

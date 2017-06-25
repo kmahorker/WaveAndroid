@@ -3,15 +3,12 @@ package com.thewavesocial.waveandroid.HomeFolder;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -34,10 +31,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.internal.Utility;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -261,7 +256,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         updateUserLoc(1);
 
         LatLng loc = UtilityClass.getUserLocation();
-        if ( loc != null ) {
+        if (loc != null) {
             server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
                     loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
                     new OnResultReadyListener<ArrayList<Party>>() {
@@ -278,7 +273,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public boolean onMarkerClick(Marker marker) {
         UtilityClass.hideKeyboard(mainActivity);
         if (marker.getTag() != null) {
-            openPartyProfile( (Party)marker.getTag());
+            openPartyProfile((Party) marker.getTag());
             editText.setCursorVisible(false);
             dragSeparator(80, 0);
             searchOpened = false;
@@ -335,7 +330,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     public void addParty(Party party, LatLng loc) {
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
-        emojiText.setText(party.getPartyEmoji().substring(0,1));
+        emojiText.setText(party.getPartyEmoji().substring(0, 1));
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
@@ -345,7 +340,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public void addParties(List<Party> parties) {
-        // TODO: 05/12/2017 Should pass party objecjt to addParty
         for (Party party : parties) {
             LatLng loc = party.getMapAddress().getAddress_latlng();
             if (loc != null)
@@ -401,7 +395,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     public static void dragSeparator(int distance, int duration) {
-        // TODO: 03/09/2017 Think about adding other views inside drag bar
         Log.d("Distance", distance + "");
         View separator = mainActivity.findViewById(R.id.home_mapsView_separator);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();
@@ -451,7 +444,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
 
     private void askToSendSOSMessage() {
-        if ( CurrentUser.theUser.getBestFriends().isEmpty() ) {
+        if (CurrentUser.theUser.getBestFriends().isEmpty()) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
             dialog.setTitle("Error")
                     .setMessage("No best friend contact specified")
@@ -544,30 +537,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             connection = (HttpURLConnection) url.openConnection();
             connection.connect();
 
-            if ( connection.getResponseCode() == 500 )
+            if (connection.getResponseCode() == 500)
                 stream = connection.getErrorStream();
             else
                 stream = connection.getInputStream();
 
             reader = new BufferedReader(new InputStreamReader(stream));
-            String line ="";
+            String line = "";
 
-            while( (line = reader.readLine()) != null ) {
+            while ((line = reader.readLine()) != null) {
                 buffer.append(line);
             }
             return buffer.toString();
 
-        } catch (IOException e) {}
-        finally {
-            if ( connection != null ) {
+        } catch (IOException e) {
+        } finally {
+            if (connection != null) {
                 connection.disconnect();
             }
             try {
-                if ( reader != null ){
+                if (reader != null) {
                     reader.close();
                 }
-            }
-            catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

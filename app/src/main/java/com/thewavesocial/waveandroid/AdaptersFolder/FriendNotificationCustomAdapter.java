@@ -12,24 +12,20 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
-import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FriendNotificationCustomAdapter extends BaseAdapter
-{
-    private FriendProfileActivity mainActivity ;
+public class FriendNotificationCustomAdapter extends BaseAdapter {
+    private FriendProfileActivity mainActivity;
     private List<Notification> notifList;
     private static LayoutInflater inflater;
     private List<Object> senderObjects;
 
-    public FriendNotificationCustomAdapter(FriendProfileActivity mainActivity, List<Notification> notifList, List<Object> senderObjects)
-    {
+    public FriendNotificationCustomAdapter(FriendProfileActivity mainActivity, List<Notification> notifList, List<Object> senderObjects) {
         super();
         this.notifList = notifList;
         this.senderObjects = senderObjects;
@@ -38,43 +34,35 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return notifList.size();
     }
 
     @Override
-    public Notification getItem(int position)
-    {
+    public Notification getItem(int position) {
         return notifList.get(position);
     }
 
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
     }
 
-    public class Holder
-    {
+    public class Holder {
         TextView sender;
         TextView message;
         TextView timeAgo;
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
-    {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final Holder holder;
         View layoutView = convertView;
-        if(convertView == null)
-        {
+        if (convertView == null) {
             layoutView = inflater.inflate(R.layout.each_friendnotif_item, null);
             holder = new Holder();
             layoutView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (Holder) layoutView.getTag();
         }
 
@@ -82,13 +70,14 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
         holder.message = (TextView) layoutView.findViewById(R.id.eachFriendNotif_message);
         holder.timeAgo = (TextView) layoutView.findViewById(R.id.eachFriendNotif_timeAgo);
 
-        if ( (getItem(position).getRequestType() == Notification.TYPE_FOLLOWED ||
-                getItem(position).getRequestType() == Notification.TYPE_FOLLOWING) ) //Friend type notification
+        holder.message.setText(getItem(position).getMessage());
+        holder.timeAgo.setText(". " + UtilityClass.getNotificationTime(notifList.get(position).getCreate_time()));
+
+        if ((getItem(position).getRequestType() == Notification.TYPE_FOLLOWED ||
+                getItem(position).getRequestType() == Notification.TYPE_FOLLOWING)) //Friend type notification
         {
             final User user = (User) senderObjects.get(position);
             holder.sender.setText(user.getFirstName());
-            holder.message.setText(getItem(position).getMessage());
-            holder.timeAgo.setText(". 28m");
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,18 +85,15 @@ public class FriendNotificationCustomAdapter extends BaseAdapter
                     Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
                     intent.putExtra("userObject", user);
                     mainActivity.startActivity(intent);
-                    Log.d("Position", position+"");
+                    Log.d("Position", position + "");
                 }
             });
-        }
-        else if ( getItem(position).getRequestType() == Notification.TYPE_GOING ||
+        } else if (getItem(position).getRequestType() == Notification.TYPE_GOING ||
                 getItem(position).getRequestType() == Notification.TYPE_HOSTING ||
-                getItem(position).getRequestType() == Notification.TYPE_BOUNCING ) //Friend type notification
+                getItem(position).getRequestType() == Notification.TYPE_BOUNCING) //Friend type notification
         {
-            final Party party = (Party)senderObjects.get(position);
+            final Party party = (Party) senderObjects.get(position);
             holder.sender.setText("\"" + party.getName() + "\"");
-            holder.message.setText(getItem(position).getMessage());
-            holder.timeAgo.setText(". 28min");
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

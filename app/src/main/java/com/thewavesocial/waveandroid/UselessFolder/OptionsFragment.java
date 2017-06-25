@@ -69,42 +69,36 @@
 //        set_bff.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //
 //        change_pswd.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //
 //        push_notif.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //
 //        manage_pay.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //
 //        privacy.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //
 //        terms_service.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                // TODO: 02/10/2017
 //            }
 //        });
 //    }

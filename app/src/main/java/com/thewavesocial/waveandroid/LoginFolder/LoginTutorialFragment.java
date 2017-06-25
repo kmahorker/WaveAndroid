@@ -1,7 +1,6 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.R;
-
 
 
 public class LoginTutorialFragment extends Fragment {
@@ -24,7 +22,7 @@ public class LoginTutorialFragment extends Fragment {
     public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 
     public LoginTutorialFragment() {
-       fragNum = 1;
+        fragNum = 1;
     }
 
     public LoginTutorialFragment(int fragNum) {
@@ -33,16 +31,16 @@ public class LoginTutorialFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       // view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+        // view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
 
-      //  view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
+        //  view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
         if (fragNum == 1) {
             //changeInfo1();
             view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
             //setupReferences();
 
         } else if (fragNum == 2) {
-           // setupReferences();
+            // setupReferences();
             //changeInfo2();
             view = inflater.inflate(R.layout.fragment_login_tutorial_2, container, false);
             //setupReferences2();
@@ -57,7 +55,6 @@ public class LoginTutorialFragment extends Fragment {
         //view = inflater.inflate(R.layout.fragment_login_tutorial, container, false);
         return view;
     }
-
 
 
     //Unused Methods

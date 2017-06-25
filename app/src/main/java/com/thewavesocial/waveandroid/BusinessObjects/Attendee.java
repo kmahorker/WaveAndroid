@@ -8,7 +8,7 @@ public class Attendee {
     private String userId;
     private String status;
 
-    public Attendee(String userId, String status){
+    public Attendee(String userId, String status) {
         this.userId = userId;
         this.status = status;
     }

@@ -12,19 +12,15 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class LaunchActivity extends AppCompatActivity
-{
+public class LaunchActivity extends AppCompatActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup_layout);
         getSupportActionBar().hide();
@@ -38,7 +34,7 @@ public class LaunchActivity extends AppCompatActivity
                 String url = getString(R.string.server_url) + "users/"
                         + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("id") + "?access_token="
                         + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("jwt");
-                RequestComponents comp = new RequestComponents(url, "GET", null );
+                RequestComponents comp = new RequestComponents(url, "GET", null);
 
                 new DatabaseAccess.HttpRequestTask(LaunchActivity.this, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
                     @Override
@@ -47,7 +43,7 @@ public class LaunchActivity extends AppCompatActivity
                         try {
                             JSONObject json = new JSONObject(result.get(0));
                             String message = json.getString("status");
-                            if ( message.equals("success") ) {
+                            if (message.equals("success")) {
                                 CurrentUser.setContext(LaunchActivity.this, new OnResultReadyListener<Boolean>() {
                                     @Override
                                     public void onResultReady(Boolean result) {
@@ -56,12 +52,14 @@ public class LaunchActivity extends AppCompatActivity
                                         finish();
                                     }
                                 });
-                            } else if ( message.equals("error") ) {
+                            } else if (message.equals("error")) {
                                 Intent intent = new Intent(LaunchActivity.this, LoginTutorialActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
-                        } catch (JSONException e) {e.printStackTrace();}
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).execute();
 
