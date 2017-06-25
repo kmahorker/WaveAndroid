@@ -29,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 
 import java.io.BufferedReader;
@@ -390,6 +391,25 @@ public final class UtilityClass {
             result.add(Integer.parseInt(user.getUserID()));
         }
         return result;
+    }
+
+    public static List<User> IntegerIdtoUserObject(List<Integer> userIdList){
+        final List<User> resultList = new ArrayList<>();
+        for(Integer i : userIdList) {
+            DatabaseAccess.server_getUserObject(i + "", new OnResultReadyListener<User>() {
+                @Override
+                public void onResultReady(User result) {
+                    if(result.equals("success")){
+                        //Good
+                        resultList.add(result);
+                    }
+                    else{
+                        //Error
+                    }
+                }
+            });
+        }
+        return resultList;
     }
 
     public static <T extends Object> List<T> findDuplicates(List<T> a, List<T> b){

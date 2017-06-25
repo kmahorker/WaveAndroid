@@ -49,7 +49,7 @@ import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.HostFolder.EditListActivity.getUsersFromFollowing;
+
 
 public class EditStatsActivity extends AppCompatActivity {
     private static EditStatsActivity mainActivity;
@@ -126,6 +126,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     NewPartyInfo.invitingUsers = updatedListUserIds;
                     inviteTextView.setText("INVITED (" + updatedList.size() + ")");
                     invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
+                    NewPartyInfo.updateInvites();
                 }
                 else{
                     //Do nothing
@@ -136,6 +137,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     NewPartyInfo.bouncingUsers = updatedListUserIds;
                     bouncingTextView.setText("BOUNCERS (" + updatedList.size() + ")");
                     bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
+                    NewPartyInfo.updateBouncers();
                 }
                 else{
                     //Do nothing
@@ -488,7 +490,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     NewPartyInfo.composeParty();
                     Intent returnIntent = new Intent();
                     setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
+                    mainActivity.finish();
                 }
             }
         });
@@ -607,13 +609,6 @@ public class EditStatsActivity extends AppCompatActivity {
             Log.d("Compose Party", "EEntered");
             if ( mapAddress.getAddress_latlng() == null )
                 mapAddress.setAddress_latlng(new LatLng(0,0));
-            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
-            for ( int bouncer_index : bouncingUsers ){
-                if ( invitingUsers.contains(bouncer_index) ) {
-                    invitingUsers.remove(Integer.valueOf(bouncer_index));
-                }
-            }
-            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
 
             try {
 
@@ -636,142 +631,10 @@ public class EditStatsActivity extends AppCompatActivity {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
-                            //TODO: uninvite previous users
-                            List<String> hostingDuplicates = UtilityClass.findDuplicates(hostingUsers, originalHosting);
-                            List<Integer> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
-                            List<Integer> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
-
-                            originalHosting.removeAll(hostingDuplicates);
-                            originalBouncing.removeAll(bouncingDuplicates);
-                            originalInviting.removeAll(invitingDuplicates);
-
-                            hostingUsers.removeAll(hostingDuplicates);
-                            bouncingUsers.removeAll(bouncingDuplicates);
-                            invitingUsers.removeAll(invitingDuplicates);
-                            
-
-                            for(final String id : originalHosting){
-                                server_manageUserForParty(id, party.getPartyID(), "hosting", "DELETE", new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        if(result.equals("success")){
-                                            server_getNotificationsOfUser(id, new OnResultReadyListener<ArrayList<Notification>>() {
-                                                @Override
-                                                public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result != null) {
-                                                        for(Notification notif : result){
-                                                            if(notif.getSenderID().equals(party.getPartyID())){
-                                                                server_deleteNotification(id, notif.getNotificationID(), new OnResultReadyListener<String>() {
-                                                                    @Override
-                                                                    public void onResultReady(String result) {
-                                                                        if (result.equals("success")) {
-                                                                            //Nothing to do
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-
-
-                                                    }
-                                                }
-                                            });
-
-                                        }
-                                    }
-                                });
-                            }
-
-                            for(final int id : originalBouncing){
-                                server_manageUserForParty(id + "", party.getPartyID(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        if(result.equals("success")){
-                                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
-                                                @Override
-                                                public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result != null) {
-                                                        for (Notification notif : result) {
-                                                            if (notif.getSenderID().equals(party.getPartyID())) {
-                                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
-                                                                    @Override
-                                                                    public void onResultReady(String result) {
-                                                                        if (result.equals("success")) {
-                                                                            //Do nothing
-                                                                        }
-                                                                    }
-                                                                });
-
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-
-                            for(final int id : originalInviting){
-                                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        if(result.equals("success")){
-                                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
-                                                @Override
-                                                public void onResultReady(ArrayList<Notification> result) {
-                                                    if(result!= null) {
-                                                        for(Notification notif : result){
-                                                            if(notif.getSenderID().equals(party.getPartyID())){
-                                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
-                                                                    @Override
-                                                                    public void onResultReady(String result) {
-                                                                        if(result.equals("success")){
-                                                                            //Do nothing
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                        }
-
-                                                    }
-                                                }
-                                            });
-
-                                        }
-                                    }
-                                });
-                            }
-                            for(final int userID : invitingUsers){
-                                server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        Log.d("addInvitedUser", result + "");
-                                        DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
-                                        completeThreads();
-                                    }
-                                });
-                            }
-
-                            for(final int userID: bouncingUsers){
-                                DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_bouncing", null);
-                                completeThreads();
-                            }
-
-                            for(final String hostingId : hostingUsers){
-                                server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        Log.d("addHostingUser", result + "");
-                                        DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
-                                        completeThreads();
-                                    }
-                                });
-                            }
+                            updateHosting();
                         }
                         else{
-
+                            //Error Here
                         }
                         Log.d("updateParty", result + "");
                     }
@@ -783,13 +646,214 @@ public class EditStatsActivity extends AppCompatActivity {
 
         }
 
+        public static void updateInvites(){
+            final String eventId = party.getPartyID();
+
+            List<Integer> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
+            originalInviting.removeAll(invitingDuplicates);
+            invitingUsers.removeAll(invitingDuplicates);
+            for(final int id : originalInviting){
+                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(result.equals("success")){
+                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
+                                @Override
+                                public void onResultReady(ArrayList<Notification> result) {
+                                    if(result!= null) {
+                                        for(Notification notif : result){
+                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                    @Override
+                                                    public void onResultReady(String result) {
+                                                        if(result.equals("success")){
+                                                            //Do nothing
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+            for(final int userID : invitingUsers){
+                server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        Log.d("addInvitedUser", result + "");
+                        DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
+                        //completeThreads();
+                    }
+                });
+            }
+
+
+        }
+
+        public static void updateBouncers(){
+            final String eventId = party.getPartyID();
+            List<Integer> conflicts = UtilityClass.findDuplicates(bouncingUsers, invitingUsers);
+            invitingUsers.removeAll(conflicts);
+            Log.d("conflicts", conflicts + "");
+
+            RecyclerView invitedRecyclerView = (RecyclerView) EditStatsActivity.mainActivity.findViewById(R.id.invite_list);
+            TextView invitedTextView = (TextView) EditStatsActivity.mainActivity.findViewById(R.id.invite_text);
+            invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(EditStatsActivity.mainActivity, UtilityClass.IntegerIdtoUserObject(invitingUsers)));
+            invitedTextView.setText("INVITED (" + invitingUsers.size() + ")");
+
+            //updateInvites();
+            for(final int id : conflicts){
+                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(result.equals("success")){
+                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
+                                @Override
+                                public void onResultReady(ArrayList<Notification> result) {
+                                    if(result!= null) {
+                                        for(Notification notif : result){
+                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                    @Override
+                                                    public void onResultReady(String result) {
+                                                        if(result.equals("success")){
+                                                            //Do nothing
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+
+
+            List<Integer> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
+            originalBouncing.removeAll(bouncingDuplicates);
+            bouncingUsers.removeAll(bouncingDuplicates);
+
+
+
+            for(final int id : originalBouncing){
+                server_manageUserForParty(id + "", party.getPartyID(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(result.equals("success")){
+                            server_getNotificationsOfUser(id + "", new OnResultReadyListener<ArrayList<Notification>>() {
+                                @Override
+                                public void onResultReady(ArrayList<Notification> result) {
+                                    if(result != null) {
+                                        for (Notification notif : result) {
+                                            if (notif.getSenderID().equals(party.getPartyID())) {
+                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                    @Override
+                                                    public void onResultReady(String result) {
+                                                        if (result.equals("success")) {
+                                                            //Do nothing
+                                                        }
+                                                    }
+                                                });
+
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            for(final int userID: bouncingUsers){
+                server_manageUserForParty(userID + "", eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        DatabaseAccess.server_createNotification(userID + "", "", eventId, "invite_bouncing", null);
+                        //completeThreads();
+                    }
+                });
+
+            }
+
+        }
+
+        public static void updateHosting(){
+            final String eventId = party.getPartyID();
+
+            List<String> hostingDuplicates = UtilityClass.findDuplicates(hostingUsers, originalHosting);
+            originalHosting.removeAll(hostingDuplicates);
+            hostingUsers.removeAll(hostingDuplicates);
+
+
+            for(final String id : originalHosting){
+                server_manageUserForParty(id, party.getPartyID(), "hosting", "DELETE", new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(result.equals("success")){
+                            server_getNotificationsOfUser(id, new OnResultReadyListener<ArrayList<Notification>>() {
+                                @Override
+                                public void onResultReady(ArrayList<Notification> result) {
+                                    if(result != null) {
+                                        for(Notification notif : result){
+                                            if(notif.getSenderID().equals(party.getPartyID())){
+                                                server_deleteNotification(id, notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                                    @Override
+                                                    public void onResultReady(String result) {
+                                                        if (result.equals("success")) {
+                                                            //Nothing to do
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+
+
+
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+
+
+
+            for(final String hostingId : hostingUsers){
+                server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        Log.d("addHostingUser", result + "");
+                        DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
+                        //completeThreads();
+                    }
+                });
+            }
+        }
+
+
+
+
     }
 
     //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
         threads_completion ++;
-        Log.d("Threads Complete", threads_completion + " out of " + (EditStatsActivity.NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()));
-        if ( threads_completion >= (EditStatsActivity.NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()) ) {
+        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()));
+        if ( threads_completion >= (NewPartyInfo.invitingUsers.size() + EditStatsActivity.NewPartyInfo.bouncingUsers.size() + EditStatsActivity.NewPartyInfo.hostingUsers.size()) ) {
             //Finish task
             CurrentUser.setContext(mainActivity, new OnResultReadyListener<Boolean>() {
                 @Override
@@ -801,6 +865,12 @@ public class EditStatsActivity extends AppCompatActivity {
             });
         }
     }
+
+    public static void completeThreads(int size){
+
+    }
+
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -103,11 +104,15 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     public void onResultReady(Party result) {
                         if(result != null) {
                             party = result;
+                            //mainActivity.recreate();
                             loadActivity();
                             //setupPartyInfos();
+                            Log.d("editedParty", result + "");
                         }
                     }
                 });
+
+
             }
             else{
                 //Do Nothing
@@ -170,6 +175,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         going = party.getAttendingUsers().size();
         male = party.getAttendingUsers().size() * 3 / 4;
         female = party.getAttendingUsers().size() / 4;
+
+        //TODO: 6/25/17 Loop through lists to find values
     }
 
 
