@@ -40,7 +40,6 @@ import java.util.TimeZone;
  * This class provides static, useful functions to other activities.
  */
 public final class UtilityClass {
-    private static LatLng loc = null, mapLoc = null;
     private static boolean dialogShowing = false;
     private static ProgressDialog progressDialog;
 
@@ -215,38 +214,6 @@ public final class UtilityClass {
                     }
                 }).show();
         dialogShowing = true;
-    }
-
-    /**
-     * Return current user GPS location
-     * @return LatLng position
-     */
-    public static LatLng getUserLocation() {
-        return loc;
-    }
-
-    /**
-     * Update current user GPS location
-     * @param loc1 new LatLng position
-     */
-    public static void updateUserLocation(LatLng loc1) {
-        loc = loc1;
-    }
-
-    /**
-     * Return current user Maps location
-     * @return LatLng position
-     */
-    public static LatLng getMapLocation() {
-        return mapLoc;
-    }
-
-    /**
-     * Update current user Maps location
-     * @param loc1 new LatLng position
-     */
-    public static void updateMapLocation(LatLng loc1) {
-        mapLoc = loc1;
     }
 
     /**

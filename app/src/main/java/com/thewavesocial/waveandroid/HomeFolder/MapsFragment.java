@@ -67,8 +67,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
-    private Marker cur_loc_marker;
-    private List<String> partyList;
     private GoogleMap mMap;
     private LatLng loc;
 
@@ -141,7 +139,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateUserLoc(0);
+                loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
+                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
+                moveMapCamera(loc);
             }
         });
     }
@@ -152,7 +152,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_fragment);
         mapFragment.getMapAsync(this);
         locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        cur_loc_marker = null;
     }
 
 
@@ -227,16 +226,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 //----------------------------------------------------------------------------------------------Map
 
     @Override
-    public void onDetach() {
-        try {
-            UtilityClass.updateMapLocation(mMap.getCameraPosition().target);
-        } catch (RuntimeException e) {
-            Log.d("Runtime Exception", "updateMap");
-        }
-        super.onDetach();
-    }
-
-    @Override
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
 
@@ -253,10 +242,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mMap.setOnMapClickListener(this);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        updateUserLoc(1);
 
-        LatLng loc = UtilityClass.getUserLocation();
+        loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
+                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
         if (loc != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
             server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
                     loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
                     new OnResultReadyListener<ArrayList<Party>>() {
@@ -286,45 +276,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public void onMapClick(LatLng latLng) {
         UtilityClass.hideKeyboard(mainActivity);
         editText.setCursorVisible(false);
-        //searchbar.setIconified(true);
-//        searchbar.clearFocus();
-    }
-
-
-    public void updateUserLoc(int key) {
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.INTERNET}
-                        , 10);
-            }
-        } else {
-            Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                loc = new LatLng(location.getLatitude(), location.getLongitude());
-            } else {
-                loc = new LatLng(34.414899, -119.84312);
-            }
-            UtilityClass.updateUserLocation(loc);
-            if (key == 1) {
-                if (UtilityClass.getMapLocation() != null) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getMapLocation(), (float) 15.0));
-                } else {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UtilityClass.getUserLocation(), (float) 15.0));
-                }
-//
-//                cur_loc_marker = mMap.addMarker(new MarkerOptions()
-//                        .icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons(R.drawable.plug_icon, 150, 150)))
-//                        .position(UtilityClass.getUserLocation()));
-            } else {
-                moveMapCamera(loc);
-            }
-        }
     }
 
 
@@ -352,13 +303,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
     }
 
-
-    public Bitmap resizeMapIcons(int res, int width, int height) {
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(), res);
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
-    }
-
 //-------------------------------------------------------------------------------------------Search
 
     @Override
@@ -366,14 +310,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
         int y = (int) event.getRawY();
         editText.setCursorVisible(false);
-        if (y < 1157) {
+        if (y < 1157)
             PartyProfileFragment.updateAttendeeImages();
-        }
-        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight) {
+
+        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight)
             y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
-        }
-        Log.d("TRUE?", y + ", " + separatorHeight
-                + ", " + (UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight));
+
         if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
                 && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
                 && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
@@ -517,7 +459,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                         == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
                 }
-                updateUserLoc(0);
+                loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
+                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
+                moveMapCamera(loc);
                 break;
             case 20:
                 askToSendSOSMessage();
@@ -525,47 +469,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 break;
         }
     }
-
-    private String parseJSONFromServer(String server_url) {
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        InputStream stream = null;
-        String error = "";
-        StringBuffer buffer = new StringBuffer();
-        try {
-            URL url = new URL(server_url);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.connect();
-
-            if (connection.getResponseCode() == 500)
-                stream = connection.getErrorStream();
-            else
-                stream = connection.getInputStream();
-
-            reader = new BufferedReader(new InputStreamReader(stream));
-            String line = "";
-
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-            return buffer.toString();
-
-        } catch (IOException e) {
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return error + server_url;
-    }
-
 
     @Override
     public void onResume() {
