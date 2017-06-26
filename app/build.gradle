@@ -39,5 +39,6 @@ dependencies {
     compile 'io.github.rockerhieu:emojiconize:1.0.0'
     compile 'me.sudar:zxing-orient:2.1.1@aar'
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.sothree.slidinguppanel:library:3.3.1'
     testCompile 'junit:junit:4.12'
 }

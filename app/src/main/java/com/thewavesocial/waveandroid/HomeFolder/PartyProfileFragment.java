@@ -87,7 +87,6 @@ public class PartyProfileFragment extends Fragment {
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MapsFragment.dragSeparator(30 - MapsFragment.mapHeight / 2, 0);
                 if (!MapsFragment.searchOpened)
                     MapsFragment.openSearchView();
             }
@@ -99,7 +98,6 @@ public class PartyProfileFragment extends Fragment {
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MapsFragment.dragSeparator(30 - MapsFragment.mapHeight / 2, 0);
                 if ( !MapsFragment.searchOpened )
                     MapsFragment.openSearchView();
                 editText.setCursorVisible(true);
