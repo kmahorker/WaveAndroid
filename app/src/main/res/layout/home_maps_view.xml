@@ -21,6 +21,21 @@
             class="com.google.android.gms.maps.SupportMapFragment">
         </fragment>
 
+        <Button
+            android:id="@+id/redo_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Redo Search"
+            android:textSize="@dimen/button_text_normal"
+            android:textColor="@color/appColor"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            android:background="@drawable/round_corner"
+            android:elevation="8dp"
+            android:visibility="invisible"/> <!--CurLoc Button (Image)-->
+
         <ImageButton
             android:id="@+id/cur_loc_button"
             android:src="@drawable/compass"

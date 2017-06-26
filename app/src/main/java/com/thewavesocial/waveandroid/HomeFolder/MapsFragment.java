@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
@@ -232,8 +233,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
                         locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
-        server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
-                loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                final Button search_button = (Button) mainActivity.findViewById(R.id.redo_search_button);
+                search_button.setVisibility(View.VISIBLE);
+                search_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        search_button.setVisibility(View.INVISIBLE);
+                        mMap.clear();
+                        displayEventsInRange();
+                    }
+                });
+            }
+        });
+    }
+
+    private void displayEventsInRange() {
+        double nBound, sBound, eBound, wBound;
+        nBound = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.latitude;
+        eBound = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.longitude;
+        sBound = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.latitude;
+        wBound = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.longitude;
+        server_getEventsInDistance(sBound + "", nBound + "", wBound + "", eBound + "",
                 new OnResultReadyListener<ArrayList<Party>>() {
                     @Override
                     public void onResultReady(ArrayList<Party> result) {
@@ -241,7 +265,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                             addParties(result);
                     }
                 });
-
     }
 
     @Override
