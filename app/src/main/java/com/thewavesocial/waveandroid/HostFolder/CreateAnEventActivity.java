@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,7 +32,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
@@ -61,7 +71,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
     public static CreateAnEventActivity thisActivity;
     public static ArrayList<User> followings;
     private static int threads_completion = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +101,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
         });
     }
+
 
     //Open page 1
     private void openFirstPage() {
@@ -180,7 +190,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
     }
 
     //Handle create event page 1
-    public static class CreateEventPage1 extends Fragment {
+    public static class CreateEventPage1 extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
         TextView cancelTextView, startDateTextView, startTimeTextView, endDateTextView, endTimeTextView;
         EditText titleEditText, locationEditText;
         EmojiconEditText emojiconEditText;
@@ -192,6 +202,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
         Integer RANGE_AGE_MAX = 40;
         Integer RANGE_AGE_SELECTED_MIN = 17;
         Integer RANGE_AGE_SELECTED_MAX = 30;
+
+        private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+        private Place locationPlace;
+        private GoogleApiClient mGoogleApiClient;
 
         //Activity thisActivity = this;
         static Calendar startCalendar = Calendar.getInstance();
@@ -205,6 +219,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.activity_create_an_event, container, false);
             Log.d("V", "OncreateView");
+            mGoogleApiClient = new GoogleApiClient
+                    .Builder(getActivity())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .build();
             return view;
         }
 
@@ -259,6 +278,34 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 UtilityClass.printAlertMessage(getActivity(), e.getMessage(), "Error", true);
             }
         }
+
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Toast.makeText(getActivity(), "Error Connecting to Google Play Services", Toast.LENGTH_SHORT).show();
+            Log.d("GoogleAPIClientFail", connectionResult + "");
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
+            if(requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE){
+                if(resultCode == RESULT_OK){
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    locationPlace = place;
+                    locationEditText.getText().clear();
+                    locationEditText.append(place.getName());
+                }
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                // TODO: Handle the error.
+                Log.d("placesAutoCompError", status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+
+
 
         private void setUpEmojicon(View v) {
             final View rootView = v.findViewById(R.id.scrollViewCreateAnEvent);
@@ -384,6 +431,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
             MapAddress address = NewPartyInfo.mapAddress;
             if (address != null) {
@@ -395,9 +443,24 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     if (popup.isShowing()) {
                         popup.dismiss();
                     }
-                    return false;
+                    UtilityClass.hideKeyboard(getActivity());
+                    //locationEditText.requestFocus();
+                    try{
+                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
+                        startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+
+                    } catch (GooglePlayServicesRepairableException e) {
+                        e.printStackTrace();
+                        // TODO: Handle the error.
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        e.printStackTrace();
+                        // TODO: Handle the error.
+                    }
+                    return true;
                 }
             });
+
+
 
         }
 
@@ -486,7 +549,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             } else if (titleEditText.getText().toString().isEmpty()) {
                 UtilityClass.printAlertMessage(getActivity(), "Please enter an Event Title", "Error Creating Party", true);
                 return false;
-            } else if (locationEditText.getText().toString().isEmpty()) {
+            } else if (locationEditText.getText().toString().isEmpty() || locationPlace == null) {
                 UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Creating Party", true);
                 return false;
             } else if (startCalendar.compareTo(endCalendar) >= 0) {
@@ -508,9 +571,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
             NewPartyInfo.startingDateTime = startCalendar;
             NewPartyInfo.endingDateTime = endCalendar;
-            String partyAddress = locationEditText.getText().toString();
-            NewPartyInfo.mapAddress = new MapAddress(partyAddress,
-                    UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
+            MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());
+            NewPartyInfo.mapAddress = loc;
             NewPartyInfo.isPublic = !privateParty;
             NewPartyInfo.partyEmoji = emojiconEditText.getText().toString();
             NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
