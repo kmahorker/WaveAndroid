@@ -4,9 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
@@ -49,12 +46,6 @@ import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,6 +130,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         cur_loc_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                    return;
+                }
                 loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
                         locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
                 moveMapCamera(loc);
@@ -245,18 +240,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
 
         loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
                         locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
-        if (loc != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
-            server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
-                    loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
-                    new OnResultReadyListener<ArrayList<Party>>() {
-                        @Override
-                        public void onResultReady(ArrayList<Party> result) {
-                            if (result != null)
-                                addParties(result);
-                        }
-                    });
-        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
+        server_getEventsInDistance(loc.latitude - 0.02 + "", loc.latitude + 0.02 + "",
+                loc.longitude - 0.02 + "", loc.longitude + 0.02 + "",
+                new OnResultReadyListener<ArrayList<Party>>() {
+                    @Override
+                    public void onResultReady(ArrayList<Party> result) {
+                        if (result != null)
+                            addParties(result);
+                    }
+                });
+
     }
 
     @Override
@@ -412,7 +406,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                     .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            sendSOSMessage();
+                            sendSOSMessage(CurrentUser.theUser.getBestFriends().get(0).getName(),
+                                    CurrentUser.theUser.getBestFriends().get(0).getPhoneNumber());
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -425,10 +420,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    private void sendSOSMessage() {
-        String phone = "6692254467";
-        String name = "Wei Tung Chen";
-        String message = "";
+    private void sendSOSMessage(String name, String phone) {
+        String message;
         SmsManager sManager = SmsManager.getDefault();
         try {
             message = "Help me, " + name.substring(0, name.lastIndexOf(' '))
@@ -445,7 +438,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                 phone, null,
                 message,
                 null, null);
-        Toast.makeText(mainActivity, "Message Sent!!!!!!", Toast.LENGTH_LONG).show();
+        Toast.makeText(mainActivity, "Message Sent.", Toast.LENGTH_LONG).show();
     }
 
     @Override
