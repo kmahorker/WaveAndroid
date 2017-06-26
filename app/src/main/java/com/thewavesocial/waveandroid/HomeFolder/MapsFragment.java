@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -53,8 +54,7 @@ import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getEventsInDistance;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, View.OnTouchListener,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
@@ -65,7 +65,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     public static boolean searchOpened = false;
     private SearchView searchbar;
     private EditText editText;
-    private int yDelta;
+    private SlidingUpPanelLayout sliding_layout;
 
 
     @Override
@@ -83,16 +83,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         setupMapElements();
         setupHeightVariables();
         setupSearchbar();
-
-        getActivity().findViewById(R.id.home_mapsView_separator).setOnTouchListener(this);
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                UtilityClass.hideKeyboard(mainActivity);
-                editText.setCursorVisible(false);
-                return true;
-            }
-        });
+        sliding_layout = (SlidingUpPanelLayout) mainActivity.findViewById(R.id.main_sliding_layout);
     }
 
 
@@ -157,15 +148,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
             public void onGlobalLayout() {
                 separator.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 separatorHeight = separator.getHeight();
-            }
-        });
 
-        final View searchBar = getActivity().findViewById(R.id.home_mapsView_searchbar);
-        searchBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                searchBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                searchBarHeight = searchBar.getHeight();
+                final View searchBar = getActivity().findViewById(R.id.home_mapsView_searchbar);
+                searchBar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        searchBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        searchBarHeight = searchBar.getHeight();
+                        sliding_layout.setPanelHeight(separatorHeight + searchBarHeight + 50);
+                    }
+                });
             }
         });
 
@@ -176,7 +168,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
                     public void onGlobalLayout() {
                         myMapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         mapHeight = myMapLayout.getHeight();
-                        dragSeparator(mapHeight / 2 - (searchBarHeight + separatorHeight) - 20, 0);
                     }
                 });
     }
@@ -187,19 +178,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         searchbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
         });
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
         });
 
@@ -209,10 +200,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dragSeparator(separatorHeight / 2 - mapHeight / 2, 0);
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
                 return false;
             }
         });
@@ -259,7 +250,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
         if (marker.getTag() != null) {
             openPartyProfile((Party) marker.getTag());
             editText.setCursorVisible(false);
-            dragSeparator(80, 0);
             searchOpened = false;
         }
         moveMapCamera(marker.getPosition());
@@ -298,50 +288,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, View.O
     }
 
 //-------------------------------------------------------------------------------------------Search
-
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        //Credit: http://stackoverflow.com/questions/35032514/how-to-hold-and-drag-re-position-a-layout-along-with-its-associated-layouts-in
-        int y = (int) event.getRawY();
-        editText.setCursorVisible(false);
-        if (y < 1157)
-            PartyProfileFragment.updateAttendeeImages();
-
-        if (y < UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight)
-            y = UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight;
-
-        if (y < UtilityClass.getScreenHeight(mainActivity) - (searchBarHeight + separatorHeight + 10)
-                && y >= UtilityClass.getScreenHeight(mainActivity) - mapHeight + separatorHeight
-                && !getActivity().findViewById(R.id.home_mapsView_searchbar).isFocused()) {
-            switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                case MotionEvent.ACTION_DOWN:
-                    RelativeLayout.LayoutParams layoutParams1 = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                    yDelta = y - layoutParams1.bottomMargin;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    dragSeparator(y - yDelta, 0);
-                    break;
-            }
-        }
-        UtilityClass.hideKeyboard(mainActivity);
-        return true;
-    }
-
-
-    public static void dragSeparator(int distance, int duration) {
-        Log.d("Distance", distance + "");
-        View separator = mainActivity.findViewById(R.id.home_mapsView_separator);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) separator.getLayoutParams();
-        layoutParams.bottomMargin = distance;
-        layoutParams.topMargin = -distance;
-        separator.setLayoutParams(layoutParams);
-
-        separator.animate().translationY(distance).setDuration(duration);
-        mainActivity.findViewById(R.id.home_mapsView_relativeLayout).invalidate();
-    }
-
 
     public static void openSearchView() {
         Fragment fragment = new SearchFragment();
