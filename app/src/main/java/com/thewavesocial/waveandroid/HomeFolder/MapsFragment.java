@@ -157,6 +157,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         searchBar.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         searchBarHeight = searchBar.getHeight();
                         sliding_layout.setPanelHeight(separatorHeight + searchBarHeight + 50);
+                        sliding_layout.setAnchorPoint((float)0.5);
+                        sliding_layout.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                UtilityClass.hideKeyboard(mainActivity);
+                                return false;
+                            }
+                        });
                     }
                 });
             }
@@ -182,7 +190,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
-                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
             }
         });
         searchbar.setOnSearchClickListener(new View.OnClickListener() {
@@ -191,7 +199,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
-                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
             }
         });
 
@@ -204,7 +212,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 if (!searchOpened)
                     openSearchView();
                 editText.setCursorVisible(true);
-                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                 return false;
             }
         });
@@ -275,7 +283,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             editText.setCursorVisible(false);
             searchOpened = false;
         }
-        moveMapCamera(marker.getPosition());
+        moveMapCamera(new LatLng(marker.getPosition().latitude - 0.003, marker.getPosition().longitude));
+        sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
         return true;
     }
 
