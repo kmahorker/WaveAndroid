@@ -33,6 +33,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
+import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
@@ -168,11 +169,23 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         time = UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
                 UtilityClass.timeToString(party.getEndingDateTime());
 
-        going = party.getAttendingUsers().size();
-        male = party.getAttendingUsers().size() * 3 / 4;
-        female = party.getAttendingUsers().size() / 4;
+        final ArrayList<User> attendees = new ArrayList<>();
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                attendees.addAll(result.get("going"));
+            }
+        });
+        going = attendees.size();
+        for(User a : attendees){
+            if(a.getGender().toLowerCase().equals("male")){
+                male++;
+            }
+            else if(a.getGender().toLowerCase().equals("female")){
+                female++;
+            }
+        }
 
-        //TODO: 6/25/17 Loop through lists to find values
     }
 
 
