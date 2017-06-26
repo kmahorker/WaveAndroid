@@ -59,7 +59,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyOSwiaWF0IjoxNDk4NDQxNDI5LCJleHAiOjE1MDEwMzM0Mjl9.dCCK_4WW1E9urUmG9YaY-4X125KNOsckAovufRvTFjY");
+        saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
 
         if (CurrentUser.mainActivity == null) {
             UtilityClass.startProgressbar(mainActivity);

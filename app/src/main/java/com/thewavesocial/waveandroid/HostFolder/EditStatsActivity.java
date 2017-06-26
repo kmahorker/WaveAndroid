@@ -21,6 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
@@ -79,6 +86,9 @@ public class EditStatsActivity extends AppCompatActivity {
     final int EDIT_BOUNCER_REQUEST = 2;
     final int EDIT_INVITE_REQUEST = 1;
 
+    private GoogleApiClient mGoogleApiClient;
+    private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
+    private Place locationPlace;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +110,12 @@ public class EditStatsActivity extends AppCompatActivity {
         startCalendar = (Calendar) NewPartyInfo.startingDateTime.clone();
         endCalendar = (Calendar) NewPartyInfo.endingDateTime.clone();
 
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+
         setupActionbar();
         setupReference();
         setUpEmojicon();
@@ -109,17 +125,15 @@ public class EditStatsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        List<Integer> updatedListUserIds = new ArrayList<>();
-        List<User> updatedList = new ArrayList<>();
-        if (resultCode == RESULT_OK) {
-            updatedList = data.getExtras().getParcelableArrayList("updatedList");
-            for (User user : updatedList) {
-                updatedListUserIds.add(Integer.parseInt(user.getUserID()));
-            }
-        }
         switch (requestCode) {
             case EDIT_INVITE_REQUEST:
                 if (resultCode == RESULT_OK) {
+                    List<Integer> updatedListUserIds = new ArrayList<>();
+                    List<User> updatedList = new ArrayList<>();
+                    updatedList = data.getExtras().getParcelableArrayList("updatedList");
+                    for (User user : updatedList) {
+                        updatedListUserIds.add(Integer.parseInt(user.getUserID()));
+                    }
                     NewPartyInfo.invitingUsers = updatedListUserIds;
                     inviteTextView.setText("INVITED (" + updatedList.size() + ")");
                     invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
@@ -130,6 +144,12 @@ public class EditStatsActivity extends AppCompatActivity {
                 break;
             case EDIT_BOUNCER_REQUEST:
                 if (resultCode == RESULT_OK) {
+                    List<Integer> updatedListUserIds = new ArrayList<>();
+                    List<User> updatedList = new ArrayList<>();
+                    updatedList = data.getExtras().getParcelableArrayList("updatedList");
+                    for (User user : updatedList) {
+                        updatedListUserIds.add(Integer.parseInt(user.getUserID()));
+                    }
                     NewPartyInfo.bouncingUsers = updatedListUserIds;
                     bouncingTextView.setText("BOUNCERS (" + updatedList.size() + ")");
                     bouncingRecylcerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, updatedList));
@@ -137,6 +157,21 @@ public class EditStatsActivity extends AppCompatActivity {
 
                 } else {
                     //Do nothing
+                }
+                break;
+            case PLACE_AUTOCOMPLETE_REQUEST_CODE:
+                if(resultCode == RESULT_OK){
+                    Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                    locationPlace = place;
+                    locationEditText.getText().clear();
+                    locationEditText.append(place.getName());
+                }
+                else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                    Status status = PlaceAutocomplete.getStatus(getActivity(), data);
+                    // TODO: Handle the error.
+                    Log.d("placesAutoCompError", status.getStatusMessage());
+                } else if (resultCode == RESULT_CANCELED) {
+                    // The user canceled the operation.
                 }
                 break;
         }
@@ -200,10 +235,26 @@ public class EditStatsActivity extends AppCompatActivity {
         locationEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (popup.isShowing()) {
-                    popup.dismiss();
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if (popup.isShowing()) {
+                        popup.dismiss();
+                    }
+                    UtilityClass.hideKeyboard(getActivity());
+                    try {
+
+                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
+                        startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+
+                    } catch (GooglePlayServicesRepairableException e) {
+                        e.printStackTrace();
+                        // TODO: Handle the error.
+                    } catch (GooglePlayServicesNotAvailableException e) {
+                        e.printStackTrace();
+                        // TODO: Handle the error.
+                    }
                 }
-                return false;
+                return true;
+
             }
         });
 
@@ -521,9 +572,8 @@ public class EditStatsActivity extends AppCompatActivity {
         NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
         NewPartyInfo.startingDateTime = startCalendar;
         NewPartyInfo.endingDateTime = endCalendar;
-        String partyAddress = locationEditText.getText().toString();
-        NewPartyInfo.mapAddress = new MapAddress(partyAddress,
-                UtilityClass.getLocationFromAddress(getActivity(), partyAddress));
+        MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());
+        NewPartyInfo.mapAddress = loc;
         NewPartyInfo.isPublic = !privateParty;
         NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
         NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();

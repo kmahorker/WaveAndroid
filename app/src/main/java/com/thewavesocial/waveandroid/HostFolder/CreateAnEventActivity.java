@@ -433,6 +433,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
 
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
+            locationEditText.setKeyListener(null);
             MapAddress address = NewPartyInfo.mapAddress;
             if (address != null) {
                 locationEditText.setText(NewPartyInfo.mapAddress.getAddress_string());
@@ -440,25 +441,31 @@ public class CreateAnEventActivity extends AppCompatActivity {
             locationEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if (popup.isShowing()) {
-                        popup.dismiss();
-                    }
-                    UtilityClass.hideKeyboard(getActivity());
-                    //locationEditText.requestFocus();
-                    try{
-                        Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
-                        startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
-                    } catch (GooglePlayServicesRepairableException e) {
-                        e.printStackTrace();
-                        // TODO: Handle the error.
-                    } catch (GooglePlayServicesNotAvailableException e) {
-                        e.printStackTrace();
-                        // TODO: Handle the error.
+                    if(event.getAction() == MotionEvent.ACTION_UP) {
+                        if (popup.isShowing()) {
+                            popup.dismiss();
+                        }
+                        UtilityClass.hideKeyboard(getActivity());
+                        //locationEditText.requestFocus();
+                        try {
+
+                            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(getActivity());
+                            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+
+                        } catch (GooglePlayServicesRepairableException e) {
+                            e.printStackTrace();
+                            // TODO: Handle the error.
+                        } catch (GooglePlayServicesNotAvailableException e) {
+                            e.printStackTrace();
+                            // TODO: Handle the error.
+                        }
                     }
                     return true;
                 }
             });
+
+
 
 
 
