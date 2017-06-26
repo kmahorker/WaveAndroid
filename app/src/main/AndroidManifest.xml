@@ -35,10 +35,7 @@
         <activity android:name=".LoginFolder.LaunchActivity" android:screenOrientation="portrait"/>
         <activity android:name=".SocialFolder.FollowActivity" android:screenOrientation="portrait"/>
         <activity android:name=".HostFolder.CreateAnEventActivity" android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
         <activity android:name=".LoginFolder.AddBestFriendActivity" android:screenOrientation="portrait">
@@ -49,8 +46,10 @@
             android:name=".HomeSwipeActivity"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
-
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
 
