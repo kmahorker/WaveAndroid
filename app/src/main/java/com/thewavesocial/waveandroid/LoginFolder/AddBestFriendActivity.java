@@ -48,7 +48,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_best_friend);
-        DatabaseAccess.saveTokentoLocal(thisActivity, "40", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMSwiaWF0IjoxNDk1ODM2MDQyLCJleHAiOjE0OTg0MjgwNDJ9.5zJdgo72EWqeRioT5X-Bea2TPkQqgsKxGzCHE2WfOj4");
+        DatabaseAccess.saveTokentoLocal(thisActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyOSwiaWF0IjoxNDk4NDQxNDI5LCJleHAiOjE1MDEwMzM0Mjl9.dCCK_4WW1E9urUmG9YaY-4X125KNOsckAovufRvTFjY");
 
         if (mainActivity == null) {
             UtilityClass.startProgressbar(thisActivity);
