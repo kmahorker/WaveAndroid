@@ -1,4 +1,4 @@
-package com.thewavesocial.waveandroid.SocialFolder;
+package com.thewavesocial.waveandroid.SettingsFolder;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,7 +33,8 @@ public class SettingsActivity extends AppCompatActivity {
         sos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(mainActivity, EditBestFriendActivity.class);
+                startActivity(intent);
             }
         });
 

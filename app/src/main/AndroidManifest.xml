@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.thewavesocial.waveandroid">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.thewavesocial.waveandroid">
 
-    <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -21,45 +21,58 @@
         tools:replace="android:label, android:icon">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".SocialFolder.FriendProfileActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".HostFolder.EventStatsActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".LoginFolder.ForgotPasswordActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".LoginFolder.LaunchActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".SocialFolder.FollowActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".HostFolder.CreateAnEventActivity" android:screenOrientation="portrait">
-
-        </activity>
-
-        <activity android:name=".LoginFolder.AddBestFriendActivity" android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name=".HostFolder.EditStatsActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SocialFolder.FriendProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HostFolder.EventStatsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginFolder.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginFolder.LaunchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SocialFolder.FollowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HostFolder.CreateAnEventActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".LoginFolder.AddBestFriendActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".HostFolder.EditStatsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomeSwipeActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
-        <activity android:name=".LoginFolder.LoginTutorialActivity" android:screenOrientation="portrait">
-
-        </activity>
-        <activity android:name=".HostFolder.EditListActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".SocialFolder.SettingsActivity" android:screenOrientation="portrait">
-        </activity>
-
+        <activity
+            android:name=".LoginFolder.LoginTutorialActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".HostFolder.EditListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SettingsFolder.SettingsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".SettingsFolder.EditBestFriendActivity"></activity>
     </application>
 
 </manifest>

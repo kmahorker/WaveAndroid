@@ -3,7 +3,6 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
-import com.thewavesocial.waveandroid.SocialFolder.SettingsActivity;
+import com.thewavesocial.waveandroid.SettingsFolder.SettingsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
 import org.json.JSONException;
