@@ -142,6 +142,13 @@ public class PartyProfileFragment extends Fragment {
                                 mainActivity.startActivity(intent);
                             }
                         });
+                        server_getEventsOfUser(result.get("hosting").get(0).getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+                            @Override
+                            public void onResultReady(HashMap<String, ArrayList<Party>> result) {
+                                hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1,
+                                        result.get("hosting")));
+                            }
+                        });
                     }
 
                     if ( !result.get("attending").isEmpty() )
@@ -154,10 +161,6 @@ public class PartyProfileFragment extends Fragment {
             }
         });
 
-        final List<Party> events = new ArrayList<>();
-        events.addAll(CurrentUser.theUser.getHosted());
-
-        hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, events));
         hostedEvents.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
