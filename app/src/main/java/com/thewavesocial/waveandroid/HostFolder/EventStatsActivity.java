@@ -1,7 +1,6 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +33,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
-import com.thewavesocial.waveandroid.BusinessObjects.Attendee;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
@@ -41,6 +41,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 import me.sudar.zxingorient.ZxingOrient;
+import me.sudar.zxingorient.ZxingOrientResult;
 
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -57,11 +58,12 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     private GoogleMap mMap;
     private LatLng latlng;
     private Party party;
+    private List<User> goingList;
     private TextView attendingView, genderView, hostView, locView, dateView, timeView, editView, qrAction, bounceView, invitedView, goingView;
 
     private RecyclerView invitedFriends, bouncingFriends, goingFriends;
     private String loc, date, time;
-    private int going, male, female, callerType;
+    private int attending, male, female, callerType;
     private EventStatsActivity mainActivity;
 
     private final int EDIT_STATS_REQUEST = 0;
@@ -115,6 +117,45 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 //Do Nothing
             }
         }
+        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
+        if (qrResult != null) {
+            if (qrResult.getContents() != null) {
+                try {
+                    int coef = Integer.parseInt(qrResult.getContents().substring(0, qrResult.getContents().indexOf('.')));
+                    long rawID = Long.parseLong(qrResult.getContents().substring(qrResult.getContents().indexOf('.') + 1));
+                    long userID = rawID/coef;
+                    processUserID(userID+"");
+                    goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, goingList));
+                } catch (Exception e) {
+                    Toast.makeText(mainActivity, "Error with QR code", Toast.LENGTH_LONG).show();
+                }
+            } else
+                Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void processUserID(String userID) {
+        boolean found = false;
+        for ( int i = 0; i < goingList.size() && !found; i++ ) {
+            User each = goingList.get(i);
+            if ( each.getUserID().equals(userID) ) {
+                found = true;
+                goingList.remove(each);
+                DatabaseAccess.server_manageUserForParty(userID, party.getPartyID(), "attending", "POST", null);
+
+                attending++;
+                if ( each.getGender().toLowerCase().equals("male") )
+                    male++;
+                else if ( each.getGender().toLowerCase().equals("female") )
+                    female++;
+
+                attendingView.setText(attending + "");
+                genderView.setText(female + "/" + male);
+                goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+            }
+        }
+        if ( !found )
+            Log.d("Error", "User Not Found");
     }
 
     private void setupSpecialFields(int callerType, String hostID) {
@@ -142,7 +183,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 @Override
                 public void onClick(View v) {
                     View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
-                    ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode("ID: " + party.getPartyID()));
+                    int coef = (int) (Math.random()*9) + 1;
+                    long id = Long.parseLong(CurrentUser.theUser.getUserID());
+                    ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode(coef + "." + (id*coef)));
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
                     dialog.setTitle("QR Code")
@@ -168,24 +211,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 UtilityClass.dateToString(party.getEndingDateTime());
         time = UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
                 UtilityClass.timeToString(party.getEndingDateTime());
-
-        final ArrayList<User> attendees = new ArrayList<>();
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
-            @Override
-            public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                attendees.addAll(result.get("going"));
-            }
-        });
-        going = attendees.size();
-        for(User a : attendees){
-            if(a.getGender().toLowerCase().equals("male")){
-                male++;
-            }
-            else if(a.getGender().toLowerCase().equals("female")){
-                female++;
-            }
-        }
-
     }
 
 
@@ -207,8 +232,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupFunctionalities() {
-        attendingView.setText(going + "");
-        genderView.setText(female + "/" + male);
         locView.setText(loc + "");
         dateView.setText(date + "");
         timeView.setText(time + "");
@@ -230,11 +253,25 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
 
-                    goingView.setText("FRIENDS GOING (" + result.get("going").size() + ")");
-                    populateHorizontalList(result.get("going"), listGoing);
+                    goingList = result.get("going");
+                    goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+                    populateHorizontalList(goingList, listGoing);
 
                     bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
                     populateHorizontalList(result.get("bouncing"), listBouncing);
+
+                    attending = male = female = 0;
+                    for ( User each : result.get("attending") ) {
+                        attending++;
+                        if(each.getGender().toLowerCase().equals("male")){
+                            male++;
+                        }
+                        else if(each.getGender().toLowerCase().equals("female")){
+                            female++;
+                        }
+                    }
+                    attendingView.setText(attending + "");
+                    genderView.setText(female + "/" + male);
 
                     setupSpecialFields(callerType, hostID);
                 }
@@ -344,5 +381,15 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     openScanner();
         }
+    }
+
+    /**
+     * Check specified userID and partyID with server to see if they match.
+     * @param user_id scanned userID
+     * @param party_id scanned partyID
+     */
+    private void validateUserAndParty(long user_id, long party_id) {
+        Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
+        // TODO: 04/02/2017 Check with database
     }
 }

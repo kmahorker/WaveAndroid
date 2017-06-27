@@ -249,20 +249,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ZxingOrientResult qrResult = ZxingOrient.parseActivityResult(requestCode, resultCode, data);
-        if (qrResult != null) {
-            if (qrResult.getContents() != null) {
-                try {
-                    JSONObject json = new JSONObject(qrResult.getContents());
-                    long party_id = json.getLong("party_id");
-                    long user_id = json.getLong("user_id");
-                    validateUserAndParty(user_id, party_id);
-                } catch (JSONException e) {
-                    Toast.makeText(this, "JSON Parsing Error", Toast.LENGTH_LONG).show();
-                }
-            } else
-                Toast.makeText(this, "No Content", Toast.LENGTH_LONG).show();
-        } else if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
+        if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
             Uri selectedImage = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
@@ -272,16 +259,6 @@ public class HomeSwipeActivity extends AppCompatActivity {
             }
         } else
             super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * Check specified userID and partyID with server to see if they match.
-     * @param user_id scanned userID
-     * @param party_id scanned partyID
-     */
-    private void validateUserAndParty(long user_id, long party_id) {
-        Toast.makeText(this, "UserID: " + user_id + ", PartyID: " + party_id, Toast.LENGTH_LONG).show();
-        // TODO: 04/02/2017 Check with database
     }
 
     /**
