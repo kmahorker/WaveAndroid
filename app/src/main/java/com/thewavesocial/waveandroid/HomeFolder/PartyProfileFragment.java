@@ -73,7 +73,7 @@ public class PartyProfileFragment extends Fragment {
                 if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
                     Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
                 } else {
-                    CurrentUser.theUser.getAttending().add(0, party.getPartyID());
+                    CurrentUser.theUser.getAttending().add(0, party);
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                     actionbar_social.setText("SOCIAL(1)");
                     ((TextView)mainActivity.findViewById(R.id.user_going_button)).setText("Attending(1)");
@@ -155,14 +155,8 @@ public class PartyProfileFragment extends Fragment {
         });
 
         final List<Party> events = new ArrayList<>();
-        server_getPartyListObjects(CurrentUser.theUser.getHosted(), new OnResultReadyListener<List<Party>>() {
-            @Override
-            public void onResultReady(List<Party> result) {
-                if ( result != null ) {
-                    events.addAll(result);  // TODO: 03/08/2017 Testing Purpose
-                }
-            }
-        });
+        events.addAll(CurrentUser.theUser.getHosted());
+
         hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1, events));
         hostedEvents.setOnTouchListener(new View.OnTouchListener() {
             @Override

@@ -28,6 +28,7 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -178,21 +179,27 @@ public class UserProfileFragment extends Fragment {
 
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
-                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                     @Override
-                    public void onResultReady(HashMap<String, ArrayList<String>> result) {
+                    public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                         if (result != null) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            server_getPartyListObjects(result.get("going"), new OnResultReadyListener<List<Party>>() {
-                                @Override
-                                public void onResultReady(List<Party> result) {
-                                    if (result != null) {
-                                        adapter = new UserActionAdapter(mainActivity, result);
-                                        action_listView.setAdapter(adapter);
+                            TreeMap<Long, Party> partyTreeMap = new TreeMap<>();
+                            for ( Party party : result.get("going") ) {
+                                long time = party.getStartingDateTime().getTimeInMillis();
+                                if ( time - Calendar.getInstance().getTimeInMillis() > -86400000 ) { //1 day
+                                    while (partyTreeMap.containsKey(time)) {
+                                        time++;
                                     }
-                                    progressBar.setVisibility(View.INVISIBLE);
+                                    partyTreeMap.put(time, party);
                                 }
-                            });
+                            }
+
+                            List<Party> new_list = new ArrayList<>();
+                            for ( Long key : partyTreeMap.keySet() ) {
+                                new_list.add(partyTreeMap.get(key));
+                            }
+                            adapter = new UserActionAdapter(mainActivity, new_list);
+                            action_listView.setAdapter(adapter);
                         }
                     }
                 });

@@ -866,16 +866,10 @@ public final class DatabaseAccess {
                     HashMap<String, String> body = new HashMap<>();
                     try {
                         JSONObject main_json = new JSONObject(result.get(i));
-                        JSONObject data = main_json.getJSONObject("data");
-                        Iterator iterKey = data.keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getString(key));
-                        }
+                        body = extractJSONData(main_json.getJSONObject("data"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                     Log.d("CurUser_GetUserInfo", result.get(i));
                     User user = constructUser(body);
                     friends.add(user);
@@ -898,17 +892,17 @@ public final class DatabaseAccess {
                 final ThreadManager threadManager = new ThreadManager(friends.size() * 2);
 
                 for (final User user : friends) {
-                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                         @Override
-                        public void onResultReady(List<String> result) {
+                        public void onResultReady(List<User> result) {
                             if (result != null)
                                 user.getFollowing().addAll(result);
                             threadManager.completeThreads();
                         }
                     });
-                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                         @Override
-                        public void onResultReady(List<String> result) {
+                        public void onResultReady(List<User> result) {
                             if (result != null)
                                 user.getFollowers().addAll(result);
                             threadManager.completeThreads();
@@ -934,25 +928,18 @@ public final class DatabaseAccess {
             public void onResultReady(ArrayList<String> result) {
                 Map<Long, Party> raw_parties = new TreeMap<>();
                 for (int i = 0; i < result.size(); i++) {
-                    long date_key = 0;
                     HashMap<String, String> body = new HashMap<>();
                     try {
                         JSONObject main_json = new JSONObject(result.get(i));
-                        JSONObject data = main_json.getJSONObject("data");
-                        Iterator iterKey = data.keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getString(key));
-                        }
-                        date_key = Long.parseLong(data.getString("start_timestamp"));
+                        body = extractJSONData(main_json.getJSONObject("data"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
                     Log.d("CurUser_GetPartyInfo", result.get(i));
+                    long date_key = Long.parseLong(body.get("start_timestamp"));
                     while (raw_parties.keySet().contains(date_key))
                         date_key += 1;
-
                     raw_parties.put(date_key, constructParty(body));
                 }
                 ArrayList<Party> parties = new ArrayList<>();
@@ -979,25 +966,20 @@ public final class DatabaseAccess {
                 HashMap<String, String> body = new HashMap<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    JSONObject data = main_json.getJSONObject("data");
-                    Iterator iterKey = data.keys();
-                    while (iterKey.hasNext()) {
-                        String key = (String) iterKey.next();
-                        body.put(key, data.getString(key));
-                    }
+                    body = extractJSONData(main_json.getJSONObject("data"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
                 Log.d("CurUser_GetUserInfo", result.get(0));
                 final User user = constructUser(body);
-                server_getUserFollowing(userID, new OnResultReadyListener<List<String>>() {
+                server_getUserFollowing(userID, new OnResultReadyListener<List<User>>() {
                     @Override
-                    public void onResultReady(List<String> result) {
+                    public void onResultReady(List<User> result) {
                         user.getFollowing().addAll(result);
-                        server_getUserFollowers(userID, new OnResultReadyListener<List<String>>() {
+                        server_getUserFollowers(userID, new OnResultReadyListener<List<User>>() {
                             @Override
-                            public void onResultReady(List<String> result) {
+                            public void onResultReady(List<User> result) {
                                 user.getFollowers().addAll(result);
                                 if (delegate != null)
                                     delegate.onResultReady(user);
@@ -1023,12 +1005,7 @@ public final class DatabaseAccess {
                 HashMap<String, String> body = new HashMap<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
-                    JSONObject data = main_json.getJSONObject("data");
-                    Iterator iterKey = data.keys();
-                    while (iterKey.hasNext()) {
-                        String key = (String) iterKey.next();
-                        body.put(key, data.getString(key));
-                    }
+                    body = extractJSONData(main_json.getJSONObject("data"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1043,7 +1020,7 @@ public final class DatabaseAccess {
     /**
      * Get user following from server
      */
-    public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<String>> delegate) {
+    public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<User>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
@@ -1051,19 +1028,19 @@ public final class DatabaseAccess {
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<String> followers = new ArrayList<>();
+                ArrayList<User> followers = new ArrayList<>();
                 try {
                     JSONObject list = new JSONObject(result.get(0));
                     JSONArray main_json = list.getJSONArray("data");
                     for (int i = 0; i < main_json.length(); i++) {
-                        JSONObject data = main_json.getJSONObject(i);
-                        String userID = data.getString("id");
-                        followers.add(userID);
+                        HashMap<String, String> body = extractJSONData(main_json.getJSONObject(i));
+                        followers.add(constructUser(body));
                     }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                Log.d("User Followers", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(followers);
             }
@@ -1073,7 +1050,7 @@ public final class DatabaseAccess {
     /**
      * Get user following from server
      */
-    public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<String>> delegate) {
+    public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
@@ -1081,14 +1058,13 @@ public final class DatabaseAccess {
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<String> followings = new ArrayList<>();
+                ArrayList<User> followings = new ArrayList<>();
                 try {
                     JSONObject list = new JSONObject(result.get(0));
                     JSONArray main_json = list.getJSONArray("data");
                     for (int i = 0; i < main_json.length(); i++) {
-                        JSONObject data = main_json.getJSONObject(i);
-                        String userID = data.getString("id");
-                        followings.add(userID);
+                        HashMap<String, String> body = extractJSONData(main_json.getJSONObject(i));
+                        followings.add(constructUser(body));
                     }
 
                 } catch (JSONException e) {
@@ -1104,34 +1080,35 @@ public final class DatabaseAccess {
     /**
      * Get User's events from server
      */
-    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<String>>> delegate) {
+    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
-                ArrayList<String> attending = new ArrayList<>();
-                ArrayList<String> going = new ArrayList<>();
-                ArrayList<String> hosting = new ArrayList<>();
-                ArrayList<String> bouncing = new ArrayList<>();
+                ArrayList<Party> attending = new ArrayList<>();
+                ArrayList<Party> going = new ArrayList<>();
+                ArrayList<Party> hosting = new ArrayList<>();
+                ArrayList<Party> bouncing = new ArrayList<>();
                 try {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         if (data.getJSONObject(i).getString("relationship").equals("attending"))
-                            attending.add(data.getJSONObject(i).getString("event_id"));
+                            attending.add(constructParty(body));
                         else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
-                            hosting.add(data.getJSONObject(i).getString("event_id"));
+                            hosting.add(constructParty(body));
                         else if (data.getJSONObject(i).getString("relationship").equals("bouncing"))
-                            bouncing.add(data.getJSONObject(i).getString("event_id"));
+                            bouncing.add(constructParty(body));
                         else if (data.getJSONObject(i).getString("relationship").equals("going"))
-                            going.add(data.getJSONObject(i).getString("event_id"));
+                            going.add(constructParty(body));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                HashMap<String, ArrayList<String>> parties = new HashMap();
+                HashMap<String, ArrayList<Party>> parties = new HashMap();
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
                 parties.put("bouncing", bouncing);
@@ -1161,12 +1138,7 @@ public final class DatabaseAccess {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         if (data.getJSONObject(i).getString("relationship").equals("attending"))
                             attending.add(constructUser(body));
                         else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
@@ -1216,17 +1188,17 @@ public final class DatabaseAccess {
 
                         //Get following/followers
                         for (final User user : users.get("attending")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowing().addAll(result);
                                     threadManager.completeThreads();
                                 }
                             });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowers().addAll(result);
                                     threadManager.completeThreads();
@@ -1234,17 +1206,17 @@ public final class DatabaseAccess {
                             });
                         }
                         for (final User user : users.get("hosting")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowing().addAll(result);
                                     threadManager.completeThreads();
                                 }
                             });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowers().addAll(result);
                                     threadManager.completeThreads();
@@ -1252,17 +1224,17 @@ public final class DatabaseAccess {
                             });
                         }
                         for (final User user : users.get("bouncing")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowing().addAll(result);
                                     threadManager.completeThreads();
                                 }
                             });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowers().addAll(result);
                                     threadManager.completeThreads();
@@ -1270,17 +1242,17 @@ public final class DatabaseAccess {
                             });
                         }
                         for (final User user : users.get("going")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowing().addAll(result);
                                     threadManager.completeThreads();
                                 }
                             });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowers().addAll(result);
                                     threadManager.completeThreads();
@@ -1288,17 +1260,17 @@ public final class DatabaseAccess {
                             });
                         }
                         for (final User user : users.get("inviting")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowing().addAll(result);
                                     threadManager.completeThreads();
                                 }
                             });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                                 @Override
-                                public void onResultReady(List<String> result) {
+                                public void onResultReady(List<User> result) {
                                     if (result != null)
                                         user.getFollowers().addAll(result);
                                     threadManager.completeThreads();
@@ -1363,12 +1335,7 @@ public final class DatabaseAccess {
                     JSONObject json_result = new JSONObject(result.get(0));
                     JSONArray data = json_result.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         parties.add(constructParty(body));
                     }
                 } catch (Exception e) {
@@ -1397,12 +1364,7 @@ public final class DatabaseAccess {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         invites.add(constructUser(body));
                     }
                 } catch (JSONException e) {
@@ -1467,12 +1429,7 @@ public final class DatabaseAccess {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         parties.add(constructParty(body));
                     }
                 } catch (JSONException e) {
@@ -1503,12 +1460,7 @@ public final class DatabaseAccess {
                     JSONObject main_json = new JSONObject(result.get(0));
                     JSONArray data = main_json.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
+                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
                         users.add(constructUser(body));
                     }
                 } catch (JSONException e) {
@@ -1532,17 +1484,17 @@ public final class DatabaseAccess {
                 final ThreadManager threadManager = new ThreadManager(users.size() * 2);
 
                 for (final User user : users) {
-                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
                         @Override
-                        public void onResultReady(List<String> result) {
+                        public void onResultReady(List<User> result) {
                             if (result != null)
                                 user.getFollowing().addAll(result);
                             threadManager.completeThreads();
                         }
                     });
-                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<String>>() {
+                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
                         @Override
-                        public void onResultReady(List<String> result) {
+                        public void onResultReady(List<User> result) {
                             if (result != null)
                                 user.getFollowers().addAll(result);
                             threadManager.completeThreads();
@@ -1865,6 +1817,17 @@ public final class DatabaseAccess {
             e.printStackTrace();
         }
         return new Notification(notification_id, sender_id, type, time);
+    }
+
+
+    private static HashMap<String,String> extractJSONData(JSONObject data) throws JSONException {
+        HashMap<String, String> body = new HashMap<>();
+        Iterator iterKey = data.keys();
+        while (iterKey.hasNext()) {
+            String key = (String) iterKey.next();
+            body.put(key, data.getString(key));
+        }
+        return body;
     }
 
 }

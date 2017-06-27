@@ -21,6 +21,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getNotificationsOfUser;
@@ -135,7 +136,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
         if (userID.equals(CurrentUser.theUser.getUserID())) {
             follow_button.setVisibility(View.INVISIBLE);
-        } else if (!CurrentUser.theUser.getFollowing().contains(userID)) {
+        } else if (!containsID(CurrentUser.theUser.getFollowing(), userID)) {
             changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
@@ -150,7 +151,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().remove(userID);
+                                removeID(CurrentUser.theUser.getFollowing(), userID);
                                 changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                             }
                         }
@@ -161,7 +162,7 @@ public class FriendProfileActivity extends AppCompatActivity {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().add(userID);
+                                CurrentUser.theUser.getFollowing().add(friend);
                                 changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
                                 DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, "", "following", null);
                                 DatabaseAccess.server_createNotification(userID, CurrentUser.theUser.getUserID(), "", "followed", null);
@@ -171,6 +172,15 @@ public class FriendProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private boolean containsID(List<User> following, String userID) {
+        for ( User user : following ) {
+            if ( user.getUserID().equals(userID) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -252,6 +262,15 @@ public class FriendProfileActivity extends AppCompatActivity {
                 list.add(objects.get(key));
             }
             return list;
+        }
+    }
+
+    private void removeID(List<User> following, String userID) {
+        for ( User user : following ) {
+            if ( user.getUserID().equals(userID) ) {
+                following.remove(user);
+                return;
+            }
         }
     }
 }

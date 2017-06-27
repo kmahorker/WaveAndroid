@@ -81,7 +81,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
 
         if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
             holder.follow.setVisibility(View.INVISIBLE);
-        } else if (!CurrentUser.theUser.getFollowing().contains(user.getUserID())) {
+        } else if (!containsID(CurrentUser.theUser.getFollowing(), user.getUserID())) {
             changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
@@ -95,7 +95,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().remove(user.getUserID());
+                                removeID(CurrentUser.theUser.getFollowing(), user.getUserID());
                                 changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                             }
                         }
@@ -106,7 +106,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().add(user.getUserID());
+                                CurrentUser.theUser.getFollowing().add(user);
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
                                 DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), "", "following", null);
                                 DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.theUser.getUserID(), "", "followed", null);
@@ -142,5 +142,23 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         view.setText(text);
         view.setTextColor(mainActivity.getResources().getColor(textColor));
         view.setBackgroundResource(backgroundColor);
+    }
+
+    private boolean containsID(List<User> following, String userID) {
+        for ( User user : following ) {
+            if ( user.getUserID().equals(userID) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void removeID(List<User> following, String userID) {
+        for ( User user : following ) {
+            if ( user.getUserID().equals(userID) ) {
+                following.remove(user);
+                return;
+            }
+        }
     }
 }

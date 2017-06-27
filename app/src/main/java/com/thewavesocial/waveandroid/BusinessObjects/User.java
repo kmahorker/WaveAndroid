@@ -26,16 +26,16 @@ public class User implements Parcelable {
     private String gender;
     private Calendar birthday;
     private List<BestFriend> bestFriends;
-    private List<String> followers;
-    private List<String> following;
+    private List<User> followers;
+    private List<User> following;
 
     //Below contain list of PartyIDs
-    private List<String> hosted;
-    private List<String> hosting;
-    private List<String> attended;
-    private List<String> attending;
-    private List<String> bouncing;
-    private List<String> going;
+    private List<Party> hosted;
+    private List<Party> hosting;
+    private List<Party> attended;
+    private List<Party> attending;
+    private List<Party> bouncing;
+    private List<Party> going;
     private List<Notification> notifications;
     private Bitmap profilePic;
 
@@ -69,15 +69,15 @@ public class User implements Parcelable {
                 String college,
                 String gender,
                 Calendar birthday,
-                List<String> followers,
-                List<String> following,
+                List<User> followers,
+                List<User> following,
                 List<BestFriend> bestFriends,
-                List<String> hosting,
-                List<String> attended,
-                List<String> hosted,
-                List<String> bouncing,
-                List<String> attending,
-                List<String> going,
+                List<Party> hosting,
+                List<Party> attended,
+                List<Party> hosted,
+                List<Party> bouncing,
+                List<Party> attending,
+                List<Party> going,
                 List<Notification> notifications,
                 Bitmap profilePic) {
         this.userID = userID;
@@ -138,19 +138,19 @@ public class User implements Parcelable {
         this.bestFriends = bestFriends;
     }
 
-    public void setAttended(List<String> attended) {
+    public void setAttended(List<Party> attended) {
         this.attended = attended;
     }
 
-    public void setHosted(List<String> hosted) {
+    public void setHosted(List<Party> hosted) {
         this.hosted = hosted;
     }
 
-    public void setBouncing(List<String> bouncing) {
+    public void setBouncing(List<Party> bouncing) {
         this.bouncing = bouncing;
     }
 
-    public void setAttending(List<String> attending) {
+    public void setAttending(List<Party> attending) {
         this.attending = attending;
     }
 
@@ -195,20 +195,20 @@ public class User implements Parcelable {
         return bestFriends;
     }
 
-    public List<String> getAttended() {
+    public List<Party> getAttended() {
         return attended;
     }
 
-    public List<String> getHosted() {
+    public List<Party> getHosted() {
         return hosted;
     }
 
-    public List<String> getBouncing() {
+    public List<Party> getBouncing() {
         return bouncing;
     }
 
 
-    public List<String> getAttending() {
+    public List<Party> getAttending() {
         return attending;
     }
 
@@ -224,19 +224,19 @@ public class User implements Parcelable {
         this.notifications = notifications;
     }
 
-    public List<String> getFollowers() {
+    public List<User> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<String> followers) {
+    public void setFollowers(List<User> followers) {
         this.followers = followers;
     }
 
-    public List<String> getFollowing() {
+    public List<User> getFollowing() {
         return following;
     }
 
-    public void setFollowing(List<String> following) {
+    public void setFollowing(List<User> following) {
         this.following = following;
     }
 
@@ -245,19 +245,19 @@ public class User implements Parcelable {
         return firstName + " " + lastName;
     }
 
-    public List<String> getHosting() {
+    public List<Party> getHosting() {
         return hosting;
     }
 
-    public void setHosting(List<String> hosting) {
+    public void setHosting(List<Party> hosting) {
         this.hosting = hosting;
     }
 
-    public List<String> getGoing() {
+    public List<Party> getGoing() {
         return going;
     }
 
-    public void setGoing(List<String> going) {
+    public void setGoing(List<Party> going) {
         this.going = going;
     }
 
@@ -266,8 +266,12 @@ public class User implements Parcelable {
         if (!(other instanceof User)) {
             return false;
         }
-        User otherUser = (User) other;
-        return this.getUserID().equals(otherUser.getUserID());
+        try {
+            User otherUser = (User) other;
+            return this.getUserID().equals(otherUser.getUserID());
+        } catch (ClassCastException e) {
+            return this.getUserID().equals(other);
+        }
     }
 
     protected User(Parcel in) {
@@ -280,61 +284,61 @@ public class User implements Parcelable {
         gender = in.readString();
         birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
-            bestFriends = new ArrayList<BestFriend>();
+            bestFriends = new ArrayList<>();
             in.readList(bestFriends, BestFriend.class.getClassLoader());
         } else {
             bestFriends = null;
         }
         if (in.readByte() == 0x01) {
-            followers = new ArrayList<String>();
-            in.readList(followers, String.class.getClassLoader());
+            followers = new ArrayList<>();
+            in.readList(followers, User.class.getClassLoader());
         } else {
             followers = null;
         }
         if (in.readByte() == 0x01) {
-            following = new ArrayList<String>();
-            in.readList(following, String.class.getClassLoader());
+            following = new ArrayList<>();
+            in.readList(following, User.class.getClassLoader());
         } else {
             following = null;
         }
         if (in.readByte() == 0x01) {
-            hosting = new ArrayList<String>();
-            in.readList(hosting, String.class.getClassLoader());
+            hosting = new ArrayList<>();
+            in.readList(hosting, Party.class.getClassLoader());
         } else {
             hosting = null;
         }
         if (in.readByte() == 0x01) {
-            attended = new ArrayList<String>();
-            in.readList(attended, String.class.getClassLoader());
+            attended = new ArrayList<>();
+            in.readList(attended, Party.class.getClassLoader());
         } else {
             attended = null;
         }
         if (in.readByte() == 0x01) {
-            hosted = new ArrayList<String>();
+            hosted = new ArrayList<>();
             in.readList(hosted, String.class.getClassLoader());
         } else {
             hosted = null;
         }
         if (in.readByte() == 0x01) {
-            bouncing = new ArrayList<String>();
-            in.readList(bouncing, String.class.getClassLoader());
+            bouncing = new ArrayList<>();
+            in.readList(bouncing, Party.class.getClassLoader());
         } else {
             bouncing = null;
         }
         if (in.readByte() == 0x01) {
-            attending = new ArrayList<String>();
-            in.readList(attending, String.class.getClassLoader());
+            attending = new ArrayList<>();
+            in.readList(attending, Party.class.getClassLoader());
         } else {
             attending = null;
         }
         if (in.readByte() == 0x01) {
-            going = new ArrayList<String>();
-            in.readList(going, String.class.getClassLoader());
+            going = new ArrayList<>();
+            in.readList(going, Party.class.getClassLoader());
         } else {
             going = null;
         }
         if (in.readByte() == 0x01) {
-            notifications = new ArrayList<Notification>();
+            notifications = new ArrayList<>();
             in.readList(notifications, Notification.class.getClassLoader());
         } else {
             notifications = null;

@@ -85,34 +85,24 @@ public class EditListActivity extends AppCompatActivity {
                     invite_list.setAdapter(invite_adapter);
 
                     //Get user followings
-                    server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-                        @Override
-                        public void onResultReady(List<User> result) {
-                            users = new ArrayList<>();
-                            if (result != null) {
-                                users.addAll(result);
-                                switch (LAYOUT_TYPE){
-                                    case 1:
-                                        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
-                                            @Override
-                                            public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                                                ArrayList<User> bouncers = result.get("bouncing");
-                                                List<User> conflicts = UtilityClass.findDuplicates(bouncers, users);
-                                                users.removeAll(conflicts);
-                                                friend_list.setAdapter(new FriendListAdapter(users));
-                                            }
-                                        });
-                                        break;
-                                    case 2:
-                                        friend_list.setAdapter(new FriendListAdapter(users));
-                                        break;
-
+                    users = new ArrayList<>();
+                    users.addAll(CurrentUser.theUser.getFollowing());
+                    switch (LAYOUT_TYPE) {
+                        case 1:
+                            server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+                                @Override
+                                public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                                    ArrayList<User> bouncers = result.get("bouncing");
+                                    List<User> conflicts = UtilityClass.findDuplicates(bouncers, users);
+                                    users.removeAll(conflicts);
+                                    friend_list.setAdapter(new FriendListAdapter(users));
                                 }
-
-                            }
-                        }
-                    });
-
+                            });
+                            break;
+                        case 2:
+                            friend_list.setAdapter(new FriendListAdapter(users));
+                            break;
+                    }
                 }
             }
         });

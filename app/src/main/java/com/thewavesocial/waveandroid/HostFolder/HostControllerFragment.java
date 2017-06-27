@@ -24,8 +24,10 @@ import com.thewavesocial.waveandroid.R;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 
 public class HostControllerFragment extends Fragment {
@@ -69,32 +71,39 @@ public class HostControllerFragment extends Fragment {
     public void populateListView() {
         final ProgressBar progressBar = (ProgressBar) mainActivity.findViewById(R.id.home_hostView_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
             @Override
-            public void onResultReady(HashMap<String, ArrayList<String>> result) {
+            public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                 if (result != null) {
-                    final List<String> list = new ArrayList<>();
+                    List<Party> list = new ArrayList<>();
                     list.addAll(result.get("hosting"));
                     list.addAll(result.get("bouncing"));
-                    server_getPartyListObjects(list, new OnResultReadyListener<List<Party>>() {
-                        @Override
-                        public void onResultReady(List<Party> result) {
-                            if (result != null) {
-                                manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, result));
 
-                                if (mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null)
-                                    return;
-                                if (!result.isEmpty())
-                                    mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
-                                else
-                                    mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
+                    TreeMap<Long, Party> partyTreeMap = new TreeMap<>();
+                    for ( Party party : list ) {
+                        long time = party.getStartingDateTime().getTimeInMillis();
+                        if ( time - Calendar.getInstance().getTimeInMillis() > -86400000 ) { //1 day
+                            while (partyTreeMap.containsKey(time)) {
+                                time++;
                             }
-                            progressBar.setVisibility(View.INVISIBLE);
+                            partyTreeMap.put(time, party);
                         }
-                    });
-                } else {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    }
+
+                    List<Party> new_list = new ArrayList<>();
+                    for ( Long key : partyTreeMap.keySet() ) {
+                        new_list.add(partyTreeMap.get(key));
+                    }
+                    manageList.setAdapter(new ManagePartyCustomAdapter(mainActivity, new_list));
+
+                    if (mainActivity.findViewById(R.id.home_hostView_text_noEvent) == null)
+                        return;
+                    if (!result.isEmpty())
+                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.INVISIBLE);
+                    else
+                        mainActivity.findViewById(R.id.home_hostView_text_noEvent).setVisibility(View.VISIBLE);
                 }
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }

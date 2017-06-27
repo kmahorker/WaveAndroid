@@ -83,23 +83,17 @@ public class CreateAnEventActivity extends AppCompatActivity {
         openFirstPage();
         NewPartyInfo.initialize();
 
-        server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(List<User> result) {
-                followings = new ArrayList<>();
-                if (result != null)
-                    followings.addAll(result);
+        followings = new ArrayList<>();
+        followings.addAll(CurrentUser.theUser.getFollowing());
 
-                for (final User user : followings) {
-                    server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
-                        @Override
-                        public void onResultReady(Bitmap result) {
-                            user.setProfilePic(result);
-                        }
-                    });
+        for (final User user : followings) {
+            server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
+                @Override
+                public void onResultReady(Bitmap result) {
+                    user.setProfilePic(result);
                 }
-            }
-        });
+            });
+        }
     }
 
 

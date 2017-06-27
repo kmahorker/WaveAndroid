@@ -53,24 +53,12 @@ public class FollowActivity extends AppCompatActivity {
     public void createViews() {
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
         final List<User> follows = new ArrayList<>();
-
         if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            server_getUsersListObjects(CurrentUser.theUser.getFollowers(), new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    follows.addAll(result);
-                    Log.d("Sizeeeeeeeeeeeeeeee", follows.size() + "");
-                    followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
-                }
-            });
+            follows.addAll(CurrentUser.theUser.getFollowers());
+            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            server_getUsersListObjects(CurrentUser.theUser.getFollowing(), new OnResultReadyListener<List<User>>() {
-                @Override
-                public void onResultReady(List<User> result) {
-                    follows.addAll(result);
-                    followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
-                }
-            });
+            follows.addAll(CurrentUser.theUser.getFollowing());
+            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
         }
 
         final List<User> finalFollows = follows;

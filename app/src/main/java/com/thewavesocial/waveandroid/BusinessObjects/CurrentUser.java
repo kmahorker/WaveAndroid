@@ -36,9 +36,9 @@ public final class CurrentUser {
             @Override
             public void onResultReady(User result) {
                 CurrentUser.theUser = result;
-                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<String>>>() {
+                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                     @Override
-                    public void onResultReady(HashMap<String, ArrayList<String>> result) {
+                    public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                         CurrentUser.theUser.getAttending().addAll(result.get("attending"));
                         CurrentUser.theUser.getHosting().addAll(result.get("hosting"));
                         CurrentUser.theUser.getBouncing().addAll(result.get("bouncing"));

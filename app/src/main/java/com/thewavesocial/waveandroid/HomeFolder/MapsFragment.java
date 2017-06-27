@@ -232,6 +232,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                                 Manifest.permission.INTERNET}
                         , 10);
             }
+            return;
         }
         mMap.setOnMarkerClickListener(this);
         mMap.setOnMapClickListener(this);

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -54,7 +55,7 @@ public class SearchEventCustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final Holder holder;
         View layoutView = convertView;
         if (convertView == null) {
@@ -82,7 +83,7 @@ public class SearchEventCustomAdapter extends BaseAdapter {
                 if (CurrentUser.theUser.getAttending().contains(party.getPartyID())) {
                     Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
                 } else {
-                    CurrentUser.theUser.getAttending().add(0, party.getPartyID());
+                    CurrentUser.theUser.getAttending().add(0, party);
                     Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                 }
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
