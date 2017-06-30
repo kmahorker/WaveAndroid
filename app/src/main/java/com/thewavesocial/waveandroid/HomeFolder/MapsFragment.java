@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
@@ -239,9 +240,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
-                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
+        Location lastLoc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if ( lastLoc != null ) {
+            loc = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
+        }
 
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
@@ -431,9 +434,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                         == PackageManager.PERMISSION_GRANTED) {
                     mMap.setMyLocationEnabled(true);
                 }
-                loc = new LatLng(locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLatitude(),
-                        locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER).getLongitude());
-                moveMapCamera(loc);
+                Location lastLoc = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if ( lastLoc != null ) {
+                    loc = new LatLng(lastLoc.getLatitude(), lastLoc.getLongitude());
+                    moveMapCamera(loc);
+                }
                 break;
             case 20:
                 askToSendSOSMessage();
