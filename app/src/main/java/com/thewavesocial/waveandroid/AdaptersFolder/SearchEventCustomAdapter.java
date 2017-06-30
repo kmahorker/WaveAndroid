@@ -12,7 +12,9 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -80,11 +82,25 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         holder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (CurrentUser.theUser.getAttending().contains(party.getPartyID())) {
-                    Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
-                } else {
-                    CurrentUser.theUser.getAttending().add(0, party);
-                    Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
+                if (containsID(CurrentUser.theUser.getHosting(), party.getPartyID()))
+                    Toast.makeText(mainActivity, "Party Already Hosting.", Toast.LENGTH_LONG).show();
+                else if (containsID(CurrentUser.theUser.getBouncing(), party.getPartyID()))
+                    Toast.makeText(mainActivity, "Party Already Bouncing.", Toast.LENGTH_LONG).show();
+                else if (containsID(CurrentUser.theUser.getGoing(),party.getPartyID()))
+                    Toast.makeText(mainActivity, "Party Already Going.", Toast.LENGTH_LONG).show();
+                else {
+                    DatabaseAccess.server_manageUserForParty(CurrentUser.theUser.getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            if ( result.equals("success") ) {
+                                CurrentUser.theUser.getAttending().add(0, party);
+                                Toast.makeText(mainActivity, "Success.", Toast.LENGTH_LONG).show();
+                                ((TextView)mainActivity.findViewById(R.id.actionbar_activity_home_text_social)).setText("SOCIAL(1)");
+                                ((TextView)mainActivity.findViewById(R.id.user_going_button)).setText("Going(1)");
+                            } else
+                                Toast.makeText(mainActivity, "Error.", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("partyObject", party);
@@ -101,5 +117,14 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         });
 
         return layoutView;
+    }
+
+    private boolean containsID(List<Party> following, String partyID) {
+        for ( Party party : following ) {
+            if ( party.getPartyID().equals(partyID) ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

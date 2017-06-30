@@ -179,6 +179,7 @@ public class UserProfileFragment extends Fragment {
 
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
+                goingButton.setText("Going");
                 server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<Party>> result) {
