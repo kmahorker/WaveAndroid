@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -430,5 +432,13 @@ public final class UtilityClass {
             this.width = width;
             this.height = height;
         }
+    }
+
+    /** Handle Drawable with Different API Versions*/
+    public static Drawable getHandledDrawable(Activity mainActivity, int resID) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return mainActivity.getDrawable(resID);
+        else
+            return mainActivity.getResources().getDrawable(resID);
     }
 }

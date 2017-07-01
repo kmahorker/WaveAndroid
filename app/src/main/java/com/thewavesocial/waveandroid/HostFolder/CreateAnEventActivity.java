@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +66,7 @@ import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import static com.thewavesocial.waveandroid.UtilityClass.getHandledDrawable;
 
 public class CreateAnEventActivity extends AppCompatActivity {
     private TextView cancel, title;
@@ -71,6 +75,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
     public static CreateAnEventActivity thisActivity;
     public static ArrayList<User> followings;
     private static int threads_completion = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +101,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
         }
     }
-
 
     //Open page 1
     private void openFirstPage() {
@@ -707,20 +711,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
-                    holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
-                    holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!inviteIDs.contains(friends.get(position).getUserID())) {
                             inviteIDs.add(friends.get(position).getUserID());
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                         } else {
                             inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                         }
                     }
                 });
@@ -734,6 +738,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 });
                 return layoutView;
             }
+
 
             private class Holder {
                 ImageView profile;
@@ -916,20 +921,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
-                    holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
-                    holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!inviteIDs.contains(friends.get(position).getUserID())) {
                             inviteIDs.add(friends.get(position).getUserID());
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                         } else {
                             inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                         }
                     }
                 });
@@ -1004,12 +1009,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
-    public static List<User> getUsersFromFollowing(List<String> indexes) {
+    //Return list of users with following IDs
+    public static List<User> getUsersFromFollowing(List<String> listIDs) {
         ArrayList<User> users = new ArrayList<>();
-        for (int i = 0; i < indexes.size(); i++) {
+        for (int i = 0; i < listIDs.size(); i++) {
             boolean found = false;
             for (int j = 0; j < followings.size() && !found; j++) {
-                if ( indexes.get(i).equals(followings.get(j).getUserID()) ) {
+                if ( listIDs.get(i).equals(followings.get(j).getUserID()) ) {
                     users.add(followings.get(j));
                     found = true;
                 }

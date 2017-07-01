@@ -3,6 +3,7 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
@@ -31,6 +33,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 /**
  * Central activity that controls the swiping mechanism of host, map, and social fragments.
