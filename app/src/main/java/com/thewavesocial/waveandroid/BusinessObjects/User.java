@@ -36,7 +36,6 @@ public class User implements Parcelable {
     private List<Party> attending;
     private List<Party> bouncing;
     private List<Party> going;
-    private List<Notification> notifications;
     private Bitmap profilePic;
 
     public User() {
@@ -57,7 +56,6 @@ public class User implements Parcelable {
         bouncing = new ArrayList<>();
         attending = new ArrayList<>();
         going = new ArrayList<>();
-        notifications = new ArrayList<>();
         profilePic = null; //TODO Use different constructor
     }
 
@@ -78,7 +76,6 @@ public class User implements Parcelable {
                 List<Party> bouncing,
                 List<Party> attending,
                 List<Party> going,
-                List<Notification> notifications,
                 Bitmap profilePic) {
         this.userID = userID;
         this.firstName = firstName;
@@ -97,7 +94,6 @@ public class User implements Parcelable {
         this.attended = attended;
         this.bouncing = bouncing;
         this.going = going;
-        this.notifications = notifications;
         this.profilePic = profilePic;
     }
 
@@ -216,14 +212,6 @@ public class User implements Parcelable {
         return profilePic;
     }
 
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
     public List<User> getFollowers() {
         return followers;
     }
@@ -337,12 +325,6 @@ public class User implements Parcelable {
         } else {
             going = null;
         }
-        if (in.readByte() == 0x01) {
-            notifications = new ArrayList<>();
-            in.readList(notifications, Notification.class.getClassLoader());
-        } else {
-            notifications = null;
-        }
         profilePic = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
     }
 
@@ -414,12 +396,6 @@ public class User implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(going);
-        }
-        if (notifications == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(notifications);
         }
         dest.writeValue(profilePic);
     }

@@ -1742,7 +1742,6 @@ public final class DatabaseAccess {
         List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
                 hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
                 attended = new ArrayList(), bounced = new ArrayList(), going = new ArrayList();
-        List notifications = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
             userID = info.get("id");
@@ -1766,7 +1765,7 @@ public final class DatabaseAccess {
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,
-                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going, notifications,
+                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going,
                 null);
         return user;
     }
