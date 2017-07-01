@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/qr_scan_image_view"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/round_shape"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/qr_scan_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name: "
+        android:textSize="@dimen/text_normal"
+        android:ellipsize="end"
+        android:lines="1"
+        android:layout_margin="5dp"
+        android:layout_alignTop="@+id/qr_scan_image_view"
+        android:layout_toRightOf="@id/qr_scan_image_view"/>
+
+    <TextView
+        android:id="@+id/qr_scan_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gender: "
+        android:textSize="@dimen/text_normal"
+        android:ellipsize="end"
+        android:lines="1"
+        android:layout_margin="5dp"
+        android:layout_below="@id/qr_scan_name"
+        android:layout_toRightOf="@id/qr_scan_image_view"/>
+
+</RelativeLayout>

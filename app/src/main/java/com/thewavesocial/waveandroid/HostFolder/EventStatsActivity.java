@@ -125,7 +125,6 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     long rawID = Long.parseLong(qrResult.getContents().substring(qrResult.getContents().indexOf('.') + 1));
                     long userID = rawID/coef;
                     processUserID(userID+"");
-                    goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, goingList));
                 } catch (Exception e) {
                     Toast.makeText(mainActivity, "Error with QR code", Toast.LENGTH_LONG).show();
                 }
@@ -134,24 +133,49 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void processUserID(String userID) {
+    private void processUserID(final String userID) {
         boolean found = false;
         for ( int i = 0; i < goingList.size() && !found; i++ ) {
-            User each = goingList.get(i);
+            final User each = goingList.get(i);
             if ( each.getUserID().equals(userID) ) {
                 found = true;
-                goingList.remove(each);
-                DatabaseAccess.server_manageUserForParty(userID, party.getPartyID(), "attending", "POST", null);
+                DatabaseAccess.server_manageUserForParty(userID, party.getPartyID(), "attending", "POST", new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if ( result.equals("success") ) {
+                            goingList.remove(each);
 
-                attending++;
-                if ( each.getGender().toLowerCase().equals("male") )
-                    male++;
-                else if ( each.getGender().toLowerCase().equals("female") )
-                    female++;
+                            if ( each.getGender().toLowerCase().equals("male") )
+                                male++;
+                            else if ( each.getGender().toLowerCase().equals("female") )
+                                female++;
+                            attending++;
+                            attendingView.setText(attending + "");
+                            genderView.setText(female + "/" + male);
+                            goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+                            goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, goingList));
 
-                attendingView.setText(attending + "");
-                genderView.setText(female + "/" + male);
-                goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+                            DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
+                                @Override
+                                public void onResultReady(Bitmap result) {
+                                    View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_scan_view, null);
+                                    ((ImageView) view.findViewById(R.id.qr_scan_image_view)).setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                                    ((TextView) view.findViewById(R.id.qr_scan_name)).setText("Name: " + each.getFullName());
+                                    ((TextView) view.findViewById(R.id.qr_scan_gender)).setText("Gender: " + each.getGender());
+
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+                                    dialog.setTitle("Scan")
+                                            .setPositiveButton("Done", null)
+                                            .setView(view);
+                                    dialog.show();
+
+                                }
+                            });
+
+                        } else
+                            Toast.makeText(mainActivity, "Failure.", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         }
         if ( !found )
