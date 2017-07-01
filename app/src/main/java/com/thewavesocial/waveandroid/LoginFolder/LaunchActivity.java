@@ -1,10 +1,14 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
@@ -19,14 +23,45 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class LaunchActivity extends AppCompatActivity {
+    private int DELAY = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup_layout);
         getSupportActionBar().hide();
-        int DELAY = 2000;
-        DatabaseAccess.saveTokentoLocal(this, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
+        DatabaseAccess.saveTokentoLocal(this, "123", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
 
+        enterApp();
+    }
+
+    private void showDocuments() {
+        View view_privacy = LayoutInflater.from(this).inflate(R.layout.document_privacy, null);
+        View view_terms = LayoutInflater.from(this).inflate(R.layout.document_terms, null);
+
+        final AlertDialog.Builder dialog_privacy = new AlertDialog.Builder(this);
+        final AlertDialog.Builder dialog_terms = new AlertDialog.Builder(this);
+        dialog_privacy.setView(view_privacy).setCancelable(false)
+                .setPositiveButton("I have read and accept.", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        dialog_terms.show();
+                    }
+                }).show();
+        dialog_terms.setView(view_terms).setCancelable(false)
+                .setPositiveButton("I have read and accept.", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(LaunchActivity.this, LoginTutorialActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+    }
+
+    private void enterApp() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -53,9 +88,7 @@ public class LaunchActivity extends AppCompatActivity {
                                     }
                                 });
                             } else if (message.equals("error")) {
-                                Intent intent = new Intent(LaunchActivity.this, LoginTutorialActivity.class);
-                                startActivity(intent);
-                                finish();
+                                showDocuments();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

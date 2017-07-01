@@ -11,12 +11,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -25,15 +26,9 @@ import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SettingsFolder.SettingsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
-
-import me.sudar.zxingorient.ZxingOrient;
-import me.sudar.zxingorient.ZxingOrientResult;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
