@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -139,47 +140,61 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             final User each = goingList.get(i);
             if ( each.getUserID().equals(userID) ) {
                 found = true;
-                DatabaseAccess.server_manageUserForParty(userID, party.getPartyID(), "attending", "POST", new OnResultReadyListener<String>() {
-                    @Override
-                    public void onResultReady(String result) {
-                        if ( result.equals("success") ) {
-                            goingList.remove(each);
-
-                            if ( each.getGender().toLowerCase().equals("male") )
-                                male++;
-                            else if ( each.getGender().toLowerCase().equals("female") )
-                                female++;
-                            attending++;
-                            attendingView.setText(attending + "");
-                            genderView.setText(female + "/" + male);
-                            goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
-                            goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, goingList));
-
-                            DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
-                                @Override
-                                public void onResultReady(Bitmap result) {
-                                    View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_scan_view, null);
-                                    ((ImageView) view.findViewById(R.id.qr_scan_image_view)).setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
-                                    ((TextView) view.findViewById(R.id.qr_scan_name)).setText("Name: " + each.getFullName());
-                                    ((TextView) view.findViewById(R.id.qr_scan_gender)).setText("Gender: " + each.getGender());
-
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
-                                    dialog.setTitle("Scan")
-                                            .setPositiveButton("Done", null)
-                                            .setView(view);
-                                    dialog.show();
-
-                                }
-                            });
-
-                        } else
-                            Toast.makeText(mainActivity, "Failure.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                displayUserProfile(each);
             }
         }
         if ( !found )
             Log.d("Error", "User Not Found");
+    }
+
+    private void displayUserProfile(final User each) {
+        DatabaseAccess.server_getProfilePicture(each.getUserID(), new OnResultReadyListener<Bitmap>() {
+            @Override
+            public void onResultReady(Bitmap result) {
+                View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_scan_view, null);
+                ((ImageView) view.findViewById(R.id.qr_scan_image_view)).setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
+                ((TextView) view.findViewById(R.id.qr_scan_name)).setText("Name: " + each.getFullName());
+                ((TextView) view.findViewById(R.id.qr_scan_gender)).setText("Gender: " + each.getGender());
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
+                dialog.setTitle("Scan")
+                        .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                acceptUserToParty(each);
+                            }
+                        })
+                        .setNegativeButton("Reject", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setView(view);
+                dialog.show();
+            }
+        });
+    }
+
+    private void acceptUserToParty(final User each) {
+        DatabaseAccess.server_manageUserForParty(each.getUserID(), party.getPartyID(), "attending", "POST", new OnResultReadyListener<String>() {
+            @Override
+            public void onResultReady(String result) {
+                if ( result.equals("success") ) {
+                    goingList.remove(each);
+                    if ( each.getGender().toLowerCase().equals("male") )
+                        male++;
+                    else if ( each.getGender().toLowerCase().equals("female") )
+                        female++;
+                    attending++;
+                    attendingView.setText(attending + "");
+                    genderView.setText(female + "/" + male);
+                    goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+                    goingFriends.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, goingList));
+                } else
+                    Toast.makeText(mainActivity, "Failure.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void setupSpecialFields(int callerType, String hostID) {
