@@ -17,14 +17,13 @@ import java.util.List;
  */
 //public class User implements Parcelable
 public class User implements Parcelable {
-    private String userID;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String college;
-    private String gender;
-    private Calendar birthday;
+    private String userID; //
+    private String firstName; //
+    private String lastName; //
+    private String email; //
+    private String college; //
+    private String gender; //
+    private Calendar birthday; //
     private List<BestFriend> bestFriends;
     private List<User> followers;
     private List<User> following;
@@ -39,14 +38,13 @@ public class User implements Parcelable {
     private Bitmap profilePic;
 
     public User() {
-        userID = "";
-        firstName = "";
-        lastName = "";
-        email = "";
-        password = "";
-        college = "";
-        gender = "";
-        birthday = Calendar.getInstance();
+        userID = ""; //
+        firstName = ""; //
+        lastName = ""; //
+        email = ""; //
+        college = ""; //
+        gender = ""; //
+        birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
         followers = new ArrayList<>();
         following = new ArrayList<>();
@@ -63,7 +61,6 @@ public class User implements Parcelable {
                 String firstName,
                 String lastName,
                 String email,
-                String password,
                 String college,
                 String gender,
                 Calendar birthday,
@@ -81,7 +78,6 @@ public class User implements Parcelable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.college = college;
         this.gender = gender;
         this.birthday = birthday;
@@ -112,10 +108,6 @@ public class User implements Parcelable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public void setCollege(String college) {
@@ -267,7 +259,6 @@ public class User implements Parcelable {
         firstName = in.readString();
         lastName = in.readString();
         email = in.readString();
-        password = in.readString();
         college = in.readString();
         gender = in.readString();
         birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
@@ -339,7 +330,6 @@ public class User implements Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(email);
-        dest.writeString(password);
         dest.writeString(college);
         dest.writeString(gender);
         dest.writeValue(birthday);

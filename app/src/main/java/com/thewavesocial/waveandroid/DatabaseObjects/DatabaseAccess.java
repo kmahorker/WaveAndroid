@@ -1761,10 +1761,8 @@ public final class DatabaseAccess {
             e.printStackTrace();
         }
 
-        String password = "";
-
         //Compose user
-        User user = new User(userID, firstName, lastName, email, password, college, gender, birthday,
+        User user = new User(userID, firstName, lastName, email, college, gender, birthday,
                 bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going,
                 null);
         return user;
