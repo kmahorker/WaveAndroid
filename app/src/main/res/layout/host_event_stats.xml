@@ -49,7 +49,6 @@
                     android:id="@+id/hostEventStats_totalGoing_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="27"
                     android:textColor="@color/appColor"
                     android:textSize="@dimen/text_large"
                     android:layout_marginBottom="10dp"/>
@@ -79,7 +78,6 @@
                     android:id="@+id/hostEventStats_femaleMale_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15/12"
                     android:textColor="@color/appColor"
                     android:textSize="@dimen/text_large"
                     android:layout_marginBottom="10dp"/>
@@ -177,7 +175,6 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
                     android:gravity="end"
-                    android:text="1234 Mario Dr. Santa Barbara, CA"
                     android:textColor="@color/grey_solid"
                     android:textSize="@dimen/text_normal"
                     android:layout_alignParentEnd="true"
@@ -215,7 +212,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
-                    android:text="Friday, March 31"
                     android:textColor="@color/grey_solid"
                     android:textSize="@dimen/text_normal"
                     android:layout_alignParentEnd="true"
@@ -254,7 +250,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="200dp"
-                    android:text="9 PM - 12 AM"
                     android:textColor="@color/grey_solid"
                     android:textSize="@dimen/text_normal"
                     android:layout_alignParentEnd="true"
@@ -329,7 +324,6 @@
 
     <github.ankushsachdeva.emojicon.EmojiconTextView
         android:id="@+id/hostEventStats_emoji"
-        android:text="\ue32d"
         android:textSize="@dimen/button_text_normal"
         android:gravity="center"
         android:visibility="invisible"

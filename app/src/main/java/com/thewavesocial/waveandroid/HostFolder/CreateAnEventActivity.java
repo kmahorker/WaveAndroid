@@ -85,6 +85,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         followings = new ArrayList<>();
         followings.addAll(CurrentUser.theUser.getFollowing());
+        followings.add(new User());
 
         for (final User user : followings) {
             server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
@@ -589,8 +590,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private ListView friend_list;
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
-        private List<User> friends;
-        private static List<Integer> invite_index = new ArrayList<>();
+        private static List<String> inviteIDs = new ArrayList<>();
         private View view;
 
         @Nullable
@@ -624,31 +624,29 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 }
             });
 
-            friends = followings;
-            friend_list.setAdapter(new FriendListAdapter(friends));
+            friend_list.setAdapter(new FriendListAdapter(followings));
 
-            invite_index = NewPartyInfo.invitingUsers;
+            inviteIDs = NewPartyInfo.invitingUsers;
             LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
             invite_list.setLayoutManager(layoutManager);
-            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, query)));
                     searchbar.clearFocus();
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String query) {
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, query)));
                     return false;
                 }
             });
-            int searchCloseButtonId = searchbar.getContext().getResources()
-                    .getIdentifier("android:id/search_close_btn", null, null);
+            int searchCloseButtonId = searchbar.getContext().getResources().getIdentifier("android:id/search_close_btn", null, null);
             ImageView closeButton = (ImageView) this.searchbar.findViewById(searchCloseButtonId);
             // Set on click listener
             closeButton.setOnClickListener(new View.OnClickListener() {
@@ -657,14 +655,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
                     EditText editText = (EditText) searchbar.findViewById(id);
                     editText.setText("");
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, "")));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, "")));
                     searchbar.clearFocus();
                 }
             });
         }
 
         private static void savePage2() {
-            NewPartyInfo.invitingUsers = invite_index;
+            NewPartyInfo.invitingUsers = inviteIDs;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -708,20 +706,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFullName());
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
-                if (invite_index.contains(position))
+                if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!invite_index.contains(position)) {
-                            invite_index.add(position);
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+                        if (!inviteIDs.contains(friends.get(position).getUserID())) {
+                            inviteIDs.add(friends.get(position).getUserID());
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                         } else {
-                            invite_index.remove(invite_index.indexOf(position));
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                         }
                     }
@@ -802,8 +800,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private ListView friend_list;
         private RecyclerView invite_list;
         private static CreateAnEventActivity mainActivity;
-        private List<User> friends;
-        private static List<Integer> invite_index = new ArrayList<>();
+        private static List<String> inviteIDs = new ArrayList<>();
 
         @Nullable
         @Override
@@ -835,26 +832,25 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 }
             });
 
-            friends = followings;
-            friend_list.setAdapter(new FriendListAdapter(friends));
+            friend_list.setAdapter(new FriendListAdapter(followings));
 
-            invite_index = NewPartyInfo.bouncingUsers;
+            inviteIDs = NewPartyInfo.bouncingUsers;
             LinearLayoutManager layoutManager = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
             invite_list.setLayoutManager(layoutManager);
-            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
 
             searchbar.setQueryHint("Search Name");
             searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, query)));
                     searchbar.clearFocus();
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String query) {
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, query)));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, query)));
                     return false;
                 }
             });
@@ -868,14 +864,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     int id = searchbar.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
                     EditText editText = (EditText) searchbar.findViewById(id);
                     editText.setText("");
-                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(friends, "")));
+                    friend_list.setAdapter(new FriendListAdapter(UtilityClass.search(followings, "")));
                     searchbar.clearFocus();
                 }
             });
         }
 
         private static void savePage3() {
-            NewPartyInfo.bouncingUsers = invite_index;
+            NewPartyInfo.bouncingUsers = inviteIDs;
         }
 
         private class FriendListAdapter extends BaseAdapter {
@@ -919,20 +915,20 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFullName());
 
                 holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
-                if (invite_index.contains(position))
+                if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!invite_index.contains(position)) {
-                            invite_index.add(position);
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+                        if (!inviteIDs.contains(friends.get(position).getUserID())) {
+                            inviteIDs.add(friends.get(position).getUserID());
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
                         } else {
-                            invite_index.remove(invite_index.indexOf(position));
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(invite_index)));
+                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
+                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
                         }
                     }
@@ -1008,10 +1004,16 @@ public class CreateAnEventActivity extends AppCompatActivity {
         }
     }
 
-    public static List<User> getUsersFromFollowing(List<Integer> indexes) {
+    public static List<User> getUsersFromFollowing(List<String> indexes) {
         ArrayList<User> users = new ArrayList<>();
         for (int i = 0; i < indexes.size(); i++) {
-            users.add(followings.get(indexes.get(i)));
+            boolean found = false;
+            for (int j = 0; j < followings.size() && !found; j++) {
+                if ( indexes.get(i).equals(followings.get(j).getUserID()) ) {
+                    users.add(followings.get(j));
+                    found = true;
+                }
+            }
         }
         return users;
     }
@@ -1025,8 +1027,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static Calendar endingDateTime;
         static MapAddress mapAddress;
         static List<String> hostingUsers;
-        static List<Integer> bouncingUsers;
-        static List<Integer> invitingUsers;
+        static List<String> bouncingUsers;
+        static List<String> invitingUsers;
         static boolean isPublic;
         static String partyEmoji;
         static int minAge;
@@ -1053,16 +1055,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         //Compose all party information
         public static void composeParty() {
-            Log.d("Compose Party", "EEntered");
             if (mapAddress.getAddress_latlng() == null)
                 mapAddress.setAddress_latlng(new LatLng(0, 0));
-            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
-            for (int bouncer_index : bouncingUsers) {
-                if (invitingUsers.contains(bouncer_index)) {
-                    invitingUsers.remove(Integer.valueOf(bouncer_index));
+            for (String bouncer_id : bouncingUsers) {
+                if (invitingUsers.contains(bouncer_id)) {
+                    invitingUsers.remove(bouncer_id);
                 }
             }
-            Log.d("Both_List", bouncingUsers.toString() + "\n" + invitingUsers.toString());
 
             try {
                 server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
@@ -1080,23 +1079,23 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
                                 final String eventId = result.substring(commaIndex + 1);
 
-                                for (final User user : getUsersFromFollowing(invitingUsers)) {
-                                    server_inviteUserToEvent(user.getUserID(), eventId, new OnResultReadyListener<String>() {
+                                for (final String id : invitingUsers) {
+                                    server_inviteUserToEvent(id, eventId, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             Log.d("addInvitedUser", result + "");
-                                            DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_going", null);
+                                            DatabaseAccess.server_createNotification(id, "", eventId, "invite_going", null);
                                             completeThreads();
                                         }
                                     });
                                 }
 
-                                for (final User user : getUsersFromFollowing(bouncingUsers)) {
-                                    server_manageUserForParty(user.getUserID(), eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                for (final String id : bouncingUsers) {
+                                    server_manageUserForParty(id, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             if(result.equals("success")){
-                                                DatabaseAccess.server_createNotification(user.getUserID(), "", eventId, "invite_bouncing", null);
+                                                DatabaseAccess.server_createNotification(id, "", eventId, "invite_bouncing", null);
                                                 completeThreads();
                                             }
                                         }
@@ -1127,7 +1126,6 @@ public class CreateAnEventActivity extends AppCompatActivity {
     //Count invitingUsers, bouncingUsers, and hostingUsers threads completion
     public static void completeThreads() {
         threads_completion++;
-        Log.d("Threads Complete", threads_completion + " out of " + (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size()));
         if (threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size())) {
             //Finish task
             CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {

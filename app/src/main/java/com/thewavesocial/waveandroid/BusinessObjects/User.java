@@ -40,7 +40,7 @@ public class User implements Parcelable {
     private Bitmap profilePic;
 
     public User() {
-        userID = "0";
+        userID = "";
         firstName = "";
         lastName = "";
         email = "";
