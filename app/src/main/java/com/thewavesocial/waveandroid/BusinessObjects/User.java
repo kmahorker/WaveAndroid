@@ -24,9 +24,7 @@ public class User implements Parcelable {
     private String college; //
     private String gender; //
     private Calendar birthday; //
-    private List<BestFriend> bestFriends;
-    private List<User> followers;
-    private List<User> following;
+    private List<BestFriend> bestFriends; //
 
     //Below contain list of PartyIDs
     private List<Party> hosted;
@@ -46,8 +44,6 @@ public class User implements Parcelable {
         gender = ""; //
         birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
-        followers = new ArrayList<>();
-        following = new ArrayList<>();
         hosting = new ArrayList<>();
         attended = new ArrayList<>();
         hosted = new ArrayList<>();
@@ -64,8 +60,6 @@ public class User implements Parcelable {
                 String college,
                 String gender,
                 Calendar birthday,
-                List<User> followers,
-                List<User> following,
                 List<BestFriend> bestFriends,
                 List<Party> hosting,
                 List<Party> attended,
@@ -81,8 +75,6 @@ public class User implements Parcelable {
         this.college = college;
         this.gender = gender;
         this.birthday = birthday;
-        this.followers = followers;
-        this.following = following;
         this.bestFriends = bestFriends;
         this.hosting = hosting;
         this.hosted = hosted;
@@ -204,22 +196,6 @@ public class User implements Parcelable {
         return profilePic;
     }
 
-    public List<User> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(List<User> followers) {
-        this.followers = followers;
-    }
-
-    public List<User> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(List<User> following) {
-        this.following = following;
-    }
-
     @Override
     public String toString() {
         return firstName + " " + lastName;
@@ -267,18 +243,6 @@ public class User implements Parcelable {
             in.readList(bestFriends, BestFriend.class.getClassLoader());
         } else {
             bestFriends = null;
-        }
-        if (in.readByte() == 0x01) {
-            followers = new ArrayList<>();
-            in.readList(followers, User.class.getClassLoader());
-        } else {
-            followers = null;
-        }
-        if (in.readByte() == 0x01) {
-            following = new ArrayList<>();
-            in.readList(following, User.class.getClassLoader());
-        } else {
-            following = null;
         }
         if (in.readByte() == 0x01) {
             hosting = new ArrayList<>();
@@ -338,18 +302,6 @@ public class User implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(bestFriends);
-        }
-        if (followers == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(followers);
-        }
-        if (following == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(following);
         }
         if (hosting == null) {
             dest.writeByte((byte) (0x00));

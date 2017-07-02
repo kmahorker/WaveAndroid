@@ -30,7 +30,8 @@ import java.util.List;
 
 public class FollowActivity extends AppCompatActivity {
     public static final String TAG = FollowActivity.class.getName();
-    public static final String FOLLOW_POPUP_TYPE_ARG = "FOLLOW_POPUP_TYPE_ARG";
+    public static final String FOLLOW_POPUP_TYPE_ARG = "FOLLOW_POPUP_TYPE_ARG", USER_LIST_OBJECTS = "userListObjects",
+            USER_FOLLOWING = "userFollowingObjects";
     private Activity followActivity = this;
     private UserProfileFragment.PopupPage pageType;
     private TextView title;
@@ -40,11 +41,9 @@ public class FollowActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_follow);
 
-        pageType = UserProfileFragment.PopupPage
-                .valueOf(getIntent().getExtras().getString(FOLLOW_POPUP_TYPE_ARG));
+        pageType = UserProfileFragment.PopupPage.valueOf(getIntent().getExtras().getString(FOLLOW_POPUP_TYPE_ARG));
 
         setupFollowActionbar();
         createViews();
@@ -52,28 +51,26 @@ public class FollowActivity extends AppCompatActivity {
 
     public void createViews() {
         followUsersList = (ListView) findViewById(R.id.lv_follow_follows_list);
-        final List<User> follows = new ArrayList<>();
+        final List<User> follows = getIntent().getParcelableArrayListExtra(USER_LIST_OBJECTS);
+        final List<User> following = getIntent().getParcelableArrayListExtra(USER_FOLLOWING);
         if (pageType == UserProfileFragment.PopupPage.FOLLOWERS) {
-            follows.addAll(CurrentUser.theUser.getFollowers());
-            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
+            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows, following));
         } else if (pageType == UserProfileFragment.PopupPage.FOLLOWING) {
-            follows.addAll(CurrentUser.theUser.getFollowing());
-            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows));
+            followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, follows, following));
         }
 
-        final List<User> finalFollows = follows;
         searchField = (SearchView) findViewById(R.id.sf_follow_search_field);
         searchField.setQueryHint(getString(R.string.search));
         searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, UtilityClass.search(finalFollows, query)));
+                followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, UtilityClass.search(follows, query), following));
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, UtilityClass.search(finalFollows, query)));
+                followUsersList.setAdapter(new SearchPeopleCustomAdapter(followActivity, UtilityClass.search(follows, query), following));
                 return true;
             }
         });

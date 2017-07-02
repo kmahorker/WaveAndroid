@@ -89,17 +89,22 @@ public class CreateAnEventActivity extends AppCompatActivity {
         NewPartyInfo.initialize();
 
         followings = new ArrayList<>();
-        followings.addAll(CurrentUser.theUser.getFollowing());
-        followings.add(new User());
-
-        for (final User user : followings) {
-            server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
-                @Override
-                public void onResultReady(Bitmap result) {
-                    user.setProfilePic(result);
+        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                followings.addAll(result);
+                followings.add(new User()); //Make up for display offset
+                for (final User user : followings) {
+                    server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
+                        @Override
+                        public void onResultReady(Bitmap result) {
+                            user.setProfilePic(result);
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+
     }
 
     //Open page 1

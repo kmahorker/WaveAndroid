@@ -43,7 +43,7 @@ public class UserProfileFragment extends Fragment {
     private int notifications_offset;
     private HomeSwipeActivity mainActivity;
 
-    public TextView activityButton, goingButton;
+    public TextView activityButton, goingButton, following_text, followers_text;
     private ListView action_listView;
     private ImageView profile_picture;
 
@@ -97,28 +97,15 @@ public class UserProfileFragment extends Fragment {
      * initialize user information
      */
     public void setupProfileInfo() {
-        TextView followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
-        followers_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(PopupPage.FOLLOWERS);
-            }
-        });
-        TextView following_text = (TextView) mainActivity.findViewById(R.id.user_following_count);
+        followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
+        following_text = (TextView) mainActivity.findViewById(R.id.user_following_count);
         profile_picture = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
         action_listView = (ListView) mainActivity.findViewById(R.id.user_notification_list);
         activityButton = (TextView) mainActivity.findViewById(R.id.user_activity_button);
         goingButton = (TextView) mainActivity.findViewById(R.id.user_going_button);
         progressBar = (ProgressBar) mainActivity.findViewById(R.id.user_notification_progressbar);
 
-        followers_text.setText(CurrentUser.theUser.getFollowers().size() + "\nfollowers");
-        following_text.setText(CurrentUser.theUser.getFollowing().size() + "\nfollowing");
-        following_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopup(PopupPage.FOLLOWING);
-            }
-        });
+        getServerFollowing();
 
         DatabaseAccess.server_getProfilePicture(CurrentUser.theUser.getUserID(), new OnResultReadyListener<Bitmap>() {
             @Override
@@ -220,19 +207,54 @@ public class UserProfileFragment extends Fragment {
                 }
             }
         });
-
         activityButton.performClick();
+    }
+
+    private void getServerFollowing() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(final List<User> result) {
+                getServerFollowers(result);
+            }
+        });
+    }
+
+    private void getServerFollowers(final List<User> following) {
+        DatabaseAccess.server_getUserFollowers(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(final List<User> followers) {
+                String text = followers.size() + "\nfollowers";
+                followers_text.setText(text);
+                followers_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPopup(PopupPage.FOLLOWERS, new ArrayList<>(followers), new ArrayList<>(following));
+                    }
+                });
+
+                text = following.size() + "\nfollowing";
+                following_text.setText(text);
+                following_text.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPopup(PopupPage.FOLLOWING, new ArrayList<>(following), new ArrayList<>(following));
+                    }
+                });
+            }
+        });
     }
 
     /**
      * Display follower/following list.
      */
-    private void showPopup(PopupPage popup) {
+    private void showPopup(PopupPage popup, ArrayList<User> users, ArrayList<User> following) {
         switch (popup) {
             case FOLLOWERS:
             case FOLLOWING:
                 Intent intent = new Intent(mainActivity, FollowActivity.class);
                 intent.putExtra(FollowActivity.FOLLOW_POPUP_TYPE_ARG, popup.name());
+                intent.putParcelableArrayListExtra(FollowActivity.USER_LIST_OBJECTS, users);
+                intent.putParcelableArrayListExtra(FollowActivity.USER_FOLLOWING, following);
                 mainActivity.startActivity(intent);
                 break;
         }

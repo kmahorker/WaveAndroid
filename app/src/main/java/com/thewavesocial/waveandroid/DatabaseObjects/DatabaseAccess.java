@@ -849,111 +849,6 @@ public final class DatabaseAccess {
 //todo ---------------------------------------------------------------------------------GET Requests
 
     /**
-     * Get list of user information from server
-     */
-    public static void server_getUsersListObjects(List<String> userIdList, final OnResultReadyListener<List<User>> delegate) {
-        RequestComponents[] comps = new RequestComponents[userIdList.size()];
-        for (int i = 0; i < comps.length; i++) {
-            String url = mainActivity.getString(R.string.server_url) + "users/" + userIdList.get(i)
-                    + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-            comps[i] = new RequestComponents(url, "GET", null);
-        }
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                final List<User> friends = new ArrayList<>();
-                for (int i = 0; i < result.size(); i++) {
-                    HashMap<String, String> body = new HashMap<>();
-                    try {
-                        JSONObject main_json = new JSONObject(result.get(i));
-                        body = extractJSONData(main_json.getJSONObject("data"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("CurUser_GetUserInfo", result.get(i));
-                    User user = constructUser(body);
-                    friends.add(user);
-                }
-
-                //Light-weight threads management
-                class ThreadManager {
-                    private int max, completes;
-
-                    public ThreadManager(int max) {
-                        this.max = max;
-                    }
-
-                    void completeThreads() {
-                        completes++;
-                        if (completes >= max && delegate != null)
-                            delegate.onResultReady(friends);
-                    }
-                }
-                final ThreadManager threadManager = new ThreadManager(friends.size() * 2);
-
-                for (final User user : friends) {
-                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                        @Override
-                        public void onResultReady(List<User> result) {
-                            if (result != null)
-                                user.getFollowing().addAll(result);
-                            threadManager.completeThreads();
-                        }
-                    });
-                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                        @Override
-                        public void onResultReady(List<User> result) {
-                            if (result != null)
-                                user.getFollowers().addAll(result);
-                            threadManager.completeThreads();
-                        }
-                    });
-                }
-            }
-        }).execute();
-    }
-
-    /**
-     * Get list of party information from server
-     */
-    public static void server_getPartyListObjects(List<String> partyIdList, final OnResultReadyListener<List<Party>> delegate) {
-        RequestComponents[] comps = new RequestComponents[partyIdList.size()];
-        for (int i = 0; i < partyIdList.size(); i++) {
-            String url = mainActivity.getString(R.string.server_url) + "events/" + partyIdList.get(i)
-                    + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-            comps[i] = new RequestComponents(url, "GET", null);
-        }
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                Map<Long, Party> raw_parties = new TreeMap<>();
-                for (int i = 0; i < result.size(); i++) {
-                    HashMap<String, String> body = new HashMap<>();
-                    try {
-                        JSONObject main_json = new JSONObject(result.get(i));
-                        body = extractJSONData(main_json.getJSONObject("data"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.d("CurUser_GetPartyInfo", result.get(i));
-                    long date_key = Long.parseLong(body.get("start_timestamp"));
-                    while (raw_parties.keySet().contains(date_key))
-                        date_key += 1;
-                    raw_parties.put(date_key, constructParty(body));
-                }
-                ArrayList<Party> parties = new ArrayList<>();
-                for (Long key : raw_parties.keySet()) {
-                    parties.add(raw_parties.get(key));
-                }
-
-                if (delegate != null)
-                    delegate.onResultReady(parties);
-            }
-        }).execute();
-    }
-
-    /**
      * Get user information
      */
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
@@ -972,21 +867,8 @@ public final class DatabaseAccess {
                 }
 
                 Log.d("CurUser_GetUserInfo", result.get(0));
-                final User user = constructUser(body);
-                server_getUserFollowing(userID, new OnResultReadyListener<List<User>>() {
-                    @Override
-                    public void onResultReady(List<User> result) {
-                        user.getFollowing().addAll(result);
-                        server_getUserFollowers(userID, new OnResultReadyListener<List<User>>() {
-                            @Override
-                            public void onResultReady(List<User> result) {
-                                user.getFollowers().addAll(result);
-                                if (delegate != null)
-                                    delegate.onResultReady(user);
-                            }
-                        });
-                    }
-                });
+                if (delegate != null)
+                    delegate.onResultReady(constructUser(body));
             }
         }).execute();
     }
@@ -1164,122 +1046,10 @@ public final class DatabaseAccess {
                     public void onResultReady(ArrayList<User> result) {
                         if (result != null)
                             users.get("inviting").addAll(result);
-
-                        //Light-weight threads management
-                        class ThreadManager {
-                            private int max, completes;
-
-                            public ThreadManager(int max) {
-                                this.max = max;
-                            }
-
-                            void completeThreads() {
-                                completes++;
-                                Log.d("Threads", "Completed: " + completes + ", Max" + max);
-                                if (completes >= max && delegate != null)
-                                    delegate.onResultReady(users);
-                            }
-                        }
-                        final ThreadManager threadManager = new ThreadManager((users.get("attending").size() +
-                                users.get("hosting").size() +
-                                users.get("bouncing").size() +
-                                users.get("going").size() +
-                                users.get("inviting").size()) * 2);
-
-                        //Get following/followers
-                        for (final User user : users.get("attending")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowing().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowers().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                        }
-                        for (final User user : users.get("hosting")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowing().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowers().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                        }
-                        for (final User user : users.get("bouncing")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowing().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowers().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                        }
-                        for (final User user : users.get("going")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowing().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowers().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                        }
-                        for (final User user : users.get("inviting")) {
-                            server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowing().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                            server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                                @Override
-                                public void onResultReady(List<User> result) {
-                                    if (result != null)
-                                        user.getFollowers().addAll(result);
-                                    threadManager.completeThreads();
-                                }
-                            });
-                        }
+                        if (delegate != null)
+                            delegate.onResultReady(users);
                     }
                 });
-
                 Log.d("Get User Events", result.get(0));
             }
         }).execute();
@@ -1467,42 +1237,9 @@ public final class DatabaseAccess {
                     e.printStackTrace();
                 }
 
-                //Light-weight threads management
-                class ThreadManager {
-                    private int max, completes;
-
-                    public ThreadManager(int max) {
-                        this.max = max;
-                    }
-
-                    void completeThreads() {
-                        completes++;
-                        if (completes >= max && delegate != null)
-                            delegate.onResultReady(users);
-                    }
-                }
-                final ThreadManager threadManager = new ThreadManager(users.size() * 2);
-
-                for (final User user : users) {
-                    server_getUserFollowing(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                        @Override
-                        public void onResultReady(List<User> result) {
-                            if (result != null)
-                                user.getFollowing().addAll(result);
-                            threadManager.completeThreads();
-                        }
-                    });
-                    server_getUserFollowers(user.getUserID(), new OnResultReadyListener<List<User>>() {
-                        @Override
-                        public void onResultReady(List<User> result) {
-                            if (result != null)
-                                user.getFollowers().addAll(result);
-                            threadManager.completeThreads();
-                        }
-                    });
-                }
-
                 Log.d("Get Users by Keyword", result.get(0));
+                if ( delegate != null )
+                    delegate.onResultReady(users);
             }
         }).execute();
 
@@ -1739,8 +1476,7 @@ public final class DatabaseAccess {
      */
     private static User constructUser(HashMap<String, String> info) {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
-        List bestFriends = new ArrayList(), followers = new ArrayList(), following = new ArrayList(),
-                hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
+        List bestFriends = new ArrayList(), hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
                 attended = new ArrayList(), bounced = new ArrayList(), going = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
@@ -1763,7 +1499,7 @@ public final class DatabaseAccess {
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, college, gender, birthday,
-                bestFriends, followers, following, hosting, attended, hosted, bounced, attending, going,
+                bestFriends, hosting, attended, hosted, bounced, attending, going,
                 null);
         return user;
     }

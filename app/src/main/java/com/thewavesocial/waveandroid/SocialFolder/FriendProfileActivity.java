@@ -106,8 +106,58 @@ public class FriendProfileActivity extends AppCompatActivity {
         notification_listview = (ListView) mainActivity.findViewById(R.id.friend_notification_list);
         follow_button = (TextView) mainActivity.findViewById(R.id.friend_follow_button);
 
-        followers_textview.setText(friend.getFollowers().size() + "\nfollowers");
-        following_textview.setText(friend.getFollowing().size() + "\nfollowing");
+        // TODO: 07/01/2017 Add loading spinners
+        DatabaseAccess.server_getUserFollowers(friend.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> result) {
+                String text = result.size() + "\nfollowers";
+                followers_textview.setText(text);
+            }
+        });
+        DatabaseAccess.server_getUserFollowing(friend.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(final List<User> followings) {
+                String text = followings.size() + "\nfollowing";
+                following_textview.setText(text);
+
+                if (userID.equals(CurrentUser.theUser.getUserID())) {
+                    follow_button.setVisibility(View.INVISIBLE);
+                } else if (!containsID(followings, userID)) {
+                    changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                } else {
+                    changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
+                }
+
+                follow_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (follow_button.getText().equals("Following")) {
+                            //If delete from server is successful, then delete locally and change button.
+                            DatabaseAccess.server_unfollow(userID, new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String result) {
+                                    if (result.equals("success")) {
+                                        changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
+                                    }
+                                }
+                            });
+                        } else {
+                            //If follow from server is successful, then follow locally and change button.
+                            DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), userID, new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String result) {
+                                    if (result.equals("success")) {
+                                        changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
+                                        DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, "", "following", null);
+                                        DatabaseAccess.server_createNotification(userID, CurrentUser.theUser.getUserID(), "", "followed", null);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
 
         if (profilepic_imageview.getDrawable() == null)
             DatabaseAccess.server_getProfilePicture(userID, new OnResultReadyListener<Bitmap>() {
@@ -128,45 +178,6 @@ public class FriendProfileActivity extends AppCompatActivity {
                             ArrayList<Notification> notifications = result.getNotifications();
                             ArrayList<Object> objects = result.getSenderObjects();
                             notification_listview.setAdapter(new FriendNotificationCustomAdapter(mainActivity, notifications, objects));
-                        }
-                    });
-                }
-            }
-        });
-
-        if (userID.equals(CurrentUser.theUser.getUserID())) {
-            follow_button.setVisibility(View.INVISIBLE);
-        } else if (!containsID(CurrentUser.theUser.getFollowing(), userID)) {
-            changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
-        } else {
-            changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
-        }
-
-        follow_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (follow_button.getText().equals("Following")) {
-                    //If delete from server is successful, then delete locally and change button.
-                    DatabaseAccess.server_unfollow(userID, new OnResultReadyListener<String>() {
-                        @Override
-                        public void onResultReady(String result) {
-                            if (result.equals("success")) {
-                                removeID(CurrentUser.theUser.getFollowing(), userID);
-                                changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
-                            }
-                        }
-                    });
-                } else {
-                    //If follow from server is successful, then follow locally and change button.
-                    DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), userID, new OnResultReadyListener<String>() {
-                        @Override
-                        public void onResultReady(String result) {
-                            if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().add(friend);
-                                changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
-                                DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, "", "following", null);
-                                DatabaseAccess.server_createNotification(userID, CurrentUser.theUser.getUserID(), "", "followed", null);
-                            }
                         }
                     });
                 }
@@ -262,15 +273,6 @@ public class FriendProfileActivity extends AppCompatActivity {
                 list.add(objects.get(key));
             }
             return list;
-        }
-    }
-
-    private void removeID(List<User> following, String userID) {
-        for ( User user : following ) {
-            if ( user.getUserID().equals(userID) ) {
-                following.remove(user);
-                return;
-            }
         }
     }
 }

@@ -23,12 +23,15 @@ import android.widget.TextView;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
+import static com.thewavesocial.waveandroid.UtilityClass.getHandledDrawable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,23 +89,28 @@ public class EditListActivity extends AppCompatActivity {
 
                     //Get user followings
                     users = new ArrayList<>();
-                    users.addAll(CurrentUser.theUser.getFollowing());
-                    switch (LAYOUT_TYPE) {
-                        case 1:
-                            server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
-                                @Override
-                                public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                                    ArrayList<User> bouncers = result.get("bouncing");
-                                    List<User> conflicts = UtilityClass.findDuplicates(bouncers, users);
-                                    users.removeAll(conflicts);
+                    DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+                        @Override
+                        public void onResultReady(List<User> result) {
+                            users.addAll(result);
+                            switch (LAYOUT_TYPE) {
+                                case 1:
+                                    server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+                                        @Override
+                                        public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                                            ArrayList<User> bouncers = result.get("bouncing");
+                                            List<User> conflicts = UtilityClass.findDuplicates(bouncers, users);
+                                            users.removeAll(conflicts);
+                                            friend_list.setAdapter(new FriendListAdapter(users));
+                                        }
+                                    });
+                                    break;
+                                case 2:
                                     friend_list.setAdapter(new FriendListAdapter(users));
-                                }
-                            });
-                            break;
-                        case 2:
-                            friend_list.setAdapter(new FriendListAdapter(users));
-                            break;
-                    }
+                                    break;
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -277,20 +285,20 @@ public class EditListActivity extends AppCompatActivity {
             });
 
             if (invites.contains(getItem(position)))
-                holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
             else
-                holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
             holder.select.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!invites.contains(getItem(position))) {
                         invites.add(getItem(position));
                         invite_adapter.notifyDataSetChanged();
-                        holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.checkmark));
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                     } else {
                         invites.remove(getItem(position));
                         invite_adapter.notifyDataSetChanged();
-                        holder.select.setImageDrawable(mainActivity.getDrawable(R.drawable.plus_button));
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                     }
                 }
             });

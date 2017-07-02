@@ -23,12 +23,13 @@ import java.util.List;
 
 public class SearchPeopleCustomAdapter extends BaseAdapter {
     private Activity mainActivity;
-    private List<User> userList;
+    private List<User> userList, following;
     private static LayoutInflater inflater;
 
-    public SearchPeopleCustomAdapter(Activity mainActivity, List<User> userList) {
+    public SearchPeopleCustomAdapter(Activity mainActivity, List<User> userList, List<User> following) {
         super();
         this.userList = userList;
+        this.following = following;
         this.mainActivity = mainActivity;
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -81,7 +82,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
 
         if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
             holder.follow.setVisibility(View.INVISIBLE);
-        } else if (!containsID(CurrentUser.theUser.getFollowing(), user.getUserID())) {
+        } else if (!containsID(following, user.getUserID())) {
             changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
@@ -95,7 +96,6 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                removeID(CurrentUser.theUser.getFollowing(), user.getUserID());
                                 changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
                             }
                         }
@@ -106,7 +106,6 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
-                                CurrentUser.theUser.getFollowing().add(user);
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
                                 DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), "", "following", null);
                                 DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.theUser.getUserID(), "", "followed", null);
@@ -151,14 +150,5 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             }
         }
         return false;
-    }
-
-    private void removeID(List<User> following, String userID) {
-        for ( User user : following ) {
-            if ( user.getUserID().equals(userID) ) {
-                following.remove(user);
-                return;
-            }
-        }
     }
 }

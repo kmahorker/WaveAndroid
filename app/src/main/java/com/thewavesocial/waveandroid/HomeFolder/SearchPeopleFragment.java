@@ -1,6 +1,5 @@
 package com.thewavesocial.waveandroid.HomeFolder;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +22,8 @@ import java.util.List;
 
 public class SearchPeopleFragment extends Fragment {
     HomeSwipeActivity mainActivity;
+    private SearchView searchbar;
+    private ListView peopleListView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,36 +35,40 @@ public class SearchPeopleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
-        final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
-        final ListView peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
+        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
+        peopleListView = (ListView) view.findViewById(R.id.searchPeople_list);
 
         //Auto-search database for existing query on start
-        if (!searchbar.getQuery().toString().isEmpty()) {
-            server_getUsersByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<User>>() {
-                @Override
-                public void onResultReady(ArrayList<User> result) {
-                    peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, result));
-                }
-            });
-        }
+        if (!searchbar.getQuery().toString().isEmpty())
+            searchQueryOnServer(searchbar.getQuery().toString());
         searchbar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if ( query.isEmpty() )
-                    return false;
-                server_getUsersByKeyword(query, new OnResultReadyListener<ArrayList<User>>() {
-                    @Override
-                    public void onResultReady(ArrayList<User> result) {
-                        peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,result));
-                    }
-                });
-                return true;
+                if ( !query.isEmpty() )
+                    searchQueryOnServer(query);
+                return !query.isEmpty();
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-//                peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity,
-//                        searchPeople(userList, newText)));
                 return false;
+            }
+        });
+    }
+
+    private void searchQueryOnServer(String query) {
+        server_getUsersByKeyword(query, new OnResultReadyListener<ArrayList<User>>() {
+            @Override
+            public void onResultReady(ArrayList<User> result) {
+                getFollowingAndUpdateList(result);
+            }
+        });
+    }
+
+    private void getFollowingAndUpdateList(final ArrayList<User> result) {
+        server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> following) {
+                peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, result, following));
             }
         });
     }
