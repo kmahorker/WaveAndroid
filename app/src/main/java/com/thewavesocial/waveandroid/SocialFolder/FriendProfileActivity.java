@@ -119,14 +119,17 @@ public class FriendProfileActivity extends AppCompatActivity {
             public void onResultReady(final List<User> followings) {
                 String text = followings.size() + "\nfollowing";
                 following_textview.setText(text);
-
-                if (userID.equals(CurrentUser.theUser.getUserID())) {
+            }
+        });
+        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+            @Override
+            public void onResultReady(List<User> followings) {
+                if (userID.equals(CurrentUser.theUser.getUserID()))
                     follow_button.setVisibility(View.INVISIBLE);
-                } else if (!containsID(followings, userID)) {
+                else if (!containsID(followings, userID))
                     changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
-                } else {
+                else
                     changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
-                }
 
                 follow_button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -185,6 +188,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         });
     }
 
+    
     private boolean containsID(List<User> following, String userID) {
         for ( User user : following ) {
             if ( user.getUserID().equals(userID) ) {
@@ -200,6 +204,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         follow_button.setTextColor(mainActivity.getResources().getColor(textColor));
         follow_button.setBackgroundResource(backgroundColor);
     }
+
 
     private void extractValues(ArrayList<Notification> result, final OnResultReadyListener<NotificationPair> delegate) {
         final NotificationPair senderObjects = new NotificationPair(new TreeMap<Long, Notification>(Collections.reverseOrder()),
@@ -249,6 +254,7 @@ public class FriendProfileActivity extends AppCompatActivity {
             }
         }
     }
+
 
     class NotificationPair {
         private TreeMap<Long, Notification> notifications;
