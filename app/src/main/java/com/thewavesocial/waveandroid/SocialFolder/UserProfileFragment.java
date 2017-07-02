@@ -105,7 +105,7 @@ public class UserProfileFragment extends Fragment {
         goingButton = (TextView) mainActivity.findViewById(R.id.user_going_button);
         progressBar = (ProgressBar) mainActivity.findViewById(R.id.user_notification_progressbar);
 
-        getServerFollowing();
+        updateFollowingFollowers();
 
         DatabaseAccess.server_getProfilePicture(CurrentUser.theUser.getUserID(), new OnResultReadyListener<Bitmap>() {
             @Override
@@ -210,34 +210,31 @@ public class UserProfileFragment extends Fragment {
         activityButton.performClick();
     }
 
-    private void getServerFollowing() {
+    /**Get following and followers list from server and update UI*/
+    private void updateFollowingFollowers() {
         DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
-            public void onResultReady(final List<User> result) {
-                getServerFollowers(result);
-            }
-        });
-    }
-
-    private void getServerFollowers(final List<User> following) {
-        DatabaseAccess.server_getUserFollowers(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
-            @Override
-            public void onResultReady(final List<User> followers) {
-                String text = followers.size() + "\nfollowers";
-                followers_text.setText(text);
-                followers_text.setOnClickListener(new View.OnClickListener() {
+            public void onResultReady(final List<User> following) {
+                DatabaseAccess.server_getUserFollowers(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
                     @Override
-                    public void onClick(View v) {
-                        showPopup(PopupPage.FOLLOWERS, new ArrayList<>(followers), new ArrayList<>(following));
-                    }
-                });
+                    public void onResultReady(final List<User> followers) {
+                        String text = followers.size() + "\nfollowers";
+                        followers_text.setText(text);
+                        followers_text.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showPopup(PopupPage.FOLLOWERS, new ArrayList<>(followers), new ArrayList<>(following));
+                            }
+                        });
 
-                text = following.size() + "\nfollowing";
-                following_text.setText(text);
-                following_text.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showPopup(PopupPage.FOLLOWING, new ArrayList<>(following), new ArrayList<>(following));
+                        text = following.size() + "\nfollowing";
+                        following_text.setText(text);
+                        following_text.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showPopup(PopupPage.FOLLOWING, new ArrayList<>(following), new ArrayList<>(following));
+                            }
+                        });
                     }
                 });
             }
@@ -365,4 +362,9 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateFollowingFollowers();
+    }
 }
