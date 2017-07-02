@@ -15,7 +15,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="15dp"
-        android:background="@drawable/round_shape"/>
+        android:background="@drawable/round_shape_grey"/>
 
     <TextView
         android:id="@+id/eachSearchPeople_follow"

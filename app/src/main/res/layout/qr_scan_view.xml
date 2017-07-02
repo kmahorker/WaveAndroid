@@ -10,7 +10,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="20dp"
-        android:background="@drawable/round_shape"
+        android:background="@drawable/round_shape_grey"
         android:layout_centerVertical="true"/>
 
     <TextView

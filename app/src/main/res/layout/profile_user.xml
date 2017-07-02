@@ -9,7 +9,7 @@
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:id="@+id/user_profile_pic"
-        android:background="@drawable/round_shape"
+        android:background="@drawable/round_shape_shadow"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:elevation="2dp"/> <!-- profile picture-->

@@ -188,7 +188,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         });
     }
 
-    
+
     private boolean containsID(List<User> following, String userID) {
         for ( User user : following ) {
             if ( user.getUserID().equals(userID) ) {
