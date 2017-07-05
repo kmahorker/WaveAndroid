@@ -64,25 +64,32 @@ public class PartyProfileFragment extends Fragment {
         actionbar_social = (TextView) mainActivity.getSupportActionBar().getCustomView().findViewById(R.id.actionbar_activity_home_text_social);
 
         setupReferences();
-        setupOnClicks();
+
+        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<Party>> result) {
+                setupOnClicks(result);
+            }
+        });
     }
 
-    private void setupOnClicks() {
+    private void setupOnClicks(final HashMap<String, ArrayList<Party>> userParties) {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (containsID(CurrentUser.theUser.getHosting(), party.getPartyID()))
+                if (containsID(userParties.get("hosting"), party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Hosting.", Toast.LENGTH_LONG).show();
-                else if (containsID(CurrentUser.theUser.getBouncing(), party.getPartyID()))
+                else if (containsID(userParties.get("bouncing"), party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Bouncing.", Toast.LENGTH_LONG).show();
-                else if (containsID(CurrentUser.theUser.getGoing(),party.getPartyID()))
+                else if (containsID(userParties.get("going"),party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Going.", Toast.LENGTH_LONG).show();
+                else if (containsID(userParties.get("attending"),party.getPartyID()))
+                    Toast.makeText(mainActivity, "Party Already attending.", Toast.LENGTH_LONG).show();
                 else {
                     DatabaseAccess.server_manageUserForParty(CurrentUser.theUser.getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if ( result.equals("success") ) {
-                                CurrentUser.theUser.getAttending().add(0, party);
                                 Toast.makeText(mainActivity, "Success.", Toast.LENGTH_LONG).show();
                                 actionbar_social.setText("SOCIAL(1)");
                                 ((TextView)mainActivity.findViewById(R.id.user_going_button)).setText("Going(1)");
@@ -90,12 +97,6 @@ public class PartyProfileFragment extends Fragment {
                                 Toast.makeText(mainActivity, "Error.", Toast.LENGTH_LONG).show();
                         }
                     });
-                }
-                if ( CurrentUser.theUser.getAttending().contains(party.getPartyID()) ) {
-                    Toast.makeText(mainActivity, "Party Already Added.", Toast.LENGTH_LONG).show();
-                } else {
-                    CurrentUser.theUser.getAttending().add(0, party);
-                    Toast.makeText(mainActivity, "Party Added!", Toast.LENGTH_LONG).show();
                 }
                 Intent intent = new Intent(mainActivity, EventStatsActivity.class);
                 intent.putExtra("partyObject", party);

@@ -23,6 +23,7 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
@@ -215,7 +216,7 @@ public class UserActionAdapter extends BaseAdapter {
     }
 
     private View setupViewAttending(final int position, View convertView, ViewGroup parent) {
-        Holder2 holder;
+        final Holder2 holder;
         View layoutView = convertView;
         if (convertView == null) {
             layoutView = inflater.inflate(R.layout.each_userattending_item, null);
@@ -225,16 +226,20 @@ public class UserActionAdapter extends BaseAdapter {
             holder = (Holder2) layoutView.getTag();
         }
 
-        Party party = partyList.get(position);
+        final Party party = partyList.get(position);
         holder.partyEmoji = (EmojiconTextView) layoutView.findViewById(R.id.eachUser_partyEmoji_icon);
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachUser_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachUser_partyInfo_item);
 
-        if (party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty()) {
+        if (party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty())
             holder.partyEmoji.setText(party.getPartyEmoji());
-        }
         holder.partyname.setText(party.getName());
-        holder.partyInfo.setText(getCustomInfoText(party));
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                holder.partyInfo.setText(getCustomInfoText(party, result.get("going").size()));
+            }
+        });
 
         layoutView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,10 +255,10 @@ public class UserActionAdapter extends BaseAdapter {
         return layoutView;
     }
 
-    private String getCustomInfoText(Party party) {
+    private String getCustomInfoText(Party party, int goingSize) {
         String compose = "";
         compose += getDays(party.getStartingDateTime()) + " days  ";
-        compose += party.getAttendingUsers().size() + " going";
+        compose += goingSize + " going";
         return compose;
     }
 

@@ -19,6 +19,8 @@ import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
@@ -26,11 +28,13 @@ import github.ankushsachdeva.emojicon.EmojiconTextView;
 public class SearchEventCustomAdapter extends BaseAdapter {
     private Activity mainActivity;
     private List<Party> partyList;
+    private HashMap<String, ArrayList<Party>> userParties;
     private static LayoutInflater inflater;
 
-    public SearchEventCustomAdapter(Activity mainActivity, List<Party> partyList) {
+    public SearchEventCustomAdapter(Activity mainActivity, List<Party> partyList, HashMap<String, ArrayList<Party>> userParties) {
         super();
         this.partyList = partyList;
+        this.userParties = userParties;
         this.mainActivity = mainActivity;
         inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -82,18 +86,20 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         holder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (containsID(CurrentUser.theUser.getHosting(), party.getPartyID()))
+                if (containsID(userParties.get("hosting"), party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Hosting.", Toast.LENGTH_LONG).show();
-                else if (containsID(CurrentUser.theUser.getBouncing(), party.getPartyID()))
+                else if (containsID(userParties.get("bouncing"), party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Bouncing.", Toast.LENGTH_LONG).show();
-                else if (containsID(CurrentUser.theUser.getGoing(),party.getPartyID()))
+                else if (containsID(userParties.get("going"),party.getPartyID()))
                     Toast.makeText(mainActivity, "Party Already Going.", Toast.LENGTH_LONG).show();
+                else if (containsID(userParties.get("attending"), party.getPartyID())) {
+                    Toast.makeText(mainActivity, "Party Already Attending.", Toast.LENGTH_LONG).show();
+                }
                 else {
                     DatabaseAccess.server_manageUserForParty(CurrentUser.theUser.getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if ( result.equals("success") ) {
-                                CurrentUser.theUser.getAttending().add(0, party);
                                 Toast.makeText(mainActivity, "Success.", Toast.LENGTH_LONG).show();
                                 ((TextView)mainActivity.findViewById(R.id.actionbar_activity_home_text_social)).setText("SOCIAL(1)");
                                 ((TextView)mainActivity.findViewById(R.id.user_going_button)).setText("Going(1)");

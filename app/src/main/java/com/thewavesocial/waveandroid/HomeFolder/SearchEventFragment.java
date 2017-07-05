@@ -18,10 +18,13 @@ import com.thewavesocial.waveandroid.R;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchEventFragment extends Fragment {
 
+    private SearchView searchbar;
+    private ListView eventListView;
     private HomeSwipeActivity mainActivity;
 
     @Override
@@ -34,16 +37,25 @@ public class SearchEventFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
 
-        final SearchView searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
-        final ListView eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
+        searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
+        eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
 
+        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<Party>> result) {
+                performSearch(result);
+            }
+        });
+    }
+
+    private void performSearch(final HashMap<String, ArrayList<Party>> userParties) {
         //Auto-search database for existing query on start
         if (!searchbar.getQuery().toString().isEmpty()) {
             server_getEventsByKeyword(searchbar.getQuery().toString(), new OnResultReadyListener<ArrayList<Party>>() {
                 @Override
                 public void onResultReady(ArrayList<Party> result) {
                     if (result != null)
-                        eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result));
+                        eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result, userParties));
                 }
             });
         }
@@ -57,15 +69,13 @@ public class SearchEventFragment extends Fragment {
                     @Override
                     public void onResultReady(ArrayList<Party> result) {
                         if (result != null)
-                            eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result));
+                            eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity, result, userParties));
                     }
                 });
                 return true;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-//                eventListView.setAdapter(new SearchEventCustomAdapter(mainActivity,
-//                        searchEvents(eventList, newText)));
                 return false;
             }
         });

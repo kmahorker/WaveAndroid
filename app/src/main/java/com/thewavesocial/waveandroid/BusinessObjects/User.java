@@ -25,15 +25,7 @@ public class User implements Parcelable {
     private String gender; //
     private Calendar birthday; //
     private List<BestFriend> bestFriends; //
-
-    //Below contain list of PartyIDs
-    private List<Party> hosted;
-    private List<Party> hosting;
-    private List<Party> attended;
-    private List<Party> attending;
-    private List<Party> bouncing;
-    private List<Party> going;
-    private Bitmap profilePic;
+    private Bitmap profilePic; //
 
     public User() {
         userID = ""; //
@@ -44,12 +36,6 @@ public class User implements Parcelable {
         gender = ""; //
         birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
-        hosting = new ArrayList<>();
-        attended = new ArrayList<>();
-        hosted = new ArrayList<>();
-        bouncing = new ArrayList<>();
-        attending = new ArrayList<>();
-        going = new ArrayList<>();
         profilePic = null; //TODO Use different constructor
     }
 
@@ -61,12 +47,6 @@ public class User implements Parcelable {
                 String gender,
                 Calendar birthday,
                 List<BestFriend> bestFriends,
-                List<Party> hosting,
-                List<Party> attended,
-                List<Party> hosted,
-                List<Party> bouncing,
-                List<Party> attending,
-                List<Party> going,
                 Bitmap profilePic) {
         this.userID = userID;
         this.firstName = firstName;
@@ -76,12 +56,6 @@ public class User implements Parcelable {
         this.gender = gender;
         this.birthday = birthday;
         this.bestFriends = bestFriends;
-        this.hosting = hosting;
-        this.hosted = hosted;
-        this.attending = attending;
-        this.attended = attended;
-        this.bouncing = bouncing;
-        this.going = going;
         this.profilePic = profilePic;
     }
 
@@ -116,22 +90,6 @@ public class User implements Parcelable {
 
     public void setBestFriends(List<BestFriend> bestFriends) {
         this.bestFriends = bestFriends;
-    }
-
-    public void setAttended(List<Party> attended) {
-        this.attended = attended;
-    }
-
-    public void setHosted(List<Party> hosted) {
-        this.hosted = hosted;
-    }
-
-    public void setBouncing(List<Party> bouncing) {
-        this.bouncing = bouncing;
-    }
-
-    public void setAttending(List<Party> attending) {
-        this.attending = attending;
     }
 
     public void setProfilePic(Bitmap profilePic) {
@@ -175,23 +133,6 @@ public class User implements Parcelable {
         return bestFriends;
     }
 
-    public List<Party> getAttended() {
-        return attended;
-    }
-
-    public List<Party> getHosted() {
-        return hosted;
-    }
-
-    public List<Party> getBouncing() {
-        return bouncing;
-    }
-
-
-    public List<Party> getAttending() {
-        return attending;
-    }
-
     public Bitmap getProfilePic() {
         return profilePic;
     }
@@ -199,22 +140,6 @@ public class User implements Parcelable {
     @Override
     public String toString() {
         return firstName + " " + lastName;
-    }
-
-    public List<Party> getHosting() {
-        return hosting;
-    }
-
-    public void setHosting(List<Party> hosting) {
-        this.hosting = hosting;
-    }
-
-    public List<Party> getGoing() {
-        return going;
-    }
-
-    public void setGoing(List<Party> going) {
-        this.going = going;
     }
 
     @Override
@@ -244,42 +169,6 @@ public class User implements Parcelable {
         } else {
             bestFriends = null;
         }
-        if (in.readByte() == 0x01) {
-            hosting = new ArrayList<>();
-            in.readList(hosting, Party.class.getClassLoader());
-        } else {
-            hosting = null;
-        }
-        if (in.readByte() == 0x01) {
-            attended = new ArrayList<>();
-            in.readList(attended, Party.class.getClassLoader());
-        } else {
-            attended = null;
-        }
-        if (in.readByte() == 0x01) {
-            hosted = new ArrayList<>();
-            in.readList(hosted, String.class.getClassLoader());
-        } else {
-            hosted = null;
-        }
-        if (in.readByte() == 0x01) {
-            bouncing = new ArrayList<>();
-            in.readList(bouncing, Party.class.getClassLoader());
-        } else {
-            bouncing = null;
-        }
-        if (in.readByte() == 0x01) {
-            attending = new ArrayList<>();
-            in.readList(attending, Party.class.getClassLoader());
-        } else {
-            attending = null;
-        }
-        if (in.readByte() == 0x01) {
-            going = new ArrayList<>();
-            in.readList(going, Party.class.getClassLoader());
-        } else {
-            going = null;
-        }
         profilePic = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
     }
 
@@ -302,42 +191,6 @@ public class User implements Parcelable {
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(bestFriends);
-        }
-        if (hosting == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(hosting);
-        }
-        if (attended == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(attended);
-        }
-        if (hosted == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(hosted);
-        }
-        if (bouncing == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(bouncing);
-        }
-        if (attending == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(attending);
-        }
-        if (going == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(going);
         }
         dest.writeValue(profilePic);
     }

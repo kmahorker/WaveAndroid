@@ -22,9 +22,6 @@ public class Party implements Parcelable {
     private Calendar startingDateTime;
     private Calendar endingDateTime;
     private MapAddress mapAddress;
-    private List<String> hostingUsers;
-    private List<String> bouncingUsers;
-    private List<Attendee> attendingUsers;
     private boolean isPublic;
     private String partyEmoji;
     private int minAge;
@@ -38,7 +35,6 @@ public class Party implements Parcelable {
         startingDateTime = Calendar.getInstance();
         endingDateTime = Calendar.getInstance();
         mapAddress = new MapAddress();
-        attendingUsers = new ArrayList<>();
         isPublic = false;
         partyEmoji = "";
         minAge = 0;
@@ -53,9 +49,6 @@ public class Party implements Parcelable {
             Calendar startingDateTime,
             Calendar endingDateTime,
             MapAddress mapAddress,
-            List<String> hostingUsers,
-            List<String> bouncingUsers,
-            List<Attendee> attendingUsers,
             boolean isPublic,
             String partyEmoji,
             int minAge,
@@ -67,23 +60,10 @@ public class Party implements Parcelable {
         this.startingDateTime = startingDateTime;
         this.endingDateTime = endingDateTime;
         this.mapAddress = mapAddress;
-        this.hostingUsers = hostingUsers;
-        this.bouncingUsers = bouncingUsers;
-        this.attendingUsers = attendingUsers;
         this.isPublic = isPublic;
         this.partyEmoji = partyEmoji;
         this.minAge = minAge;
         this.maxAge = maxAge;
-    }
-
-    //Delete
-    public boolean removeAttending(String userIDToRemove) {
-        return attendingUsers.remove(userIDToRemove);
-    }
-
-    //Add
-    public void addAttending(Attendee attendeeToAdd) {
-        attendingUsers.add(attendeeToAdd);
     }
 
     //Setters
@@ -113,18 +93,6 @@ public class Party implements Parcelable {
 
     public void setMapAddress(MapAddress mapAddress) {
         this.mapAddress = mapAddress;
-    }
-
-    public void setHostingUsers(List<String> hostingUsers) {
-        this.hostingUsers = hostingUsers;
-    }
-
-    public void setBouncingUsers(List<String> bouncingUsers) {
-        this.bouncingUsers = bouncingUsers;
-    }
-
-    public void setAttendingUsers(List<Attendee> attendingUsers) {
-        this.attendingUsers = attendingUsers;
     }
 
     public void setIsPublic(boolean isPublic) {
@@ -158,18 +126,6 @@ public class Party implements Parcelable {
 
     public MapAddress getMapAddress() {
         return mapAddress;
-    }
-
-    public List<String> getHostingUsers() {
-        return hostingUsers;
-    }
-
-    public List<String> getBouncingUsers() {
-        return bouncingUsers;
-    }
-
-    public List<Attendee> getAttendingUsers() {
-        return attendingUsers;
     }
 
     public boolean getIsPublic() {
@@ -214,24 +170,6 @@ public class Party implements Parcelable {
         startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
         endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
         mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
-        if (in.readByte() == 0x01) {
-            hostingUsers = new ArrayList<String>();
-            in.readList(hostingUsers, String.class.getClassLoader());
-        } else {
-            hostingUsers = null;
-        }
-        if (in.readByte() == 0x01) {
-            bouncingUsers = new ArrayList<String>();
-            in.readList(bouncingUsers, String.class.getClassLoader());
-        } else {
-            bouncingUsers = null;
-        }
-        if (in.readByte() == 0x01) {
-            attendingUsers = new ArrayList<>();
-            in.readList(attendingUsers, String.class.getClassLoader());
-        } else {
-            attendingUsers = null;
-        }
         isPublic = in.readByte() != 0x00;
         partyEmoji = in.readString();
         minAge = in.readInt();
@@ -252,24 +190,6 @@ public class Party implements Parcelable {
         dest.writeValue(startingDateTime);
         dest.writeValue(endingDateTime);
         dest.writeValue(mapAddress);
-        if (hostingUsers == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(hostingUsers);
-        }
-        if (bouncingUsers == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(bouncingUsers);
-        }
-        if (attendingUsers == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(attendingUsers);
-        }
         dest.writeByte((byte) (isPublic ? 0x01 : 0x00));
         dest.writeString(partyEmoji);
         dest.writeInt(minAge);

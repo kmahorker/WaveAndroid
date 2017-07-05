@@ -10,13 +10,19 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
+
+import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getUsersOfEvent;
 
 public class ManagePartyCustomAdapter extends BaseAdapter {
     private Activity mainActivity;
@@ -72,7 +78,12 @@ public class ManagePartyCustomAdapter extends BaseAdapter {
             holder.partyEmoji.setText(party.getPartyEmoji());
         }
         holder.partyname.setText(party.getName());
-        holder.partyInfo.setText(getCustomInfoText(party));
+        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            @Override
+            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+                holder.partyInfo.setText(getCustomInfoText(party, result.get("going").size()));
+            }
+        });
 
         layoutView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,10 +98,10 @@ public class ManagePartyCustomAdapter extends BaseAdapter {
         return layoutView;
     }
 
-    private String getCustomInfoText(Party party) {
+    private String getCustomInfoText(Party party, int goingSize) {
         String compose = "";
         compose += getDays(party.getStartingDateTime()) + " days  ";
-        compose += party.getAttendingUsers().size() + " going";
+        compose += goingSize + " going";
         return compose;
     }
 

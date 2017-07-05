@@ -26,7 +26,6 @@
 
         <TextView
             android:id="@+id/eachUser_partyname_item"
-            android:text="Party Nameeeeeeeeeeeeeeee"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -38,7 +37,6 @@
 
         <TextView
             android:id="@+id/eachUser_partyInfo_item"
-            android:text="12 days 58 going"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"

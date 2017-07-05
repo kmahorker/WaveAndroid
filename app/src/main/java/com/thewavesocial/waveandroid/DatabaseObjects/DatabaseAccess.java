@@ -137,8 +137,8 @@ public final class DatabaseAccess {
             try {
                 URL request_url = new URL(url);
                 connection = (HttpURLConnection) request_url.openConnection();
-                connection.setReadTimeout(5000); //Time out both at 5 seconds
-                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(2000); //Time out both at 5 seconds
+                connection.setConnectTimeout(2000);
                 connection.setRequestMethod(endpoint); //Set endpoint
 
                 if (body != null) {
@@ -1467,7 +1467,7 @@ public final class DatabaseAccess {
 
         //Compose Party
         Party party = new Party(partyID, name, price, hostName, startingDateTimeCalendar, endingDateTimeCalendar,
-                mapAddress, hostingUsers, bouncingUsers, attendingUsers, isPublic, emoji, minAge, maxAge);
+                mapAddress, isPublic, emoji, minAge, maxAge);
         return party;
     }
 
@@ -1476,8 +1476,7 @@ public final class DatabaseAccess {
      */
     private static User constructUser(HashMap<String, String> info) {
         String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
-        List bestFriends = new ArrayList(), hosting = new ArrayList(), hosted = new ArrayList(), attending = new ArrayList(),
-                attended = new ArrayList(), bounced = new ArrayList(), going = new ArrayList();
+        List bestFriends = new ArrayList();
         Calendar birthday = Calendar.getInstance();
         try {
             userID = info.get("id");
@@ -1499,8 +1498,7 @@ public final class DatabaseAccess {
 
         //Compose user
         User user = new User(userID, firstName, lastName, email, college, gender, birthday,
-                bestFriends, hosting, attended, hosted, bounced, attending, going,
-                null);
+                bestFriends, null);
         return user;
     }
 
