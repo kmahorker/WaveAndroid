@@ -38,6 +38,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
@@ -277,12 +278,20 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
-            public void onResultReady(HashMap<String, ArrayList<User>> result) {
+            public void onResultReady(final HashMap<String, ArrayList<User>> result) {
                 if (result != null) {
                     String hostname = "", hostID = "";
                     if (!result.get("hosting").isEmpty()) {
                         hostname = result.get("hosting").get(0).getFullName();
                         hostID = result.get("hosting").get(0).getUserID();
+                        hostView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                                intent.putExtra("userObject", result.get("hosting").get(0));
+                                startActivity(intent);
+                            }
+                        });
                     }
                     hostView.setText(hostname);
 
