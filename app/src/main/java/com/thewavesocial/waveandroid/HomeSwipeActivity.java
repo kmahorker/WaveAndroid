@@ -3,7 +3,6 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -12,16 +11,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
@@ -33,7 +29,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 
 /**
  * Central activity that controls the swiping mechanism of host, map, and social fragments.
@@ -247,14 +242,9 @@ public class HomeSwipeActivity extends AppCompatActivity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == UserProfileFragment.ADD_IMAGE_INTENT_ID && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), selectedImage);
-                userProfileFragment.updateProfileImage(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (requestCode == UserProfileFragment.INTENT_PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            Bitmap bitmap = data.getExtras().getParcelable("data");
+            userProfileFragment.updateProfileImage(bitmap);
         } else
             super.onActivityResult(requestCode, resultCode, data);
     }

@@ -37,7 +37,7 @@ import java.util.TreeMap;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 public class UserProfileFragment extends Fragment {
-    public final static int ADD_IMAGE_INTENT_ID = 5, LIST_ACTIVITY = 2, LIST_GOING = 1, LOAD_SIZE = 8;
+    public final static int INTENT_PICK_IMAGE = 1, LIST_ACTIVITY = 2, LIST_GOING = 3, LOAD_SIZE = 4;
     private boolean flag_loading_notif;
     private int flag_list_type;
     private int notifications_offset;
@@ -123,9 +123,17 @@ public class UserProfileFragment extends Fragment {
         profile_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                mainActivity.startActivityForResult(i, ADD_IMAGE_INTENT_ID);
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.putExtra("crop", "true");
+                intent.putExtra("scale", true);
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                intent.putExtra("outputX", 200);
+                intent.putExtra("outputY", 200);
+                intent.putExtra("noFaceDetection", true);
+                intent.putExtra("return-data", true);
+                intent.putExtra("cancellable", true);
+                mainActivity.startActivityForResult(intent, INTENT_PICK_IMAGE);
             }
         });
         activityButton.setOnClickListener(new View.OnClickListener() {
