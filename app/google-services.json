@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "109335372915",
+    "firebase_url": "https://plug-social.firebaseio.com",
+    "project_id": "plug-social",
+    "storage_bucket": "plug-social.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109335372915:android:af4f320bf2571e2a",
+        "android_client_info": {
+          "package_name": "com.thewavesocial.waveandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109335372915-0riblf01asgm0j5n39e1ik2ms0abk7bq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thewavesocial.waveandroid",
+            "certificate_hash": "616a52e0373f8cf0ff63ea70e9abae352cf8905e"
+          }
+        },
+        {
+          "client_id": "109335372915-qo93tksjgbgfnhj0tu5f9h6l976o0862.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWDcDa1RqlnsP_SiaDkd7Jq2v6l8E67iA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109335372915-qo93tksjgbgfnhj0tu5f9h6l976o0862.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
