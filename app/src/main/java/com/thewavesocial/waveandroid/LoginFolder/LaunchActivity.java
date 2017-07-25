@@ -10,7 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.DatabaseObjects.RequestComponents;
@@ -23,14 +30,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class LaunchActivity extends AppCompatActivity {
+    private static final String TAG = "Launch test";
     private int DELAY = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate: startup success");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup_layout);
         getSupportActionBar().hide();
-        DatabaseAccess.saveTokentoLocal(this, "123", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
+        DatabaseAccess.saveTokentoLocal(this, "123");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
 
         enterApp();
     }
@@ -66,7 +75,29 @@ public class LaunchActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                String url = getString(R.string.server_url) + "users/"
+                Log.i("Logging in", "run: attempting to login ");
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild(DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("id"))){
+                            CurrentUser.setContext(LaunchActivity.this, new OnResultReadyListener<Boolean>() {
+                                @Override
+                                public void onResultReady(Boolean result) {
+                                    Intent intent = new Intent(LaunchActivity.this, HomeSwipeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+                        else
+                            showDocuments();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+/*                String url = getString(R.string.server_url) + "users/"
                         + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("id") + "?access_token="
                         + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("jwt");
                 RequestComponents comp = new RequestComponents(url, "GET", null);
@@ -94,7 +125,7 @@ public class LaunchActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                }).execute();
+                }).execute();*/
 
             }
         }, DELAY);

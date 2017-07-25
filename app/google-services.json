@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "109335372915-qt7one6i7t6o0vop48tb7l1hkkd9ru2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thewavesocial.waveandroid",
+            "certificate_hash": "092c0a67272a590b4ba1709d3f5af4917a07d912"
+          }
+        },
+        {
+          "client_id": "109335372915-f2lvkm9qhdq0ibdpg6c720ocg7amhr9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thewavesocial.waveandroid",
+            "certificate_hash": "e54c76ce4b234e031475cf0c04cae5fa2fe5e468"
+          }
+        },
+        {
           "client_id": "109335372915-0riblf01asgm0j5n39e1ik2ms0abk7bq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -42,6 +58,13 @@
             {
               "client_id": "109335372915-qo93tksjgbgfnhj0tu5f9h6l976o0862.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "109335372915-9gg4d0p2d7hr8hit1kgltc9rvghmra91.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wavesocial.WaveiOS"
+              }
             }
           ]
         },

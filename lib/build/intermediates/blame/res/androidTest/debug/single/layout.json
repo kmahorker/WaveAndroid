@@ -1,5 +1,9 @@
 [
     {
+        "merged": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\emojicons.xml",
+        "source": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\layout\\emojicons.xml"
+    },
+    {
         "merged": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\emojicons.xml",
         "source": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\layout\\emojicons.xml"
     },
@@ -10,5 +14,13 @@
     {
         "merged": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\emojicon_grid.xml",
         "source": "C:\\Users\\kmaho\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\layout\\emojicon_grid.xml"
+    },
+    {
+        "merged": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\emojicon_item.xml",
+        "source": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\layout\\emojicon_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\emojicon_grid.xml",
+        "source": "C:\\Users\\Tim Kwong\\AndroidStudioProjects\\WaveAndroid\\lib\\build\\intermediates\\bundles\\debug\\res\\layout\\emojicon_grid.xml"
     }
 ]

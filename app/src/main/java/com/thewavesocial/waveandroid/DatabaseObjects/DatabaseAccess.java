@@ -6,12 +6,26 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
@@ -50,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -438,11 +453,10 @@ public final class DatabaseAccess {
     /**
      * Save login info to phone.
      */
-    public static void saveTokentoLocal(Activity mainActivity, String id, String jwt) {
+    public static void saveTokentoLocal(Activity mainActivity, String id) {
         SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("id", id);
-        editor.putString("jwt", jwt);
         editor.commit();
     }
 
@@ -457,353 +471,63 @@ public final class DatabaseAccess {
         return tokens;
     }
 
-
-//todo --------------------------------------------------------------------------------POST Requests
-
-    /**
-     * Create new party in server
-     */
-    public static void server_createNewParty(String name,
-                                             String emoji,
-                                             double price,
-                                             String address,
-                                             double lat,
-                                             double lng,
-                                             boolean isPublic,
-                                             double startTimeStamp,
-                                             double endingTimeStamp,
-                                             int minAge,
-                                             int maxAge,
-                                             final OnResultReadyListener<String> delegate) {
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/events?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        HashMap<String, String> event_info = new HashMap();
-        event_info.put("name", name);
-        event_info.put("emoji", emoji);
-        event_info.put("price", price + "");
-        event_info.put("address", address);
-        event_info.put("lat", lat + "");
-        event_info.put("lng", lng + "");
-        event_info.put("is_public", isPublic ? "1" : "0");
-        event_info.put("start_timestamp", startTimeStamp + "");
-        event_info.put("end_timestamp", endingTimeStamp + "");
-        event_info.put("min_age", minAge + "");
-        event_info.put("max_age", maxAge + "");
-
-        comps[0] = new RequestComponents(url, "POST", event_info);
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
+    public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
+/*
+        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
+                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+*/
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child(getTokenFromLocal(mainActivity).get("id").toString());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        UploadTask uploadTask = storageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status = main_json.getString("status");
-
-                    if (!status.equals("error")) {
-                        JSONObject data_json = main_json.getJSONObject("data");
-                        String event_id = data_json.getString("insertId");
-                        status += "," + event_id;
-                        if (delegate != null)
-                            delegate.onResultReady(status);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("CreateNewParty", result.get(0));
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
             }
-        }).execute();
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+            }
+        });
     }
 
-    /**
-     * Create new user in server
-     */
-    public static void server_createNewUser(String first_name,
-                                            String last_name,
-                                            String email,
-                                            String college,
-                                            String password,
-                                            String fb_id,
-                                            String fb_token,
-                                            String gender,
-                                            String birthday,
-                                            final OnResultReadyListener<String> delegate) {
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = "https://api.theplugsocial.com/v1/users";
-        HashMap<String, String> event_info = new HashMap();
-        event_info.put("first_name", first_name);
-        event_info.put("last_name", last_name);
-        event_info.put("email", email);
-        event_info.put("college", college);
-        event_info.put("password", password);
-        event_info.put("fb_id", fb_id);
-        event_info.put("gender", gender);
-        event_info.put("birthday", birthday);
-
-        comps[0] = new RequestComponents(url, "POST", event_info);
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status = main_json.getString("status");
-
-                    if (!status.equals("error")) {
-                        JSONObject data_json = main_json.getJSONObject("data");
-                        String event_id = data_json.getString("insertId");
-                        status += "," + event_id;
-
-                        if (delegate != null)
-                            delegate.onResultReady(status);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("CreateNewUser", result.get(0));
-            }
-        }).execute();
-    }
-
-    /**
-     * Parameter action must be either "POST" or "DELETE"
-     */
-    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate) {
-        RequestComponents[] comps = new RequestComponents[1];
-        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users/" + userID + "/?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        HashMap<String, String> about = new HashMap();
-        about.put("relationship", relationship);
-
-        if (action.equals("POST"))
-            comps[0] = new RequestComponents(url, "POST", about);
-        else if (action.equals("DELETE"))
-            comps[0] = new RequestComponents(url, "DELETE", about);
-        else
-            Log.d("Action", "Illegal passed action argument: " + action);
-
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("ManageUserForParty", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    /**
-     * Update user in server
-     */
-    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents[] comps = new RequestComponents[1];
-        comps[0] = new RequestComponents(url, "POST", body);
-
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("UpdateUser", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    /**
-     * Update party in server
-     */
-    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents[] comps = new RequestComponents[1];
-        comps[0] = new RequestComponents(url, "POST", body);
-
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("UpdateParty", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    /**
-     * Follow a user
-     */
-    public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "POST", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("Follow User", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    /**
-     * Add Best Friend on server
-     */
-    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");
-        HashMap<String, String> body = new HashMap<>();
-        body.put("name", name);
-        body.put("contact", number);
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    String status = main_json.getString("status");
-                    if (delegate != null)
-                        delegate.onResultReady(status);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("addBestFriend", result.get(0) + "");
-            }
-        }).execute();
-    }
-
-    /**
-     * Invite user to event. Return either "success" or "error"
-     */
-    public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
-                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "POST", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("InviteUserToParty", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-    }
-
-    /**
-     * Create new notification. Return either "success" or "error"
-     */
-    public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
-                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        HashMap<String, String> body = new HashMap<>();
-        body.put("type", type);
-        body.put("sender_id", senderID);
-        body.put("event_id", eventID);
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CreateNotification", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-
-    }
-
-    /**
-     * Login using email and password. Return either success or error
-     */
-    public static void server_login_email(String email, String password, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "auth";
-        HashMap<String, String> body = new HashMap<>();
-        body.put("email", email);
-        body.put("password", password);
-
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                Log.d("Login by Email", result.get(0));
-                try {
-                    JSONObject jsonObject = new JSONObject(result.get(0));
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
-                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
-                        @Override
-                        public void onResultReady(User result) {
-                            if (result != null) {
-                                CurrentUser.theUser = result;
-                            }
-                        }
-                    });
-                    delegate.onResultReady("success");
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Incorrect email or password", "Sign in Error", true);
-                    delegate.onResultReady("error");
-                }
-            }
-        }).execute();
-    }
-
-    /**
-     * Login using facebook token. Return either success or error
-     */
     public static void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "FBauth";
-        HashMap<String, String> body = new HashMap<>();
+        //String url = mainActivity.getString(R.string.server_url) + "FBauth";
+        final HashMap<String, String> body = new HashMap<>();
         body.put("fb_token", fb_token);
-
-        RequestComponents comp = new RequestComponents(url, "POST", body);
-        new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        Query query = db.orderByChild("fb_id").startAt(fb_token);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                    if (postSnapshot.hasChild(body.get("fb_token"))) {
+                        DatabaseAccess.saveTokentoLocal(mainActivity, body.get("fb_token"));
+                        server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
+                            @Override
+                            public void onResultReady(User result) {
+                                if (result != null) {
+                                    CurrentUser.theUser = result;
+                                }
+                            }
+                        });
+                        delegate.onResultReady("success");
+                    }
+                    else
+                        delegate.onResultReady("error");
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        //RequestComponents comp = new RequestComponents(url, "POST", body);
+        /*new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 Log.d("Login by Facebook", result.get(0));
@@ -811,7 +535,7 @@ public final class DatabaseAccess {
                     JSONObject jsonObject = new JSONObject(result.get(0));
                     String user_id = jsonObject.getJSONObject("data").getString("id");
                     String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id, access_token);
+                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id);, access_token);
 
                     server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
                         @Override
@@ -827,276 +551,369 @@ public final class DatabaseAccess {
                     delegate.onResultReady("error");
                 }
             }
-        }).execute();
-    }
-
-    /**
-     * Wrapper method for uploading image. Return either OK or Error.
-     */
-    public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
-                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        new ImageUploadTask(mainActivity, url, bitmap, new OnResultReadyListener<String>() {
-            @Override
-            public void onResultReady(String result) {
-                if (delegate != null)
-                    delegate.onResultReady(result);
-            }
-        }).execute();
+        });*/
     }
 
 
-//todo ---------------------------------------------------------------------------------GET Requests
+//todo --------------------------------------------------------------------------------POST Requests
 
-    /**
-     * Get user information
-     */
+    public static void server_createNewParty(String name,
+                                             String emoji,
+                                             double price,
+                                             String address,
+                                             double lat,
+                                             double lng,
+                                             boolean isPublic,
+                                             double startTimeStamp,
+                                             double endingTimeStamp,
+                                             int minAge,
+                                             int maxAge,
+                                             final OnResultReadyListener<String> delegate){
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        String eventID = UUID.randomUUID().toString(); //unique ID for each event
+        db.child(eventID).child("name").setValue(name);
+        db.child(eventID).child("emoji").setValue(emoji);
+        db.child(eventID).child("price").setValue(price);
+        db.child(eventID).child("address").setValue(address);
+        db.child(eventID).child("lat").setValue(lat);
+        db.child(eventID).child("lng").setValue(lng);
+        db.child(eventID).child("isPublic").setValue(isPublic);
+        db.child(eventID).child("startTimeStamp").setValue(startTimeStamp);
+        db.child(eventID).child("endingTimeStamp").setValue(endingTimeStamp);
+        db.child(eventID).child("minAge").setValue(minAge);
+        db.child(eventID).child("maxAge").setValue(maxAge);
+        if(delegate != null)
+            delegate.onResultReady("success,"+eventID);
+
+/*	HashMap<String, String> event_info = new HashMap();
+	event_info.put("name", name);
+	event_info.put("emoji", emoji);
+	event_info.put("price", price + "");
+	event_info.put("address", address);
+	event_info.put("lat", lat + "");
+	event_info.put("lng", lng + "");
+	event_info.put("is_public", isPublic ? "1" : "0");
+	event_info.put("start_timestamp", startTimeStamp + "");
+	event_info.put("end_timestamp", endingTimeStamp + "");
+	event_info.put("min_age", minAge + "");
+	event_info.put("max_age", maxAge + "");*/ //obsolete
+    }
+
+    public static void server_createNewUser(String first_name,
+                                            String last_name,
+                                            String email,
+                                            String college,
+                                            String password,
+                                            String fb_id,
+                                            String fb_token,
+                                            String gender,
+                                            String birthday,
+                                            final OnResultReadyListener<String> delegate) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
+        String userID = UUID.randomUUID().toString(); //unique ID for each event
+        db.child(userID).child("first_name").setValue(first_name);
+        db.child(userID).child("last_name").setValue(last_name);
+        db.child(userID).child("email").setValue(email);
+        db.child(userID).child("college").setValue(college);
+        db.child(userID).child("password").setValue(password);
+        db.child(userID).child("fb_id").setValue(fb_id);
+        db.child(userID).child("fb_token").setValue(fb_token);
+        db.child(userID).child("gender").setValue(gender);
+        db.child(userID).child("birthday").setValue(birthday);
+        if(delegate != null)
+            delegate.onResultReady("success,"+userID);
+
+    }
+
+
+    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate) {
+        //RequestComponents[] comps = new RequestComponents[1];
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("users").child(userID);
+        //HashMap<String, String> about = new HashMap();
+        //about.put("relationship", relationship);
+        if (action.equals("POST"))
+            db.child("relationship").setValue(relationship);
+        else if (action.equals("DELETE"))
+            db.child("relationship").removeValue(); //"DELETE" will just remove the relationship
+        else
+            Log.d("Action", "Illegal passed action argument: " + action);
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
+        Iterator it = body.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            db.child(pair.getKey().toString()).setValue(pair.getValue()); //iterates through every value in body parameter and updates those values in database
+        }
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+        //String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
+/*        RequestComponents[] comps = new RequestComponents[1];
+        comps[0] = new RequestComponents(url, "POST", body);*/
+        Iterator it = body.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            db.child(pair.getKey().toString()).setValue(pair.getValue()); //iterates through every value in body parameter and updates those values in database
+        }
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
+        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        db.child(userID).child("followings").child(targetID).setValue(targetID); //not so sure what value should appear as in followings list, so I just set it to the input targetID
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");
+        HashMap<String, String> body = new HashMap<>();*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        BestFriend bestFriend = new BestFriend(name, number);
+        db.setValue(bestFriend);
+        db.child("userID").setValue(userId);
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
+/*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites").child(userID);
+        db.setValue(userID); //just setting the value of a user invited to the party as the userID, can change this as well
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
+
+    public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
+                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        HashMap<String, String> body = new HashMap<>();*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(receiverID).child("notifications");
+        db.child("sender_id").setValue(senderID);
+        db.child("event_id").setValue(eventID);
+        db.child("type").setValue(type);
+        if(delegate != null)
+            delegate.onResultReady("success");
+    }
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        RequestComponents comp = new RequestComponents(url, "GET", null);*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                HashMap<String, String> body = new HashMap<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    body = extractJSONData(main_json.getJSONObject("data"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (delegate != null)
+                        delegate.onResultReady(user);
                 }
-
-                Log.d("CurUser_GetUserInfo", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(constructUser(body));
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
-    /**
-     * Get party information from server
-     */
-    public static void server_getPartyObject(String partyID, final OnResultReadyListener<Party> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
+    public static void server_getPartyObject(final String partyID, final OnResultReadyListener<Party> delegate) {
+/*        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        RequestComponents comp = new RequestComponents(url, "GET", null);*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                HashMap<String, String> body = new HashMap<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    body = extractJSONData(main_json.getJSONObject("data"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() != null){
+                    Party party = dataSnapshot.getValue(Party.class);
+                    if(delegate != null)
+                        delegate.onResultReady(party);
                 }
-
-                Log.d("CurUser_GetPartyInfo", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(constructParty(body));
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
-    /**
-     * Get user following from server
-     */
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<User>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("followers");
+        final List<User> followerList = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> followers = new ArrayList<>();
-                try {
-                    JSONObject list = new JSONObject(result.get(0));
-                    JSONArray main_json = list.getJSONArray("data");
-                    for (int i = 0; i < main_json.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(main_json.getJSONObject(i));
-                        followers.add(constructUser(body));
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    User user = postSnapshot.getValue(User.class);
+                    followerList.add(user);
                 }
-                Log.d("User Followers", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(followers);
+                if(delegate != null)
+                    delegate.onResultReady(followerList);
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
-    /**
-     * Get user following from server
-     */
     public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+    */
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("followings");
+        final List<User> followingList = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> followings = new ArrayList<>();
-                try {
-                    JSONObject list = new JSONObject(result.get(0));
-                    JSONArray main_json = list.getJSONArray("data");
-                    for (int i = 0; i < main_json.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(main_json.getJSONObject(i));
-                        followings.add(constructUser(body));
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    User user = postSnapshot.getValue(User.class);
+                    followingList.add(user);
                 }
-                Log.d("User Following", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(followings);
+                if(delegate != null)
+                    delegate.onResultReady(followingList);
             }
-        }).execute();
-    }
-
-    /**
-     * Get User's events from server
-     */
-    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
-                + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> attending = new ArrayList<>();
-                ArrayList<Party> going = new ArrayList<>();
-                ArrayList<Party> hosting = new ArrayList<>();
-                ArrayList<Party> bouncing = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        if (data.getJSONObject(i).getString("relationship").equals("attending"))
-                            attending.add(constructParty(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
-                            hosting.add(constructParty(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("bouncing"))
-                            bouncing.add(constructParty(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("going"))
-                            going.add(constructParty(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+    public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
+        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
+                + getTokenFromLocal(mainActivity).get("jwt");*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("events");
+        final ArrayList<Party> attending = new ArrayList<>();
+        final ArrayList<Party> going = new ArrayList<>();
+        final ArrayList<Party> hosting = new ArrayList<>();
+        final ArrayList<Party> bouncing = new ArrayList<>();
+        final HashMap<String, ArrayList<Party>> parties = new HashMap();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    if(postSnapshot.child("relationship").getValue().toString() == "attending")
+                        attending.add(postSnapshot.getValue(Party.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "going")
+                        going.add(postSnapshot.getValue(Party.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "hosting")
+                        hosting.add(postSnapshot.getValue(Party.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "bouncing")
+                        bouncing.add(postSnapshot.getValue(Party.class));
                 }
-                HashMap<String, ArrayList<Party>> parties = new HashMap();
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
                 parties.put("bouncing", bouncing);
                 parties.put("going", going);
-                Log.d("Get User Events", result.get(0));
-                if (delegate != null)
+                if(delegate != null)
                     delegate.onResultReady(parties);
             }
-        }).execute();
-    }
 
-    /**
-     * Get User's events from server
-     */
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
         String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("users");
+        final ArrayList<User> attending = new ArrayList<>();
+        final ArrayList<User> going = new ArrayList<>();
+        final ArrayList<User> hosting = new ArrayList<>();
+        final ArrayList<User> bouncing = new ArrayList<>();
+        final HashMap<String, ArrayList<User>> users = new HashMap();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> attending = new ArrayList<>();
-                ArrayList<User> going = new ArrayList<>();
-                ArrayList<User> hosting = new ArrayList<>();
-                ArrayList<User> bouncing = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        if (data.getJSONObject(i).getString("relationship").equals("attending"))
-                            attending.add(constructUser(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("hosting"))
-                            hosting.add(constructUser(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("bouncing"))
-                            bouncing.add(constructUser(body));
-                        else if (data.getJSONObject(i).getString("relationship").equals("going"))
-                            going.add(constructUser(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    if(postSnapshot.child("relationship").getValue().toString() == "attending")
+                        attending.add(postSnapshot.getValue(User.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "going")
+                        going.add(postSnapshot.getValue(User.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "hosting")
+                        hosting.add(postSnapshot.getValue(User.class));
+                    else if(postSnapshot.child("relationship").getValue().toString() == "bouncing")
+                        bouncing.add(postSnapshot.getValue(User.class));
                 }
-
-                //Parties will have: attending, hosting, bouncing, going, and inviting
-                final HashMap<String, ArrayList<User>> users = new HashMap();
                 users.put("attending", attending);
                 users.put("hosting", hosting);
                 users.put("bouncing", bouncing);
                 users.put("going", going);
-                users.put("inviting", new ArrayList<User>());
-                server_getInvitesOfEvent(eventID, new OnResultReadyListener<ArrayList<User>>() {
-                    @Override
-                    public void onResultReady(ArrayList<User> result) {
-                        if (result != null)
-                            users.get("inviting").addAll(result);
-                        if (delegate != null)
-                            delegate.onResultReady(users);
-                    }
-                });
-                Log.d("Get User Events", result.get(0));
+                if(delegate != null)
+                    delegate.onResultReady(users);
             }
-        }).execute();
-    }
-
-    /**
-     * Get Best Friend from server
-     */
-    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                try {
-                    JSONObject list = new JSONObject(result.get(0));
-                    JSONArray main_json = list.getJSONArray("data");
-                    String name = "", number = "";
-                    for (int i = 0; i < main_json.length(); i++) {
-                        JSONObject data = main_json.getJSONObject(i);
-                        name = data.getString("name");
-                        number = data.getString("contact");
-                        bestFriends.add(new BestFriend(name, number));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("getBestFriends", result.get(0) + "");
-                if (delegate != null) {
-                    delegate.onResultReady(bestFriends);
-                }
+            public void onCancelled(DatabaseError databaseError) {
             }
-        }).execute();
+        });
     }
 
-    /**
-     * Get events in specified distance
-     */
-    public static void server_getEventsInDistance(String minLat, String maxLat, String minLng, String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+    public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
+  /*      String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");
+        RequestComponents comp = new RequestComponents(url, "GET", null);*/
+
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        final ArrayList<BestFriend> bestfriends = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    bestfriends.add(postSnapshot.getValue(BestFriend.class));
+                //Log.d("getBestFriends", result.get(0) + "");
+                if (delegate != null) {
+                    delegate.onResultReady(bestfriends);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+   public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
+       DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+       final ArrayList<Party> parties = new ArrayList<>();
+       db.addListenerForSingleValueEvent(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                   float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
+                   float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
+                   if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
+                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng))
+                       parties.add(postSnapshot.getValue(Party.class));
+               }
+               if(delegate != null)
+                   delegate.onResultReady(parties);
+           }
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
+       //UNSURE ABOUT THIS ONE FOR NOW
+        /*String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
                 + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
-                + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
+                + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        /*RequestComponents comp = new RequestComponents(url, "GET", null);
         new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
@@ -1115,134 +932,100 @@ public final class DatabaseAccess {
                 if (delegate != null)
                     delegate.onResultReady(parties);
             }
-        }).execute();
-    }
+    }).execute();*/
+}
 
-    /**
-     * Get event's invited users from server
-     */
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
-                + "/invites?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+/*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
+                + "/invites?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites");
+        final ArrayList<User> invites = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<User> invites = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        invites.add(constructUser(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("Get Invites of Event", result.get(0));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    invites.add(postSnapshot.getValue(User.class));
+                //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(invites);
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * Get Notification by UserID
      */
     public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
+        final ArrayList<Notification> notifications = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Notification> notifications = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = new HashMap<>();
-                        Iterator iterKey = data.getJSONObject(i).keys();
-                        while (iterKey.hasNext()) {
-                            String key = (String) iterKey.next();
-                            body.put(key, data.getJSONObject(i).getString(key));
-                        }
-                        notifications.add(constructNotification(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("Get Notifications", result.get(0));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    notifications.add(postSnapshot.getValue(Notification.class));
+                //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(notifications);
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * Get events by keyword
      */
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
+/*        String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
                 + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        RequestComponents comp = new RequestComponents(url, "GET", null);*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        Query q1 = db.orderByChild("name").startAt(keyword);
+        final ArrayList<Party> parties = new ArrayList<>();
+        q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        parties.add(constructParty(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("Get Events by Keyword", result.get(0));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    parties.add(postSnapshot.getValue(Party.class));
+                //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(parties);
             }
-        }).execute();
-
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/find-by-keyword?keyword="
+/*        String url = mainActivity.getString(R.string.server_url) + "users/find-by-keyword?keyword="
                 + keyword + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        Query q1 = db.orderByChild("first_name").startAt(keyword);
+        final ArrayList<User> users = new ArrayList<>();
+        q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                final ArrayList<User> users = new ArrayList<>();
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    JSONArray data = main_json.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        users.add(constructUser(body));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("Get Users by Keyword", result.get(0));
-                if ( delegate != null )
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    users.add(postSnapshot.getValue(User.class));
+                if (delegate != null)
                     delegate.onResultReady(users);
             }
-        }).execute();
-
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
@@ -1260,7 +1043,7 @@ public final class DatabaseAccess {
                     Log.d("Image_Download", "Success");
                 }
             }
-        }).execute();
+        });
     }
 
 
@@ -1270,295 +1053,73 @@ public final class DatabaseAccess {
      * Delete Best Friend on server
      */
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");
-        HashMap<String, String> body = new HashMap<>();
-        body.put("contact", number);
-        RequestComponents comp = new RequestComponents(url, "DELETE", body);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(mainActivity).get("jwt");*/
+        final DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        Query q1 = db.orderByChild("number").startAt(number);
+        q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_DelBestFriend", result.get(0) + "");
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    db.child(postSnapshot.getKey()).removeValue();
                 if (delegate != null)
-                    delegate.onResultReady(status);
+                    delegate.onResultReady("success");
             }
-        }).execute();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     /**
      * Delete party from server
      */
     public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
-        RequestComponents comps[] = new RequestComponents[1];
-        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token="
-                + getTokenFromLocal(mainActivity).get("jwt");
-        String result = null;
-        comps[0] = new RequestComponents(url, "DELETE", null);
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_DeleteEvent", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
-        Log.d("Delete Party", result);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        db.child(partyID).removeValue();
+        if(delegate != null)
+            delegate.onResultReady("success");
+        Log.d("Delete Party", "Success");
     }
 
     /**
      * User unfollow user from server. Return either success or error.
      */
-    public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {
+    public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {/*
         String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
-                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "DELETE", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_UnfollowUser", result.get(0) + "");
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
+                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        String localUserId = getTokenFromLocal(mainActivity).get("id");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(localUserId).child("followings");
+        db.child(userID).removeValue();
+        if (delegate != null)
+            delegate.onResultReady("success");
     }
 
     /**
      * Delete notification. Return success or error.
      */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
-        RequestComponents comps[] = new RequestComponents[1];
+        /*RequestComponents comps[] = new RequestComponents[1];
         String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/notifications/"
                 + notificationID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-
-        comps[0] = new RequestComponents(url, "DELETE", null);
-        new HttpRequestTask(mainActivity, comps, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_DeleteNotif", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
+*/
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
+        db.child(notificationID).removeValue();
+        if (delegate != null)
+            delegate.onResultReady("success");
     }
 
     /**
      * Uninvite user to event. Return success or error.
      */
     public static void server_uninviteUser(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+        /*String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
-        RequestComponents comp = new RequestComponents(url, "DELETE", null);
-
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                String status = null;
-                try {
-                    JSONObject main_json = new JSONObject(result.get(0));
-                    status = main_json.getString("status");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Log.d("CurUser_UninviteUser", result.get(0) + "");
-                if (delegate != null)
-                    delegate.onResultReady(status);
-            }
-        }).execute();
+        */
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites");
+        db.child(userID).removeValue();
+        if (delegate != null)
+            delegate.onResultReady("success");
     }
-
-//todo -------------------------------------------------------------------------------Helper Methods
-
-    /**
-     * Fill in all party information locally
-     */
-    private static Party constructParty(HashMap<String, String> info) {
-        String partyID = "", name = "", emoji = "", startDateTime = "", endDateTime = "", address = "", str_isPublic = "", hostName = "",
-                min_age = "", max_age = "";
-        List hostingUsers = new ArrayList(), bouncingUsers = new ArrayList(), attendingUsers = new ArrayList();
-        Calendar startingDateTimeCalendar = Calendar.getInstance(), endingDateTimeCalendar = Calendar.getInstance();
-        MapAddress mapAddress = new MapAddress();
-        double price = 0;
-        boolean isPublic = false;
-        int minAge = 0, maxAge = 0;
-
-        try {
-            partyID = info.get("id");
-            name = info.get("name");
-            emoji = info.get("emoji");
-            if (info.get("price") != null)
-                price = Double.parseDouble(info.get("price") + "");
-
-            startDateTime = info.get("start_timestamp");
-            endDateTime = info.get("end_timestamp");
-            if (startDateTime != null) {
-                startingDateTimeCalendar.setTime(new Date(Long.parseLong(startDateTime) * 1000));
-            }
-            if (endDateTime != null) {
-                endingDateTimeCalendar.setTime(new Date(Long.parseLong(endDateTime) * 1000));
-            }
-            Log.d("Calendar", startingDateTimeCalendar.get(Calendar.MONTH) + "");
-
-            address = info.get("address");
-            mapAddress.setAddress_string(address);
-            if (info.get("lat") != null && info.get("lng") != null) {
-                mapAddress.setAddress_latlng(new LatLng(Double.parseDouble(info.get("lat")), Double.parseDouble(info.get("lng"))));
-                Log.d("MyLatLng", mapAddress.getAddress_latlng().toString());
-            }
-
-            str_isPublic = info.get("is_public") + "";
-            if (!str_isPublic.equals("null") && Integer.parseInt(str_isPublic) == 1) {
-                isPublic = true;
-            }
-
-            hostName = info.get("host_name");
-            min_age = info.get("min_age");
-            max_age = info.get("max_age");
-            if (!min_age.equals("null") && !max_age.equals("null")) {
-                minAge = Integer.parseInt(min_age);
-                maxAge = Integer.parseInt(max_age);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-//        hostingUsers = (ArrayList) info.get("hosting");
-//        bouncingUsers = (ArrayList) info.get("bouncing");
-//        attendingUsers = (ArrayList) info.get("attending");
-//        hostName = "";
-//        String partyEmoji = "";
-//        int minAge = 17, maxAge = 40;
-
-
-        //Compose Party
-        Party party = new Party(partyID, name, price, hostName, startingDateTimeCalendar, endingDateTimeCalendar,
-                mapAddress, isPublic, emoji, minAge, maxAge);
-        return party;
-    }
-
-    /**
-     * Fill in all user information locally
-     */
-    private static User constructUser(HashMap<String, String> info) {
-        String userID = "", firstName = "", lastName = "", email = "", college = "", gender = "", date = "";
-        List bestFriends = new ArrayList();
-        Calendar birthday = Calendar.getInstance();
-        try {
-            userID = info.get("id");
-            firstName = info.get("first_name");
-            lastName = info.get("last_name");
-            email = info.get("email");
-            college = info.get("college");
-            gender = info.get("gender");
-
-            date = info.get("birthday");
-            if (!date.equals("null")) {
-                birthday.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
-                birthday.set(Calendar.MONTH, Integer.parseInt(date.substring(5, 7)));
-                birthday.set(Calendar.DATE, Integer.parseInt(date.substring(8, 10)));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //Compose user
-        User user = new User(userID, firstName, lastName, email, college, gender, birthday,
-                bestFriends, null);
-        return user;
-    }
-
-    /**
-     * Fill in notification information locally
-     */
-    private static Notification constructNotification(HashMap<String, String> info) {
-        int type;
-        String sender_id, notification_id;
-        if (info == null)
-            return new Notification();
-
-        notification_id = info.get("id");
-        if (info.get("type").equals("following")) { //user notification
-            type = Notification.TYPE_FOLLOWING;
-            sender_id = info.get("sender_id");
-        } else if (info.get("type").equals("followed")) {
-            type = Notification.TYPE_FOLLOWED;
-            sender_id = info.get("sender_id");
-        } else if (info.get("type").equals("hosting")) { //event notification
-            type = Notification.TYPE_HOSTING;
-            sender_id = info.get("event_id");
-        } else if (info.get("type").equals("going")) {
-            type = Notification.TYPE_GOING;
-            sender_id = info.get("event_id");
-        } else if (info.get("type").equals("bouncing")) {
-            type = Notification.TYPE_BOUNCING;
-            sender_id = info.get("event_id");
-        } else if (info.get("type").equals("invite_going")) {
-            type = Notification.TYPE_INVITE_GOING;
-            sender_id = info.get("event_id");
-        } else if (info.get("type").equals("invite_bouncing")) {
-            type = Notification.TYPE_INVITE_BOUNCING;
-            sender_id = info.get("event_id");
-        } else {
-            type = 0;
-            sender_id = "";
-        }
-
-        long time = 0;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date date = sdf.parse(info.get("creation_time"));
-            time = date.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Notification(notification_id, sender_id, type, time);
-    }
-
-
-    private static HashMap<String,String> extractJSONData(JSONObject data) throws JSONException {
-        HashMap<String, String> body = new HashMap<>();
-        Iterator iterKey = data.keys();
-        while (iterKey.hasNext()) {
-            String key = (String) iterKey.next();
-            body.put(key, data.getString(key));
-        }
-        return body;
-    }
-
 }

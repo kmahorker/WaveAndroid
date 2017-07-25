@@ -35,6 +35,7 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
  */
 public class HomeSwipeActivity extends AppCompatActivity {
     private static final int NUM_PAGES = 3;
+    private static final String TAG = "Launch test";
     public ViewPager mPager;
     private PagerAdapter mPagerAdapter;
 
@@ -49,11 +50,14 @@ public class HomeSwipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate: created initial home screen");
+
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        saveTokentoLocal(mainActivity, "10", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
+        saveTokentoLocal(mainActivity, "10");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
 
         if (CurrentUser.mainActivity == null) {
+            Log.i(TAG, "onCreate: No current user");
             UtilityClass.startProgressbar(mainActivity);
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
