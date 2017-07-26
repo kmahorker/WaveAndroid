@@ -73,6 +73,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.content.ContentValues.TAG;
+
 public final class DatabaseAccess {
     public static Activity mainActivity;
 
@@ -467,7 +469,7 @@ public final class DatabaseAccess {
         SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         HashMap<String, String> tokens = new HashMap<>();
         tokens.put("id", pref.getString("id", ""));
-        tokens.put("jwt", pref.getString("jwt", ""));
+        //tokens.put("jwt", pref.getString("jwt", ""));
         return tokens;
     }
 
@@ -612,7 +614,10 @@ public final class DatabaseAccess {
                                             final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
         String userID = UUID.randomUUID().toString(); //unique ID for each event
-        db.child(userID).child("first_name").setValue(first_name);
+        List<BestFriend> list = new ArrayList<>();
+        User user = new User(userID, first_name, last_name, email, college, gender, list);
+        db.child(userID).setValue(user);
+        /*        db.child(userID).child("first_name").setValue(first_name);
         db.child(userID).child("last_name").setValue(last_name);
         db.child(userID).child("email").setValue(email);
         db.child(userID).child("college").setValue(college);
@@ -620,9 +625,9 @@ public final class DatabaseAccess {
         db.child(userID).child("fb_id").setValue(fb_id);
         db.child(userID).child("fb_token").setValue(fb_token);
         db.child(userID).child("gender").setValue(gender);
-        db.child(userID).child("birthday").setValue(birthday);
+        db.child(userID).child("birthday").setValue(birthday);*/
         if(delegate != null)
-            delegate.onResultReady("success,"+userID);
+            delegate.onResultReady(userID);
 
     }
 
@@ -718,7 +723,7 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null) {
                     User user = dataSnapshot.getValue(User.class);
-                    if (delegate != null)
+                    if(delegate != null)
                         delegate.onResultReady(user);
                 }
             }

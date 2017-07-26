@@ -23,9 +23,9 @@ public class User implements Parcelable {
     private String email; //
     private String college; //
     private String gender; //
-    private Calendar birthday; //
+   // private Calendar birthday; //
     private List<BestFriend> bestFriends; //
-    private Bitmap profilePic; //
+   // private Bitmap profilePic; //
 
     public User() {
         userID = ""; //
@@ -34,9 +34,9 @@ public class User implements Parcelable {
         email = ""; //
         college = ""; //
         gender = ""; //
-        birthday = Calendar.getInstance(); //
+     //   birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
-        profilePic = null; //TODO Use different constructor
+     //   profilePic = null; //TODO Use different constructor
     }
 
     public User(String userID,
@@ -45,18 +45,18 @@ public class User implements Parcelable {
                 String email,
                 String college,
                 String gender,
-                Calendar birthday,
-                List<BestFriend> bestFriends,
-                Bitmap profilePic) {
+        //        Calendar birthday,
+                List<BestFriend> bestFriends) {
+                //Bitmap profilePic) {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.college = college;
         this.gender = gender;
-        this.birthday = birthday;
+      //  this.birthday = birthday;
         this.bestFriends = bestFriends;
-        this.profilePic = profilePic;
+      //  this.profilePic = profilePic;
     }
 
     //Setter Block
@@ -84,17 +84,17 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
-    public void setBirthday(Calendar birthday) {
+  /*  public void setBirthday(Calendar birthday) {
         this.birthday = Calendar.getInstance();
-    }
+    }*/
 
     public void setBestFriends(List<BestFriend> bestFriends) {
         this.bestFriends = bestFriends;
     }
 
-    public void setProfilePic(Bitmap profilePic) {
+/*    public void setProfilePic(Bitmap profilePic) {
         this.profilePic = profilePic;
-    }
+    }*/
 
     //Getter Block
     public String getUserID() {
@@ -125,17 +125,17 @@ public class User implements Parcelable {
         return gender;
     }
 
-    public Calendar getBirthday() {
+  /*  public Calendar getBirthday() {
         return birthday;
-    }
+    }*/
 
     public List<BestFriend> getBestFriends() {
         return bestFriends;
     }
 
-    public Bitmap getProfilePic() {
+   /* public Bitmap getProfilePic() {
         return profilePic;
-    }
+    }*/
 
     @Override
     public String toString() {
@@ -162,14 +162,14 @@ public class User implements Parcelable {
         email = in.readString();
         college = in.readString();
         gender = in.readString();
-        birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        //birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
             bestFriends = new ArrayList<>();
             in.readList(bestFriends, BestFriend.class.getClassLoader());
         } else {
             bestFriends = null;
         }
-        profilePic = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+        //profilePic = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
     }
 
     @Override
@@ -185,14 +185,14 @@ public class User implements Parcelable {
         dest.writeString(email);
         dest.writeString(college);
         dest.writeString(gender);
-        dest.writeValue(birthday);
+      //  dest.writeValue(birthday);
         if (bestFriends == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
             dest.writeList(bestFriends);
         }
-        dest.writeValue(profilePic);
+       // dest.writeValue(profilePic);
     }
 
     @SuppressWarnings("unused")

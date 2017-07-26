@@ -89,7 +89,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         NewPartyInfo.initialize();
 
         followings = new ArrayList<>();
-        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+/*        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 followings.addAll(result);
@@ -103,7 +103,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     });
                 }
             }
-        });
+        });*/
 
     }
 
@@ -714,7 +714,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
                 holder.name.setText(getItem(position).getFullName());
 
-                holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
@@ -781,7 +781,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(ViewHolder holder, final int position) {
-                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
+                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -924,7 +924,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
                 holder.name.setText(getItem(position).getFullName());
 
-                holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
@@ -992,7 +992,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             @Override
             public void onBindViewHolder(ViewHolder holder, final int position) {
 
-                holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
+                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

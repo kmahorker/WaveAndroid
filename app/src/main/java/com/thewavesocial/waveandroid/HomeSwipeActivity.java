@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
@@ -54,11 +56,27 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         setContentView(R.layout.home_activity);
         mainActivity = this;
-        saveTokentoLocal(mainActivity, "10");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
+        //saveTokentoLocal(mainActivity, "Test User");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
 
         if (CurrentUser.mainActivity == null) {
             Log.i(TAG, "onCreate: No current user");
             UtilityClass.startProgressbar(mainActivity);
+            DatabaseAccess.server_createNewUser("Test", "User", "testing123@gmail.com", "UCSB", "1122", "fsaf", "fsafa", "male",
+                    null, new OnResultReadyListener<String>() {
+                        @Override
+                        public void onResultReady(String result) {
+                            saveTokentoLocal(mainActivity, result);
+                            Log.i(TAG, "onResultReady: User ID ready: " + result);
+                            DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
+                                @Override
+                                public void onResultReady(User result) {
+                                    Log.i(TAG, "onResultReady: " + result.getFullName());
+                                    CurrentUser.setTheUser(result);
+                                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
+                                }
+                            });
+                        }
+                    });
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
