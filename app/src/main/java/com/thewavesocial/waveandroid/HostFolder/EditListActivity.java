@@ -276,7 +276,7 @@ public class EditListActivity extends AppCompatActivity {
             holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
             holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
             holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-            holder.name.setText(getItem(position).getFullName());
+            holder.name.setText(getItem(position).getFull_name());
             server_getProfilePicture(getItem(position).getUserID(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {

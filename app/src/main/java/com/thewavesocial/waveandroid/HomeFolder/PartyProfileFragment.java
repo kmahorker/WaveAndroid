@@ -153,7 +153,7 @@ public class PartyProfileFragment extends Fragment {
                 if ( result != null ) {
 
                     if ( !result.get("hosting").isEmpty() ) {
-                        hostname.setText(result.get("hosting").get(0).getFullName());
+                        hostname.setText(result.get("hosting").get(0).getFull_name());
                         hostname.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {

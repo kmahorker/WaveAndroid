@@ -1024,7 +1024,7 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     users.add(postSnapshot.getValue(User.class));
-                    Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFullName());
+                    Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFull_name());
                 }
                 if (delegate != null)
                     delegate.onResultReady(users);

@@ -81,7 +81,7 @@
 //            rowView = inflater.inflate(R.layout.each_friend_item, null);
 //            holder.tv = (TextView) rowView.findViewById(R.id.friendName);
 //            holder.img = (ImageView) rowView.findViewById(R.id.friendImage);
-//            holder.tv.setText(userList.get(position).getFullName());
+//            holder.tv.setText(userList.get(position).getFull_name());
 //
 //            UtilityClass.getBitmapFromURL(context, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
 //                @Override

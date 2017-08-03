@@ -90,7 +90,7 @@ public class User implements Parcelable {
         return last_name;
     }
 
-    public String getFullName() {
+    public String getFull_name() {
         return first_name + " " + last_name;
     }
 
@@ -122,9 +122,9 @@ public class User implements Parcelable {
         }
         try {
             User otherUser = (User) other;
-            return this.getFullName().equals(otherUser.getFullName());
+            return this.getFull_name().equals(otherUser.getFull_name());
         } catch (ClassCastException e) {
-            return this.getFullName().equals(other);
+            return this.getFull_name().equals(other);
         }
     }
 

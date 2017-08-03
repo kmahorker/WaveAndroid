@@ -150,7 +150,7 @@
 //                Log.d("V", "  lastName: " + u.getLast_name());
 //                Log.d("V", "    bool: " + u.getLast_name().contains(query));
 //                users.add(u);
-//            } else if (u.getFullName().matches("(?i:" + query + ".*)")) {
+//            } else if (u.getFull_name().matches("(?i:" + query + ".*)")) {
 //                users.add(u);
 //            }
 //            for (User check : users) {

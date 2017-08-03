@@ -66,10 +66,10 @@ public class HomeSwipeActivity extends AppCompatActivity {
             DatabaseAccess.server_getUserObject(tokens.get("id"), new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
-                    Log.i(TAG, "onResultReady: " + result.getFullName());
-                    if (result.getFullName().length() > 1) {
+                    if (result != null) {
                         CurrentUser.setTheUser(result);
-                        //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName() + Integer.toString(result.getFullName().length()));
+                        Log.i(TAG, "onResultReady: " + result.getFull_name());
+                            //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name() + Integer.toString(result.getFull_name().length()));
                     }
                     else {
                         DatabaseAccess.server_createNewUser("Test", "User231", "1122", "fsaf", "fsafa", "male",
@@ -81,15 +81,15 @@ public class HomeSwipeActivity extends AppCompatActivity {
                                         DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
                                             @Override
                                             public void onResultReady(User result) {
-                                                Log.i(TAG, "onResultReady: " + result.getFullName());
+                                                Log.i(TAG, "onResultReady: " + result.getFull_name());
                                                 CurrentUser.setTheUser(result);
-                                                Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
+                                                Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                                             }
                                         });
                                     }
                                 });
                     }
-                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
+                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                 }
             });
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {

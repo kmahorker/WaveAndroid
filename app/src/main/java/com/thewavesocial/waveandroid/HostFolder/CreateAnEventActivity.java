@@ -579,7 +579,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void savePage1() {
             NewPartyInfo.name = titleEditText.getText().toString();
             NewPartyInfo.price = 0;
-            NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
+            NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
             NewPartyInfo.startingDateTime = startCalendar;
             NewPartyInfo.endingDateTime = endCalendar;
             MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());
@@ -712,7 +712,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                holder.name.setText(getItem(position).getFullName());
+                holder.name.setText(getItem(position).getFull_name());
 
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
@@ -922,7 +922,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
                 holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                holder.name.setText(getItem(position).getFullName());
+                holder.name.setText(getItem(position).getFull_name());
 
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))

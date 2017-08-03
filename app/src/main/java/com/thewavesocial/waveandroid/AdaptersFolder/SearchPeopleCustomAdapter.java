@@ -78,7 +78,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             });
         }
 
-        holder.name.setText(user.getFullName());
+        holder.name.setText(user.getFull_name());
 
         if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
             holder.follow.setVisibility(View.INVISIBLE);

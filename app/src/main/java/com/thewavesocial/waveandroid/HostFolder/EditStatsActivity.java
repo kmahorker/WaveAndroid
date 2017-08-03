@@ -569,7 +569,7 @@ public class EditStatsActivity extends AppCompatActivity {
     public void savePage() {
         NewPartyInfo.name = titleEditText.getText().toString();
         NewPartyInfo.price = 0;
-        NewPartyInfo.hostName = CurrentUser.theUser.getFullName();
+        NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
         NewPartyInfo.startingDateTime = startCalendar;
         NewPartyInfo.endingDateTime = endCalendar;
         MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());

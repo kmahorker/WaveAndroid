@@ -135,7 +135,7 @@
 //                    profile_pic.setImageDrawable( UtilityClass.toRoundImage(getResources(), image));
 //            }
 //        });
-//        username.setText(user.getFullName());
+//        username.setText(user.getFull_name());
 //    }
 //
 //    //setup the actionbar + onClick for saveData

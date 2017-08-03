@@ -154,7 +154,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             public void onResultReady(Bitmap result) {
                 View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_scan_view, null);
                 ((ImageView) view.findViewById(R.id.qr_scan_image_view)).setImageDrawable(UtilityClass.toRoundImage(getResources(), result));
-                ((TextView) view.findViewById(R.id.qr_scan_name)).setText("Name: " + each.getFullName());
+                ((TextView) view.findViewById(R.id.qr_scan_name)).setText("Name: " + each.getFull_name());
                 ((TextView) view.findViewById(R.id.qr_scan_gender)).setText("Gender: " + each.getGender());
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
@@ -282,7 +282,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 if (result != null) {
                     String hostname = "", hostID = "";
                     if (!result.get("hosting").isEmpty()) {
-                        hostname = result.get("hosting").get(0).getFullName();
+                        hostname = result.get("hosting").get(0).getFull_name();
                         hostID = result.get("hosting").get(0).getUserID();
                         hostView.setOnClickListener(new View.OnClickListener() {
                             @Override

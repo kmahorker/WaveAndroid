@@ -71,7 +71,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         final TextView option = (TextView) findViewById(R.id.friend_options);
         ImageView back = (ImageView) findViewById(R.id.friend_back_button);
 
-        title.setText(friend.getFullName());
+        title.setText(friend.getFull_name());
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
