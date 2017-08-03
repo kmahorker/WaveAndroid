@@ -41,7 +41,7 @@
         android:layout_marginTop="70dp"
         android:cursorVisible="false"
 
-        android:drawableRight="@drawable/plus_button"
+        android:drawableRight="@drawable/plus_button_small"
         android:ems="10"
         android:focusableInTouchMode="true"
         android:hint="Phone Number: 18053212972"

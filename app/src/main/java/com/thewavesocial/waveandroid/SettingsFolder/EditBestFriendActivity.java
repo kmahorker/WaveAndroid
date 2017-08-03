@@ -208,7 +208,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (event.getRawX() >= (phoneNumberEditText.getRight() - phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         //fire contact picker
-                        if (phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_button).getConstantState())) { //TODO: Change with actual pics
+                        if (phoneNumberEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getConstantState().equals(getResources().getDrawable(R.drawable.plus_button_small).getConstantState())) { //TODO: Change with actual pics
                             UtilityClass.hideKeyboard(thisActivity);
                             pickContact(v);
                         } else {
@@ -260,7 +260,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
     }
 
     private void drawableToPlus() {
-        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.plus_button, 0);
+        phoneNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.plus_button_small, 0);
     }
 
 }
