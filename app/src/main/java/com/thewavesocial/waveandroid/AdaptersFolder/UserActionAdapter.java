@@ -116,7 +116,7 @@ public class UserActionAdapter extends BaseAdapter {
                 notifList.get(position).getRequestType() == Notification.TYPE_FOLLOWING)) //Friend type notification
         {
             final User sender = (User) senderObjects.get(position);
-            holder.sender.setText(sender.getFirstName());
+            holder.sender.setText(sender.getFirst_name());
             holder.accept.setVisibility(View.INVISIBLE);
             holder.decline.setVisibility(View.INVISIBLE);
 

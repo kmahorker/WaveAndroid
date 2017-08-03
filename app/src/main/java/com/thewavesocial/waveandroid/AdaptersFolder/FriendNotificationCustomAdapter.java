@@ -77,7 +77,7 @@ public class FriendNotificationCustomAdapter extends BaseAdapter {
                 getItem(position).getRequestType() == Notification.TYPE_FOLLOWING)) //Friend type notification
         {
             final User user = (User) senderObjects.get(position);
-            holder.sender.setText(user.getFirstName());
+            holder.sender.setText(user.getFirst_name());
 
             layoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

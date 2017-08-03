@@ -142,19 +142,19 @@
 //        }
 //        List<User> users = new ArrayList<>();
 //        for (User u : us) {
-//            if ((u.getFirstName().matches("(?i:" + query + ".*)"))) {
-//                Log.d("V", "  firstName: " + u.getFirstName());
-//                Log.d("V", "    bool: " + u.getFirstName().contains(query));
+//            if ((u.getFirst_name().matches("(?i:" + query + ".*)"))) {
+//                Log.d("V", "  firstName: " + u.getFirst_name());
+//                Log.d("V", "    bool: " + u.getFirst_name().contains(query));
 //                users.add(u);
-//            } else if (u.getLastName().matches("(?i:" + query + ".*)")) {
-//                Log.d("V", "  lastName: " + u.getLastName());
-//                Log.d("V", "    bool: " + u.getLastName().contains(query));
+//            } else if (u.getLast_name().matches("(?i:" + query + ".*)")) {
+//                Log.d("V", "  lastName: " + u.getLast_name());
+//                Log.d("V", "    bool: " + u.getLast_name().contains(query));
 //                users.add(u);
 //            } else if (u.getFullName().matches("(?i:" + query + ".*)")) {
 //                users.add(u);
 //            }
 //            for (User check : users) {
-//                Log.d("V", "    " + check.getFirstName());
+//                Log.d("V", "    " + check.getFirst_name());
 //            }
 //        }
 //        return users;

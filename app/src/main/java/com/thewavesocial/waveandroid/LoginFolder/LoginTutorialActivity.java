@@ -185,7 +185,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         gender = (!json.has("gender")) ? "N/A" : json.getString("gender");
                         birthday = (!json.has("birthday")) ? "" : json.getString("birthday");
 
-                        DatabaseAccess.server_createNewUser(fname, lname, email, college, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
+                        DatabaseAccess.server_createNewUser(fname, lname, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
                                 if (result != null) {

@@ -88,7 +88,7 @@
 //                        }
 //                    });
 //
-//                    holder.sender.setText(sender[0].getFirstName());
+//                    holder.sender.setText(sender[0].getFirst_name());
 //                    holder.message.setText(getItem(position).getMessage());
 //                    holder.timeAgo.setText(".  28min");
 //

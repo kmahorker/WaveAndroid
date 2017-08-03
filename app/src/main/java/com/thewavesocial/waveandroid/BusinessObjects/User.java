@@ -1,11 +1,9 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /*
@@ -18,10 +16,8 @@ import java.util.List;
 //public class User implements Parcelable
 public class User implements Parcelable {
     private String userID; //
-    private String firstName; //
-    private String lastName; //
-    private String email; //
-    private String college; //
+    private String first_name; //
+    private String last_name; //
     private String gender; //
    // private Calendar birthday; //
     private List<BestFriend> bestFriends; //
@@ -29,10 +25,8 @@ public class User implements Parcelable {
 
     public User() {
         userID = ""; //
-        firstName = ""; //
-        lastName = ""; //
-        email = ""; //
-        college = ""; //
+        first_name = ""; //
+        last_name = ""; //
         gender = ""; //
      //   birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
@@ -40,19 +34,15 @@ public class User implements Parcelable {
     }
 
     public User(String userID,
-                String firstName,
-                String lastName,
-                String email,
-                String college,
+                String first_name,
+                String last_name,
                 String gender,
         //        Calendar birthday,
                 List<BestFriend> bestFriends) {
                 //Bitmap profilePic) {
         this.userID = userID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.college = college;
+        this.first_name = first_name;
+        this.last_name = last_name;
         this.gender = gender;
       //  this.birthday = birthday;
         this.bestFriends = bestFriends;
@@ -60,24 +50,15 @@ public class User implements Parcelable {
     }
 
     //Setter Block
-    public void setUserID(String userID) {
-        this.userID = userID;
+
+    public void setUserID(String userID) { this.userID = userID; }
+
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setCollege(String college) {
-        this.college = college;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public void setGender(String gender) {
@@ -97,28 +78,20 @@ public class User implements Parcelable {
     }*/
 
     //Getter Block
-    public String getUserID() {
-        return userID;
+
+
+    public String getUserID() { return userID; }
+
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getLast_name() {
+        return last_name;
     }
 
     public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getCollege() {
-        return college;
+        return first_name + " " + last_name;
     }
 
     public String getGender() {
@@ -139,7 +112,7 @@ public class User implements Parcelable {
 
     @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return first_name + " " + last_name;
     }
 
     @Override
@@ -149,18 +122,16 @@ public class User implements Parcelable {
         }
         try {
             User otherUser = (User) other;
-            return this.getUserID().equals(otherUser.getUserID());
+            return this.getFullName().equals(otherUser.getFullName());
         } catch (ClassCastException e) {
-            return this.getUserID().equals(other);
+            return this.getFullName().equals(other);
         }
     }
 
     protected User(Parcel in) {
         userID = in.readString();
-        firstName = in.readString();
-        lastName = in.readString();
-        email = in.readString();
-        college = in.readString();
+        first_name = in.readString();
+        last_name = in.readString();
         gender = in.readString();
         //birthday = (Calendar) in.readValue(Calendar.class.getClassLoader());
         if (in.readByte() == 0x01) {
@@ -180,10 +151,8 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(userID);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(email);
-        dest.writeString(college);
+        dest.writeString(first_name);
+        dest.writeString(last_name);
         dest.writeString(gender);
       //  dest.writeValue(birthday);
         if (bestFriends == null) {
