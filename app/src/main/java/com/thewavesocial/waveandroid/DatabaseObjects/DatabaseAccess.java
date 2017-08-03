@@ -604,8 +604,6 @@ public final class DatabaseAccess {
 
     public static void server_createNewUser(String first_name,
                                             String last_name,
-                                            String email,
-                                            String college,
                                             String password,
                                             String fb_id,
                                             String fb_token,
@@ -615,7 +613,7 @@ public final class DatabaseAccess {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
         String userID = UUID.randomUUID().toString(); //unique ID for each event
         List<BestFriend> list = new ArrayList<>();
-        User user = new User(userID, first_name, last_name, email, college, gender, list);
+        User user = new User(userID, first_name, last_name, gender, list);
         db.child(userID).setValue(user);
         /*        db.child(userID).child("first_name").setValue(first_name);
         db.child(userID).child("last_name").setValue(last_name);
@@ -726,6 +724,8 @@ public final class DatabaseAccess {
                     if(delegate != null)
                         delegate.onResultReady(user);
                 }
+                else
+                    delegate.onResultReady(null);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -1022,8 +1022,10 @@ public final class DatabaseAccess {
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     users.add(postSnapshot.getValue(User.class));
+                    Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFullName());
+                }
                 if (delegate != null)
                     delegate.onResultReady(users);
             }

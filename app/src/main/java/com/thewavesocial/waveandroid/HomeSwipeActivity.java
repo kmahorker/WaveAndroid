@@ -56,27 +56,42 @@ public class HomeSwipeActivity extends AppCompatActivity {
 
         setContentView(R.layout.home_activity);
         mainActivity = this;
+
+        HashMap<String, String> tokens = getTokenFromLocal(mainActivity);
         //saveTokentoLocal(mainActivity, "Test User");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
 
         if (CurrentUser.mainActivity == null) {
             Log.i(TAG, "onCreate: No current user");
             UtilityClass.startProgressbar(mainActivity);
-            DatabaseAccess.server_createNewUser("Test", "User", "testing123@gmail.com", "UCSB", "1122", "fsaf", "fsafa", "male",
-                    null, new OnResultReadyListener<String>() {
-                        @Override
-                        public void onResultReady(String result) {
-                            saveTokentoLocal(mainActivity, result);
-                            Log.i(TAG, "onResultReady: User ID ready: " + result);
-                            DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
-                                @Override
-                                public void onResultReady(User result) {
-                                    Log.i(TAG, "onResultReady: " + result.getFullName());
-                                    CurrentUser.setTheUser(result);
-                                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
-                                }
-                            });
-                        }
-                    });
+            DatabaseAccess.server_getUserObject(tokens.get("id"), new OnResultReadyListener<User>() {
+                @Override
+                public void onResultReady(User result) {
+                    Log.i(TAG, "onResultReady: " + result.getFullName());
+                    if (result.getFullName().length() > 1) {
+                        CurrentUser.setTheUser(result);
+                        //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName() + Integer.toString(result.getFullName().length()));
+                    }
+                    else {
+                        DatabaseAccess.server_createNewUser("Test", "User231", "1122", "fsaf", "fsafa", "male",
+                                null, new OnResultReadyListener<String>() {
+                                    @Override
+                                    public void onResultReady(String result) {
+                                        saveTokentoLocal(mainActivity, result);
+                                        Log.i(TAG, "onResultReady: User ID ready: " + result);
+                                        DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
+                                            @Override
+                                            public void onResultReady(User result) {
+                                                Log.i(TAG, "onResultReady: " + result.getFullName());
+                                                CurrentUser.setTheUser(result);
+                                                Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
+                                            }
+                                        });
+                                    }
+                                });
+                    }
+                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFullName());
+                }
+            });
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
