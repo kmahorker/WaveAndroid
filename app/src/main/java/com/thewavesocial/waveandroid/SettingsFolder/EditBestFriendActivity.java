@@ -242,7 +242,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
         Cursor cursor = null;
         try {
             doneTextView.setTextColor(getResources().getColor(R.color.appColor));
-            
+
             Uri uri = data.getData();
             cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
