@@ -56,6 +56,9 @@ public class EditBestFriendActivity extends AppCompatActivity {
         backImageView = (ImageView) findViewById(R.id.edit_backImageView);
         phoneNumberEditText = (EditText) findViewById(R.id.edit_phoneNumberEditText);
 
+        doneTextView.setTextColor(getResources().getColor(R.color.grey_default));
+
+
         server_getBestFriends(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
             @Override
             public void onResultReady(List<BestFriend> result) {
@@ -190,6 +193,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                     });
 
                 } else {
+                    doneTextView.setTextColor(getResources().getColor(R.color.grey_default));
                     //TODO: When contact is manually entered
                 }
 
@@ -237,6 +241,8 @@ public class EditBestFriendActivity extends AppCompatActivity {
     private void contactPicked(Intent data) {
         Cursor cursor = null;
         try {
+            doneTextView.setTextColor(getResources().getColor(R.color.appColor));
+            
             Uri uri = data.getData();
             cursor = getContentResolver().query(uri, null, null, null, null);
             cursor.moveToFirst();
