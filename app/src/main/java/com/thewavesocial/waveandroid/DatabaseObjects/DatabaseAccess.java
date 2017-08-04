@@ -21,7 +21,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -32,6 +34,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -566,25 +569,19 @@ public final class DatabaseAccess {
                                              double lat,
                                              double lng,
                                              boolean isPublic,
-                                             double startTimeStamp,
-                                             double endingTimeStamp,
+                                             Calendar startTimeStamp,
+                                             Calendar endingTimeStamp,
                                              int minAge,
                                              int maxAge,
                                              final OnResultReadyListener<String> delegate){
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         String eventID = UUID.randomUUID().toString(); //unique ID for each event
-        db.child(eventID).child("name").setValue(name);
-        db.child(eventID).child("emoji").setValue(emoji);
-        db.child(eventID).child("price").setValue(price);
-        db.child(eventID).child("address").setValue(address);
-        db.child(eventID).child("lat").setValue(lat);
-        db.child(eventID).child("lng").setValue(lng);
-        db.child(eventID).child("isPublic").setValue(isPublic);
-        db.child(eventID).child("startTimeStamp").setValue(startTimeStamp);
-        db.child(eventID).child("endingTimeStamp").setValue(endingTimeStamp);
-        db.child(eventID).child("minAge").setValue(minAge);
-        db.child(eventID).child("maxAge").setValue(maxAge);
+        Party party = new Party(eventID, name, price,
+                CurrentUser.theUser.getFull_name(),
+                startTimeStamp, endingTimeStamp, new MapAddress(address, new LatLng(lat, lng)),
+                isPublic, emoji, minAge, maxAge);
+        db.child(eventID).setValue(party);
         if(delegate != null)
             delegate.onResultReady("success,"+eventID);
 
@@ -615,15 +612,6 @@ public final class DatabaseAccess {
         List<BestFriend> list = new ArrayList<>();
         User user = new User(userID, first_name, last_name, gender, list);
         db.child(userID).setValue(user);
-        /*        db.child(userID).child("first_name").setValue(first_name);
-        db.child(userID).child("last_name").setValue(last_name);
-        db.child(userID).child("email").setValue(email);
-        db.child(userID).child("college").setValue(college);
-        db.child(userID).child("password").setValue(password);
-        db.child(userID).child("fb_id").setValue(fb_id);
-        db.child(userID).child("fb_token").setValue(fb_token);
-        db.child(userID).child("gender").setValue(gender);
-        db.child(userID).child("birthday").setValue(birthday);*/
         if(delegate != null)
             delegate.onResultReady(userID);
 
@@ -673,8 +661,10 @@ public final class DatabaseAccess {
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
         /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
-        db.child(userID).child("followings").child(targetID).setValue(targetID); //not so sure what value should appear as in followings list, so I just set it to the input targetID
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.child("following").child(userID).child(targetID).setValue(true); //not so sure what value should appear as in followings list, so I just set it to the input targetID
+        db.child("followers").child(targetID).child(userID).setValue(true);
+        updateFollowersCount(userID, targetID, 1);
         if(delegate != null)
             delegate.onResultReady("success");
     }
@@ -705,9 +695,9 @@ public final class DatabaseAccess {
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
 /*        HashMap<String, String> body = new HashMap<>();*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(receiverID).child("notifications");
-        db.child("sender_id").setValue(senderID);
-        db.child("event_id").setValue(eventID);
-        db.child("type").setValue(type);
+        String uuid = UUID.randomUUID().toString(); //unique ID for each event
+        Notification notification = new Notification(uuid, senderID, 1);
+        db.child(uuid).setValue(notification);
         if(delegate != null)
             delegate.onResultReady("success");
     }
@@ -758,14 +748,25 @@ public final class DatabaseAccess {
                 + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
 
 */
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("followers");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
         final List<User> followerList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    followerList.add(user);
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    DatabaseReference refDb = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey());
+                    refDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            user.setUserID(dataSnapshot.getKey());
+                            followerList.add(user);
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 if(delegate != null)
                     delegate.onResultReady(followerList);
@@ -780,14 +781,30 @@ public final class DatabaseAccess {
 /*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
     */
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("followings");
+        //Log.i(TAG, "server_getUserFollowing: USING USER ID: " + userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(userID);
         final List<User> followingList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    followingList.add(user);
+                    //Log.i(TAG, "USER FOUND: " + postSnapshot);
+                    DatabaseReference refDb = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey());
+                    //Log.i(TAG, "server_getUserFollowing inside loop: " + refDb);
+                    refDb.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            //Log.i(TAG, "Users following: Found user: " + user.getFull_name());
+                            user.setUserID(dataSnapshot.getKey());
+                            followingList.add(user);
+                            Log.i(TAG, "Current following list contents: " + followingList);
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 if(delegate != null)
                     delegate.onResultReady(followingList);
@@ -991,7 +1008,7 @@ public final class DatabaseAccess {
                 + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-        Query q1 = db.orderByChild("name").startAt(keyword);
+        Query q1 = db.orderByChild("name").startAt(keyword).endAt(keyword + " zzzz");
         final ArrayList<Party> parties = new ArrayList<>();
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -1017,14 +1034,17 @@ public final class DatabaseAccess {
         RequestComponents comp = new RequestComponents(url, "GET", null);
 */
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
-        Query q1 = db.orderByChild("first_name").startAt(keyword);
+        Query q1 = db.orderByChild("first_name").startAt(keyword).endAt(keyword + "zzzz");
         final ArrayList<User> users = new ArrayList<>();
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    users.add(postSnapshot.getValue(User.class));
-                    Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFull_name());
+                    User user = postSnapshot.getValue(User.class);
+                    //Log.i(TAG, "onDataChange: Found key: " + postSnapshot.getKey());
+                    user.setUserID(postSnapshot.getKey());
+                    users.add(user);
+                    //Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFull_name());
                 }
                 if (delegate != null)
                     delegate.onResultReady(users);
@@ -1096,10 +1116,67 @@ public final class DatabaseAccess {
         String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
                 + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
         String localUserId = getTokenFromLocal(mainActivity).get("id");
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(localUserId).child("followings");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(localUserId);
         db.child(userID).removeValue();
+        db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
+        db.child(localUserId).removeValue();
+        updateFollowersCount(localUserId, userID, 0);
         if (delegate != null)
             delegate.onResultReady("success");
+    }
+
+    public static void updateFollowersCount(String userID, String targetID, final int mode){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("following_count");
+        db.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if(mutableData.getValue() == null)
+                    mutableData.setValue(1);
+                else {
+                    int following_count = mutableData.getValue(Integer.class);
+                    if (mode == 0) { //mode 0 = unfollow
+                        if (following_count > 0)
+                            following_count -= 1;
+                    } else //mode 1 = follow
+                        following_count += 1;
+                    mutableData.setValue(following_count);
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+
+        db = FirebaseDatabase.getInstance().getReference("users").child(targetID).child("follower_count");
+        db.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if(mutableData.getValue() == null)
+                    mutableData.setValue(1);
+                else {
+                    int follower_count = mutableData.getValue(Integer.class);
+                    if (mode == 0) { //mode 0 = unfollow
+                        if (follower_count > 0)
+                            follower_count -= 1;
+                    } else //mode 1 = follow
+                        follower_count += 1;
+                    mutableData.setValue(follower_count);
+                }
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
     }
 
     /**

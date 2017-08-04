@@ -1077,7 +1077,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             try {
                 server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
                         mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
-                        isPublic, startingDateTime.getTimeInMillis() / 1000L, endingDateTime.getTimeInMillis() / 1000L,
+                        isPublic, startingDateTime, endingDateTime,
                         minAge, maxAge, new OnResultReadyListener<String>() {
 
                             @Override

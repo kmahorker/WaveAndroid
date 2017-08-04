@@ -2,9 +2,11 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +29,7 @@ import java.util.TreeMap;
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getNotificationsOfUser;
 
 public class FriendProfileActivity extends AppCompatActivity {
+    private static final String TAG = "123";
     private User friend;
     private String userID;
     private TextView followers_textview, following_textview, follow_button;
@@ -107,9 +110,14 @@ public class FriendProfileActivity extends AppCompatActivity {
         follow_button = (TextView) mainActivity.findViewById(R.id.friend_follow_button);
 
         // TODO: 07/01/2017 Add loading spinners
+        Log.i(TAG, "Friend profile ID: " + friend.getUserID());
+        Log.i(TAG, "Friend following count: " + Integer.toString(friend.getFollower_count()));
+/*        followers_textview.setText(Integer.toString(friend.getFollower_count()) + "\nfollowers");
+        following_textview.setText(Integer.toString(friend.getFollowing_count())+ "\nfollowings");*/
         DatabaseAccess.server_getUserFollowers(friend.getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
+                Log.i(TAG, "onResultReady: " + result);
                 String text = result.size() + "\nfollowers";
                 followers_textview.setText(text);
             }

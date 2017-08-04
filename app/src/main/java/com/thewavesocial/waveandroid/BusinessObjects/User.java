@@ -17,8 +17,11 @@ import java.util.List;
 public class User implements Parcelable {
     private String userID; //
     private String first_name; //
+    private String full_name;
     private String last_name; //
     private String gender; //
+    private int follower_count;
+    private int following_count;
    // private Calendar birthday; //
     private List<BestFriend> bestFriends; //
    // private Bitmap profilePic; //
@@ -28,6 +31,8 @@ public class User implements Parcelable {
         first_name = ""; //
         last_name = ""; //
         gender = ""; //
+        follower_count = 100;
+        following_count = 100;
      //   birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
      //   profilePic = null; //TODO Use different constructor
@@ -43,7 +48,10 @@ public class User implements Parcelable {
         this.userID = userID;
         this.first_name = first_name;
         this.last_name = last_name;
+        this.full_name = first_name + " " + last_name;
         this.gender = gender;
+        this.follower_count = 100;
+        this.following_count = 100;
       //  this.birthday = birthday;
         this.bestFriends = bestFriends;
       //  this.profilePic = profilePic;
@@ -65,6 +73,10 @@ public class User implements Parcelable {
         this.gender = gender;
     }
 
+    public void setFollower_count(int count) {this.follower_count = count; }
+
+    public void setFollowing_count(int count) {this.following_count = count; }
+
   /*  public void setBirthday(Calendar birthday) {
         this.birthday = Calendar.getInstance();
     }*/
@@ -79,6 +91,9 @@ public class User implements Parcelable {
 
     //Getter Block
 
+    public int getFollower_count() {return follower_count; }
+
+    public int getFollowing_count() {return following_count; }
 
     public String getUserID() { return userID; }
 

@@ -3,6 +3,8 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Calendar;
+
 /**
  * Created by Wei-Tung on 02/18/2017.
  * Stores all notifications:
@@ -28,7 +30,7 @@ public class Notification implements Parcelable {
         create_time = 0;
     }
 
-    public Notification(String notificationID, String senderID, int requestType, long create_time) {
+    public Notification(String notificationID, String senderID, int requestType) {
         if (requestType == TYPE_FOLLOWING)
             message = "Started following";
         else if (requestType == TYPE_FOLLOWED)
@@ -49,7 +51,7 @@ public class Notification implements Parcelable {
         this.requestType = requestType;
         this.senderID = senderID;
         this.notificationID = notificationID;
-        this.create_time = create_time;
+        this.create_time = Calendar.getInstance().getTimeInMillis();
     }
 
     public String getMessage() {

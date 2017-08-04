@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class SearchPeopleCustomAdapter extends BaseAdapter {
     private Activity mainActivity;
@@ -80,6 +83,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
 
         holder.name.setText(user.getFull_name());
 
+        Log.i(TAG, "containsID: UserID: " + user.getUserID());
         if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
             holder.follow.setVisibility(View.INVISIBLE);
         } else if (!containsID(following, user.getUserID())) {
