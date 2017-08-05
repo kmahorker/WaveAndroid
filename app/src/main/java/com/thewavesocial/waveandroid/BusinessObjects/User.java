@@ -31,8 +31,8 @@ public class User implements Parcelable {
         first_name = ""; //
         last_name = ""; //
         gender = ""; //
-        follower_count = 100;
-        following_count = 100;
+        follower_count = 0;
+        following_count = 0;
      //   birthday = Calendar.getInstance(); //
         bestFriends = new ArrayList<>();
      //   profilePic = null; //TODO Use different constructor
@@ -50,8 +50,8 @@ public class User implements Parcelable {
         this.last_name = last_name;
         this.full_name = first_name + " " + last_name;
         this.gender = gender;
-        this.follower_count = 100;
-        this.following_count = 100;
+        this.follower_count = 0;
+        this.following_count = 0;
       //  this.birthday = birthday;
         this.bestFriends = bestFriends;
       //  this.profilePic = profilePic;
