@@ -37,7 +37,7 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
  */
 public class HomeSwipeActivity extends AppCompatActivity {
     private static final int NUM_PAGES = 3;
-    private static final String TAG = "Launch test";
+    private static final String TAG = "PlugApp";
     public ViewPager mPager;
     private PagerAdapter mPagerAdapter;
 
