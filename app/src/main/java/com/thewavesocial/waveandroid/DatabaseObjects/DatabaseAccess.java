@@ -730,13 +730,31 @@ public final class DatabaseAccess {
 /*        String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
                 + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
 /*        HashMap<String, String> body = new HashMap<>();*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(receiverID).child("notifications");
-        String uuid = UUID.randomUUID().toString(); //unique ID for each event
-        Notification notification = new Notification(uuid, senderID, 1);
-        db.child(uuid).setValue(notification);
+        //DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications").child(receiverID).child(type);
+        //String uuid = UUID.randomUUID().toString(); //unique ID for each event
+        int numType = notificationTypeGenerator(type);
+        Notification notification = new Notification(senderID, numType, eventID);
         if(delegate != null)
             delegate.onResultReady("success");
     }
+
+    public static int notificationTypeGenerator(String type) {
+        switch (type) {
+            case "following":
+                return 1;
+            case "followed":
+                return 2;
+            case "hosting":
+                return 3;
+            case "going":
+                return 4;
+            case "bouncing":
+                return 5;
+            default:
+                return 0;
+        }
+    }
+
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
