@@ -620,15 +620,50 @@ public final class DatabaseAccess {
 
     public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate) {
         //RequestComponents[] comps = new RequestComponents[1];
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("users").child(userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         //HashMap<String, String> about = new HashMap();
         //about.put("relationship", relationship);
-        if (action.equals("POST"))
-            db.child("relationship").setValue(relationship);
-        else if (action.equals("DELETE"))
-            db.child("relationship").removeValue(); //"DELETE" will just remove the relationship
-        else
-            Log.d("Action", "Illegal passed action argument: " + action);
+        if (action.equals("POST")) {
+            switch(relationship) {
+                case "hosting":
+                    db.child("hosting").child(userID).child(eventID).setValue(true);
+                    db.child("event_hosts").child(eventID).child(userID).setValue(true);
+                    break;
+                case "bouncing":
+                    db.child("bouncing").child(userID).child(eventID).setValue(true);
+                    db.child("event_bouncing").child(eventID).child(userID).setValue(true);
+                    break;
+                case "invited":
+                    db.child("invited").child(userID).child(eventID).setValue(true);
+                    db.child("event_invited").child(eventID).child(userID).setValue(true);
+                    break;
+                case "attending":
+                    db.child("attending").child(userID).child(eventID).setValue(true);
+                    db.child("event_attending").child(eventID).child(userID).setValue(true);
+                    break;
+            }
+        }
+        else if (action.equals("DELETE")){
+            switch(relationship) {
+                case "hosting":
+                    db.child("hosting").child(userID).child(eventID).removeValue();
+                    db.child("event_hosts").child(eventID).child(userID).removeValue();
+                case "bouncing":
+                    db.child("bouncing").child(userID).child(eventID).removeValue();
+                    db.child("event_bouncing").child(eventID).child(userID).removeValue();
+                    break;
+                case "invited":
+                    db.child("invited").child(userID).child(eventID).removeValue();
+                    db.child("event_invited").child(eventID).child(userID).removeValue();
+                    break;
+                case "attending":
+                    db.child("attending").child(userID).child(eventID).removeValue();
+                    db.child("event_attending").child(eventID).child(userID).removeValue();
+                    break;
+            }
+        }
+/*        else
+            Log.d("Action", "Illegal passed action argument: " + action);*/
         if(delegate != null)
             delegate.onResultReady("success");
     }
@@ -684,8 +719,9 @@ public final class DatabaseAccess {
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites").child(userID);
-        db.setValue(userID); //just setting the value of a user invited to the party as the userID, can change this as well
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.child("event_invited").child(userID).setValue(true); //just setting the value of a user invited to the party as the userID, can change this as well
+        db.child("invited").child(userID).setValue(true);
         if(delegate != null)
             delegate.onResultReady("success");
     }
@@ -749,27 +785,20 @@ public final class DatabaseAccess {
 
 */
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
-        final List<User> followerList = new ArrayList<>();
+        Log.i(TAG, "server_getUserFollowers: " + db);
+        final ArrayList<String> followerIDlist = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    DatabaseReference refDb = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey());
-                    refDb.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User user = dataSnapshot.getValue(User.class);
-                            user.setUserID(dataSnapshot.getKey());
-                            followerList.add(user);
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-                if(delegate != null)
-                    delegate.onResultReady(followerList);
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
+                    followerIDlist.add(postSnapshot.getKey());
+                server_getUsersFromIDs(followerIDlist, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        if(delegate != null)
+                            delegate.onResultReady(result);
+                    }
+                });
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -777,37 +806,26 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_getUserFollowing(String userID, final OnResultReadyListener<List<User>> delegate) {
+    public static void server_getUserFollowing(final String userID, final OnResultReadyListener<List<User>> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
                 + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
     */
         //Log.i(TAG, "server_getUserFollowing: USING USER ID: " + userID);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(userID);
-        final List<User> followingList = new ArrayList<>();
+        final ArrayList<String> followingIDlist = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    //Log.i(TAG, "USER FOUND: " + postSnapshot);
-                    DatabaseReference refDb = FirebaseDatabase.getInstance().getReference("users").child(postSnapshot.getKey());
-                    //Log.i(TAG, "server_getUserFollowing inside loop: " + refDb);
-                    refDb.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User user = dataSnapshot.getValue(User.class);
-                            //Log.i(TAG, "Users following: Found user: " + user.getFull_name());
-                            user.setUserID(dataSnapshot.getKey());
-                            followingList.add(user);
-                            Log.i(TAG, "Current following list contents: " + followingList);
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-                if(delegate != null)
-                    delegate.onResultReady(followingList);
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
+                   followingIDlist.add(postSnapshot.getKey());
+                Log.i(TAG, "onDataChange: FollowingIDList for user " + userID + ": " + followingIDlist);
+                server_getUsersFromIDs(followingIDlist, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        if(delegate != null)
+                            delegate.onResultReady(result);
+                    }
+                });
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -960,19 +978,46 @@ public final class DatabaseAccess {
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
                 + "/invites?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites");
-        final ArrayList<User> invites = new ArrayList<>();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_invited").child(eventID);
+        final ArrayList<String> userIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    invites.add(postSnapshot.getValue(User.class));
+                    userIDs.add(postSnapshot.getKey());
                 //Log.d("Get Invites of Event", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(invites);
+                server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        if (delegate != null)
+                            delegate.onResultReady(result);
+                    }
+                });
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        final ArrayList<User> userList = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(String userID: userIDlist){
+                    User user = dataSnapshot.child(userID).getValue(User.class);
+                    user.setUserID(userID);
+                    userList.add(user);
+                }
+                if (delegate != null)
+                    delegate.onResultReady(userList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }

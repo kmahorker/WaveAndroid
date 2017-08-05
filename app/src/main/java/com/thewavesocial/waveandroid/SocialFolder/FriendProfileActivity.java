@@ -117,7 +117,6 @@ public class FriendProfileActivity extends AppCompatActivity {
         DatabaseAccess.server_getUserFollowers(friend.getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
-                Log.i(TAG, "onResultReady: " + result);
                 String text = result.size() + "\nfollowers";
                 followers_textview.setText(text);
             }
