@@ -20,8 +20,8 @@ public class User implements Parcelable {
     private String full_name;
     private String last_name; //
     private String gender; //
-    private int follower_count;
-    private int following_count;
+    private int follower_count = 0;
+    private int following_count = 0;
    // private Calendar birthday; //
     private List<BestFriend> bestFriends; //
    // private Bitmap profilePic; //
