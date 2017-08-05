@@ -711,7 +711,7 @@ public final class DatabaseAccess {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         BestFriend bestFriend = new BestFriend(name, number);
         db.setValue(bestFriend);
-        db.child("userID").setValue(userId);
+        //db.child("userID").setValue(userId);
         if(delegate != null)
             delegate.onResultReady("success");
     }
