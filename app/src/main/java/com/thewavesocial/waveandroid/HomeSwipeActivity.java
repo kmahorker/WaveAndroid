@@ -115,6 +115,21 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed");
+        if (mPager.getCurrentItem() == 0) {
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            UtilityClass.hideKeyboard(mainActivity);
+        } else if (mPager.getCurrentItem() == 2) {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            UtilityClass.hideKeyboard(mainActivity);
+        }else{
+            Log.d(TAG, "onBackPressed: finish()");
+            super.onBackPressed();
+        }
+    }
+
     /**
      * Sliding mechanism for host, map, and social fragments.
      */
