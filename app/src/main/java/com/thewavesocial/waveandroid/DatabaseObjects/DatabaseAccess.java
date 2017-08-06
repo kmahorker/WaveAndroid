@@ -34,6 +34,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -756,13 +757,12 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
-        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);*/
+        Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(HomeSwipeActivity.TAG, "ValueEventListener.onDataChange");
                 if(dataSnapshot.getValue() != null) {
                     User user = dataSnapshot.getValue(User.class);
                     if(delegate != null)
@@ -773,14 +773,13 @@ public final class DatabaseAccess {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.d(HomeSwipeActivity.TAG, "ValueEventListener.onCancelled");
             }
         });
+        Log.i(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject DONE");
     }
 
     public static void server_getPartyObject(final String partyID, final OnResultReadyListener<Party> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "events/" + partyID
-                + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -798,10 +797,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<User>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/followers?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-
-*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
         Log.i(TAG, "server_getUserFollowers: " + db);
         final ArrayList<String> followerIDlist = new ArrayList<>();
@@ -825,10 +820,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUserFollowing(final String userID, final OnResultReadyListener<List<User>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/followings?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-    */
-        //Log.i(TAG, "server_getUserFollowing: USING USER ID: " + userID);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(userID);
         final ArrayList<String> followingIDlist = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -851,8 +842,6 @@ public final class DatabaseAccess {
         });
     }
     public static void server_getEventsOfUser(String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/events?access_token="
-                + getTokenFromLocal(mainActivity).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("events");
         final ArrayList<Party> attending = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();

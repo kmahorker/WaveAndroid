@@ -69,6 +69,7 @@ public class HostControllerFragment extends Fragment {
     }
 
     public void populateListView() {
+        Log.d(HomeSwipeActivity.TAG, "HostControllerFragment.populateListView");
         final ProgressBar progressBar = (ProgressBar) mainActivity.findViewById(R.id.home_hostView_progressbar);
         progressBar.setVisibility(View.VISIBLE);
         server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {

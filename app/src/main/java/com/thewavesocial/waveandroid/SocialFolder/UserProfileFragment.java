@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -97,6 +98,7 @@ public class UserProfileFragment extends Fragment {
      * initialize user information
      */
     public void setupProfileInfo() {
+        Log.d(HomeSwipeActivity.TAG, "UserProfileFragment.setupProfileInfo");
         followers_text = (TextView) mainActivity.findViewById(R.id.user_followers_count);
         following_text = (TextView) mainActivity.findViewById(R.id.user_following_count);
         profile_picture = (ImageView) mainActivity.findViewById(R.id.user_profile_pic);
