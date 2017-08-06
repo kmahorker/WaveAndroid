@@ -1,9 +1,11 @@
 package com.thewavesocial.waveandroid.BusinessObjects;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ public final class CurrentUser {
      * Initialize user object
      */
     public static void setContext(Activity activity, final OnResultReadyListener<Boolean> delegate) {
+        Log.d(HomeSwipeActivity.TAG, "CurrentUser.setContext");
         mainActivity = activity;
         DatabaseAccess.setContext(mainActivity);
         server_getUserObject(getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {

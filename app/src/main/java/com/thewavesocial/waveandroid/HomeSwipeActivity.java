@@ -3,8 +3,6 @@ package com.thewavesocial.waveandroid;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -26,7 +24,6 @@ import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SettingsFolder.SettingsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -37,14 +34,14 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
  */
 public class HomeSwipeActivity extends AppCompatActivity {
     private static final int NUM_PAGES = 3;
-    private static final String TAG = "Launch test";
+    public static final String TAG = "PlugApp";
     public ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
 
     private HomeSwipeActivity mainActivity;
     private HostControllerFragment hostControllerFragment;
     private UserProfileFragment userProfileFragment;
     private MapsFragment mapsFragment;
+    private Runnable onBackPressedListener;
 
     /**
      * Initialize logged-in user information and all UIs.
@@ -67,23 +64,21 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(User result) {
                     if (result != null) {
+                        Log.i(TAG, "onCreate: User exists");
                         CurrentUser.setTheUser(result);
-                        Log.i(TAG, "onResultReady: " + result.getFull_name());
                             //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name() + Integer.toString(result.getFull_name().length()));
                     }
                     else {
+                        Log.i(TAG, "onCreate: Creating user...");
                         DatabaseAccess.server_createNewUser("FIRST_NAME", "LAST_NAME", "1122", "fsaf", "fsafa", "GENDER",
                                 null, new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         saveTokentoLocal(mainActivity, result);
-                                        Log.i(TAG, "onResultReady: User ID ready: " + result);
                                         DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
                                             @Override
                                             public void onResultReady(User result) {
-                                                Log.i(TAG, "onResultReady: " + result.getFull_name());
                                                 CurrentUser.setTheUser(result);
-                                                Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                                             }
                                         });
                                     }
@@ -92,32 +87,69 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                 }
             });
+            Log.i(TAG, "onCreate: proceed to setContext");
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
                     UtilityClass.endProgressbar(mainActivity, result);
                     if (result) {
+                        Log.i(TAG, "onCreate: Context set");
 //                        setupServerDummies();
-                        setupMapActionbar();
-                        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-                        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-                        mPager.setAdapter(mPagerAdapter);
-                        mPager.setCurrentItem(1);
-                        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+                        setupPager();
                     } else {
-                        Log.d("HomeSwipeActivity", "Set User Context Failed...");
+                        Log.d(TAG, "onCreate: Set User Context Failed!");
                     }
                 }
             });
         } else {
-            setupMapActionbar();
-            mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-            mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-            mPager.setAdapter(mPagerAdapter);
-            mPager.setCurrentItem(1);
-            mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+            Log.i(TAG, "onCreate: User exists, resetting mPager");
+            setupPager();
         }
 
+    }
+
+    private void setupPager(){
+        setupMapActionbar();
+        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
+        mPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
+        mPager.setCurrentItem(1);
+        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+    }
+
+    /**
+     * enable MapsFragment to collapse SlidingUpPanelLayout on Back button press
+     * @param onBackPressedListener
+     * @see MapsFragment
+     *
+     */
+    public void setOnBackPressedListener(Runnable onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
+    }
+
+    /**
+     * enable user to return to mapsFragment using back button
+     * NOTE:    the bug which causes the first back press to be ignored
+     *          is unrelated to this method
+     */
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed");
+        if (mPager.getCurrentItem() == 0) {
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            UtilityClass.hideKeyboard(mainActivity);
+        } else if (mPager.getCurrentItem() == 2) {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            UtilityClass.hideKeyboard(mainActivity);
+        }else if (onBackPressedListener != null) {
+            onBackPressedListener.run();
+            if(onBackPressedListener == null){
+                Log.d(TAG, "onBackPressed: finish()");
+                super.onBackPressed();
+            }
+        }else {
+            Log.d(TAG, "onBackPressed: finish()");
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -140,6 +172,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
          */
         @Override
         public Fragment getItem(int position) {
+            Log.i(TAG, "ScreenSlidePagerAdapter.getItem: " + position);
             switch (position) {
                 case 0:
                     hostControllerFragment = new HostControllerFragment();
@@ -267,8 +300,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mainActivity, SettingsActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(mainActivity, SettingsActivity.class));
             }
         });
     }
