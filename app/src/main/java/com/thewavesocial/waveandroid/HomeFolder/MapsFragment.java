@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.HomeFolder;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -29,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -217,6 +217,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 return false;
             }
         });
+
+        //enable user to return to map using back button
+        final Activity main_activity = getActivity();
+        if(main_activity instanceof HomeSwipeActivity){
+            ((HomeSwipeActivity) main_activity).setOnBackPressedListener(new Runnable() {
+                @Override
+                public void run() {
+                    if(sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED ||
+                            sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED){
+                        sliding_layout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    } else if(sliding_layout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        ((HomeSwipeActivity) main_activity).setOnBackPressedListener(null);
+                    }
+                }
+            });
+        }
     }
 
 //----------------------------------------------------------------------------------------------Map

@@ -41,6 +41,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
     private HostControllerFragment hostControllerFragment;
     private UserProfileFragment userProfileFragment;
     private MapsFragment mapsFragment;
+    private Runnable onBackPressedListener;
 
     /**
      * Initialize logged-in user information and all UIs.
@@ -115,6 +116,21 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
     }
 
+    /**
+     * enable MapsFragment to collapse SlidingUpPanelLayout on Back button press
+     * @param onBackPressedListener
+     * @see MapsFragment
+     *
+     */
+    public void setOnBackPressedListener(Runnable onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
+    }
+
+    /**
+     * enable user to return to mapsFragment using back button
+     * NOTE:    the bug which causes the first back press to be ignored
+     *          is unrelated to this method
+     */
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed");
@@ -124,7 +140,13 @@ public class HomeSwipeActivity extends AppCompatActivity {
         } else if (mPager.getCurrentItem() == 2) {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
             UtilityClass.hideKeyboard(mainActivity);
-        }else{
+        }else if (onBackPressedListener != null) {
+            onBackPressedListener.run();
+            if(onBackPressedListener == null){
+                Log.d(TAG, "onBackPressed: finish()");
+                super.onBackPressed();
+            }
+        }else {
             Log.d(TAG, "onBackPressed: finish()");
             super.onBackPressed();
         }
