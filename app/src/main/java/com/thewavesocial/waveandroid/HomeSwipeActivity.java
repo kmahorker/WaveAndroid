@@ -67,23 +67,21 @@ public class HomeSwipeActivity extends AppCompatActivity {
                 @Override
                 public void onResultReady(User result) {
                     if (result != null) {
+                        Log.i(TAG, "onCreate: User exists");
                         CurrentUser.setTheUser(result);
-                        Log.i(TAG, "onResultReady: " + result.getFull_name());
                             //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name() + Integer.toString(result.getFull_name().length()));
                     }
                     else {
+                        Log.i(TAG, "onCreate: Creating user...");
                         DatabaseAccess.server_createNewUser("FIRST_NAME", "LAST_NAME", "1122", "fsaf", "fsafa", "GENDER",
                                 null, new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         saveTokentoLocal(mainActivity, result);
-                                        Log.i(TAG, "onResultReady: User ID ready: " + result);
                                         DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
                                             @Override
                                             public void onResultReady(User result) {
-                                                Log.i(TAG, "onResultReady: " + result.getFull_name());
                                                 CurrentUser.setTheUser(result);
-                                                Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                                             }
                                         });
                                     }
@@ -92,32 +90,34 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                 }
             });
+            Log.i(TAG, "onCreate: proceed");
             CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
                     UtilityClass.endProgressbar(mainActivity, result);
                     if (result) {
+                        Log.i(TAG, "onCreate: Context set");
 //                        setupServerDummies();
-                        setupMapActionbar();
-                        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-                        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-                        mPager.setAdapter(mPagerAdapter);
-                        mPager.setCurrentItem(1);
-                        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+                        setupPager();
                     } else {
-                        Log.d("HomeSwipeActivity", "Set User Context Failed...");
+                        Log.d(TAG, "onCreate: Set User Context Failed!");
                     }
                 }
             });
         } else {
-            setupMapActionbar();
-            mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
-            mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-            mPager.setAdapter(mPagerAdapter);
-            mPager.setCurrentItem(1);
-            mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
+            Log.i(TAG, "onCreate: User exists, resetting mPager");
+            setupPager();
         }
 
+    }
+
+    private void setupPager(){
+        setupMapActionbar();
+        mPager = (ViewPager) findViewById(R.id.new_activity_home_viewpager);
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(1);
+        mPager.setOnPageChangeListener(new ScreenSlideChangeListener());
     }
 
     /**
