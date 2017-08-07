@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -51,6 +53,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -59,6 +62,7 @@ import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import github.ankushsachdeva.emojicon.EmojiconEditText;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
@@ -520,6 +524,23 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
             //emojiconEditText.setEmojiconSize(150);
             emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+            //prevents user from inputting non-emoji characters
+            //the pattern should (but have not been tested) to cover all emoji
+            InputFilter filter = new InputFilter() {
+                public CharSequence filter(CharSequence source, int start, int end,
+                                           Spanned dest, int dstart, int dend) {
+                    //Log.d(HomeSwipeActivity.TAG, "CreateAnEventActivity.setupEmojiconEditText: input: \"" + source.toString() + "\"");
+                    boolean matchFound = Pattern.compile("/[\u2190-\u21FF]|[\u2600-\u26FF]|[\u2700-\u27BF]|[\u3000-\u303F]|[\u1F300-\u1F64F]|[\u1F680-\u1F6FF]/g")
+                            .matcher(source)
+                            .find();
+                    if(!matchFound)
+                        return null;
+                    else
+                        return "";
+                }
+            };
+            emojiconEditText.setFilters(new InputFilter[] { filter });
 
             emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
