@@ -291,7 +291,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
-        endDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(party.getDuration()).getTime()));
+        endDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar( party.getDate() + party.getDuration() ).getTime()));
         endDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,7 +306,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
-        endTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(party.getDuration()).getTime()));
+        endTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar( party.getDate() + party.getDuration() ).getTime()));
         endTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -614,7 +614,7 @@ public class EditStatsActivity extends AppCompatActivity {
             price = party.getPrice();
             hostName = party.getHost_name();
             startingDateTime = party.getDate();
-            endingDateTime = party.getDuration();
+            endingDateTime = party.getDate() + party.getDuration();
             server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
                 @Override
                 public void onResultReady(HashMap<String, ArrayList<User>> result) {

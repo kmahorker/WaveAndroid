@@ -141,7 +141,7 @@ public class PartyProfileFragment extends Fragment {
         partyname.setText(party.getName());
         hostname.setText(party.getHost_name());
         datetime.setText(UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getDate())) + " - " +
-                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getDuration())));
+                UtilityClass.timeToString(UtilityClass.epochToCalendar( party.getDate() + party.getDuration() )));
         location.setText(party.getAddress());
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
