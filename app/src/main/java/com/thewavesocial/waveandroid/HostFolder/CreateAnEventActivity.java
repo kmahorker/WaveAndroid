@@ -459,6 +459,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
 
                         } catch (GooglePlayServicesRepairableException e) {
+                            UtilityClass.printAlertMessage(thisActivity, "Your Google Play Services are out of date.", "Please Update", true);
                             e.printStackTrace();
                             // TODO: Handle the error.
                         } catch (GooglePlayServicesNotAvailableException e) {
