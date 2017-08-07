@@ -124,9 +124,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             if (qrResult.getContents() != null) {
                 try {
                     int coef = Integer.parseInt(qrResult.getContents().substring(0, qrResult.getContents().indexOf('.')));
-                    long rawID = Long.parseLong(qrResult.getContents().substring(qrResult.getContents().indexOf('.') + 1));
-                    long userID = rawID/coef;
-                    processUserID(userID+"");
+                    processScanID(qrResult.getContents());
                 } catch (Exception e) {
                     Toast.makeText(mainActivity, "Error with QR code", Toast.LENGTH_LONG).show();
                 }
@@ -135,17 +133,22 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void processUserID(final String userID) {
+    private void processScanID(final String rawID) {
         boolean found = false;
+        User user = null;
+
         for ( int i = 0; i < goingList.size() && !found; i++ ) {
             final User each = goingList.get(i);
-            if ( each.getUserID().equals(userID) ) {
+            if ( rawID.contains(each.getUserID()) ) {
                 found = true;
-                displayUserProfile(each);
+                user = each;
             }
         }
-        if ( !found )
+
+        if ( !rawID.contains(party.getPartyID()) || !found )
             Log.d("Error", "User Not Found");
+        else
+            displayUserProfile(user);
     }
 
     private void displayUserProfile(final User each) {
@@ -223,9 +226,8 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 @Override
                 public void onClick(View v) {
                     View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
-                    int coef = (int) (Math.random()*9) + 1;
-                    long id = Long.parseLong(CurrentUser.theUser.getUserID());
-                    ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode(coef + "." + (id*coef)));
+                    String id = CurrentUser.theUser.getUserID() + party.getPartyID();
+                    ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode(id));
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
                     dialog.setTitle("QR Code")
@@ -326,6 +328,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
     }
+
 
     private void populateHorizontalList(List<User> list, int type) {
         LinearLayoutManager layoutManagerAttendees = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);

@@ -837,14 +837,16 @@ public final class DatabaseAccess {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Party each_party = postSnapshot.getValue(Party.class);
+                    each_party.setPartyID(postSnapshot.getKey());
                     if(postSnapshot.child("relationship").getValue().toString() == "attending")
-                        attending.add(postSnapshot.getValue(Party.class));
+                        attending.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "going")
-                        going.add(postSnapshot.getValue(Party.class));
+                        going.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "hosting")
-                        hosting.add(postSnapshot.getValue(Party.class));
+                        hosting.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "bouncing")
-                        bouncing.add(postSnapshot.getValue(Party.class));
+                        bouncing.add(each_party);
                 }
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
@@ -928,8 +930,11 @@ public final class DatabaseAccess {
                    float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
                    float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
                    if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
-                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng))
-                       parties.add(postSnapshot.getValue(Party.class));
+                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
+                       Party each_party = postSnapshot.getValue(Party.class);
+                       each_party.setPartyID(postSnapshot.getKey());
+                       parties.add(each_party);
+                   }
                }
                if(delegate != null)
                    delegate.onResultReady(parties);
@@ -1050,8 +1055,11 @@ public final class DatabaseAccess {
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    parties.add(postSnapshot.getValue(Party.class));
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Party each_party = postSnapshot.getValue(Party.class);
+                    each_party.setPartyID(postSnapshot.getKey());
+                    parties.add(each_party);
+                }
                 //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(parties);
