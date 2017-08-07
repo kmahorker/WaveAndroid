@@ -277,15 +277,13 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         locView.setText(loc + "");
         dateView.setText(date + "");
         timeView.setText(time + "");
+        hostView.setText(party.getHost_name());
 
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(final HashMap<String, ArrayList<User>> result) {
                 if (result != null) {
-                    String hostname = "", hostID = "";
                     if (!result.get("hosting").isEmpty()) {
-                        hostname = result.get("hosting").get(0).getFull_name();
-                        hostID = result.get("hosting").get(0).getUserID();
                         hostView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -295,10 +293,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                             }
                         });
                     }
-                    hostView.setText(hostname);
 
                     //If coming from hostFragment and you are a host
-                    if (callerType == activityHostFragment && hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"))) {
+                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"))) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
@@ -323,7 +320,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     attendingView.setText(attending + "");
                     genderView.setText(female + "/" + male);
 
-                    setupSpecialFields(callerType, hostID);
+                    setupSpecialFields(callerType, party.getHost_id());
                 }
             }
         });
