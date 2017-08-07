@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -317,7 +316,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void addParty(Party party, LatLng loc) {
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
-        emojiText.setText(party.getPartyEmoji().substring(0, 1));
+        emojiText.setText(party.getEmoji().substring(0, 1));
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
@@ -328,9 +327,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void addParties(List<Party> parties) {
         for (Party party : parties) {
-            LatLng loc = party.getMapAddress().getAddress_latlng();
-            if (loc != null)
-                addParty(party, loc);
+            LatLng loc = new LatLng( party.getLat(), party.getLng() );
+            addParty(party, loc);
         }
     }
 

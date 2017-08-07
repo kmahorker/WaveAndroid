@@ -1,6 +1,5 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,9 +7,6 @@ import android.content.Intent;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -47,9 +43,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -250,12 +244,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     }
                 });
                 view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                if (NewPartyInfo.startingDateTime != 0) {
-                    startCalendar = NewPartyInfo.startingDateTime;
+                if (NewPartyInfo.date != 0) {
+                    startCalendar = NewPartyInfo.date;
                 }
-                if (NewPartyInfo.endingDateTime != 0l) {
-                    endCalendar = NewPartyInfo.endingDateTime;
-                }
+                endCalendar = NewPartyInfo.date + NewPartyInfo.duration;
                 setUpTextViews(view);
                 setupEditText(view);
                 setupSwitch(view);
@@ -407,7 +399,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //            Calendar tempCalendar = Calendar.getInstance();
 //            tempCalendar.setTime(new Date());
 //            tempCalendar.add(Calendar.HOUR, 1);
-            if (NewPartyInfo.endingDateTime == 0) {
+            if (startCalendar + NewPartyInfo.duration == 0) {
                 endCalendar = startCalendar + 3600;
                 //UtilityClass.epochToCalendar(endCalendar).set(Calendar.HOUR_OF_DAY, UtilityClass.epochToCalendar(startCalendar).get(Calendar.HOUR_OF_DAY) + 1);
             }
@@ -443,10 +435,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
             locationEditText = (EditText) v.findViewById(R.id.locationEditText);
             locationEditText.setKeyListener(null);
-            MapAddress address = NewPartyInfo.mapAddress;
-            if (address != null) {
-                locationEditText.setText(NewPartyInfo.mapAddress.getAddress_string());
-            }
+            locationEditText.setText(NewPartyInfo.address);
             locationEditText.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -483,10 +472,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupSwitch(View v) {
             privateSwitch = (SwitchCompat) v.findViewById(R.id.privateSwitch);
-            if (NewPartyInfo.isPublic == true) {
+            if (NewPartyInfo.is_public == true) {
                 privateSwitch.setChecked(false);
                 privateParty = false;
-            } else if (NewPartyInfo.isPublic == false) {
+            } else if (NewPartyInfo.is_public == false) {
                 privateSwitch.setChecked(true);
                 privateParty = true;
             }
@@ -508,19 +497,19 @@ public class CreateAnEventActivity extends AppCompatActivity {
             //rangeSeekBar = new RangeSeekBar<>(getActivity());
             rangeSeekBar = (RangeSeekBar<Integer>) v.findViewById(R.id.ageRestrictionSeekBar);
             rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
-            if (NewPartyInfo.minAge == -1 || NewPartyInfo.maxAge == -1) {
+            if (NewPartyInfo.min_age == -1 || NewPartyInfo.max_age == -1) {
                 rangeSeekBar.setSelectedMinValue(RANGE_AGE_SELECTED_MIN);
                 rangeSeekBar.setSelectedMaxValue(RANGE_AGE_SELECTED_MAX);
             } else {
-                rangeSeekBar.setSelectedMinValue(NewPartyInfo.minAge);
-                rangeSeekBar.setSelectedMaxValue(NewPartyInfo.maxAge);
+                rangeSeekBar.setSelectedMinValue(NewPartyInfo.min_age);
+                rangeSeekBar.setSelectedMaxValue(NewPartyInfo.max_age);
             }
         }
 
         private void setupEmojiconEditText(View v) {
             emojiconEditText = (EmojiconEditText) v.findViewById(R.id.emojiconEditText);
-            if (!NewPartyInfo.partyEmoji.isEmpty()) {
-                emojiconEditText.setText(NewPartyInfo.partyEmoji);
+            if (!NewPartyInfo.emoji.isEmpty()) {
+                emojiconEditText.setText(NewPartyInfo.emoji);
             }
             //emojiconEditText.setEmojiconSize(150);
             emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -602,15 +591,16 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void savePage1() {
             NewPartyInfo.name = titleEditText.getText().toString();
             NewPartyInfo.price = 0;
-            NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
-            NewPartyInfo.startingDateTime = startCalendar;
-            NewPartyInfo.endingDateTime = endCalendar;
-            MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());
-            NewPartyInfo.mapAddress = loc;
-            NewPartyInfo.isPublic = !privateParty;
-            NewPartyInfo.partyEmoji = emojiconEditText.getText().toString();
-            NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
-            NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
+            NewPartyInfo.host_name = CurrentUser.theUser.getFull_name();
+            NewPartyInfo.date = startCalendar;
+            NewPartyInfo.duration = endCalendar - startCalendar;
+            NewPartyInfo.address = locationPlace.getAddress().toString();
+            NewPartyInfo.lat = locationPlace.getLatLng().latitude;
+            NewPartyInfo.lng = locationPlace.getLatLng().longitude;
+            NewPartyInfo.is_public = !privateParty;
+            NewPartyInfo.emoji = emojiconEditText.getText().toString();
+            NewPartyInfo.min_age = rangeSeekBar.getSelectedMinValue();
+            NewPartyInfo.max_age = rangeSeekBar.getSelectedMaxValue();
             //getActivity().finish();
         }
     }
@@ -1056,41 +1046,43 @@ public class CreateAnEventActivity extends AppCompatActivity {
     private static class NewPartyInfo {
         static String name;
         static double price;
-        static String hostName;
-        static long startingDateTime;
-        static long endingDateTime;
-        static MapAddress mapAddress;
+        static String host_name;
+        static long date;
+        static long duration;
+        static String address;
+        static double lat;
+        static double lng;
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
         static List<String> invitingUsers;
-        static boolean isPublic;
-        static String partyEmoji;
-        static int minAge;
-        static int maxAge;
+        static boolean is_public;
+        static String emoji;
+        static int min_age;
+        static int max_age;
 
         //Initialize party information
         public static void initialize() {
             name = "";
             price = 0;
-            hostName = "";
-            startingDateTime = UtilityClass.calendarToEpoch(Calendar.getInstance());
-            endingDateTime = UtilityClass.calendarToEpoch(Calendar.getInstance()) + 3600;
+            host_name = "";
+            date = UtilityClass.calendarToEpoch(Calendar.getInstance());
+            duration = 3600;
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
             invitingUsers = new ArrayList<>();
-            isPublic = true;
-            partyEmoji = "";
-            minAge = -1;
-            maxAge = -1;
-            mapAddress = new MapAddress();
+            is_public = true;
+            emoji = "";
+            min_age = -1;
+            max_age = -1;
+            address = "";
+            lat = 0;
+            lng = 0;
 
             hostingUsers.add(DatabaseAccess.getTokenFromLocal(thisActivity).get("id"));
         }
 
         //Compose all party information
         public static void composeParty() {
-            if (mapAddress.getAddress_latlng() == null)
-                mapAddress.setAddress_latlng(new LatLng(0, 0));
             for (String bouncer_id : bouncingUsers) {
                 if (invitingUsers.contains(bouncer_id)) {
                     invitingUsers.remove(bouncer_id);
@@ -1098,58 +1090,53 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
 
             try {
-                server_createNewParty(name, partyEmoji, price, mapAddress.getAddress_string(),
-                        mapAddress.getAddress_latlng().latitude, mapAddress.getAddress_latlng().longitude,
-                        isPublic, startingDateTime, endingDateTime,
-                        minAge, maxAge, new OnResultReadyListener<String>() {
+                server_createNewParty(address, date, duration, emoji, CurrentUser.theUser.getUserID(), host_name, is_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        int commaIndex = result.indexOf(',');
+                        if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
+                            Log.d("Compose Party", "Unsuccessful");
+                            return;
+                        }
 
-                            @Override
-                            public void onResultReady(String result) {
-                                int commaIndex = result.indexOf(',');
-                                if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
-                                    Log.d("Compose Party", "Unsuccessful");
-                                    return;
+                        final String eventId = result.substring(commaIndex + 1);
+
+                        for (final String id : invitingUsers) {
+                            server_inviteUserToEvent(id, eventId, new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String result) {
+                                    Log.d("addInvitedUser", result + "");
+                                    DatabaseAccess.server_createNotification(id, "", eventId, "invite_going", null);
+                                    completeThreads();
                                 }
+                            });
+                        }
 
-                                final String eventId = result.substring(commaIndex + 1);
-
-                                for (final String id : invitingUsers) {
-                                    server_inviteUserToEvent(id, eventId, new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            Log.d("addInvitedUser", result + "");
-                                            DatabaseAccess.server_createNotification(id, "", eventId, "invite_going", null);
-                                            completeThreads();
-                                        }
-                                    });
+                        for (final String id : bouncingUsers) {
+                            server_manageUserForParty(id, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String result) {
+                                    if(result.equals("success")){
+                                        DatabaseAccess.server_createNotification(id, "", eventId, "invite_bouncing", null);
+                                        completeThreads();
+                                    }
                                 }
+                            });
 
-                                for (final String id : bouncingUsers) {
-                                    server_manageUserForParty(id, eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            if(result.equals("success")){
-                                                DatabaseAccess.server_createNotification(id, "", eventId, "invite_bouncing", null);
-                                                completeThreads();
-                                            }
-                                        }
-                                    });
+                        }
 
+                        for (final String hostingId : hostingUsers) {
+                            server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
+                                @Override
+                                public void onResultReady(String result) {
+                                    Log.d("addHostingUser", result + "");
+                                    DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
+                                    completeThreads();
                                 }
-
-                                for (final String hostingId : hostingUsers) {
-                                    server_manageUserForParty(hostingId, eventId, "hosting", "POST", new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            Log.d("addHostingUser", result + "");
-                                            DatabaseAccess.server_createNotification(hostingId, "", eventId, "hosting", null);
-                                            completeThreads();
-                                        }
-                                    });
-                                }
-
-                            }
-                        });
+                            });
+                        }
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -19,7 +19,6 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class SearchEventFragment extends Fragment {
 

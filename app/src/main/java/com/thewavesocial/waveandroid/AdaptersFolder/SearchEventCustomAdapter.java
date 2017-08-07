@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
-import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
@@ -78,8 +77,8 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         holder.name = (TextView) layoutView.findViewById(R.id.eachSearchEvent_name);
         holder.go = (TextView) layoutView.findViewById(R.id.eachSearchEvent_go);
 
-        if (party.getPartyEmoji() != null) {
-            holder.image.setText(party.getPartyEmoji());
+        if (party.getEmoji() != null) {
+            holder.image.setText(party.getEmoji());
         }
 
         holder.name.setText(party.getName());

@@ -82,7 +82,7 @@ public class HostControllerFragment extends Fragment {
 
                     TreeMap<Long, Party> partyTreeMap = new TreeMap<>();
                     for ( Party party : list ) {
-                        long time = party.getStartingDateTime();
+                        long time = party.getDate();
                         if ( time - Calendar.getInstance().getTimeInMillis()/1000 > -86400 ) { //1 day
                             while (partyTreeMap.containsKey(time)) {
                                 time++;

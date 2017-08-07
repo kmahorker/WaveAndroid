@@ -231,8 +231,8 @@ public class UserActionAdapter extends BaseAdapter {
         holder.partyname = (TextView) layoutView.findViewById(R.id.eachUser_partyname_item);
         holder.partyInfo = (TextView) layoutView.findViewById(R.id.eachUser_partyInfo_item);
 
-        if (party.getPartyEmoji() != null && !party.getPartyEmoji().isEmpty())
-            holder.partyEmoji.setText(party.getPartyEmoji());
+        if (party.getEmoji() != null && !party.getEmoji().isEmpty())
+            holder.partyEmoji.setText(party.getEmoji());
         holder.partyname.setText(party.getName());
         server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
@@ -257,7 +257,7 @@ public class UserActionAdapter extends BaseAdapter {
 
     private String getCustomInfoText(Party party, int goingSize) {
         String compose = "";
-        compose += getDays(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " days  ";
+        compose += getDays(UtilityClass.epochToCalendar(party.getDate())) + " days  ";
         compose += goingSize + " going";
         return compose;
     }

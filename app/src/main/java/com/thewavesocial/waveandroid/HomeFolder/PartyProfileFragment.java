@@ -137,12 +137,12 @@ public class PartyProfileFragment extends Fragment {
         hostedEvents = (ListView) mainActivity.findViewById(R.id.partyprofile_eventsHosted_list);
         emoji = (EmojiconTextView) mainActivity.findViewById(R.id.partyprofile_text_emoji);
 
-        emoji.setText(party.getPartyEmoji().substring(0,1));
+        emoji.setText(party.getEmoji().substring(0,1));
         partyname.setText(party.getName());
-        hostname.setText(party.getHostName());
-        datetime.setText(UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
-                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getEndingDateTime())));
-        location.setText(party.getMapAddress().getAddress_string());
+        hostname.setText(party.getHost_name());
+        datetime.setText(UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getDate())) + " - " +
+                UtilityClass.timeToString(UtilityClass.epochToCalendar( party.getDate() + party.getDuration() )));
+        location.setText(party.getAddress());
         price.setText(UtilityClass.priceToString(party.getPrice()));
 
         sample = new ArrayList();

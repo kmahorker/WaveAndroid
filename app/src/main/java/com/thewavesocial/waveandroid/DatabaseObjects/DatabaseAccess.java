@@ -6,15 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,18 +27,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
-import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
-import com.thewavesocial.waveandroid.UtilityClass;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -57,17 +47,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
-import java.util.TreeMap;
 import java.util.UUID;
 
 import okhttp3.MediaType;
@@ -563,26 +547,27 @@ public final class DatabaseAccess {
 
 //todo --------------------------------------------------------------------------------POST Requests
 
-    public static void server_createNewParty(String name,
+    public static void server_createNewParty(String address,
+                                             long date,
+                                             long duration,
                                              String emoji,
-                                             double price,
-                                             String address,
+                                             String host_id,
+                                             String host_name,
+                                             boolean is_public,
                                              double lat,
                                              double lng,
-                                             boolean isPublic,
-                                             long startTimeStamp,
-                                             long endingTimeStamp,
-                                             int minAge,
-                                             int maxAge,
+                                             int max_age,
+                                             int min_age,
+                                             String name,
+                                             double price,
                                              final OnResultReadyListener<String> delegate){
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         String eventID = UUID.randomUUID().toString(); //unique ID for each event
-        Party party = new Party(eventID, name, price,
-                CurrentUser.theUser.getFull_name(),
-                startTimeStamp, endingTimeStamp, new MapAddress(address, new LatLng(lat, lng)),
-                isPublic, emoji, minAge, maxAge);
+
+        Party party = new Party(address, date, duration, emoji, host_id, host_name, is_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
+
         if(delegate != null)
             delegate.onResultReady("success,"+eventID);
 
@@ -852,14 +837,16 @@ public final class DatabaseAccess {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Party each_party = postSnapshot.getValue(Party.class);
+                    each_party.setPartyID(postSnapshot.getKey());
                     if(postSnapshot.child("relationship").getValue().toString() == "attending")
-                        attending.add(postSnapshot.getValue(Party.class));
+                        attending.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "going")
-                        going.add(postSnapshot.getValue(Party.class));
+                        going.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "hosting")
-                        hosting.add(postSnapshot.getValue(Party.class));
+                        hosting.add(each_party);
                     else if(postSnapshot.child("relationship").getValue().toString() == "bouncing")
-                        bouncing.add(postSnapshot.getValue(Party.class));
+                        bouncing.add(each_party);
                 }
                 parties.put("attending", attending);
                 parties.put("hosting", hosting);
@@ -943,8 +930,11 @@ public final class DatabaseAccess {
                    float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
                    float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
                    if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
-                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng))
-                       parties.add(postSnapshot.getValue(Party.class));
+                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
+                       Party each_party = postSnapshot.getValue(Party.class);
+                       each_party.setPartyID(postSnapshot.getKey());
+                       parties.add(each_party);
+                   }
                }
                if(delegate != null)
                    delegate.onResultReady(parties);
@@ -1065,8 +1055,11 @@ public final class DatabaseAccess {
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    parties.add(postSnapshot.getValue(Party.class));
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Party each_party = postSnapshot.getValue(Party.class);
+                    each_party.setPartyID(postSnapshot.getKey());
+                    parties.add(each_party);
+                }
                 //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(parties);

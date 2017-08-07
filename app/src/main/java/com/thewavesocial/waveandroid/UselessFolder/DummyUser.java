@@ -253,11 +253,11 @@
 ////        party4.getStartingDateTime().set(2017, 2, 10);
 ////        party5.getStartingDateTime().set(2018, 2, 4);
 ////
-////        party1.getEndingDateTime().set(2017, 2, 7);
-////        party2.getEndingDateTime().set(2017, 3, 7);
-////        party3.getEndingDateTime().set(2017, 9, 9);
-////        party4.getEndingDateTime().set(2017, 2, 10);
-////        party5.getEndingDateTime().set(2018, 2, 5);
+////        party1.getDuration().set(2017, 2, 7);
+////        party2.getDuration().set(2017, 3, 7);
+////        party3.getDuration().set(2017, 9, 9);
+////        party4.getDuration().set(2017, 2, 10);
+////        party5.getDuration().set(2018, 2, 5);
 ////    }
 ////
 ////    private void setupUserObjects(Context mainActivity)

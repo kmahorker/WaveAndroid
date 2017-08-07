@@ -96,7 +96,7 @@
 //        newParty.setMapAddress( location );
 //        newParty.setPrice(price);
 //        newParty.setStartingDateTime(startCalendar);
-//        newParty.setEndingDateTime(endCalendar);
+//        newParty.setDuration(endCalendar);
 //        CurrentUser.theUser.getHosted().add(0, newParty.getPartyID());
 //    }
 //}
