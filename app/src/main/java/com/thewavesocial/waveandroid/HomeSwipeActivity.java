@@ -70,7 +70,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     }
                     else {
                         Log.i(TAG, "onCreate: Creating user...");
-                        DatabaseAccess.server_createNewUser("FIRST_NAME", "LAST_NAME", "1122", "fsaf", "fsafa", "GENDER",
+                        DatabaseAccess.server_createNewUser("Amy", "Pierce", "12365", "s1245qsadf", "s1245qsadf", "Female",
                                 null, new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {

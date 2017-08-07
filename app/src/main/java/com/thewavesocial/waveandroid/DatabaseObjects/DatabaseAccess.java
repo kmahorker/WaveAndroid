@@ -570,8 +570,8 @@ public final class DatabaseAccess {
                                              double lat,
                                              double lng,
                                              boolean isPublic,
-                                             Calendar startTimeStamp,
-                                             Calendar endingTimeStamp,
+                                             long startTimeStamp,
+                                             long endingTimeStamp,
                                              int minAge,
                                              int maxAge,
                                              final OnResultReadyListener<String> delegate){
@@ -920,8 +920,8 @@ public final class DatabaseAccess {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    bestfriends.add(postSnapshot.getValue(BestFriend.class));
+                //for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                    bestfriends.add(dataSnapshot.getValue(BestFriend.class));
                 //Log.d("getBestFriends", result.get(0) + "");
                 if (delegate != null) {
                     delegate.onResultReady(bestfriends);

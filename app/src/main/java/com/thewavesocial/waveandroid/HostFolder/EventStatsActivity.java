@@ -247,10 +247,10 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
     private void setupPartyInfos() {
         loc = party.getMapAddress().getAddress_string();
-        date = UtilityClass.dateToString(party.getStartingDateTime()) + " - " +
-                UtilityClass.dateToString(party.getEndingDateTime());
-        time = UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
-                UtilityClass.timeToString(party.getEndingDateTime());
+        date = UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
+                UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getEndingDateTime()));
+        time = UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
+                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getEndingDateTime()));
     }
 
 

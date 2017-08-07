@@ -212,8 +212,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private GoogleApiClient mGoogleApiClient;
 
         //Activity thisActivity = this;
-        static Calendar startCalendar = Calendar.getInstance();
-        static Calendar endCalendar = Calendar.getInstance();
+        static long startCalendar = 0; // Calendar.getInstance();
+        static long endCalendar = 0; //Calendar.getInstance();
         String DATE_FORMAT = "MMM d, yyyy";
         String TIME_FORMAT = "h:mm a";
         String CALLING_CLASS = "CreateAnEvent";
@@ -246,10 +246,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
                     }
                 });
                 view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                if (NewPartyInfo.startingDateTime != null) {
+                if (NewPartyInfo.startingDateTime != 0) {
                     startCalendar = NewPartyInfo.startingDateTime;
                 }
-                if (NewPartyInfo.endingDateTime != null) {
+                if (NewPartyInfo.endingDateTime != 0l) {
                     endCalendar = NewPartyInfo.endingDateTime;
                 }
                 setUpTextViews(view);
@@ -354,14 +354,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
         private void setUpTextViews(View v) {
             startDateTextView = (TextView) v.findViewById(R.id.startDateTextView);
             final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-            startDateTextView.setText(dateFormat.format(startCalendar.getTime()));
+            startDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(startCalendar).getTime()));
             startDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
-                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar.get(Calendar.DAY_OF_MONTH),
-                            startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(startCalendar/*UtilityClass.epochToCalendar(startCalendar).get(Calendar.DAY_OF_MONTH),
+                            UtilityClass.epochToCalendar(startCalendar).get(Calendar.MONTH), UtilityClass.epochToCalendar(startCalendar).get(Calendar.YEAR)*/, DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
                             CALLING_CLASS);
                     dialogFragment.setDateDisplay(startDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
@@ -370,14 +370,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
             startTimeTextView = (TextView) v.findViewById(R.id.startTimeTextView);
             final SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
-            startTimeTextView.setText(timeFormat.format(startCalendar.getTime()));
+            startTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(startCalendar).getTime()));
             startTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
-                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar.get(Calendar.HOUR),
-                            startCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(startCalendar/*UtilityClass.epochToCalendar(startCalendar).get(Calendar.HOUR),
+                            UtilityClass.epochToCalendar(startCalendar).get(Calendar.MINUTE)*/, TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
                             CALLING_CLASS);
                     timePickerDialogFragment.setTimeTextView(startTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
@@ -385,14 +385,14 @@ public class CreateAnEventActivity extends AppCompatActivity {
             });
 
             endDateTextView = (TextView) v.findViewById(R.id.endDateTextView);
-            endDateTextView.setText(dateFormat.format(endCalendar.getTime()));
+            endDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(endCalendar).getTime()));
             endDateTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
-                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar.get(Calendar.DAY_OF_MONTH),
-                            endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.YEAR), DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                    DatePickerDialogFragment dialogFragment = DatePickerDialogFragment.newInstance(endCalendar/*UtilityClass.epochToCalendar(endCalendar).get(Calendar.DAY_OF_MONTH),
+                            UtilityClass.epochToCalendar(endCalendar).get(Calendar.MONTH), UtilityClass.epochToCalendar(endCalendar).get(Calendar.YEAR)*/, DATE_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
                             CALLING_CLASS);
                     dialogFragment.setDateDisplay(endDateTextView);
                     dialogFragment.show(getActivity().getFragmentManager(), "datePicker");
@@ -403,17 +403,18 @@ public class CreateAnEventActivity extends AppCompatActivity {
 //            Calendar tempCalendar = Calendar.getInstance();
 //            tempCalendar.setTime(new Date());
 //            tempCalendar.add(Calendar.HOUR, 1);
-            if (NewPartyInfo.endingDateTime == null) {
-                endCalendar.set(Calendar.HOUR_OF_DAY, startCalendar.get(Calendar.HOUR_OF_DAY) + 1);
+            if (NewPartyInfo.endingDateTime == 0) {
+                endCalendar = startCalendar + 3600;
+                //UtilityClass.epochToCalendar(endCalendar).set(Calendar.HOUR_OF_DAY, UtilityClass.epochToCalendar(startCalendar).get(Calendar.HOUR_OF_DAY) + 1);
             }
-            endTimeTextView.setText(timeFormat.format(endCalendar.getTime()));
+            endTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(endCalendar).getTime()));
             endTimeTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UtilityClass.hideKeyboard(getActivity());
                     popup.dismiss();
-                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar.get(Calendar.HOUR),
-                            endCalendar.get(Calendar.MINUTE), TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
+                    TimePickerDialogFragment timePickerDialogFragment = TimePickerDialogFragment.newInstance(endCalendar/*UtilityClass.epochToCalendar(endCalendar).get(Calendar.HOUR),
+                            UtilityClass.epochToCalendar(endCalendar).get(Calendar.MINUTE)*/, TIME_FORMAT, android.R.style.Theme_Material_Light_Dialog_Alert,
                             CALLING_CLASS);
                     timePickerDialogFragment.setTimeTextView(endTimeTextView);
                     timePickerDialogFragment.show(getActivity().getFragmentManager(), "timePicker");
@@ -563,7 +564,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             } else if (locationEditText.getText().toString().isEmpty() || locationPlace == null) {
                 UtilityClass.printAlertMessage(getActivity(), "Please select an Event Location", "Error Creating Party", true);
                 return false;
-            } else if (startCalendar.compareTo(endCalendar) >= 0) {
+            } else if (startCalendar >= endCalendar) {
                 UtilityClass.printAlertMessage(getActivity(), "The event start date must be before the end date", "Error Creating Party", true);
                 return false;
             } else if (UtilityClass.getLocationFromAddress(getActivity(), locationEditText.getText().toString()) == null) {
@@ -1034,8 +1035,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static String name;
         static double price;
         static String hostName;
-        static Calendar startingDateTime;
-        static Calendar endingDateTime;
+        static long startingDateTime;
+        static long endingDateTime;
         static MapAddress mapAddress;
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
@@ -1050,8 +1051,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             name = "";
             price = 0;
             hostName = "";
-            startingDateTime = null;
-            endingDateTime = null;
+            startingDateTime = UtilityClass.calendarToEpoch(Calendar.getInstance());
+            endingDateTime = UtilityClass.calendarToEpoch(Calendar.getInstance()) + 3600;
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
             invitingUsers = new ArrayList<>();

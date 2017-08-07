@@ -140,8 +140,8 @@ public class PartyProfileFragment extends Fragment {
         emoji.setText(party.getPartyEmoji().substring(0,1));
         partyname.setText(party.getName());
         hostname.setText(party.getHostName());
-        datetime.setText(UtilityClass.timeToString(party.getStartingDateTime()) + " - " +
-                UtilityClass.timeToString(party.getEndingDateTime()));
+        datetime.setText(UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
+                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getEndingDateTime())));
         location.setText(party.getMapAddress().getAddress_string());
         price.setText(UtilityClass.priceToString(party.getPrice()));
 

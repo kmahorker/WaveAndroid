@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,6 +30,7 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     private static final String ARG_TIME_FORMAT = "time_format";
     private static final String ARG_STYLE = "style";
     private static final String ARG_CALLING_CLASS = "callingClass";
+    private static final String ARG_SECONDS_SINCE_EPOCH = "secondsSinceEpoch";
 
 
     private int hour;
@@ -38,6 +40,7 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     private Calendar calendar;
     private int alertDialogStyle;
     private int callingClass;
+    private long secondsSinceEpoch;
 
 
     public TimePickerDialogFragment() {
@@ -48,18 +51,17 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param hour             Current hour value in the Calendar
-     * @param min              Current minute value in the Calendar
      * @param timeFormat       Format to display the time in the textView
      * @param alertDialogStyle id of the type of Style to display
      * @return A new instance of fragment TimePickerDialogFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TimePickerDialogFragment newInstance(int hour, int min, String timeFormat, int alertDialogStyle, String callingClass) {
+    public static TimePickerDialogFragment newInstance(long secondsSinceEpoch, String timeFormat, int alertDialogStyle, String callingClass) {
         TimePickerDialogFragment fragment = new TimePickerDialogFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_HOUR, hour);
-        args.putInt(ARG_MINUTE, min);
+        //args.putInt(ARG_HOUR, hour);
+        //args.putInt(ARG_MINUTE, min);
+        args.putLong(ARG_SECONDS_SINCE_EPOCH, secondsSinceEpoch);
         args.putString(ARG_TIME_FORMAT, timeFormat);
         args.putInt(ARG_STYLE, alertDialogStyle);
         args.putString(ARG_CALLING_CLASS, callingClass);
@@ -71,13 +73,17 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            hour = getArguments().getInt(ARG_HOUR);
-            minute = getArguments().getInt(ARG_MINUTE);
+            //hour = getArguments().getInt(ARG_HOUR);
+            //minute = getArguments().getInt(ARG_MINUTE);
+            secondsSinceEpoch = getArguments().getLong(ARG_SECONDS_SINCE_EPOCH);
             timeFormat = new SimpleDateFormat(getArguments().getString(ARG_TIME_FORMAT));
             alertDialogStyle = getArguments().getInt(ARG_STYLE);
-            calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR, hour);
-            calendar.set(Calendar.MINUTE, minute);
+            calendar = UtilityClass.epochToCalendar(secondsSinceEpoch);
+            hour = calendar.get(Calendar.HOUR_OF_DAY);
+            minute = calendar.get(Calendar.MINUTE);
+            //calendar.setTimeInMillis(secondsSinceEpoch);
+            //calendar.set(Calendar.HOUR, hour);
+            //calendar.set(Calendar.MINUTE, minute);
             String theClass = getArguments().getString(ARG_CALLING_CLASS);
             if (theClass.equals("CreateAnEvent")) {
                 callingClass = 1;
@@ -108,20 +114,20 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
             case 1:
                 if (timeTextView.equals(getActivity().findViewById(R.id.startTimeTextView))) {
 
-                    CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                    CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                    CreateAnEventActivity.CreateEventPage1.startCalendar = UtilityClass.calendarToEpoch(calendar); //set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    //CreateAnEventActivity.CreateEventPage1.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 } else if (timeTextView.equals(getActivity().findViewById(R.id.endTimeTextView))) {
-                    CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                    CreateAnEventActivity.CreateEventPage1.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                    CreateAnEventActivity.CreateEventPage1.endCalendar = UtilityClass.calendarToEpoch(calendar); //.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    //CreateAnEventActivity.CreateEventPage1.endCalendar = .set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 }
                 break;
             case 2:
                 if (timeTextView.equals(getActivity().findViewById(R.id.editEventStartTimeTextView))) {
-                    EditStatsActivity.startCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                    EditStatsActivity.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                    EditStatsActivity.startCalendar = UtilityClass.calendarToEpoch(calendar); //.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    //EditStatsActivity.startCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 } else if (timeTextView.equals(getActivity().findViewById(R.id.editEventEndTimeTextView))) {
-                    EditStatsActivity.endCalendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                    EditStatsActivity.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+                    EditStatsActivity.endCalendar = UtilityClass.calendarToEpoch(calendar); //set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+                    //EditStatsActivity.endCalendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
                 }
                 break;
             default:

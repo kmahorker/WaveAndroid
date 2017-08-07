@@ -257,7 +257,7 @@ public class UserActionAdapter extends BaseAdapter {
 
     private String getCustomInfoText(Party party, int goingSize) {
         String compose = "";
-        compose += getDays(party.getStartingDateTime()) + " days  ";
+        compose += getDays(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " days  ";
         compose += goingSize + " going";
         return compose;
     }

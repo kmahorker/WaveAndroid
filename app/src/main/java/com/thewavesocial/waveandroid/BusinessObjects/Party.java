@@ -19,8 +19,8 @@ public class Party implements Parcelable {
     private String name;
     private double price;
     private String hostName; //to hostID
-    private Calendar startingDateTime;
-    private Calendar endingDateTime;
+    private long startingDateTime;
+    private long endingDateTime;
     private MapAddress mapAddress;
     private boolean isPublic;
     private String partyEmoji;
@@ -32,8 +32,8 @@ public class Party implements Parcelable {
         name = "";
         price = 0;
         hostName = "";
-        startingDateTime = Calendar.getInstance();
-        endingDateTime = Calendar.getInstance();
+        startingDateTime = 0; //Calendar.getInstance();
+        endingDateTime = 0; //Calendar.getInstance();
         mapAddress = new MapAddress();
         isPublic = false;
         partyEmoji = "";
@@ -46,8 +46,8 @@ public class Party implements Parcelable {
             String name,
             double price,
             String hostName,
-            Calendar startingDateTime,
-            Calendar endingDateTime,
+            long startingDateTime,
+            long endingDateTime,
             MapAddress mapAddress,
             boolean isPublic,
             String partyEmoji,
@@ -83,11 +83,11 @@ public class Party implements Parcelable {
         this.hostName = hostName;
     }
 
-    public void setStartingDateTime(Calendar dateTimeObj) {
+    public void setStartingDateTime(long dateTimeObj) {
         this.startingDateTime = dateTimeObj;
     }
 
-    public void setEndingDateTime(Calendar dateTimeObj) {
+    public void setEndingDateTime(long dateTimeObj) {
         this.endingDateTime = dateTimeObj;
     }
 
@@ -116,11 +116,11 @@ public class Party implements Parcelable {
         return hostName;
     }
 
-    public Calendar getStartingDateTime() {
+    public long getStartingDateTime() {
         return startingDateTime;
     }
 
-    public Calendar getEndingDateTime() {
+    public long getEndingDateTime() {
         return endingDateTime;
     }
 
@@ -167,8 +167,8 @@ public class Party implements Parcelable {
         name = in.readString();
         price = in.readDouble();
         hostName = in.readString();
-        startingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
-        endingDateTime = (Calendar) in.readValue(Calendar.class.getClassLoader());
+        startingDateTime = in.readLong(); //(Calendar) in.readValue(Calendar.class.getClassLoader());
+        endingDateTime = in.readLong(); //(Calendar) in.readValue(Calendar.class.getClassLoader());
         mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
         isPublic = in.readByte() != 0x00;
         partyEmoji = in.readString();

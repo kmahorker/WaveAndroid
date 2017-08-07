@@ -74,6 +74,22 @@ public final class UtilityClass {
         return (prefixM + m + "/" + prefixD + d + "/" + (c.get(Calendar.YEAR) + "").substring(2));
     }
 
+
+    /**
+     * Convert from epochTime to Calendar Object
+     * @param secondsSinceEpoch
+     * @return Calendar Object
+     */
+    public static Calendar epochToCalendar(long secondsSinceEpoch){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(secondsSinceEpoch*1000);
+        return c;
+    }
+
+    public static long calendarToEpoch(Calendar c){
+        return c.getTimeInMillis()/1000;
+    }
+
     /**
      * Display time from a calendar object.
      * @param c calendar object

@@ -14,6 +14,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HostFolder.EventStatsActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -100,7 +101,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter {
 
     private String getCustomInfoText(Party party, int goingSize) {
         String compose = "";
-        compose += getDays(party.getStartingDateTime()) + " days  ";
+        compose += getDays(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " days  ";
         compose += goingSize + " going";
         return compose;
     }
