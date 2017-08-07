@@ -3,177 +3,187 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
-/*
- * Things I did during file translation:
- * 1. Changed List<Int64> to ArrayList<Long> (see line 37)
- * 2. Changed Int64 to long
- * 3. Changed DateTime to Date
- * - Wei Tung
- */
 public class Party implements Parcelable {
-    private String partyID;
+
+    private String address;
+    private long date;
+    private long duration;
+    private String emoji;
+    private String host_id;
+    private String host_name;
+    private boolean is_public;
+    private double lat;
+    private double lng;
+    private int max_age;
+    private int min_age;
     private String name;
+    private String partyID;
     private double price;
-    private String hostName; //to hostID
-    private long startingDateTime;
-    private long endingDateTime;
-    private MapAddress mapAddress;
-    private boolean isPublic;
-    private String partyEmoji;
-    private int minAge;
-    private int maxAge;
 
     public Party() {
-        partyID = "0";
-        name = "";
-        price = 0;
-        hostName = "";
-        startingDateTime = 0; //Calendar.getInstance();
-        endingDateTime = 0; //Calendar.getInstance();
-        mapAddress = new MapAddress();
-        isPublic = false;
-        partyEmoji = "";
-        minAge = 0;
-        maxAge = 0;
+        this.address = "";
+        this.date = 0;
+        this.duration = 0;
+        this.emoji = "";
+        this.host_id = "";
+        this.host_name = "";
+        this.is_public = false;
+        this.lat = 0;
+        this.lng = 0;
+        this.max_age = 100;
+        this.min_age = 18;
+        this.name = "";
+        this.partyID = "123";
+        this.price = 0;
     }
 
-    public Party(
-            String partyID,
-            String name,
-            double price,
-            String hostName,
-            long startingDateTime,
-            long endingDateTime,
-            MapAddress mapAddress,
-            boolean isPublic,
-            String partyEmoji,
-            int minAge,
-            int maxAge) {
-        this.partyID = partyID;
+    public Party(String address, long date, long duration, String emoji, String host_id, String host_name, boolean is_public, double lat, double lng, int max_age, int min_age, String name, String partyID, double price) {
+        this.address = address;
+        this.date = date;
+        this.duration = duration;
+        this.emoji = emoji;
+        this.host_id = host_id;
+        this.host_name = host_name;
+        this.is_public = is_public;
+        this.lat = lat;
+        this.lng = lng;
+        this.max_age = max_age;
+        this.min_age = min_age;
         this.name = name;
-        this.price = price;
-        this.hostName = hostName;
-        this.startingDateTime = startingDateTime;
-        this.endingDateTime = endingDateTime;
-        this.mapAddress = mapAddress;
-        this.isPublic = isPublic;
-        this.partyEmoji = partyEmoji;
-        this.minAge = minAge;
-        this.maxAge = maxAge;
-    }
-
-    //Setters
-    public void setPartyID(String partyID) {
         this.partyID = partyID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(double price) {
         this.price = price;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
+
+    public String getAddress() {
+        return address;
     }
 
-    public void setStartingDateTime(long dateTimeObj) {
-        this.startingDateTime = dateTimeObj;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setEndingDateTime(long dateTimeObj) {
-        this.endingDateTime = dateTimeObj;
+    public long getDate() {
+        return date;
     }
 
-    public void setMapAddress(MapAddress mapAddress) {
-        this.mapAddress = mapAddress;
+    public void setDate(long date) {
+        this.date = date;
     }
 
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    public long getDuration() {
+        return duration;
     }
 
-    //Getters
-    public String getPartyID() {
-        return partyID;
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public String getEmoji() {
+        return emoji;
+    }
+
+    public void setEmoji(String emoji) {
+        this.emoji = emoji;
+    }
+
+    public String getHost_id() {
+        return host_id;
+    }
+
+    public void setHost_id(String host_id) {
+        this.host_id = host_id;
+    }
+
+    public String getHost_name() {
+        return host_name;
+    }
+
+    public void setHost_name(String host_name) {
+        this.host_name = host_name;
+    }
+
+    public boolean is_public() {
+        return is_public;
+    }
+
+    public void setIs_public(boolean is_public) {
+        this.is_public = is_public;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
+    }
+
+    public int getMax_age() {
+        return max_age;
+    }
+
+    public void setMax_age(int max_age) {
+        this.max_age = max_age;
+    }
+
+    public int getMin_age() {
+        return min_age;
+    }
+
+    public void setMin_age(int min_age) {
+        this.min_age = min_age;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPartyID() {
+        return partyID;
+    }
+
+    public void setPartyID(String partyID) {
+        this.partyID = partyID;
+    }
+
     public double getPrice() {
         return price;
     }
 
-    public String getHostName() {
-        return hostName;
-    }
-
-    public long getStartingDateTime() {
-        return startingDateTime;
-    }
-
-    public long getEndingDateTime() {
-        return endingDateTime;
-    }
-
-    public MapAddress getMapAddress() {
-        return mapAddress;
-    }
-
-    public boolean getIsPublic() {
-        return isPublic;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    public String getPartyEmoji() {
-        return partyEmoji;
-    }
-
-    public void setPartyEmoji(String partyEmoji) {
-        this.partyEmoji = partyEmoji;
-    }
-
-    public int getMinAge() {
-        return minAge;
-    }
-
-    public void setMinAge(int minAge) {
-        this.minAge = minAge;
-    }
-
-    public int getMaxAge() {
-        return maxAge;
-    }
-
-    public void setMaxAge(int maxAge) {
-        this.maxAge = maxAge;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
 
     protected Party(Parcel in) {
-        partyID = in.readString();
+        address = in.readString();
+        date = in.readLong();
+        duration = in.readLong();
+        emoji = in.readString();
+        host_id = in.readString();
+        host_name = in.readString();
+        is_public = in.readByte() != 0x00;
+        lat = in.readDouble();
+        lng = in.readDouble();
+        max_age = in.readInt();
+        min_age = in.readInt();
         name = in.readString();
+        partyID = in.readString();
         price = in.readDouble();
-        hostName = in.readString();
-        startingDateTime = in.readLong(); //(Calendar) in.readValue(Calendar.class.getClassLoader());
-        endingDateTime = in.readLong(); //(Calendar) in.readValue(Calendar.class.getClassLoader());
-        mapAddress = (MapAddress) in.readValue(MapAddress.class.getClassLoader());
-        isPublic = in.readByte() != 0x00;
-        partyEmoji = in.readString();
-        minAge = in.readInt();
-        maxAge = in.readInt();
     }
 
     @Override
@@ -183,17 +193,20 @@ public class Party implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(partyID);
+        dest.writeString(address);
+        dest.writeLong(date);
+        dest.writeLong(duration);
+        dest.writeString(emoji);
+        dest.writeString(host_id);
+        dest.writeString(host_name);
+        dest.writeByte((byte) (is_public ? 0x01 : 0x00));
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
+        dest.writeInt(max_age);
+        dest.writeInt(min_age);
         dest.writeString(name);
+        dest.writeString(partyID);
         dest.writeDouble(price);
-        dest.writeString(hostName);
-        dest.writeValue(startingDateTime);
-        dest.writeValue(endingDateTime);
-        dest.writeValue(mapAddress);
-        dest.writeByte((byte) (isPublic ? 0x01 : 0x00));
-        dest.writeString(partyEmoji);
-        dest.writeInt(minAge);
-        dest.writeInt(maxAge);
     }
 
     @SuppressWarnings("unused")
@@ -209,4 +222,3 @@ public class Party implements Parcelable {
         }
     };
 }
-

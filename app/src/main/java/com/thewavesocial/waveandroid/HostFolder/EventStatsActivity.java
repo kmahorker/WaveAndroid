@@ -246,11 +246,11 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
 
     private void setupPartyInfos() {
-        loc = party.getMapAddress().getAddress_string();
-        date = UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
-                UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getEndingDateTime()));
-        time = UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getStartingDateTime())) + " - " +
-                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getEndingDateTime()));
+        loc = party.getAddress();
+        date = UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getDate())) + " - " +
+                UtilityClass.dateToString(UtilityClass.epochToCalendar(party.getDuration()));
+        time = UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getDate())) + " - " +
+                UtilityClass.timeToString(UtilityClass.epochToCalendar(party.getDuration()));
     }
 
 
@@ -394,7 +394,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        latlng = party.getMapAddress().getAddress_latlng();
+        latlng = new LatLng(party.getLat(), party.getLng());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, (float) 15.0));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -403,7 +403,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.hostEventStats_emoji);
-        emojiText.setText(party.getPartyEmoji().substring(0, 1));
+        emojiText.setText(party.getEmoji().substring(0, 1));
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions()

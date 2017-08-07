@@ -31,7 +31,6 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.BusinessObjects.MapAddress;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -231,7 +230,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         locationEditText = (EditText) findViewById(R.id.editEventLocationEditText);
-        locationEditText.setText(party.getMapAddress().getAddress_string());
+        locationEditText.setText(party.getAddress());
         locationEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -262,7 +261,7 @@ public class EditStatsActivity extends AppCompatActivity {
         SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT);
 
         startDateTextView = (TextView) findViewById(R.id.editEventStartDateTextView);
-        startDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(party.getStartingDateTime()).getTime()));
+        startDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(party.getDate()).getTime()));
         startDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -277,7 +276,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         startTimeTextView = (TextView) findViewById(R.id.editEventStartTimeTextView);
-        startTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(party.getStartingDateTime()).getTime()));
+        startTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(party.getDate()).getTime()));
         startTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,7 +291,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         endDateTextView = (TextView) findViewById(R.id.editEventEndDateTextView);
-        endDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(party.getEndingDateTime()).getTime()));
+        endDateTextView.setText(dateFormat.format(UtilityClass.epochToCalendar(party.getDuration()).getTime()));
         endDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,7 +306,7 @@ public class EditStatsActivity extends AppCompatActivity {
         });
 
         endTimeTextView = (TextView) findViewById(R.id.editEventEndTimeTextView);
-        endTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(party.getEndingDateTime()).getTime()));
+        endTimeTextView.setText(timeFormat.format(UtilityClass.epochToCalendar(party.getDuration()).getTime()));
         endTimeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -323,7 +322,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
         emojiconEditText = (EmojiconEditText) findViewById(R.id.editEventEmojiconEditText);
         emojiconEditText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        emojiconEditText.setText(party.getPartyEmoji());
+        emojiconEditText.setText(party.getEmoji());
         emojiconEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -357,7 +356,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
 
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
-        boolean isPrivate = !party.getIsPublic();
+        boolean isPrivate = !party.is_public();
         if (isPrivate) {
             privateSwitch.setChecked(true);
             privateParty = true;
@@ -381,8 +380,8 @@ public class EditStatsActivity extends AppCompatActivity {
 
         rangeSeekBar = (RangeSeekBar<Integer>) findViewById(R.id.editEventAgeRestrictionSeekBar);
         rangeSeekBar.setRangeValues(RANGE_AGE_MIN, RANGE_AGE_MAX);
-        rangeSeekBar.setSelectedMinValue(party.getMinAge());
-        rangeSeekBar.setSelectedMaxValue(party.getMaxAge());
+        rangeSeekBar.setSelectedMinValue(party.getMin_age());
+        rangeSeekBar.setSelectedMaxValue(party.getMax_age());
 
         invitedRecyclerView = (RecyclerView) findViewById(R.id.invite_list);
         bouncingRecylcerView = (RecyclerView) findViewById(R.id.bouncing_list);
@@ -572,8 +571,9 @@ public class EditStatsActivity extends AppCompatActivity {
         NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
         NewPartyInfo.startingDateTime = startCalendar;
         NewPartyInfo.endingDateTime = endCalendar;
-        MapAddress loc = new MapAddress(locationPlace.getAddress() + "", locationPlace.getLatLng());
-        NewPartyInfo.mapAddress = loc;
+        NewPartyInfo.address = locationPlace.getAddress().toString();
+        NewPartyInfo.lat = locationPlace.getLatLng().latitude;
+        NewPartyInfo.lng = locationPlace.getLatLng().longitude;
         NewPartyInfo.isPublic = !privateParty;
         NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
         NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
@@ -593,7 +593,9 @@ public class EditStatsActivity extends AppCompatActivity {
         static String hostName;
         static long startingDateTime;
         static long endingDateTime;
-        static MapAddress mapAddress;
+        static String address;
+        static double lat;
+        static double lng;
         static List<String> hostingUsers;
         static List<Integer> bouncingUsers;
         static List<Integer> invitingUsers;
@@ -610,9 +612,9 @@ public class EditStatsActivity extends AppCompatActivity {
         public static void initialize() {
             name = party.getName();
             price = party.getPrice();
-            hostName = party.getHostName();
-            startingDateTime = party.getStartingDateTime();
-            endingDateTime = party.getEndingDateTime();
+            hostName = party.getHost_name();
+            startingDateTime = party.getDate();
+            endingDateTime = party.getDuration();
             server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
                 @Override
                 public void onResultReady(HashMap<String, ArrayList<User>> result) {
@@ -629,21 +631,18 @@ public class EditStatsActivity extends AppCompatActivity {
 //            hostingUsers = party.getHostingUsers();
 //            bouncingUsers = null;
 //            invitingUsers = new ArrayList<>();
-            isPublic = party.getIsPublic();
-            partyEmoji = party.getPartyEmoji();
-            minAge = party.getMinAge();
-            maxAge = party.getMaxAge();
-            mapAddress = party.getMapAddress();
+            isPublic = party.is_public();
+            partyEmoji = party.getEmoji();
+            minAge = party.getMin_age();
+            maxAge = party.getMax_age();
+            address = party.getAddress();
 
             //hostingUsers.add(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
         }
 
         //Compose all party information
         public static void composeParty() {
-            Log.d("Compose Party", "EEntered");
-
-            if ( mapAddress.getAddress_latlng() == null )
-                mapAddress.setAddress_latlng(new LatLng(0,0));
+            Log.d("Compose Party", "Entered");
 
             try {
 
@@ -651,9 +650,9 @@ public class EditStatsActivity extends AppCompatActivity {
                 newParty.put("name", name);
                 newParty.put("emoji", partyEmoji);
                 newParty.put("price", price + "");
-                newParty.put("address", mapAddress.getAddress_string());
-                newParty.put("lat", mapAddress.getAddress_latlng().latitude + "");
-                newParty.put("long", mapAddress.getAddress_latlng().longitude + "");
+                newParty.put("address", address);
+                newParty.put("lat", lat + "");
+                newParty.put("long", lng + "");
                 newParty.put("is_public", isPublic ? 1 + "" : 0 + "");
                 newParty.put("start_timestamp", startingDateTime + "");
                 newParty.put("end_timestamp", endingDateTime + "");
