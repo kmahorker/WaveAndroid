@@ -140,7 +140,9 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), alertDialogStyle, this, hour, minute, false);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, minute, false);
+        View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_time_picker_dialog, null, false);
+        timePickerDialog.setView(view);
         return timePickerDialog;
     }
 
