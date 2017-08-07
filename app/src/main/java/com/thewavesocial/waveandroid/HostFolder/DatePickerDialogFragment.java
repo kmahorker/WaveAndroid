@@ -1,5 +1,6 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -7,6 +8,7 @@ import android.app.DialogFragment;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -27,7 +29,7 @@ import com.thewavesocial.waveandroid.UtilityClass;
  * Use the {@link DatePickerDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+public class DatePickerDialogFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -53,6 +55,7 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
     private int alertDialogStyle;
     private int callingClass;
     private long secondsSinceEpoch;
+    private DatePickerDialogFragment thisFragment = this;
 
     public DatePickerDialogFragment() {
         // Required empty public constructor
@@ -116,7 +119,6 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
         return super.onCreateView(inflater, container, savedInstanceState);//view;
     }
 
-    @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         this.day = dayOfMonth;
         this.month = month + 1;
@@ -172,10 +174,43 @@ public class DatePickerDialogFragment extends DialogFragment implements DatePick
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog (getActivity(), this, year, month, day);
+
+//        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), R.style.datepicker, new DatePickerDialog.OnDateSetListener() {
+//            @Override
+//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                thisFragment.onDateSet(view, year, month, dayOfMonth);
+//            }
+//        }, year, month, day);
+//
+//        datePickerDialog.setTitle(UtilityClass.dateToString(calendar));
+//        //datePickerDialog.getDatePicker().mode
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_date_picker_dialog, null, false);
-        datePickerDialog.setView(view);
-        return datePickerDialog;
+//        datePickerDialog.setView(view);
+        final DatePicker picker = (DatePicker) view.findViewById(R.id.datePicker);
+        picker.init(year, month, day, null);
+//        new DatePicker.OnDateChangedListener() {
+//            @Override
+//            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+//                thisFragment.onDateSet(view, year, monthOfYear, dayOfMonth);
+//            }
+//        });
+
+        return new AlertDialog.Builder(getActivity()).setView(view)
+                .setCancelable(false)
+                .setTitle(UtilityClass.dateToString(calendar))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        onDateSet(picker, picker.getYear(), picker.getMonth(), picker.getDayOfMonth());
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
     }
 
     public int getDay() {

@@ -1,10 +1,12 @@
 package com.thewavesocial.waveandroid.HostFolder;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class TimePickerDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+public class TimePickerDialogFragment extends DialogFragment{
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_HOUR = "hour";
@@ -140,10 +142,35 @@ public class TimePickerDialogFragment extends DialogFragment implements TimePick
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, minute, false);
+//        TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener(){
+//            @Override
+//            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//                onTimeSet(view, hourOfDay, minute);
+//            }
+//        };
+//        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), listener, hour, minute, false);
+
         View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_time_picker_dialog, null, false);
-        timePickerDialog.setView(view);
-        return timePickerDialog;
+        final TimePicker picker = (TimePicker) view.findViewById(R.id.timePicker);
+        picker.setCurrentHour(hour);
+        picker.setCurrentMinute(minute);
+        //timePickerDialog.setView(view);
+        return new AlertDialog.Builder(getActivity()).setView(view)
+                .setTitle(UtilityClass.timeToString(calendar))
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        onTimeSet(picker, picker.getCurrentHour(), picker.getCurrentMinute());
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
     }
 
     public void setTimeTextView(TextView timeTextView) {
