@@ -356,7 +356,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
 
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
-        boolean isPrivate = !party.is_public();
+        boolean isPrivate = !party.isPublic();
         if (isPrivate) {
             privateSwitch.setChecked(true);
             privateParty = true;
@@ -631,7 +631,7 @@ public class EditStatsActivity extends AppCompatActivity {
 //            hostingUsers = party.getHostingUsers();
 //            bouncingUsers = null;
 //            invitingUsers = new ArrayList<>();
-            isPublic = party.is_public();
+            isPublic = party.isPublic();
             partyEmoji = party.getEmoji();
             minAge = party.getMin_age();
             maxAge = party.getMax_age();

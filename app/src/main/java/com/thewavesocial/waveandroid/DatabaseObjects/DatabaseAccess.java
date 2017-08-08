@@ -832,6 +832,7 @@ public final class DatabaseAccess {
         final ArrayList<Party> going = new ArrayList<>();
         final ArrayList<Party> hosting = new ArrayList<>();
         final ArrayList<Party> bouncing = new ArrayList<>();
+        final ArrayList<Party> attending = new ArrayList<>();
         final HashMap<String, ArrayList<Party>> parties = new HashMap();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -850,7 +851,7 @@ public final class DatabaseAccess {
                         bouncing.add(each_party);
                     }
                 }
-/*                if(dataSnapshot.hasChild("attending")) {
+                if(dataSnapshot.hasChild("attending")) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("attending").child(userID).getChildren()) {
                         Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
                         each_party.setPartyID(postSnapshot.getKey());
@@ -861,8 +862,8 @@ public final class DatabaseAccess {
                     Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
                     each_party.setPartyID(postSnapshot.getKey());
                     going.add(each_party);
-                }*/
-                    parties.put("invited", invited);
+                }
+                    parties.put("attending", attending);
                     parties.put("hosting", hosting);
                     parties.put("bouncing", bouncing);
                     parties.put("going", going);

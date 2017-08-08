@@ -104,7 +104,7 @@ public class Party implements Parcelable {
         this.host_name = host_name;
     }
 
-    public boolean is_public() {
+    public boolean isPublic() {
         return is_public;
     }
 
