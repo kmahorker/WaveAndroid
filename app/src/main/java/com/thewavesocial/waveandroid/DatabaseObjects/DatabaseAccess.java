@@ -927,13 +927,15 @@ public final class DatabaseAccess {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                   float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
-                   float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
-                   if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
-                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
-                       Party each_party = postSnapshot.getValue(Party.class);
-                       each_party.setPartyID(postSnapshot.getKey());
-                       parties.add(each_party);
+                   if(!postSnapshot.getKey().equals("0") && postSnapshot.child("lat") != null && postSnapshot.child("lng") != null) {
+                       float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
+                       float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
+                       if (lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
+                               lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
+                           Party each_party = postSnapshot.getValue(Party.class);
+                           each_party.setPartyID(postSnapshot.getKey());
+                           parties.add(each_party);
+                       }
                    }
                }
                if(delegate != null)
