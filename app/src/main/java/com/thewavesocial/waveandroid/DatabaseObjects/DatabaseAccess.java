@@ -863,10 +863,18 @@ public final class DatabaseAccess {
                     each_party.setPartyID(postSnapshot.getKey());
                     going.add(each_party);
                 }
+                if(dataSnapshot.child("invited").hasChild(userID)) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.child("invited").child(userID).getChildren()) {
+                        Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
+                        each_party.setPartyID(postSnapshot.getKey());
+                        hosting.add(each_party);
+                    }
+                }
                     parties.put("attending", attending);
                     parties.put("hosting", hosting);
                     parties.put("bouncing", bouncing);
                     parties.put("going", going);
+                    parties.put("invited", invited);
                     if (delegate != null)
                         delegate.onResultReady(parties);
                 }
@@ -934,7 +942,7 @@ public final class DatabaseAccess {
                         inviting.add(user);
                     }
                 }
-                /*if(dataSnapshot.child("event_attending").hasChild(eventID)) {
+                if(dataSnapshot.child("event_attending").hasChild(eventID)) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("event_attending").child(eventID).getChildren()) {
                         User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
                         user.setUserID(postSnapshot.getKey());
@@ -943,12 +951,11 @@ public final class DatabaseAccess {
                 }
                 if(dataSnapshot.child("event_going").hasChild(eventID)) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("event_going").child(eventID).getChildren()) {
-                    Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                    each_party.setPartyID(postSnapshot.getKey());
-                    going.add(each_party);
-                }
+                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
+                        user.setUserID(postSnapshot.getKey());
+                        going.add(user);
                     }
-                }*/
+                }
                     users.put("attending", attending);
                     users.put("hosting", hosting);
                     users.put("bouncing", bouncing);
