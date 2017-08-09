@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +27,10 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
@@ -88,6 +91,8 @@ public class EditStatsActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleApiClient;
     private final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 3;
     private Place locationPlace;
+    double partyLat;
+    double partyLng;
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +169,8 @@ public class EditStatsActivity extends AppCompatActivity {
                     locationPlace = place;
                     locationEditText.getText().clear();
                     locationEditText.append(place.getName());
+                    partyLat = locationPlace.getLatLng().latitude;
+                    partyLng = locationPlace.getLatLng().longitude;
                 }
                 else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Status status = PlaceAutocomplete.getStatus(getActivity(), data);
@@ -231,6 +238,8 @@ public class EditStatsActivity extends AppCompatActivity {
 
         locationEditText = (EditText) findViewById(R.id.editEventLocationEditText);
         locationEditText.setText(party.getAddress());
+        partyLat = party.getLat();
+        partyLng = party.getLng();
         locationEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -571,9 +580,9 @@ public class EditStatsActivity extends AppCompatActivity {
         NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
         NewPartyInfo.startingDateTime = startCalendar;
         NewPartyInfo.endingDateTime = endCalendar;
-        NewPartyInfo.address = locationPlace.getAddress().toString();
-        NewPartyInfo.lat = locationPlace.getLatLng().latitude;
-        NewPartyInfo.lng = locationPlace.getLatLng().longitude;
+        NewPartyInfo.address = locationPlace != null ? locationPlace.getAddress().toString() : locationEditText.getText().toString();
+        NewPartyInfo.lat = locationPlace != null ? locationPlace.getLatLng().latitude : partyLat;
+        NewPartyInfo.lng = locationPlace != null ? locationPlace.getLatLng().longitude : partyLng;
         NewPartyInfo.isPublic = !privateParty;
         NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
         NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
