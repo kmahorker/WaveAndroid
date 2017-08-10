@@ -457,4 +457,12 @@ public final class UtilityClass {
         else
             return mainActivity.getResources().getDrawable(resID);
     }
+
+    public static List<String> partyListToNames(List<Party> parties){
+        List<String> stringNames = new ArrayList<>();
+        for(Party p : parties){
+            stringNames.add(p.getName());
+        }
+        return stringNames;
+    }
 }

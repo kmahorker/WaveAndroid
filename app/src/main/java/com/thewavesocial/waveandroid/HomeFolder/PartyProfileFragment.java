@@ -166,7 +166,7 @@ public class PartyProfileFragment extends Fragment {
                             @Override
                             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                                 hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1,
-                                        result.get("hosting")));
+                                        UtilityClass.partyListToNames(result.get("hosting"))));
                             }
                         });
                     }

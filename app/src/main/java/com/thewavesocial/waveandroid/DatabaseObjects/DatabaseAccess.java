@@ -839,6 +839,8 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.child("hosting").hasChild(userID)) {
                     for (DataSnapshot postSnapshot : dataSnapshot.child("hosting").child(userID).getChildren()) {
+                        Log.d("postSnapshotKey", postSnapshot.getKey());
+                        Log.d("userId", userID);
                         Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
                         each_party.setPartyID(postSnapshot.getKey());
                         hosting.add(each_party);
