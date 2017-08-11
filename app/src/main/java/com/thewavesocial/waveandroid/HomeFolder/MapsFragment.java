@@ -5,6 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -320,8 +327,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(overlay(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.pin), emojiText.getDrawingCache()))/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/);
         marker.setTag(party);
+    }
+
+    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        bmp1 = Bitmap.createScaledBitmap(bmp1, 80, 95, false);
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, new Matrix(), null);
+        return bmOverlay;
+    }
+
+    public BitmapDrawable writeOnDrawable(int drawableId, String text){
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
+       // bm = Bitmap.createScaledBitmap(bm, 50, 60, false);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(40);
+
+        Canvas canvas = new Canvas(bm);
+        canvas.drawText(text, 0, bm.getHeight()/2, paint);
+
+        return new BitmapDrawable(getContext().getResources(), bm);
     }
 
 
