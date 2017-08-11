@@ -327,18 +327,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(overlay(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.pin), emojiText.getDrawingCache()))/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/);
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(UtilityClass.overlay(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.pin), emojiText.getDrawingCache()))/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/);
         marker.setTag(party);
     }
 
-    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
-        bmp1 = Bitmap.createScaledBitmap(bmp1, 80, 95, false);
-        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(bmp1, new Matrix(), null);
-        canvas.drawBitmap(bmp2, new Matrix(), null);
-        return bmOverlay;
-    }
 
     public BitmapDrawable writeOnDrawable(int drawableId, String text){
 

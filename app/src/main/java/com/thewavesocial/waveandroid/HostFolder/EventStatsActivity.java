@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -408,7 +409,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latlng)
-                .icon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache())));
+                .icon(BitmapDescriptorFactory.fromBitmap(UtilityClass.overlay(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.pin), emojiText.getDrawingCache()))));
         marker.setTag(party.getPartyID());
     }
 
