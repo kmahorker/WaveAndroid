@@ -316,7 +316,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void addParty(Party party, LatLng loc) {
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
-        emojiText.setText(party.getEmoji().substring(0, 1));
+        emojiText.setText(party.getEmoji());
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));

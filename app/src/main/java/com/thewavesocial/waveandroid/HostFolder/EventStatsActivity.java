@@ -403,7 +403,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.hostEventStats_emoji);
-        emojiText.setText(party.getEmoji().substring(0, 1));
+        emojiText.setText(party.getEmoji());
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions()
