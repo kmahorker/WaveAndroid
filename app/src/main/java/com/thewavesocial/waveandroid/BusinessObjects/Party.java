@@ -12,7 +12,7 @@ public class Party implements Parcelable {
     private String emoji;
     private String host_id;
     private String host_name;
-    private boolean is_public;
+    private boolean e_public;
     private double lat;
     private double lng;
     private int max_age;
@@ -28,7 +28,7 @@ public class Party implements Parcelable {
         this.emoji = "";
         this.host_id = "";
         this.host_name = "";
-        this.is_public = false;
+        this.e_public = false;
         this.lat = 0;
         this.lng = 0;
         this.max_age = 100;
@@ -38,14 +38,14 @@ public class Party implements Parcelable {
         this.price = 0;
     }
 
-    public Party(String address, long date, long duration, String emoji, String host_id, String host_name, boolean is_public, double lat, double lng, int max_age, int min_age, String name, String partyID, double price) {
+    public Party(String address, long date, long duration, String emoji, String host_id, String host_name, boolean e_public, double lat, double lng, int max_age, int min_age, String name, String partyID, double price) {
         this.address = address;
         this.date = date;
         this.duration = duration;
         this.emoji = emoji;
         this.host_id = host_id;
         this.host_name = host_name;
-        this.is_public = is_public;
+        this.e_public = e_public;
         this.lat = lat;
         this.lng = lng;
         this.max_age = max_age;
@@ -104,12 +104,12 @@ public class Party implements Parcelable {
         this.host_name = host_name;
     }
 
-    public boolean isPublic() {
-        return is_public;
+    public boolean isE_public() {
+        return e_public;
     }
 
-    public void setIs_public(boolean is_public) {
-        this.is_public = is_public;
+    public void setE_public(boolean e_public) {
+        this.e_public = e_public;
     }
 
     public double getLat() {
@@ -176,7 +176,7 @@ public class Party implements Parcelable {
         emoji = in.readString();
         host_id = in.readString();
         host_name = in.readString();
-        is_public = in.readByte() != 0x00;
+        e_public = in.readByte() != 0x00;
         lat = in.readDouble();
         lng = in.readDouble();
         max_age = in.readInt();
@@ -199,7 +199,7 @@ public class Party implements Parcelable {
         dest.writeString(emoji);
         dest.writeString(host_id);
         dest.writeString(host_name);
-        dest.writeByte((byte) (is_public ? 0x01 : 0x00));
+        dest.writeByte((byte) (e_public ? 0x01 : 0x00));
         dest.writeDouble(lat);
         dest.writeDouble(lng);
         dest.writeInt(max_age);

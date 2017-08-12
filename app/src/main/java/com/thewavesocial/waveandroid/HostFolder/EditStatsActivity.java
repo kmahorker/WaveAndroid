@@ -365,7 +365,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
 
         privateSwitch = (SwitchCompat) findViewById(R.id.editEventPrivateSwitch);
-        boolean isPrivate = !party.isPublic();
+        boolean isPrivate = !party.isE_public();
         if (isPrivate) {
             privateSwitch.setChecked(true);
             privateParty = true;
@@ -583,10 +583,10 @@ public class EditStatsActivity extends AppCompatActivity {
         NewPartyInfo.address = locationPlace != null ? locationPlace.getAddress().toString() : locationEditText.getText().toString();
         NewPartyInfo.lat = locationPlace != null ? locationPlace.getLatLng().latitude : partyLat;
         NewPartyInfo.lng = locationPlace != null ? locationPlace.getLatLng().longitude : partyLng;
-        NewPartyInfo.isPublic = !privateParty;
+        NewPartyInfo.e_public = !privateParty;
         NewPartyInfo.partyEmoji = emojiconEditText.getText().toString(); //TODO: 4/22/17 Replace with actual chose emoji
-        NewPartyInfo.minAge = rangeSeekBar.getSelectedMinValue();
-        NewPartyInfo.maxAge = rangeSeekBar.getSelectedMaxValue();
+        NewPartyInfo.min_age = rangeSeekBar.getSelectedMinValue();
+        NewPartyInfo.max_age = rangeSeekBar.getSelectedMaxValue();
         //getActivity().finish();
     }
 
@@ -608,10 +608,10 @@ public class EditStatsActivity extends AppCompatActivity {
         static List<String> hostingUsers;
         static List<Integer> bouncingUsers;
         static List<Integer> invitingUsers;
-        static boolean isPublic;
+        static boolean e_public;
         static String partyEmoji;
-        static int minAge;
-        static int maxAge;
+        static int min_age;
+        static int max_age;
 
         static List<String> originalHosting;
         static List<Integer> originalBouncing;
@@ -640,10 +640,10 @@ public class EditStatsActivity extends AppCompatActivity {
 //            hostingUsers = party.getHostingUsers();
 //            bouncingUsers = null;
 //            invitingUsers = new ArrayList<>();
-            isPublic = party.isPublic();
+            e_public = party.isE_public();
             partyEmoji = party.getEmoji();
-            minAge = party.getMin_age();
-            maxAge = party.getMax_age();
+            min_age = party.getMin_age();
+            max_age = party.getMax_age();
             address = party.getAddress();
 
             //hostingUsers.add(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
@@ -655,34 +655,34 @@ public class EditStatsActivity extends AppCompatActivity {
 
             try {
 
-                HashMap<String, String> newParty = new HashMap<>();
+/*                HashMap<String, String> newParty = new HashMap<>();
                 newParty.put("name", name);
                 newParty.put("emoji", partyEmoji);
                 newParty.put("price", price + "");
                 newParty.put("address", address);
                 newParty.put("lat", lat + "");
                 newParty.put("long", lng + "");
-                newParty.put("is_public", isPublic ? 1 + "" : 0 + "");
+                newParty.put("public", isPublic ? 1 + "" : 0 + "");
                 newParty.put("start_timestamp", startingDateTime + "");
                 newParty.put("end_timestamp", endingDateTime + "");
                 newParty.put("min_age", minAge + "");
-                newParty.put("max_age", maxAge + "");
+                newParty.put("max_age", maxAge + "");*/
 
                 final String eventId = party.getPartyID();
 
-                server_updateParty(eventId, newParty, new OnResultReadyListener<String>() {
+                server_updateParty(eventId, address, startingDateTime, endingDateTime, partyEmoji, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
                             updateHosting();
                         }
                         else{
-                            //Error Here
                         }
                         Log.d("updateParty", result + "");
                     }
                 });
 
+                //Error Here
             } catch (Exception e) {
                 e.printStackTrace();
             }
