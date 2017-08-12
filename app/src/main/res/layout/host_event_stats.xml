@@ -328,7 +328,6 @@
         android:gravity="center"
         android:visibility="invisible"
         android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/round_shape_blue"/>
+        android:layout_height="30dp" />
 
 </RelativeLayout>
