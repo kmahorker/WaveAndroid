@@ -615,10 +615,10 @@ public final class DatabaseAccess {
                 change = 8;
                 break;
             case "bouncing":
-                change = 2;
+                change = 130;
                 break;
             case "invited":
-                change = 128;
+                change = 132;
                 break;
             case "attending":
                 change = 64;
@@ -653,7 +653,7 @@ public final class DatabaseAccess {
         db.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                if(mutableData.getValue() == null && action != "DELETE")
+                if(mutableData.getValue(Integer.class) == null && action != "DELETE")
                     mutableData.setValue(change);
                 else {
                     if (action.equals("POST")) {
@@ -900,6 +900,7 @@ public final class DatabaseAccess {
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     partyIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
                     partyIDs.add(postSnapshot.getKey());
+                    //
                 }
                 server_getPartiesFromIDs(partyIDs, new OnResultReadyListener<ArrayList<Party>>() {
                     @Override
