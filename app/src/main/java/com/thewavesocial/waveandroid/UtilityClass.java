@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -457,4 +459,22 @@ public final class UtilityClass {
         else
             return mainActivity.getResources().getDrawable(resID);
     }
+
+    public static List<String> partyListToNames(List<Party> parties){
+        List<String> stringNames = new ArrayList<>();
+        for(Party p : parties){
+            stringNames.add(p.getName());
+        }
+        return stringNames;
+    }
+
+    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        bmp1 = Bitmap.createScaledBitmap(bmp1, 80, 95, false);
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, new Matrix(), null);
+        return bmOverlay;
+    }
+
 }

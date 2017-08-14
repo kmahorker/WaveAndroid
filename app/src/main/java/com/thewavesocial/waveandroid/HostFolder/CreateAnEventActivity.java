@@ -472,10 +472,10 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
         private void setupSwitch(View v) {
             privateSwitch = (SwitchCompat) v.findViewById(R.id.privateSwitch);
-            if (NewPartyInfo.is_public == true) {
+            if (NewPartyInfo.e_public == true) {
                 privateSwitch.setChecked(false);
                 privateParty = false;
-            } else if (NewPartyInfo.is_public == false) {
+            } else if (NewPartyInfo.e_public == false) {
                 privateSwitch.setChecked(true);
                 privateParty = true;
             }
@@ -597,7 +597,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             NewPartyInfo.address = locationPlace.getAddress().toString();
             NewPartyInfo.lat = locationPlace.getLatLng().latitude;
             NewPartyInfo.lng = locationPlace.getLatLng().longitude;
-            NewPartyInfo.is_public = !privateParty;
+            NewPartyInfo.e_public = !privateParty;
             NewPartyInfo.emoji = emojiconEditText.getText().toString();
             NewPartyInfo.min_age = rangeSeekBar.getSelectedMinValue();
             NewPartyInfo.max_age = rangeSeekBar.getSelectedMaxValue();
@@ -1055,7 +1055,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         static List<String> hostingUsers;
         static List<String> bouncingUsers;
         static List<String> invitingUsers;
-        static boolean is_public;
+        static boolean e_public;
         static String emoji;
         static int min_age;
         static int max_age;
@@ -1070,7 +1070,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             hostingUsers = new ArrayList<>();
             bouncingUsers = new ArrayList<>();
             invitingUsers = new ArrayList<>();
-            is_public = true;
+            e_public = true;
             emoji = "";
             min_age = -1;
             max_age = -1;
@@ -1081,6 +1081,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             hostingUsers.add(DatabaseAccess.getTokenFromLocal(thisActivity).get("id"));
         }
 
+
         //Compose all party information
         public static void composeParty() {
             for (String bouncer_id : bouncingUsers) {
@@ -1090,7 +1091,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
 
             try {
-                server_createNewParty(address, date, duration, emoji, CurrentUser.theUser.getUserID(), host_name, is_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
+                server_createNewParty(address, date, duration, emoji, CurrentUser.theUser.getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
 /*                        int commaIndex = result.indexOf(',');

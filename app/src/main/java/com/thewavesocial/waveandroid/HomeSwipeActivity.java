@@ -321,7 +321,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
     /**
      * Setup server party, user dummies and their relationships.
      */
-    private void setupServerDummies() {
+/*    private void setupServerDummies() {
         String uv = "1", pv = "1";
 
         //Main User ID=10
@@ -435,7 +435,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body6.put("address", "6612 Sueno Rd Goleta, CA 93117");
         body6.put("lat", 34.412923 + "");
         body6.put("lng", -119.859315 + "");
-        body6.put("is_public", true ? "1" : "0");
+        body6.put("public", true ? "1" : "0");
         body6.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body6.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body6.put("min_age", 18 + "");
@@ -449,7 +449,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body7.put("address", "6555 Segovia Rd Goleta, CA 93117");
         body7.put("lat", 34.414241 + "");
         body7.put("lng", -119.856559 + "");
-        body7.put("is_public", true ? "1" : "0");
+        body7.put("public", true ? "1" : "0");
         body7.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body7.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body7.put("min_age", 18 + "");
@@ -463,7 +463,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body8.put("address", "6650 Picasso Rd, Goleta, CA 93117");
         body8.put("lat", 34.415500 + "");
         body8.put("lng", -119.860575 + "");
-        body8.put("is_public", true ? "1" : "0");
+        body8.put("public", true ? "1" : "0");
         body8.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body8.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body8.put("min_age", 18 + "");
@@ -477,7 +477,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body9.put("address", "895 Camino Del Sur Goleta, CA 93117");
         body9.put("lat", 34.412938 + "");
         body9.put("lng", -119.862853 + "");
-        body9.put("is_public", true ? "1" : "0");
+        body9.put("public", true ? "1" : "0");
         body9.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body9.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body9.put("min_age", 18 + "");
@@ -491,7 +491,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body10.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body10.put("lat", 34.411962 + "");
         body10.put("lng", -119.859848 + "");
-        body10.put("is_public", true ? "1" : "0");
+        body10.put("public", true ? "1" : "0");
         body10.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body10.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body10.put("min_age", 18 + "");
@@ -505,7 +505,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body11.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body11.put("lat", 34.411962 + "");
         body11.put("lng", -119.859848 + "");
-        body11.put("is_public", true ? "1" : "0");
+        body11.put("public", true ? "1" : "0");
         body11.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body11.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body11.put("min_age", 18 + "");
@@ -519,7 +519,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body12.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body12.put("lat", 34.411962 + "");
         body12.put("lng", -119.859848 + "");
-        body12.put("is_public", true ? "1" : "0");
+        body12.put("public", true ? "1" : "0");
         body12.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body12.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body12.put("min_age", 18 + "");
@@ -533,7 +533,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body13.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body13.put("lat", 34.411962 + "");
         body13.put("lng", -119.859848 + "");
-        body13.put("is_public", true ? "1" : "0");
+        body13.put("public", true ? "1" : "0");
         body13.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body13.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body13.put("min_age", 18 + "");
@@ -547,7 +547,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
         body14.put("address", "6628 Pasado Rd Goleta, CA 93117");
         body14.put("lat", 34.411962 + "");
         body14.put("lng", -119.859848 + "");
-        body14.put("is_public", true ? "1" : "0");
+        body14.put("public", true ? "1" : "0");
         body14.put("start_timestamp", startDate.getTime().getTime() / 1000 + "");
         body14.put("end_timestamp", endDate.getTime().getTime() / 1000 + "");
         body14.put("min_age", 18 + "");
@@ -618,6 +618,6 @@ public class HomeSwipeActivity extends AppCompatActivity {
         server_inviteUserToEvent(uv + "4", pv + "2", null);
         server_inviteUserToEvent(uv + "4", pv + "3", null);
         server_inviteUserToEvent(uv + "4", pv + "4", null);
-        server_inviteUserToEvent(uv + "4", pv + "5", null);
-    }
+        server_inviteUserToEvent(uv + "4", pv + "5", null);*/
+    //}
 }

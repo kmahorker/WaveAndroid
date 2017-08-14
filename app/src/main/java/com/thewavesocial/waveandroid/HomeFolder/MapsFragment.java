@@ -5,6 +5,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -316,12 +323,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void addParty(Party party, LatLng loc) {
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
-        emojiText.setText(party.getEmoji().substring(0, 1));
+        emojiText.setText(party.getEmoji());
         emojiText.buildDrawingCache();
 
         Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(UtilityClass.overlay(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.pin), emojiText.getDrawingCache()))/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/);
         marker.setTag(party);
+    }
+
+
+    public BitmapDrawable writeOnDrawable(int drawableId, String text){
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
+       // bm = Bitmap.createScaledBitmap(bm, 50, 60, false);
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(40);
+
+        Canvas canvas = new Canvas(bm);
+        canvas.drawText(text, 0, bm.getHeight()/2, paint);
+
+        return new BitmapDrawable(getContext().getResources(), bm);
     }
 
 

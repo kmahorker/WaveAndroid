@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.util.RangeValueIterator;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -553,7 +554,7 @@ public final class DatabaseAccess {
                                              String emoji,
                                              String host_id,
                                              String host_name,
-                                             boolean is_public,
+                                             boolean e_public,
                                              double lat,
                                              double lng,
                                              int max_age,
@@ -565,7 +566,7 @@ public final class DatabaseAccess {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         String eventID = UUID.randomUUID().toString(); //unique ID for each event
 
-        Party party = new Party(address, date, duration, emoji, host_id, host_name, is_public, lat, lng, max_age, min_age, name, eventID, price);
+        Party party = new Party(address, date, duration, emoji, host_id, host_name, e_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
 
         if(delegate != null)
@@ -578,7 +579,7 @@ public final class DatabaseAccess {
 	event_info.put("address", address);
 	event_info.put("lat", lat + "");
 	event_info.put("lng", lng + "");
-	event_info.put("is_public", isPublic ? "1" : "0");
+	event_info.put("e_public", isPublic ? "1" : "0");
 	event_info.put("start_timestamp", startTimeStamp + "");
 	event_info.put("end_timestamp", endingTimeStamp + "");
 	event_info.put("min_age", minAge + "");
@@ -604,54 +605,75 @@ public final class DatabaseAccess {
     }
 
 
-    public static void server_manageUserForParty(String userID, String eventID, String relationship, String action, final OnResultReadyListener<String> delegate) {
+    public static void server_manageUserForParty(final String userID, final String eventID, final String relationship, final String action, final OnResultReadyListener<String> delegate) {
         //RequestComponents[] comps = new RequestComponents[1];
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         //HashMap<String, String> about = new HashMap();
         //about.put("relationship", relationship);
-        if (action.equals("POST")) {
-            switch(relationship) {
-                case "hosting":
-                    db.child("hosting").child(userID).child(eventID).setValue(true);
-                    db.child("event_hosts").child(eventID).child(userID).setValue(true);
-                    break;
-                case "bouncing":
-                    db.child("bouncing").child(userID).child(eventID).setValue(true);
-                    db.child("event_bouncing").child(eventID).child(userID).setValue(true);
-                    break;
-                case "invited":
-                    db.child("invited").child(userID).child(eventID).setValue(true);
-                    db.child("event_invited").child(eventID).child(userID).setValue(true);
-                    break;
-                case "attending":
-                    db.child("attending").child(userID).child(eventID).setValue(true);
-                    db.child("event_attending").child(eventID).child(userID).setValue(true);
-                    break;
-            }
+        final int change;
+        switch(relationship){
+            case "hosting":
+                change = 8;
+                break;
+            case "bouncing":
+                change = 2;
+                break;
+            case "invited":
+                change = 128;
+                break;
+            case "attending":
+                change = 64;
+                break;
+            case "going":
+                change = 4;
+                break;
+            default:
+                change = 0;
+                break;
         }
-        else if (action.equals("DELETE")){
-            switch(relationship) {
-                case "hosting":
-                    db.child("hosting").child(userID).child(eventID).removeValue();
-                    db.child("event_hosts").child(eventID).child(userID).removeValue();
-                case "bouncing":
-                    db.child("bouncing").child(userID).child(eventID).removeValue();
-                    db.child("event_bouncing").child(eventID).child(userID).removeValue();
-                    break;
-                case "invited":
-                    db.child("invited").child(userID).child(eventID).removeValue();
-                    db.child("event_invited").child(eventID).child(userID).removeValue();
-                    break;
-                case "attending":
-                    db.child("attending").child(userID).child(eventID).removeValue();
-                    db.child("event_attending").child(eventID).child(userID).removeValue();
-                    break;
+        server_changeEventRelationship("event_user", userID, eventID, action, change, new OnResultReadyListener<String>() {
+            @Override
+            public void onResultReady(String result) {
+                server_changeEventRelationship("user_event", userID, eventID, action, change, new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        if(delegate != null)
+                            delegate.onResultReady("success");
+                    }
+                });
             }
-        }
-/*        else
-            Log.d("Action", "Illegal passed action argument: " + action);*/
-        if(delegate != null)
-            delegate.onResultReady("success");
+        });
+    }
+
+    public static void server_changeEventRelationship(String dbChild, String userID, String eventID, final String action, final int change, final OnResultReadyListener<String> delegate){
+        DatabaseReference db;
+        if (dbChild == "event_user")
+            db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID).child(userID);
+        else
+            db = FirebaseDatabase.getInstance().getReference("user_event").child(userID).child(eventID);
+        db.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if(mutableData.getValue() == null && action != "DELETE")
+                    mutableData.setValue(change);
+                else {
+                    if (action.equals("POST")) {
+                        mutableData.setValue(mutableData.getValue(Integer.class) + change);
+                    }
+                    else if (action.equals("DELETE")){
+                        mutableData.setValue(mutableData.getValue(Integer.class) - change);
+                    }
+                }
+                return Transaction.success(mutableData);
+            }
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+                if(delegate != null)
+                    delegate.onResultReady("success");
+            }
+        });
     }
 
     public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
@@ -665,18 +687,52 @@ public final class DatabaseAccess {
             delegate.onResultReady("success");
     }
 
-    public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
+    public static void server_updateParty(String partyID,
+                                          final String address,
+                                          long start_time,
+                                          long end_time,
+                                          final String emoji,
+                                          final boolean e_public,
+                                          final double lat,
+                                          final double lng,
+                                          final int max_age,
+                                          final int min_age,
+                                          final String name,
+                                          final double price,
+                                          final OnResultReadyListener<String> delegate) {
         //String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
 /*        RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);*/
-        Iterator it = body.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            db.child(pair.getKey().toString()).setValue(pair.getValue()); //iterates through every value in body parameter and updates those values in database
-        }
-        if(delegate != null)
-            delegate.onResultReady("success");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
+        db.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if(mutableData.getValue() == null)
+                    return Transaction.success(mutableData);
+                else {
+                    Party party = mutableData.getValue(Party.class);
+                    party.setAddress(address);
+                    party.setEmoji(emoji);
+                    party.setE_public(e_public);
+                    party.setLat(lat);
+                    party.setLng(lng);
+                    party.setName(name);
+                    party.setPrice(price);
+                    party.setMax_age(max_age);
+                    party.setMin_age(min_age);
+                    mutableData.setValue(party);
+                }
+                return Transaction.success(mutableData);
+            }
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                // Transaction completed
+                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
+            }
+        });
+
+
     }
 
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
@@ -705,11 +761,13 @@ public final class DatabaseAccess {
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
                 + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        db.child("event_invited").child(eventID).child(userID).setValue(true); //just setting the value of a user invited to the party as the userID, can change this as well
-        db.child("invited").child(userID).child(eventID).setValue(true);
-        if(delegate != null)
-            delegate.onResultReady("success");
+        server_manageUserForParty(userID, eventID, "invited", "POST", new OnResultReadyListener<String>() {
+            @Override
+            public void onResultReady(String result) {
+                if(delegate != null)
+                    delegate.onResultReady("success");
+            }
+        });
     }
 
     public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
@@ -827,57 +885,56 @@ public final class DatabaseAccess {
         });
     }
     public static void server_getEventsOfUser(final String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("user_event").child(userID);
         final ArrayList<Party> invited = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();
         final ArrayList<Party> hosting = new ArrayList<>();
         final ArrayList<Party> bouncing = new ArrayList<>();
         final ArrayList<Party> attending = new ArrayList<>();
         final HashMap<String, ArrayList<Party>> parties = new HashMap();
+        final HashMap<String, Integer> partyIDsAndR = new HashMap(); //partyIDsAndRelationships
+        final ArrayList<String> partyIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("hosting").hasChild(userID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("hosting").child(userID).getChildren()) {
-                        Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                        each_party.setPartyID(postSnapshot.getKey());
-                        hosting.add(each_party);
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    partyIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
+                    partyIDs.add(postSnapshot.getKey());
+                }
+                server_getPartiesFromIDs(partyIDs, new OnResultReadyListener<ArrayList<Party>>() {
+                    @Override
+                    public void onResultReady(ArrayList<Party> result) {
+                        for(Party party : result) {
+                            int userRelationship = partyIDsAndR.get(party.getPartyID());
+                            if (userRelationship >= 128) {
+                                userRelationship -= 128;
+                                invited.add(party);
+                            }
+                            if (userRelationship >= 64) {
+                                userRelationship -= 64;
+                                attending.add(party);
+                            }
+                            if (userRelationship >= 8) {
+                                userRelationship -= 8;
+                                hosting.add(party);
+                            }
+                            if (userRelationship >= 4) {
+                                userRelationship -= 4;
+                                going.add(party);
+                            }
+                            if (userRelationship >= 2)
+                                bouncing.add(party);
+                            parties.put("attending", attending);
+                            parties.put("hosting", hosting);
+                            parties.put("bouncing", bouncing);
+                            parties.put("going", going);
+                            parties.put("invited", invited);
+                        }
+                        if(delegate != null)
+                            delegate.onResultReady(parties);
                     }
-                }
-                if(dataSnapshot.child("bouncing").hasChild(userID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("bouncing").child(userID).getChildren()) {
-                        Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                        each_party.setPartyID(postSnapshot.getKey());
-                        bouncing.add(each_party);
-                    }
-                }
-                if(dataSnapshot.hasChild("attending")) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("attending").child(userID).getChildren()) {
-                        Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                        each_party.setPartyID(postSnapshot.getKey());
-                        invited.add(each_party);
-                    }
-                }
-                for (DataSnapshot postSnapshot : dataSnapshot.child("going").child(userID).getChildren()) {
-                    Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                    each_party.setPartyID(postSnapshot.getKey());
-                    going.add(each_party);
-                }
-                if(dataSnapshot.child("invited").hasChild(userID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("invited").child(userID).getChildren()) {
-                        Party each_party = dataSnapshot.child("events").child(postSnapshot.getKey()).getValue(Party.class);
-                        each_party.setPartyID(postSnapshot.getKey());
-                        hosting.add(each_party);
-                    }
-                }
-                    parties.put("attending", attending);
-                    parties.put("hosting", hosting);
-                    parties.put("bouncing", bouncing);
-                    parties.put("going", going);
-                    parties.put("invited", invited);
-                    if (delegate != null)
-                        delegate.onResultReady(parties);
-                }
+                });
+            }
 
 
             @Override
@@ -911,59 +968,58 @@ public final class DatabaseAccess {
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
                 + getTokenFromLocal(mainActivity).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID);
+        Log.i(TAG, "server_getUsersOfEvent: " + eventID);
         final ArrayList<User> attending = new ArrayList<>();
         final ArrayList<User> going = new ArrayList<>();
         final ArrayList<User> hosting = new ArrayList<>();
         final ArrayList<User> inviting = new ArrayList<>();
         final ArrayList<User> bouncing = new ArrayList<>();
         final HashMap<String, ArrayList<User>> users = new HashMap();
+        final HashMap<String, Integer> userIDsAndR = new HashMap();
+        final ArrayList<String> userIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("event_hosts").hasChild(eventID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("event_hosts").child(eventID).getChildren()) {
-                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
-                        user.setUserID(postSnapshot.getKey());
-                        hosting.add(user);
+                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.i(TAG, "onDataChange: " + postSnapshot.getKey());
+                    userIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
+                    userIDs.add(postSnapshot.getKey());
+                }
+                server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
+                    @Override
+                    public void onResultReady(ArrayList<User> result) {
+                        for(User user : result) {
+                            int userRelationship = userIDsAndR.get(user.getUserID());
+                            if (userRelationship >= 128) {
+                                userRelationship -= 128;
+                                inviting.add(user);
+                            }
+                            if (userRelationship >= 64) {
+                                userRelationship -= 64;
+                                attending.add(user);
+                            }
+                            if (userRelationship >= 8) {
+                                userRelationship -= 8;
+                                hosting.add(user);
+                            }
+                            if (userRelationship >= 4) {
+                                userRelationship -= 4;
+                                going.add(user);
+                            }
+                            if (userRelationship >= 2)
+                                bouncing.add(user);
+                            users.put("attending", attending);
+                            users.put("hosting", hosting);
+                            users.put("bouncing", bouncing);
+                            users.put("going", going);
+                            users.put("inviting", inviting);
+                        }
+                        if(delegate != null)
+                            delegate.onResultReady(users);
                     }
-                }
-                if(dataSnapshot.child("event_bouncing").hasChild(eventID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("event_bouncing").child(eventID).getChildren()) {
-                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
-                        user.setUserID(postSnapshot.getKey());
-                        bouncing.add(user);
-                    }
-                }
-                if(dataSnapshot.child("event_invited").hasChild(eventID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("event_invited").child(eventID).getChildren()) {
-                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
-                        user.setUserID(postSnapshot.getKey());
-                        inviting.add(user);
-                    }
-                }
-                if(dataSnapshot.child("event_attending").hasChild(eventID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("event_attending").child(eventID).getChildren()) {
-                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
-                        user.setUserID(postSnapshot.getKey());
-                        attending.add(user);
-                    }
-                }
-                if(dataSnapshot.child("event_going").hasChild(eventID)) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.child("event_going").child(eventID).getChildren()) {
-                        User user = dataSnapshot.child("users").child(postSnapshot.getKey()).getValue(User.class);
-                        user.setUserID(postSnapshot.getKey());
-                        going.add(user);
-                    }
-                }
-                    users.put("attending", attending);
-                    users.put("hosting", hosting);
-                    users.put("bouncing", bouncing);
-                    users.put("going", going);
-                    users.put("inviting", inviting);
-                    if (delegate != null)
-                        delegate.onResultReady(users);
-                }
+                });
+            }
 
 
             @Override
