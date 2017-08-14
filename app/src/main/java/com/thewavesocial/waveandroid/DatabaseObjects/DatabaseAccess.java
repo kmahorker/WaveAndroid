@@ -1238,16 +1238,34 @@ public final class DatabaseAccess {
      * Download Profile Picture from Server. Return bitmap or null.
      */
     public static void server_getProfilePicture(String userID, final OnResultReadyListener<Bitmap> delegate) {
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-        new ImageDownloadTask(mainActivity, comp, new OnResultReadyListener<Bitmap>() {
+//        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
+//                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+//        RequestComponents comp = new RequestComponents(url, "GET", null);
+//        new ImageDownloadTask(mainActivity, comp, new OnResultReadyListener<Bitmap>() {
+//            @Override
+//            public void onResultReady(Bitmap result) {
+//                if (result != null && delegate != null) {
+//                    delegate.onResultReady(result);
+//                    Log.d("Image_Download", "Success");
+//                }
+//            }
+//        });
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child(getTokenFromLocal(mainActivity).get("id"));
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
-            public void onResultReady(Bitmap result) {
-                if (result != null && delegate != null) {
-                    delegate.onResultReady(result);
-                    Log.d("Image_Download", "Success");
-                }
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                delegate.onResultReady(bitmap);
+                Log.d("Download", "Success");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.d("Download", "Failed " + exception.getLocalizedMessage());
             }
         });
     }
