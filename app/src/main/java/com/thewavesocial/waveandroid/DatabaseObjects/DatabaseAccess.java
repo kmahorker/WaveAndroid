@@ -19,6 +19,9 @@ import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -1205,12 +1208,47 @@ public final class DatabaseAccess {
     /**
      * Delete party from server
      */
-    public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
+    public static void server_deleteParty(final String partyID, final OnResultReadyListener<Exception> delegate) {
+        final GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
+
+        final TaskCompletionSource<String> tcs1 = new TaskCompletionSource<>();
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-        db.child(partyID).removeValue();
-        if(delegate != null)
-            delegate.onResultReady("success");
-        Log.d("Delete Party", "Success");
+        db.child(partyID).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null){
+                    tcs1.setException(databaseError.toException());
+                } else {
+                    tcs1.setResult(partyID);
+                }
+            }
+        });
+
+        final TaskCompletionSource<String> tcs2 = new TaskCompletionSource<>();
+        geoFire.removeLocation(partyID, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if(error != null){
+                    tcs2.setException(error.toException());
+                } else {
+                    tcs2.setResult(partyID);
+                }
+            }
+        });
+
+        if(delegate != null){
+            Tasks.whenAll(tcs1.getTask(), tcs2.getTask()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.onResultReady(null);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    delegate.onResultReady(e);
+                }
+            });
+        }
     }
 
     /**

@@ -197,12 +197,12 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                server_deleteParty(party.getPartyID(), new OnResultReadyListener<Exception>() {
                     @Override
-                    public void onResultReady(String result) {
+                    public void onResultReady(Exception e) {
                         // TODO: 04/20/2017 Remove party from server
                         // TODO: 04/20/2017 Notify all users
-                        if (!result.equals("success")) {
+                        if (e != null) {
                             Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(mainActivity, HostControllerFragment.class);
