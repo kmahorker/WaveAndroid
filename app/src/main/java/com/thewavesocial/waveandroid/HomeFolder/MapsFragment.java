@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -267,8 +268,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             public void onCameraIdle() {
                 LatLng nePoint = mMap.getProjection().getVisibleRegion().latLngBounds.northeast;
                 LatLng swPoint = mMap.getProjection().getVisibleRegion().latLngBounds.southwest;
-                LatLng center = new LatLng(nePoint.latitude - swPoint.latitude, nePoint.longitude - swPoint.longitude);
+                LatLng center = new LatLng((nePoint.latitude + swPoint.latitude)/2, (nePoint.longitude + swPoint.longitude)/2);
                 double radius = distance(nePoint, swPoint) / 2;
+                Log.d(HomeSwipeActivity.TAG, "OnCameraIdleListener invoked. (" + center + " radius:" + radius + ")");
                 mMap.clear();
                 server_getEventsInDistance(center, radius,
                     new OnResultReadyListener<Party>() {
@@ -328,6 +330,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         Marker marker = mMap.addMarker(new MarkerOptions().position(partyLatLng));
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
         marker.setTag(party);
+
+        Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\")");
     }
 
     public void moveMapCamera(LatLng loc) {

@@ -932,8 +932,9 @@ public final class DatabaseAccess {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events");
-                ref.equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                Log.d(HomeSwipeActivity.TAG, "onKeyEntered key:" + key);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events").child(key);
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
