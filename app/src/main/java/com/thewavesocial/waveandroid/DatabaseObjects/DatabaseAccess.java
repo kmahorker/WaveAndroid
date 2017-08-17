@@ -573,6 +573,10 @@ public final class DatabaseAccess {
         Party party = new Party(address, date, duration, emoji, host_id, host_name, is_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
 
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
+        GeoFire geoFire = new GeoFire(ref);
+        geoFire.setLocation(eventID, new GeoLocation(lat, lng));
+
         if(delegate != null)
             delegate.onResultReady("success,"+eventID);
 
