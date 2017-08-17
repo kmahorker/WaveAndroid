@@ -680,6 +680,7 @@ public final class DatabaseAccess {
     public static void server_updateParty(String partyID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
         //String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
+        final GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
 /*        RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);*/
         Iterator it = body.entrySet().iterator();
@@ -687,6 +688,7 @@ public final class DatabaseAccess {
             Map.Entry pair = (Map.Entry)it.next();
             db.child(pair.getKey().toString()).setValue(pair.getValue()); //iterates through every value in body parameter and updates those values in database
         }
+        geoFire.setLocation( partyID, new GeoLocation( Double.parseDouble(body.get("lat")), Double.parseDouble(body.get("long")) ) );
         if(delegate != null)
             delegate.onResultReady("success");
     }

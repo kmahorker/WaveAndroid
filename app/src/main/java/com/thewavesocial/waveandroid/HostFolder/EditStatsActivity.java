@@ -651,6 +651,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 newParty.put("emoji", partyEmoji);
                 newParty.put("price", price + "");
                 newParty.put("address", address);
+                //NOTE: remember to change DatabaseAccess.server_updateParty(...)
+                // if updating the lat lng keys
                 newParty.put("lat", lat + "");
                 newParty.put("long", lng + "");
                 newParty.put("is_public", isPublic ? 1 + "" : 0 + "");
