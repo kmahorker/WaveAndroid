@@ -70,6 +70,7 @@ import static android.content.ContentValues.TAG;
 
 public final class DatabaseAccess {
     public static Activity mainActivity;
+    public static final String PATH_TO_GEOFIRE = "geofire";
 
     /**
      * Initialize mainActivity
@@ -573,8 +574,7 @@ public final class DatabaseAccess {
         Party party = new Party(address, date, duration, emoji, host_id, host_name, is_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("path/to/geofire");
-        GeoFire geoFire = new GeoFire(ref);
+        GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
         geoFire.setLocation(eventID, new GeoLocation(lat, lng));
 
         if(delegate != null)
@@ -930,8 +930,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_getEventsInDistance(LatLng center, double radius, final OnResultReadyListener<Party> onKeyEnteredDelegate) {
-        DatabaseReference geoFireReference = FirebaseDatabase.getInstance().getReference("geofire");
-        GeoFire geoFire = new GeoFire(geoFireReference);
+        GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(center.latitude, center.longitude), radius);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
