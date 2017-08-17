@@ -261,37 +261,43 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
         }
 
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+        //FIXME: if a event is updated, instead of updating its marker, a new marker will be inserted instead.
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
-            public void onCameraMove() {
-                final Button search_button = (Button) mainActivity.findViewById(R.id.redo_search_button);
-                search_button.setVisibility(View.VISIBLE);
-                search_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        search_button.setVisibility(View.INVISIBLE);
-                        mMap.clear();
-                        displayEventsInRange();
-                    }
-                });
+            public void onCameraIdle() {
+                LatLng nePoint = mMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+                LatLng swPoint = mMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+                LatLng center = new LatLng(nePoint.latitude - swPoint.latitude, nePoint.longitude - swPoint.longitude);
+                double radius = distance(nePoint, swPoint) / 2;
+                mMap.clear();
+                server_getEventsInDistance(center, radius,
+                    new OnResultReadyListener<Party>() {
+                        @Override
+                        public void onResultReady(Party party) {
+                            addParty(party);
+                        }
+                    });
             }
         });
     }
 
-    private void displayEventsInRange() {
-        double nBound, sBound, eBound, wBound;
-        nBound = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.latitude;
-        eBound = mMap.getProjection().getVisibleRegion().latLngBounds.northeast.longitude;
-        sBound = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.latitude;
-        wBound = mMap.getProjection().getVisibleRegion().latLngBounds.southwest.longitude;
-        server_getEventsInDistance(sBound + "", nBound + "", wBound + "", eBound + "",
-                new OnResultReadyListener<ArrayList<Party>>() {
-                    @Override
-                    public void onResultReady(ArrayList<Party> result) {
-                        if (result != null)
-                            addParties(result);
-                    }
-                });
+    /**
+     * Calculate distance between two points in latitude and longitude taking
+     * into account height difference. If you are not interested in height
+     * difference pass 0.0. Uses Haversine method as its base.
+     *
+     * lat1, lon1 Start point lat2, lon2 End point
+     * @returns Distance in km
+     *
+     * //stackoverflow.com/questions/3694380
+     */
+    public static double distance(LatLng latLng1, LatLng latLng2) {
+        double latDist = Math.toRadians(latLng2.latitude - latLng1.latitude);
+        double lngDist = Math.toRadians(latLng2.longitude - latLng1.longitude);
+        double a = Math.sin(latDist / 2) * Math.sin(latDist / 2)
+                + Math.cos(Math.toRadians(latLng1.latitude)) * Math.cos(Math.toRadians(latLng2.latitude))
+                * Math.sin(lngDist / 2) * Math.sin(lngDist / 2);
+        return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
     @Override
@@ -313,25 +319,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         editText.setCursorVisible(false);
     }
 
-
-    public void addParty(Party party, LatLng loc) {
+    public void addParty(Party party) {
         EmojiconTextView emojiText = (EmojiconTextView) mainActivity.findViewById(R.id.home_mapsView_emoji);
         emojiText.setText(party.getEmoji().substring(0, 1));
         emojiText.buildDrawingCache();
 
-        Marker marker = mMap.addMarker(new MarkerOptions().position(loc));
+        LatLng partyLatLng = new LatLng( party.getLat(), party.getLng() );
+        Marker marker = mMap.addMarker(new MarkerOptions().position(partyLatLng));
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(emojiText.getDrawingCache()));
         marker.setTag(party);
     }
-
-
-    public void addParties(List<Party> parties) {
-        for (Party party : parties) {
-            LatLng loc = new LatLng( party.getLat(), party.getLng() );
-            addParty(party, loc);
-        }
-    }
-
 
     public void moveMapCamera(LatLng loc) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));

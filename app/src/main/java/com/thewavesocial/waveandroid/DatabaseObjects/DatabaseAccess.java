@@ -13,6 +13,10 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -921,8 +925,51 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        
+    public static void server_getEventsInDistance(LatLng center, double radius, final OnResultReadyListener<Party> onKeyEnteredDelegate) {
+        DatabaseReference geoFireReference = FirebaseDatabase.getInstance().getReference("geofire");
+        GeoFire geoFire = new GeoFire(geoFireReference);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(center.latitude, center.longitude), radius);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events");
+                ref.equalTo(key).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Party party = dataSnapshot.getValue(Party.class);
+                            party.setPartyID(dataSnapshot.getKey());
+                            onKeyEnteredDelegate.onResultReady(party);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(HomeSwipeActivity.TAG, "server_getEventsInDistance", databaseError.toException());
+                    }
+                });
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
     }
 
 
