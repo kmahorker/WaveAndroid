@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.firebase.geofire.GeoFire;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -920,57 +921,64 @@ public final class DatabaseAccess {
         });
     }
 
-   public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-       DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-       final ArrayList<Party> parties = new ArrayList<>();
-       db.addListenerForSingleValueEvent(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                   float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
-                   float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
-                   if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
-                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
-                       Party each_party = postSnapshot.getValue(Party.class);
-                       each_party.setPartyID(postSnapshot.getKey());
-                       parties.add(each_party);
-                   }
-               }
-               if(delegate != null)
-                   delegate.onResultReady(parties);
-           }
+    public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
+        
+    }
 
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
 
-           }
-       });
-       //UNSURE ABOUT THIS ONE FOR NOW
-        /*String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
-                + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
-                + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
-                + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        /*RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
-                try {
-                    JSONObject json_result = new JSONObject(result.get(0));
-                    JSONArray data = json_result.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        parties.add(constructParty(body));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Log.d("Get Events In Distance", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(parties);
-            }
-    }).execute();*/
-}
+//   public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
+//       DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+//       final ArrayList<Party> parties = new ArrayList<>();
+//       db.addListenerForSingleValueEvent(new ValueEventListener() {
+//           @Override
+//           public void onDataChange(DataSnapshot dataSnapshot) {
+//               for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+//                   float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
+//                   float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
+//                   if(      lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
+//                            lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
+//                       Party each_party = postSnapshot.getValue(Party.class);
+//                       each_party.setPartyID(postSnapshot.getKey());
+//                       parties.add(each_party);
+//                   }
+//               }
+//               if(delegate != null)
+//                   delegate.onResultReady(parties);
+//           }
+//
+//           @Override
+//           public void onCancelled(DatabaseError databaseError) {
+//
+//           }
+//       });
+//
+//            /*String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+//                    + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
+//                    + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
+//                    + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+//            /*RequestComponents comp = new RequestComponents(url, "GET", null);
+//            new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+//                @Override
+//                public void onResultReady(ArrayList<String> result) {
+//                    ArrayList<Party> parties = new ArrayList<>();
+//                    try {
+//                        JSONObject json_result = new JSONObject(result.get(0));
+//                        JSONArray data = json_result.getJSONArray("data");
+//                        for (int i = 0; i < data.length(); i++) {
+//                            HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
+//                            parties.add(constructParty(body));
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    Log.d("Get Events In Distance", result.get(0));
+//                    if (delegate != null)
+//                        delegate.onResultReady(parties);
+//                }
+//        }).execute();*/
+//
+//    }
+
 
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
 /*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
