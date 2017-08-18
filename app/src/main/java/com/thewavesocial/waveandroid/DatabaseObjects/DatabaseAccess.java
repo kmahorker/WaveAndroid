@@ -1040,10 +1040,15 @@ public final class DatabaseAccess {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                if(dataSnapshot.exists()) {
                     bestfriends.add(dataSnapshot.getValue(BestFriend.class));
-                //Log.d("getBestFriends", result.get(0) + "");
-                if (delegate != null) {
-                    delegate.onResultReady(bestfriends);
+                    if (delegate != null) {
+                        delegate.onResultReady(bestfriends);
+                    }
+                }
+                else
+                    if (delegate != null) {
+                        delegate.onResultReady(null);
                 }
             }
             @Override
