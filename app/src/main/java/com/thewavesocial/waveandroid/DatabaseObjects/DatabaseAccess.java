@@ -564,7 +564,7 @@ public final class DatabaseAccess {
                                              final OnResultReadyListener<String> delegate){
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-        String eventID = UUID.randomUUID().toString(); //unique ID for each event
+        String eventID = db.push().getKey(); //unique ID for each event
 
         Party party = new Party(address, date, duration, emoji, host_id, host_name, e_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
@@ -595,7 +595,7 @@ public final class DatabaseAccess {
                                             String birthday,
                                             final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
-        String userID = UUID.randomUUID().toString(); //unique ID for each event
+        String userID = db.push().getKey(); //unique ID for each event
         List<BestFriend> list = new ArrayList<>();
         User user = new User(userID, first_name, last_name, gender, list);
         db.child(userID).setValue(user);
@@ -657,7 +657,7 @@ public final class DatabaseAccess {
                     mutableData.setValue(change);
                 else {
                     if (action.equals("POST")) {
-                        mutableData.setValue(mutableData.getValue(Integer.class) + change);
+                        mutableData.setValue(mutableData.getValue(Integer.class) + change + 128);
                     }
                     else if (action.equals("DELETE")){
                         mutableData.setValue(mutableData.getValue(Integer.class) - change);
