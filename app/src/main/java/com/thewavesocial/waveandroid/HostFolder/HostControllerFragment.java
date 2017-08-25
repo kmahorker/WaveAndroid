@@ -77,8 +77,10 @@ public class HostControllerFragment extends Fragment {
             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                 if (result != null) {
                     List<Party> list = new ArrayList<>();
-                    list.addAll(result.get("hosting"));
-                    list.addAll(result.get("bouncing"));
+                    if ( result.get("hosting") != null )
+                        list.addAll(result.get("hosting"));
+                    if ( result.get("bouncing") != null )
+                        list.addAll(result.get("bouncing"));
 
                     TreeMap<Long, Party> partyTreeMap = new TreeMap<>();
                     for ( Party party : list ) {

@@ -1,6 +1,7 @@
 package com.thewavesocial.waveandroid.LoginFolder;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -22,6 +23,14 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
@@ -42,6 +51,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
     public ViewPager mPager;
     private CallbackManager callbackManager;
     public final LoginTutorialActivity mainActivity = this;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,8 @@ public class LoginTutorialActivity extends AppCompatActivity {
         dot1 = (ImageView) findViewById(R.id.login_tutorial_dot1);
         dot2 = (ImageView) findViewById(R.id.login_tutorial_dot2);
         dot3 = (ImageView) findViewById(R.id.login_tutorial_dot3);
+
+        mAuth = FirebaseAuth.getInstance();
 
         //setup facebook
         FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -165,49 +177,71 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
     private void processJSONObject(final String token, final JSONObject json) {
         Log.d("FacebookLogin", json.toString());
-        DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
-            //If login not successful, create new user and login again
-            @Override
-            public void onResultReady(String result) {
-                if (result.equals("success")) {
-                    Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
-                    startActivity(intent);
-                } else {
-                    String fname, lname, email, college, password, fb_id, fb_token, gender, birthday;
-                    try {
-                        fname = (!json.has("name")) ? "N/A" : json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
-                        lname = (!json.has("name")) ? "N/A" : json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
-                        email = "N/A";
-                        college = "N/A";
-                        password = "N/A";
-                        fb_id = (!json.has("id")) ? "N/A" : json.getString("id");
-                        fb_token = token;
-                        gender = (!json.has("gender")) ? "N/A" : json.getString("gender");
-                        birthday = (!json.has("birthday")) ? "" : json.getString("birthday");
 
-                        DatabaseAccess.server_createNewUser(fname, lname, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
-                            @Override
-                            public void onResultReady(String result) {
-                                if (result != null) {
-                                    DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
-                                        @Override
-                                        public void onResultReady(String result) {
-                                            if (result.equals("success")) {
-                                                Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    });
-                                }
+        AuthCredential credential = FacebookAuthProvider.getCredential(token);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d("Firebase_Auth_Result", "SignInWithCredential:Success - " + user.getUid() + ", " + user.getDisplayName() + ", " + user.getEmail());
 
-                            }
-                        });
-                    } catch (JSONException | NullPointerException e) {
-                        e.printStackTrace();
+                            // TODO: 08/24/2017 This method below is not working. Please fix.
+                            
+//                            DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
+//                                //If login not successful, create new user and login again
+//                                @Override
+//                                public void onResultReady(String result) {
+//                                    if (result.equals("success")) {
+//                                        Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+//                                        startActivity(intent);
+//                                    } else {
+//                                        String fname, lname, email, college, password, fb_id, fb_token, gender, birthday;
+//                                        try {
+//                                            fname = (!json.has("name")) ? "N/A" : json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
+//                                            lname = (!json.has("name")) ? "N/A" : json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
+//                                            email = "N/A";
+//                                            college = "N/A";
+//                                            password = "N/A";
+//                                            fb_id = (!json.has("id")) ? "N/A" : json.getString("id");
+//                                            fb_token = token;
+//                                            gender = (!json.has("gender")) ? "N/A" : json.getString("gender");
+//                                            birthday = (!json.has("birthday")) ? "" : json.getString("birthday");
+//
+//                                            DatabaseAccess.server_createNewUser(fname, lname, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
+//                                                @Override
+//                                                public void onResultReady(String result) {
+//                                                    if (result != null) {
+//                                                        DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
+//                                                            @Override
+//                                                            public void onResultReady(String result) {
+//                                                                if (result.equals("success")) {
+//                                                                    Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+//                                                                    startActivity(intent);
+//                                                                }
+//                                                            }
+//                                                        });
+//                                                    }
+//
+//                                                }
+//                                            });
+//                                        } catch (JSONException | NullPointerException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//                                }
+//                            });
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("Firebase Signin", "signInWithCredential:failure", task.getException());
+                            Toast.makeText(LoginTutorialActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-            }
-        });
+                });
 //        try
 //        {
 //            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
