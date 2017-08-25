@@ -17,7 +17,6 @@ import java.util.List;
 public class User implements Parcelable {
     private String userID; //
     private String first_name; //
-    private String full_name;
     private String last_name; //
     private String gender; //
     private int follower_count = 0;
@@ -48,7 +47,6 @@ public class User implements Parcelable {
         this.userID = userID;
         this.first_name = first_name;
         this.last_name = last_name;
-        this.full_name = first_name + " " + last_name;
         this.gender = gender;
         this.follower_count = 0;
         this.following_count = 0;

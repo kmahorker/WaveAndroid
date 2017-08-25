@@ -66,23 +66,9 @@ public class HomeSwipeActivity extends AppCompatActivity {
                     if (result != null) {
                         Log.i(TAG, "onCreate: User exists");
                         CurrentUser.setTheUser(result);
-                            //Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name() + Integer.toString(result.getFull_name().length()));
                     }
                     else {
-                        Log.i(TAG, "onCreate: Creating user...");
-                        DatabaseAccess.server_createNewUser("Kaushik", "Mahorker", "12365", "s1245qsadf", "s1245qsadf", "Male",
-                                null, new OnResultReadyListener<String>() {
-                                    @Override
-                                    public void onResultReady(String result) {
-                                        saveTokentoLocal(mainActivity, result);
-                                        DatabaseAccess.server_getUserObject(result, new OnResultReadyListener<User>() {
-                                            @Override
-                                            public void onResultReady(User result) {
-                                                CurrentUser.setTheUser(result);
-                                            }
-                                        });
-                                    }
-                                });
+                        throw new RuntimeException("User should exist");
                     }
                     Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
                 }

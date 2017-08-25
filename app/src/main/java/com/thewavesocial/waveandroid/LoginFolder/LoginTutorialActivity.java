@@ -15,10 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
@@ -31,6 +31,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
@@ -44,6 +45,7 @@ import java.util.List;
 
 public class LoginTutorialActivity extends AppCompatActivity {
 
+    private static final String TAG = HomeSwipeActivity.TAG;
     private static final int NUM_PAGES = 3;
     private PagerAdapter mPagerAdapter;
     private ImageView dot1, dot2, dot3;
@@ -59,11 +61,8 @@ public class LoginTutorialActivity extends AppCompatActivity {
         DatabaseAccess.setContext(mainActivity);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_tutorial);
-        setupReferences();
-    }
 
 
-    private void setupReferences() {
         mPager = (ViewPager) findViewById(R.id.login_tutorial_viewpager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -75,23 +74,11 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        //setup facebook
-        FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                final GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
-                                processJSONObject(loginResult.getAccessToken().getToken(), graphResponse.getJSONObject());
-                            }
-                        });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, name, email, gender, age_range, birthday, location, education");
-                request.setParameters(parameters);
-                request.executeAsync();
+                handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
@@ -108,6 +95,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
         facebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Start login...");
                 List<String> permissions = new ArrayList<String>();
                 permissions.add("public_profile");
                 LoginManager.getInstance().logInWithReadPermissions(mainActivity, permissions);
@@ -174,162 +162,83 @@ public class LoginTutorialActivity extends AppCompatActivity {
     }
 
 
+    private void handleFacebookAccessToken(final AccessToken token) {
+        Log.d("FacebookLogin", "");
 
-    private void processJSONObject(final String token, final JSONObject json) {
-        Log.d("FacebookLogin", json.toString());
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token);
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("Firebase_Auth_Result", "SignInWithCredential:Success - " + user.getUid() + ", " + user.getDisplayName() + ", " + user.getEmail());
+                            final FirebaseUser user = mAuth.getCurrentUser();
+                            Log.i(TAG,
+                                    "signInWithCredential:Success\n" +
+                                    "facebook ID(AccessToken):" + token.getUserId() + "\n" +
+                                    "provider0 ID(FirebaseUser):" + user.getProviderData().get(1).getUid() + "\n" +
+                                    "name:" + user.getDisplayName() + "\n" +
+                                    "email:" + user.getEmail() + "\n" +
+                                    "providers:" + user.getProviders() + "\n" +
+                                    "photo URL:" + user.getPhotoUrl() + "\n"
+                            );
 
-                            // TODO: 08/24/2017 This method below is not working. Please fix.
-                            
-//                            DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
-//                                //If login not successful, create new user and login again
-//                                @Override
-//                                public void onResultReady(String result) {
-//                                    if (result.equals("success")) {
-//                                        Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
-//                                        startActivity(intent);
-//                                    } else {
-//                                        String fname, lname, email, college, password, fb_id, fb_token, gender, birthday;
-//                                        try {
-//                                            fname = (!json.has("name")) ? "N/A" : json.getString("name").substring(0, json.getString("name").lastIndexOf(' '));
-//                                            lname = (!json.has("name")) ? "N/A" : json.getString("name").substring(json.getString("name").lastIndexOf(' ') + 1);
-//                                            email = "N/A";
-//                                            college = "N/A";
-//                                            password = "N/A";
-//                                            fb_id = (!json.has("id")) ? "N/A" : json.getString("id");
-//                                            fb_token = token;
-//                                            gender = (!json.has("gender")) ? "N/A" : json.getString("gender");
-//                                            birthday = (!json.has("birthday")) ? "" : json.getString("birthday");
-//
-//                                            DatabaseAccess.server_createNewUser(fname, lname, password, fb_id, fb_token, gender, birthday, new OnResultReadyListener<String>() {
-//                                                @Override
-//                                                public void onResultReady(String result) {
-//                                                    if (result != null) {
-//                                                        DatabaseAccess.server_login_facebook(token, new OnResultReadyListener<String>() {
-//                                                            @Override
-//                                                            public void onResultReady(String result) {
-//                                                                if (result.equals("success")) {
-//                                                                    Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
-//                                                                    startActivity(intent);
-//                                                                }
-//                                                            }
-//                                                        });
-//                                                    }
-//
-//                                                }
-//                                            });
-//                                        } catch (JSONException | NullPointerException e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//                                }
-//                            });
+                            DatabaseAccess.server_SetCurrentUserByFacebookToken(token, new OnResultReadyListener<Boolean>() {
+                                @Override
+                                public void onResultReady(Boolean userInfoExists) {
+                                    if (userInfoExists) {
+                                        Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+                                        startActivity(intent);
+                                    } else {
+                                        Log.i(TAG, "user info for " + user.getDisplayName() + " does not exist, creating new database entry...");
+                                        createNewUserFromFacebookToken(token);
+                                    }
+                                }
+                            });
+
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("Firebase Signin", "signInWithCredential:failure", task.getException());
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginTutorialActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-//        try
-//        {
-//            if ( json.getString("id") == "100000000000" ) // TODO: 03/01/2017 Check with database
-//            {
-//                //login
-//                intentLogin.putExtra("userIDLong", json.getString("id"));
-//                startActivity(intentLogin);
-//                finish();
-//            }
-//            if ( Integer.parseInt(json.getString("age_range").substring(
-//                    json.getString("age_range").lastIndexOf(':')+1, json.getString("age_range").length()-1)) < 17 ) {
-//                UtilityClass.printAlertMessage(this, "Sorry. This app is limited to 17+ (College Students) only.", "Underage!", true);
-//                return;
-//            }
-//            else
-//            {
-                /*
-                //signup
-                intentSignup.putExtra("userIDLong", json.getString("id"));
-                intentSignup.putExtra("userName", json.getString("name"));
-                intentSignup.putExtra("userEmail", json.getString("email"));
-                intentSignup.putExtra("userGender", json.getString("gender"));
-                intentSignup.putExtra("userBirthday", json.getString("birthday"));*/
+    }
 
-        //Parse Birthdays
-//                String string = json.getString("birthday");
-//                String pattern1 = "MM/dd/yyyy";
-//                String pattern2 = "MM/dd";
-//                String pattern3 = "yyyy";
-//                Date date = null;
-//                Calendar calendar = null;
-//                try {
-//                    if(string.length() == pattern1.length()) {
-//                        date = new SimpleDateFormat(pattern1).parse(string);
-//                    }
-//                    else if(string.length() == pattern2.length()){
-//                        date = new SimpleDateFormat(pattern2).parse(string);
-//                    }
-//                    else{
-//                        date = new SimpleDateFormat(pattern3).parse(string);
-//                    }
-//                    if(date != null) {
-//                        calendar = Calendar.getInstance();
-//                        calendar.setTime(date);
-//                    }
-//
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                //Get profile pic and convert to bitmapdrawable
-//                String id = json.getString("id");
-//                URL img_value = null;
-//                try {
-//                    img_value = new URL("http://graph.facebook.com/"+id+"/picture?type=large");
-//                } catch (MalformedURLException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                // TODO: 04/21/2017 Add image by url
-//                String profilePic = "";
-////                    Bitmap bitmap = BitmapFactory.decodeStream(img_value.openConnection().getInputStream());
-////                    BitmapDrawable profilePic = new BitmapDrawable(bitmap);
-//                User newUser = new User(json.getString("id"),
-//                        json.getString("first_name"),
-//                        json.getString("last_name"),
-//                        json.getString("email"),
-//                        "password" /*TODO: delete password field*/,
-//                        "UCSB" /*TODO: delete college field*/,
-//                        json.getString("gender"),
-//                        calendar,
-//                        new ArrayList<String>(), //followers
-//                        new ArrayList<String>(), //following
-//                        new ArrayList<com.thewavesocial.waveandroid.BusinessObjects.BestFriend>(), //bestFriends
-//                        new ArrayList<String>(), //hosting
-//                        new ArrayList<String>(), //attended
-//                        new ArrayList<String>(), //hosted
-//                        new ArrayList<String>(), //bounced
-//                        new ArrayList<String>(), //attending
-//                        new ArrayList<String>(), //going
-//                        new ArrayList<Notification>(),
-//                        profilePic);
-//                //TODO: Add user object to Database
-//            }
-//        }
-//        catch (JSONException e) {
-//            System.out.println("Error with JSON LOL" + e.getLocalizedMessage());
-//        }
+    private void createNewUserFromFacebookToken(final AccessToken token){
+        final GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
+                final User user = new User();
+                try {
+                    Log.i(TAG, "createNewUserFromFacebookToken: facebook info received:" + jsonObject.toString(1));
+                    //https://developers.facebook.com/docs/android/graph/
+                    user.setUserID(jsonObject.getString("id"));
+                    user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
+                    user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
+                    user.setGender(jsonObject.getString("gender"));
+                }catch (JSONException e){
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                }
+
+                DatabaseAccess.server_createNewUser(user, new OnResultReadyListener<String>() {
+                    @Override
+                    public void onResultReady(String result) {
+                        user.setUserID(result);
+                        DatabaseAccess.saveTokentoLocal(mainActivity, result);
+                        CurrentUser.setTheUser(user);
+                        Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", userID:" + result);
+                    }
+                });
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id, name, email, gender, age_range, birthday, location, education");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
     @Override

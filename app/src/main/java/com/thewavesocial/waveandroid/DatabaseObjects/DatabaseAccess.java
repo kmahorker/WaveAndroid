@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -487,62 +488,29 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_login_facebook(String fb_token, final OnResultReadyListener<String> delegate) {
-        //String url = mainActivity.getString(R.string.server_url) + "FBauth";
-        final HashMap<String, String> body = new HashMap<>();
-        body.put("fb_token", fb_token);
+    public static void server_SetCurrentUserByFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
-        Query query = db.orderByChild("fb_id").startAt(fb_token);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    if (postSnapshot.hasChild(body.get("fb_token"))) {
-                        DatabaseAccess.saveTokentoLocal(mainActivity, body.get("fb_token"));
-                        server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
-                            @Override
-                            public void onResultReady(User result) {
-                                if (result != null) {
-                                    CurrentUser.theUser = result;
-                                }
-                            }
-                        });
-                        delegate.onResultReady("success");
-                    }
-                    else
-                        delegate.onResultReady("error");
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        //RequestComponents comp = new RequestComponents(url, "POST", body);
-        /*new DatabaseAccess.HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
-            @Override
-            public void onResultReady(ArrayList<String> result) {
-                Log.d("Login by Facebook", result.get(0));
-                try {
-                    JSONObject jsonObject = new JSONObject(result.get(0));
-                    String user_id = jsonObject.getJSONObject("data").getString("id");
-                    String access_token = jsonObject.getJSONObject("data").getString("jwt");
-                    DatabaseAccess.saveTokentoLocal(mainActivity, user_id);, access_token);
-
-                    server_getUserObject(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"), new OnResultReadyListener<User>() {
-                        @Override
-                        public void onResultReady(User result) {
-                            if (result != null) {
-                                CurrentUser.theUser = result;
-                            }
+        //ensure the key is same in User class
+        db.orderByChild("userID")
+                .equalTo(token.getUserId())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() > 0) {
+                            DataSnapshot userSnapshot = dataSnapshot.getChildren().iterator().next();
+                            DatabaseAccess.saveTokentoLocal(mainActivity, userSnapshot.getKey());
+                            CurrentUser.theUser = userSnapshot.getValue(User.class);
+                            delegate.onResultReady(true);
+                        } else {
+                            delegate.onResultReady(false);
                         }
-                    });
-                    delegate.onResultReady("success");
-                } catch (JSONException e) {
-                    UtilityClass.printAlertMessage(mainActivity, "Could not authorize facebook", "Facebook Login Error", true);
-                    delegate.onResultReady("error");
-                }
-            }
-        });*/
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        throw new RuntimeException("Listener failed; check security rules.");
+                    }
+                });
     }
 
 
@@ -586,22 +554,12 @@ public final class DatabaseAccess {
 	event_info.put("max_age", maxAge + "");*/ //obsolete
     }
 
-    public static void server_createNewUser(String first_name,
-                                            String last_name,
-                                            String password,
-                                            String fb_id,
-                                            String fb_token,
-                                            String gender,
-                                            String birthday,
-                                            final OnResultReadyListener<String> delegate) {
+    public static void server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
         String userID = db.push().getKey(); //unique ID for each event
-        List<BestFriend> list = new ArrayList<>();
-        User user = new User(userID, first_name, last_name, gender, list);
         db.child(userID).setValue(user);
         if(delegate != null)
             delegate.onResultReady(userID);
-
     }
 
 
@@ -805,7 +763,7 @@ public final class DatabaseAccess {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(HomeSwipeActivity.TAG, "ValueEventListener.onDataChange");
+                Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject onDataChange");
                 if(dataSnapshot.getValue() != null) {
                     User user = dataSnapshot.getValue(User.class);
                     if(delegate != null)
@@ -819,7 +777,6 @@ public final class DatabaseAccess {
                 Log.d(HomeSwipeActivity.TAG, "ValueEventListener.onCancelled");
             }
         });
-        Log.i(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject DONE");
     }
 
     public static void server_getPartyObject(final String partyID, final OnResultReadyListener<Party> delegate) {

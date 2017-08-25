@@ -18,16 +18,6 @@ public final class CurrentUser {
     public static Activity mainActivity;
     public static User theUser = new User();
 
-    private CurrentUser() {
-        mainActivity = null;
-        server_getUserObject("10", new OnResultReadyListener<User>() {
-            @Override
-            public void onResultReady(User result) {
-                CurrentUser.theUser = result;
-            }
-        });
-    }
-
     /**
      * Initialize user object
      */
