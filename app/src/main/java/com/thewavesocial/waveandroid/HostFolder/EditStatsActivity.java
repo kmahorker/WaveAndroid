@@ -200,12 +200,12 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                server_deleteParty(party.getPartyID(), new OnResultReadyListener<String>() {
+                server_deleteParty(party.getPartyID(), new OnResultReadyListener<Exception>() {
                     @Override
-                    public void onResultReady(String result) {
+                    public void onResultReady(Exception e) {
                         // TODO: 04/20/2017 Remove party from server
                         // TODO: 04/20/2017 Notify all users
-                        if (!result.equals("success")) {
+                        if (e != null) {
                             Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG).show();
                         } else {
                             Intent intent = new Intent(mainActivity, HostControllerFragment.class);
@@ -656,6 +656,8 @@ public class EditStatsActivity extends AppCompatActivity {
                 newParty.put("emoji", partyEmoji);
                 newParty.put("price", price + "");
                 newParty.put("address", address);
+                //NOTE: remember to change DatabaseAccess.server_updateParty(...)
+                // if updating the lat lng keys
                 newParty.put("lat", lat + "");
                 newParty.put("long", lng + "");
                 newParty.put("public", isPublic ? 1 + "" : 0 + "");
@@ -666,7 +668,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
                 final String eventId = party.getPartyID();
 
-                server_updateParty(eventId, address, startingDateTime, endingDateTime, partyEmoji, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
+                server_updateParty(eventId, party, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){

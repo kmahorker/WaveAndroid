@@ -68,8 +68,13 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     if (result != null){
                         Log.i(TAG, "user " + result.getFull_name() + " exists, starting HomeSwipeActivity...");
                         DatabaseAccess.saveTokentoLocal(userID);
-                        CurrentUser.syncUser();
-                        startHomeSwipeActivity();
+                        CurrentUser.syncUser(new OnResultReadyListener<Boolean>() {
+                            @Override
+                            public void onResultReady(Boolean result) {
+                                //only start home swipe after loading, otherwise there is race condition.
+                                startHomeSwipeActivity();
+                            }
+                        });
                     }
                 }
             });

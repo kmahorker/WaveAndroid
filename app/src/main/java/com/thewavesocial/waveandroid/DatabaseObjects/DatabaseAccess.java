@@ -13,8 +13,16 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.facebook.AccessToken;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,6 +73,7 @@ import static android.content.ContentValues.TAG;
 public final class DatabaseAccess {
     public static Context sharedPreferencesContext;
     public static final String TAG = HomeSwipeActivity.TAG;
+    public static final String PATH_TO_GEOFIRE = "geofire";
 
     /**
      * Initialize sharedPreferencesContext
@@ -535,6 +544,9 @@ public final class DatabaseAccess {
         Party party = new Party(address, date, duration, emoji, host_id, host_name, e_public, lat, lng, max_age, min_age, name, eventID, price);
         db.child(eventID).setValue(party);
 
+        GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
+        geoFire.setLocation(eventID, new GeoLocation(lat, lng));
+
         if(delegate != null)
             delegate.onResultReady(eventID);
 
@@ -644,52 +656,14 @@ public final class DatabaseAccess {
             delegate.onResultReady("success");
     }
 
-    public static void server_updateParty(String partyID,
-                                          final String address,
-                                          long start_time,
-                                          long end_time,
-                                          final String emoji,
-                                          final boolean e_public,
-                                          final double lat,
-                                          final double lng,
-                                          final int max_age,
-                                          final int min_age,
-                                          final String name,
-                                          final double price,
-                                          final OnResultReadyListener<String> delegate) {
-        //String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
-/*        RequestComponents[] comps = new RequestComponents[1];
-        comps[0] = new RequestComponents(url, "POST", body);*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
-        db.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                if(mutableData.getValue() == null)
-                    return Transaction.success(mutableData);
-                else {
-                    Party party = mutableData.getValue(Party.class);
-                    party.setAddress(address);
-                    party.setEmoji(emoji);
-                    party.setE_public(e_public);
-                    party.setLat(lat);
-                    party.setLng(lng);
-                    party.setName(name);
-                    party.setPrice(price);
-                    party.setMax_age(max_age);
-                    party.setMin_age(min_age);
-                    mutableData.setValue(party);
-                }
-                return Transaction.success(mutableData);
-            }
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                // Transaction completed
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
-            }
-        });
-
-
+    public static void server_updateParty(String partyID, Party party, final OnResultReadyListener<String> delegate) {
+        FirebaseDatabase.getInstance().getReference("events")
+                .child(partyID)
+                .setValue(party);
+        new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE))
+                .setLocation( partyID, new GeoLocation(party.getLat(), party.getLng()) );
+        if(delegate != null)
+            delegate.onResultReady("success");
     }
 
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
@@ -841,6 +815,7 @@ public final class DatabaseAccess {
         });
     }
     public static void server_getEventsOfUser(final String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
+        Log.d(TAG, "server_getEventsOfUser: entry:" + userID);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("user_event").child(userID);
         final ArrayList<Party> invited = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();
@@ -853,6 +828,8 @@ public final class DatabaseAccess {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "server_getEventsOfUser: " + userID);
+                Log.d(TAG, "server_getEventsOfUser: " + dataSnapshot.toString());
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     partyIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
                     partyIDs.add(postSnapshot.getKey());
@@ -1013,59 +990,53 @@ public final class DatabaseAccess {
         });
     }
 
-   public static void server_getEventsInDistance(final String minLat, final String maxLat, final String minLng, final String maxLng, final OnResultReadyListener<ArrayList<Party>> delegate) {
-       DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-       final ArrayList<Party> parties = new ArrayList<>();
-       db.addListenerForSingleValueEvent(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                   if(!postSnapshot.getKey().equals("0") && postSnapshot.child("lat") != null && postSnapshot.child("lng") != null) {
-                       float lat = Float.parseFloat(postSnapshot.child("lat").getValue().toString());
-                       float lng = Float.parseFloat(postSnapshot.child("lng").getValue().toString());
-                       if (lat > Float.parseFloat(minLat) && lng < Float.parseFloat(maxLat) &&
-                               lng > Float.parseFloat(minLng) && lng < Float.parseFloat(maxLng)) {
-                           Party each_party = postSnapshot.getValue(Party.class);
-                           each_party.setPartyID(postSnapshot.getKey());
-                           parties.add(each_party);
-                       }
-                   }
-               }
-               if(delegate != null)
-                   delegate.onResultReady(parties);
-           }
-
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
-
-           }
-       });
-       //UNSURE ABOUT THIS ONE FOR NOW
-        /*String url = sharedPreferencesContext.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
-                + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
-                + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
-                + "&access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
-        /*RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(sharedPreferencesContext, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+    public static void server_getEventsInDistance(LatLng center, double radius, final OnResultReadyListener<Party> onKeyEnteredDelegate) {
+        GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(center.latitude, center.longitude), radius);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
-            public void onResultReady(ArrayList<String> result) {
-                ArrayList<Party> parties = new ArrayList<>();
-                try {
-                    JSONObject json_result = new JSONObject(result.get(0));
-                    JSONArray data = json_result.getJSONArray("data");
-                    for (int i = 0; i < data.length(); i++) {
-                        HashMap<String, String> body = extractJSONData(data.getJSONObject(i));
-                        parties.add(constructParty(body));
+            public void onKeyEntered(String key, GeoLocation location) {
+                Log.d(HomeSwipeActivity.TAG, "onKeyEntered key:" + key);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events").child(key);
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Party party = dataSnapshot.getValue(Party.class);
+                            party.setPartyID(dataSnapshot.getKey());
+                            onKeyEnteredDelegate.onResultReady(party);
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Log.d("Get Events In Distance", result.get(0));
-                if (delegate != null)
-                    delegate.onResultReady(parties);
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(HomeSwipeActivity.TAG, "server_getEventsInDistance", databaseError.toException());
+                    }
+                });
             }
-    }).execute();*/
-}
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
+
 
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
 /*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID
@@ -1259,12 +1230,51 @@ public final class DatabaseAccess {
     /**
      * Delete party from server
      */
-    public static void server_deleteParty(String partyID, final OnResultReadyListener<String> delegate) {
+    public static void server_deleteParty(final String partyID, final OnResultReadyListener<Exception> delegate) {
+        final GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
+
+        //attempt to achieve concurrent behavior using task API
+        //should fire delegate(null) after event is deleted in both Firebase and Geofire.
+        //should fire delegate(Exception e) after either one fails.
+
+        final TaskCompletionSource<String> tcs1 = new TaskCompletionSource<>();
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-        db.child(partyID).removeValue();
-        if(delegate != null)
-            delegate.onResultReady("success");
-        Log.d("Delete Party", "Success");
+        db.child(partyID).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null){
+                    tcs1.setException(databaseError.toException());
+                } else {
+                    tcs1.setResult(partyID);
+                }
+            }
+        });
+
+        final TaskCompletionSource<String> tcs2 = new TaskCompletionSource<>();
+        geoFire.removeLocation(partyID, new GeoFire.CompletionListener() {
+            @Override
+            public void onComplete(String key, DatabaseError error) {
+                if(error != null){
+                    tcs2.setException(error.toException());
+                } else {
+                    tcs2.setResult(partyID);
+                }
+            }
+        });
+
+        if(delegate != null){
+            Tasks.whenAll(tcs1.getTask(), tcs2.getTask()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    delegate.onResultReady(null);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    delegate.onResultReady(e);
+                }
+            });
+        }
     }
 
     /**

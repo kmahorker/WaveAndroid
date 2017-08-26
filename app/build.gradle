@@ -43,6 +43,7 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.3.1'
     compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.google.firebase:firebase-auth:10.2.6'
+    compile 'com.firebase:geofire-android:2.1.1'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     testCompile 'junit:junit:4.12'
 }
