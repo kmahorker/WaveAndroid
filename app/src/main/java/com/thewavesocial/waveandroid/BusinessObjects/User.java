@@ -3,6 +3,8 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 //public class User implements Parcelable
 public class User implements Parcelable {
     private String facebookID;
+    @Exclude //userID represents the Firebase key, so it should not be stored
     private String userID; //
     private String first_name; //
     private String last_name; //
