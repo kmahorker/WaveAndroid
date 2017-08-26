@@ -64,6 +64,7 @@ import static android.content.ContentValues.TAG;
 
 public final class DatabaseAccess {
     public static Context sharedPreferencesContext;
+    public static final String TAG = HomeSwipeActivity.TAG;
 
     /**
      * Initialize sharedPreferencesContext
@@ -554,6 +555,7 @@ public final class DatabaseAccess {
     public static void server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
         String userID = db.push().getKey(); //unique ID for each event
+        user.setUserID(userID);
         db.child(userID).setValue(user);
         if(delegate != null)
             delegate.onResultReady(userID);

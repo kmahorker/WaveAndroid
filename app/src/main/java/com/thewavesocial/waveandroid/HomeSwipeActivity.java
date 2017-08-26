@@ -51,21 +51,22 @@ public class HomeSwipeActivity extends AppCompatActivity {
         mainActivity = this;
 
         if (CurrentUser.getUser() == null) {
-            Log.i(TAG, "onCreate: No current user.");
-            UtilityClass.startProgressbar(mainActivity);
-            DatabaseAccess.server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
-                @Override
-                public void onResultReady(User result) {
-                    if (result != null) {
-                        Log.i(TAG, "onCreate: Current user set.");
-                        CurrentUser.syncUser();
-                    }
-                    else {
-                        throw new RuntimeException("User does not exist!");
-                    }
-                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.getUser().getFull_name());
-                }
-            });
+            throw new RuntimeException("current user is not set.");
+//            Log.i(TAG, "onCreate: No current user.");
+//            UtilityClass.startProgressbar(mainActivity);
+//            DatabaseAccess.server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
+//                @Override
+//                public void onResultReady(User result) {
+//                    if (result != null) {
+//                        Log.i(TAG, "onCreate: Current user set.");
+//                        CurrentUser.syncUser();
+//                    }
+//                    else {
+//                        throw new RuntimeException("User does not exist!");
+//                    }
+//                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.getUser().getFull_name());
+//                }
+//            });
         } else {
             Log.i(TAG, "onCreate: User exists, resetting mPager");
             setupPager();

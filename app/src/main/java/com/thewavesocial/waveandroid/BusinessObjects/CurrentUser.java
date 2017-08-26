@@ -2,6 +2,7 @@ package com.thewavesocial.waveandroid.BusinessObjects;
 
 import android.util.Log;
 
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 
@@ -20,6 +21,9 @@ public final class CurrentUser {
      */
     public static void loadBestFriends(final OnResultReadyListener<Boolean> delegate) {
         Log.d(HomeSwipeActivity.TAG, "CurrentUser.loadBestFriends");
+        if(getTokenFromLocal().get("id").equals("")){
+            throw new RuntimeException("id is not set.");
+        }
         server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
@@ -60,5 +64,9 @@ public final class CurrentUser {
 
     public static User getUser() {
         return user;
+    }
+
+    public static String getKey() {
+        return DatabaseAccess.getTokenFromLocal().get("id");
     }
 }

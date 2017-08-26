@@ -57,15 +57,17 @@ public class LoginTutorialActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "LoginTutorialActivity.onCreate");
         DatabaseAccess.setContext(this);
 
-        String userID = DatabaseAccess.getTokenFromLocal().get("id");
+        final String userID = DatabaseAccess.getTokenFromLocal().get("id");
         if(!userID.equals("")){
             DatabaseAccess.server_getUserObject(userID, new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
                     if (result != null){
                         Log.i(TAG, "user " + result.getFull_name() + " exists, starting HomeSwipeActivity...");
+                        DatabaseAccess.saveTokentoLocal(userID);
                         CurrentUser.syncUser();
                         startHomeSwipeActivity();
                     }
@@ -204,8 +206,12 @@ public class LoginTutorialActivity extends AppCompatActivity {
                                         startHomeSwipeActivity();
                                     } else {
                                         Log.i(TAG, "user info for " + user.getDisplayName() + " does not exist, creating new database entry...");
-                                        createNewUserFromFacebookToken(token);
-                                        startHomeSwipeActivity();
+                                        createNewUserFromFacebookToken(token, new OnResultReadyListener<Boolean>() {
+                                            @Override
+                                            public void onResultReady(Boolean result) {
+                                                startHomeSwipeActivity();
+                                            }
+                                        });
                                     }
                                 }
                             });
@@ -228,7 +234,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createNewUserFromFacebookToken(final AccessToken token){
+    private void createNewUserFromFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate){
         final GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
@@ -236,7 +242,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 try {
                     Log.i(TAG, "createNewUserFromFacebookToken: facebook info received:" + jsonObject.toString(1));
                     //https://developers.facebook.com/docs/android/graph/
-                    user.setUserID(jsonObject.getString("id"));
+                    user.setFacebookID(jsonObject.getString("id"));
                     user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
                     user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
                     user.setGender(jsonObject.getString("gender"));
@@ -248,10 +254,12 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 DatabaseAccess.server_createNewUser(user, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
-                        user.setUserID(result);
                         DatabaseAccess.saveTokentoLocal(result);
                         CurrentUser.syncUser();
-                        Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", userID:" + user.getUserID());
+                        Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", facebookID:" + user.getFacebookID());
+                        if(delegate != null){
+                            delegate.onResultReady(true);
+                        }
                     }
                 });
             }

@@ -15,6 +15,7 @@ import java.util.List;
  */
 //public class User implements Parcelable
 public class User implements Parcelable {
+    private String facebookID;
     private String userID; //
     private String first_name; //
     private String last_name; //
@@ -38,6 +39,7 @@ public class User implements Parcelable {
     }
 
     public User(String userID,
+                String facebookID,
                 String first_name,
                 String last_name,
                 String gender,
@@ -45,6 +47,7 @@ public class User implements Parcelable {
                 List<BestFriend> bestFriends) {
                 //Bitmap profilePic) {
         this.userID = userID;
+        this.facebookID = facebookID;
         this.first_name = first_name;
         this.last_name = last_name;
         this.gender = gender;
@@ -58,6 +61,10 @@ public class User implements Parcelable {
     //Setter Block
 
     public void setUserID(String userID) { this.userID = userID; }
+
+    public void setFacebookID(String facebookID) {
+        this.facebookID = facebookID;
+    }
 
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
@@ -94,6 +101,10 @@ public class User implements Parcelable {
     public int getFollowing_count() {return following_count; }
 
     public String getUserID() { return userID; }
+
+    public String getFacebookID() {
+        return facebookID;
+    }
 
     public String getFirst_name() {
         return first_name;
