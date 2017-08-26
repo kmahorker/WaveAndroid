@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,9 +22,6 @@ import com.thewavesocial.waveandroid.HomeFolder.MapsFragment;
 import com.thewavesocial.waveandroid.HostFolder.HostControllerFragment;
 import com.thewavesocial.waveandroid.SettingsFolder.SettingsActivity;
 import com.thewavesocial.waveandroid.SocialFolder.UserProfileFragment;
-
-import java.util.Calendar;
-import java.util.HashMap;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
@@ -54,37 +50,20 @@ public class HomeSwipeActivity extends AppCompatActivity {
         setContentView(R.layout.home_activity);
         mainActivity = this;
 
-        HashMap<String, String> tokens = getTokenFromLocal(mainActivity);
-        //saveTokentoLocal(mainActivity, "Test User");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
-
-        if (CurrentUser.mainActivity == null) {
-            Log.i(TAG, "onCreate: No current user");
+        if (CurrentUser.getUser() == null) {
+            Log.i(TAG, "onCreate: No current user.");
             UtilityClass.startProgressbar(mainActivity);
-            DatabaseAccess.server_getUserObject(tokens.get("id"), new OnResultReadyListener<User>() {
+            DatabaseAccess.server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
                     if (result != null) {
-                        Log.i(TAG, "onCreate: User exists");
-                        CurrentUser.setTheUser(result);
+                        Log.i(TAG, "onCreate: Current user set.");
+                        CurrentUser.syncUser();
                     }
                     else {
-                        throw new RuntimeException("User should exist");
+                        throw new RuntimeException("User does not exist!");
                     }
-                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.theUser.getFull_name());
-                }
-            });
-            Log.i(TAG, "onCreate: proceed to setContext");
-            CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
-                @Override
-                public void onResultReady(Boolean result) {
-                    UtilityClass.endProgressbar(mainActivity, result);
-                    if (result) {
-                        Log.i(TAG, "onCreate: Context set");
-//                        setupServerDummies();
-                        setupPager();
-                    } else {
-                        Log.d(TAG, "onCreate: Set User Context Failed!");
-                    }
+                    Log.i(TAG, "onCreate: Current user's name: " + CurrentUser.getUser().getFull_name());
                 }
             });
         } else {

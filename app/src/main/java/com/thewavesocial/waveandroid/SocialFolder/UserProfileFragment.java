@@ -109,7 +109,7 @@ public class UserProfileFragment extends Fragment {
 
         updateFollowingFollowers();
 
-        DatabaseAccess.server_getProfilePicture(CurrentUser.theUser.getUserID(), new OnResultReadyListener<Bitmap>() {
+        DatabaseAccess.server_getProfilePicture(CurrentUser.getUser().getUserID(), new OnResultReadyListener<Bitmap>() {
             @Override
             public void onResultReady(Bitmap result) {
                 if (result != null) {
@@ -146,7 +146,7 @@ public class UserProfileFragment extends Fragment {
 
                 changeButton(activityButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(goingButton, R.color.appColor, R.drawable.round_corner_red_edge);
-                server_getNotificationsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
+                server_getNotificationsOfUser(CurrentUser.getUser().getUserID(), new OnResultReadyListener<ArrayList<Notification>>() {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
                         if (result != null) {
@@ -177,7 +177,7 @@ public class UserProfileFragment extends Fragment {
                 changeButton(goingButton, R.color.white_solid, R.drawable.round_corner_red);
                 changeButton(activityButton, R.color.appColor, R.drawable.round_corner_red_edge);
                 goingButton.setText("Going");
-                server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+                server_getEventsOfUser(CurrentUser.getUser().getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                         if (result != null) {
@@ -222,10 +222,10 @@ public class UserProfileFragment extends Fragment {
 
     /**Get following and followers list from server and update UI*/
     private void updateFollowingFollowers() {
-        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(final List<User> following) {
-                DatabaseAccess.server_getUserFollowers(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+                DatabaseAccess.server_getUserFollowers(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
                     @Override
                     public void onResultReady(final List<User> followers) {
                         String text = followers.size() + "\nfollowers";

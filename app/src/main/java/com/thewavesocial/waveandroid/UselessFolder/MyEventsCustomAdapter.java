@@ -29,12 +29,12 @@
 //    MyEventsFragment fragment;
 //    private static LayoutInflater inflater=null;
 //
-//    public MyEventsCustomAdapter(FragmentActivity mainActivity, MyEventsFragment fragment, List<Party> partyList) {
+//    public MyEventsCustomAdapter(FragmentActivity sharedPreferencesContext, MyEventsFragment fragment, List<Party> partyList) {
 //        super();
 //        this.partyList.addAll(partyList);
 //        //this.partyList.addAll(partyList);
 //        //result = friendsNamesList;
-//        context = mainActivity;
+//        context = sharedPreferencesContext;
 //        this.fragment = fragment;
 //        //imageId = friendsImagesList;
 //        inflater = ( LayoutInflater )context.

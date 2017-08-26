@@ -30,7 +30,6 @@ import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
 
 import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.mainActivity;
 import static com.thewavesocial.waveandroid.UtilityClass.getHandledDrawable;
 
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class EditListActivity extends AppCompatActivity {
 
                     //Get user followings
                     users = new ArrayList<>();
-                    DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+                    DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
                         @Override
                         public void onResultReady(List<User> result) {
                             users.addAll(result);

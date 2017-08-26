@@ -33,7 +33,7 @@
 //{
 //    private int fragNum;
 //    private View view;
-//    private SignupActivity mainActivity;
+//    private SignupActivity sharedPreferencesContext;
 //    public final static int ADD_PROFILEPIC_INTENT_ID = 5;
 //
 //    public SignupFragment()
@@ -50,7 +50,7 @@
 //    @Override
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 //    {
-//        mainActivity = (SignupActivity)getActivity();
+//        sharedPreferencesContext = (SignupActivity)getActivity();
 //        if ( fragNum == 0 )
 //        {
 //            view = inflater.inflate(R.layout.signup_layout1, container, false);
@@ -89,16 +89,16 @@
 //        final EditText emailField = (EditText) view.findViewById(R.id.signup1_edittext_email);
 //        Button nextButton = (Button) view.findViewById(R.id.signup1_button_next);
 //
-//        emailField.setText(mainActivity.email);
+//        emailField.setText(sharedPreferencesContext.email);
 //
 //        nextButton.setOnClickListener(new View.OnClickListener()
 //        {
 //            @Override
 //            public void onClick(View view)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-//                mainActivity.email = emailField.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.email = emailField.getText().toString();
 //            }
 //        });
 //
@@ -107,8 +107,8 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.email = emailField.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.email = emailField.getText().toString();
 //                return true;
 //            }
 //        });
@@ -125,9 +125,9 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-//                mainActivity.password = newPassField.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.password = newPassField.getText().toString();
 //            }
 //        });
 //
@@ -136,8 +136,8 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.password = newPassField.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.password = newPassField.getText().toString();
 //                return true;
 //            }
 //        });
@@ -178,13 +178,13 @@
 //            public void onClick(View view)
 //            {
 //
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
 //
 //                int day = birthdayDatePickerDialogFragment.getDay();
 //                int month = birthdayDatePickerDialogFragment.getMonth();
 //                int year = birthdayDatePickerDialogFragment.getYear();
 //
-//                mainActivity.birthday.set(year, month+1, day);
+//                sharedPreferencesContext.birthday.set(year, month+1, day);
 //
 //                Log.d("birthday", month+1 + "-" + day + "-" + year);
 //            }
@@ -201,12 +201,12 @@
 //        final Button male = (Button) view.findViewById(R.id.signup4_button_male);
 //        final Button female = (Button) view.findViewById(R.id.signup4_button_female);
 //
-//        if ( mainActivity.gender.equals("male") )
+//        if ( sharedPreferencesContext.gender.equals("male") )
 //        {
 //            male.setBackgroundResource(R.drawable.round_button_yellow);
 //            female.setBackgroundResource(R.drawable.round_button);
 //        }
-//        else if ( mainActivity.gender.equals("female") )
+//        else if ( sharedPreferencesContext.gender.equals("female") )
 //        {
 //            female.setBackgroundResource(R.drawable.round_button_yellow);
 //            male.setBackgroundResource(R.drawable.round_button);
@@ -217,8 +217,8 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-//                mainActivity.gender = "male";
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.gender = "male";
 //                male.setBackgroundResource(R.drawable.round_button_yellow);
 //                female.setBackgroundResource(R.drawable.round_button);
 //            }
@@ -229,8 +229,8 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
-//                mainActivity.gender = "female";
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.gender = "female";
 //                female.setBackgroundResource(R.drawable.round_button_yellow);
 //                male.setBackgroundResource(R.drawable.round_button);
 //            }
@@ -241,7 +241,7 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });
@@ -253,7 +253,7 @@
 //        final Button nextButton = (Button) view.findViewById(R.id.signup5_button_next);
 //
 //
-//        UtilityClass.getBitmapFromURL(mainActivity, mainActivity.profilePic, new OnResultReadyListener<Bitmap>() {
+//        UtilityClass.getBitmapFromURL(sharedPreferencesContext, sharedPreferencesContext.profilePic, new OnResultReadyListener<Bitmap>() {
 //            @Override
 //            public void onResultReady(Bitmap image) {
 //                if (image != null)
@@ -277,7 +277,7 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                mainActivity.mPager.setCurrentItem( mainActivity.mPager.getCurrentItem() + 1 );
+//                sharedPreferencesContext.mPager.setCurrentItem( sharedPreferencesContext.mPager.getCurrentItem() + 1 );
 //            }
 //        });
 //
@@ -286,7 +286,7 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });
@@ -303,11 +303,11 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.friendname = friendname.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.friendname = friendname.getText().toString();
 //                if ( !friendphone.getText().toString().equals("") )
-//                    mainActivity.friendphone = friendphone.getText().toString();
-//                mainActivity.saveUserData();
+//                    sharedPreferencesContext.friendphone = friendphone.getText().toString();
+//                sharedPreferencesContext.saveUserData();
 //            }
 //        });
 //
@@ -316,10 +316,10 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
-//                mainActivity.friendname = friendname.getText().toString();
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
+//                sharedPreferencesContext.friendname = friendname.getText().toString();
 //                if ( !friendphone.getText().toString().equals("") )
-//                    mainActivity.friendphone = friendphone.getText().toString();
+//                    sharedPreferencesContext.friendphone = friendphone.getText().toString();
 //                return true;
 //            }
 //        });
@@ -338,7 +338,7 @@
 //                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
 //                ImageView profilepic = (ImageView) view.findViewById(R.id.signup5_button_addpic);
 //                profilepic.setImageDrawable( UtilityClass.toRoundImage(getResources(), bitmap) );
-//                mainActivity.profilePic = "";
+//                sharedPreferencesContext.profilePic = "";
 //            }
 //            catch (FileNotFoundException e)
 //            {

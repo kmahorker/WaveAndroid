@@ -21,16 +21,16 @@
 //
 //public class StatsFriendCustomAdapter extends BaseAdapter
 //{
-//    private EventStatsActivity mainActivity;
+//    private EventStatsActivity sharedPreferencesContext;
 //    private List<User> userList = new ArrayList<>();
 //    private static LayoutInflater inflater;
 //
-//    public StatsFriendCustomAdapter(EventStatsActivity mainActivity, List<User> userList)
+//    public StatsFriendCustomAdapter(EventStatsActivity sharedPreferencesContext, List<User> userList)
 //    {
 //        super();
 //        this.userList = userList;
-//        this.mainActivity = mainActivity;
-//        inflater = (LayoutInflater)mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        this.sharedPreferencesContext = sharedPreferencesContext;
+//        inflater = (LayoutInflater)sharedPreferencesContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //    }
 //
 //    @Override
@@ -65,11 +65,11 @@
 //            View rowView = inflater.inflate(R.layout.each_statsfriend_item, null);
 //            holder.img = (ImageView) rowView.findViewById(R.id.each_statsfriend_image);
 //
-//            UtilityClass.getBitmapFromURL(mainActivity, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
+//            UtilityClass.getBitmapFromURL(sharedPreferencesContext, userList.get(position).getProfilePic(), new OnResultReadyListener<Bitmap>() {
 //                @Override
 //                public void onResultReady(Bitmap image) {
 //                    if (image != null)
-//                        holder.img.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+//                        holder.img.setImageDrawable( UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), image));
 //                }
 //            });
 //
@@ -78,9 +78,9 @@
 //                @Override
 //                public void onClick(View v)
 //                {
-//                    Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+//                    Intent intent = new Intent(sharedPreferencesContext, FriendProfileActivity.class);
 //                    intent.putExtra("userIDLong", ((User)getItem(position)).getUserID());
-//                    mainActivity.startActivity(intent);
+//                    sharedPreferencesContext.startActivity(intent);
 //                }
 //            });
 //            return rowView;

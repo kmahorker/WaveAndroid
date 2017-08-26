@@ -25,7 +25,7 @@
 //{
 //    private User dummy;
 //    private View view;
-//    private ManageEventsActivity mainActivity;
+//    private ManageEventsActivity sharedPreferencesContext;
 //    private ListView manageListView;
 //    private List<Party> partyList;
 //    private SearchView searchView;
@@ -50,7 +50,7 @@
 //            public boolean onQueryTextSubmit(String query)
 //            {
 //                List<Party> newPartyList = search(partyList, query);
-//                manageListView.setAdapter(new ManagePartyCustomAdapter(mainActivity, newPartyList));
+//                manageListView.setAdapter(new ManagePartyCustomAdapter(sharedPreferencesContext, newPartyList));
 //                searchView.clearFocus();
 //                return true;
 //            }
@@ -59,7 +59,7 @@
 //            public boolean onQueryTextChange(String query)
 //            {
 //                List<Party> newPartyList = search(partyList, query);
-//                manageListView.setAdapter(new ManagePartyCustomAdapter(mainActivity, newPartyList));
+//                manageListView.setAdapter(new ManagePartyCustomAdapter(sharedPreferencesContext, newPartyList));
 //                return true;
 //            }
 //        });
@@ -68,7 +68,7 @@
 //        {
 //            @Override
 //            public boolean onTouch(View v, MotionEvent ev) {
-//                UtilityClass.hideKeyboard( mainActivity );
+//                UtilityClass.hideKeyboard( sharedPreferencesContext );
 //                return true;
 //            }
 //        });
@@ -86,8 +86,8 @@
 //    private void setupReferences()
 //    {
 //        view = this.findViewById(android.R.id.content).getRootView();
-//        mainActivity = this;
-//        dummy = CurrentUser.theUser;
+//        sharedPreferencesContext = this;
+//        dummy = CurrentUser.user;
 //        manageListView = (ListView) findViewById(R.id.manageEvents_listview);
 //        searchView = (SearchView) findViewById(R.id.manageEvents_searchbar);
 //        searchView.setIconifiedByDefault(false);

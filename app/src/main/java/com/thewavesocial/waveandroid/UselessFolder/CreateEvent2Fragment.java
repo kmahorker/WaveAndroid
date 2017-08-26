@@ -19,7 +19,7 @@
 //    private EditText partyname;
 //    private TextView startingDate, startingTime, endingDate, endingTime,
 //            location, paidfree, privatePublic, maleCount, femaleCount, finish;
-//    private CreateEventActivity mainActivity;
+//    private CreateEventActivity sharedPreferencesContext;
 //    private View mainView;
 //
 //    @Override
@@ -32,7 +32,7 @@
 //    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 //    {
 //        super.onViewCreated(view, savedInstanceState);
-//        mainActivity = (CreateEventActivity)getActivity();
+//        sharedPreferencesContext = (CreateEventActivity)getActivity();
 //        mainView = view;
 //
 //        setupActionbar();
@@ -43,15 +43,15 @@
 //
 //    private void setupInitializeValues()
 //    {
-//        startingDate.setText( UtilityClass.dateToString( mainActivity.startCalendar ));
-//        startingTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ));
-//        endingDate.setText( UtilityClass.dateToString( mainActivity.endCalendar ));
-//        endingTime.setText( UtilityClass.timeToString( mainActivity.endCalendar ));
-//        location.setText( mainActivity.location.getAddress_string() );
-//        privatePublic.setText( mainActivity.privatePublic );
-//        paidfree.setText( mainActivity.paidFree + " - $" + mainActivity.price);
-//        maleCount.setText( mainActivity.maleCount + " Males" );
-//        femaleCount.setText( mainActivity.femaleCount + " Females");
+//        startingDate.setText( UtilityClass.dateToString( sharedPreferencesContext.startCalendar ));
+//        startingTime.setText( UtilityClass.timeToString( sharedPreferencesContext.startCalendar ));
+//        endingDate.setText( UtilityClass.dateToString( sharedPreferencesContext.endCalendar ));
+//        endingTime.setText( UtilityClass.timeToString( sharedPreferencesContext.endCalendar ));
+//        location.setText( sharedPreferencesContext.location.getAddress_string() );
+//        privatePublic.setText( sharedPreferencesContext.privatePublic );
+//        paidfree.setText( sharedPreferencesContext.paidFree + " - $" + sharedPreferencesContext.price);
+//        maleCount.setText( sharedPreferencesContext.maleCount + " Males" );
+//        femaleCount.setText( sharedPreferencesContext.femaleCount + " Females");
 //    }
 //
 //    private void setupReferences()
@@ -78,7 +78,7 @@
 //            {
 //                if (!hasFocus)
 //                {
-//                    UtilityClass.hideKeyboard( mainActivity );
+//                    UtilityClass.hideKeyboard( sharedPreferencesContext );
 //                }
 //            }
 //        });
@@ -90,15 +90,15 @@
 //            {
 //                if (partyname.getText().toString().isEmpty())
 //                {
-//                    UtilityClass .printAlertMessage(mainActivity, "Please specify your party name.", "Error Creating Party", true);
+//                    UtilityClass .printAlertMessage(sharedPreferencesContext, "Please specify your party name.", "Error Creating Party", true);
 //                }
 //                else
 //                {
-//                    mainActivity.name = partyname.getText().toString();
-//                    mainActivity.saveToUser();
-//                    mainActivity.getSupportFragmentManager().popBackStack();
-//                    mainActivity.getSupportFragmentManager().popBackStack();
-//                    mainActivity.onBackPressed();
+//                    sharedPreferencesContext.name = partyname.getText().toString();
+//                    sharedPreferencesContext.saveToUser();
+//                    sharedPreferencesContext.getSupportFragmentManager().popBackStack();
+//                    sharedPreferencesContext.getSupportFragmentManager().popBackStack();
+//                    sharedPreferencesContext.onBackPressed();
 //                }
 //            }
 //        });
@@ -108,7 +108,7 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });

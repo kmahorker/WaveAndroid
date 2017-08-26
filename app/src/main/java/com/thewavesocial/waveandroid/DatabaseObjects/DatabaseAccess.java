@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.util.RangeValueIterator;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -33,7 +32,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
-import com.thewavesocial.waveandroid.R;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,7 +52,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -66,13 +63,13 @@ import okhttp3.Response;
 import static android.content.ContentValues.TAG;
 
 public final class DatabaseAccess {
-    public static Activity mainActivity;
+    public static Context sharedPreferencesContext;
 
     /**
-     * Initialize mainActivity
+     * Initialize sharedPreferencesContext
      */
-    public static void setContext(Activity activity) {
-        mainActivity = activity;
+    public static void setContext(Context context) {
+        sharedPreferencesContext = context.getApplicationContext();
     }
 
     /**
@@ -96,10 +93,10 @@ public final class DatabaseAccess {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(sharedPreferencesContext, "Loading...", Toast.LENGTH_SHORT).show();
 //            if (progressShowing)
 //                return;
-//            progress = new ProgressDialog(mainActivity);
+//            progress = new ProgressDialog(sharedPreferencesContext);
 //            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //            progress.setTitle("Please wait");
 //            progress.setMessage("Connecting to Server...");
@@ -181,7 +178,7 @@ public final class DatabaseAccess {
 //                handler.post(new Runnable() {
 //                    @Override
 //                    public void run() {
-//                        UtilityClass.printAlertMessage(mainActivity, "Sorry. Internet Connection Error.", "Network Error", true);
+//                        UtilityClass.printAlertMessage(sharedPreferencesContext, "Sorry. Internet Connection Error.", "Network Error", true);
 //                    }
 //                });
             }
@@ -240,10 +237,10 @@ public final class DatabaseAccess {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            Toast.makeText(mainActivity, "Loading...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(sharedPreferencesContext, "Loading...", Toast.LENGTH_SHORT).show();
 //            if (progressShowing)
 //                return;
-//            progress = new ProgressDialog(mainActivity);
+//            progress = new ProgressDialog(sharedPreferencesContext);
 //            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 //            progress.setTitle("Please wait");
 //            progress.setMessage("Connecting to Server...");
@@ -445,8 +442,8 @@ public final class DatabaseAccess {
     /**
      * Save login info to phone.
      */
-    public static void saveTokentoLocal(Activity mainActivity, String id) {
-        SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+    public static void saveTokentoLocal(String id) {
+        SharedPreferences pref = sharedPreferencesContext.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("id", id);
         editor.commit();
@@ -455,8 +452,8 @@ public final class DatabaseAccess {
     /**
      * Get login info from phone.
      */
-    public static HashMap<String, String> getTokenFromLocal(Activity mainActivity) {
-        SharedPreferences pref = mainActivity.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
+    public static HashMap<String, String> getTokenFromLocal() {
+        SharedPreferences pref = sharedPreferencesContext.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
         HashMap<String, String> tokens = new HashMap<>();
         tokens.put("id", pref.getString("id", ""));
         //tokens.put("jwt", pref.getString("jwt", ""));
@@ -465,11 +462,11 @@ public final class DatabaseAccess {
 
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
 /*
-        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
-                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + getTokenFromLocal(sharedPreferencesContext).get("id")
+                + "/profile-photo?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
 */
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(getTokenFromLocal(mainActivity).get("id").toString());
+        StorageReference storageRef = storage.getReference().child(getTokenFromLocal().get("id").toString());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -498,8 +495,8 @@ public final class DatabaseAccess {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.getChildrenCount() > 0) {
                             DataSnapshot userSnapshot = dataSnapshot.getChildren().iterator().next();
-                            DatabaseAccess.saveTokentoLocal(mainActivity, userSnapshot.getKey());
-                            CurrentUser.theUser = userSnapshot.getValue(User.class);
+                            DatabaseAccess.saveTokentoLocal(userSnapshot.getKey());
+                            CurrentUser.syncUser();
                             delegate.onResultReady(true);
                         } else {
                             delegate.onResultReady(false);
@@ -658,7 +655,7 @@ public final class DatabaseAccess {
                                           final String name,
                                           final double price,
                                           final OnResultReadyListener<String> delegate) {
-        //String url = mainActivity.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        //String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + partyID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
 /*        RequestComponents[] comps = new RequestComponents[1];
         comps[0] = new RequestComponents(url, "POST", body);*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
@@ -694,8 +691,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
-        /*String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+        /*String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
+                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         db.child("following").child(userID).child(targetID).setValue(true); //not so sure what value should appear as in followings list, so I just set it to the input targetID
         db.child("followers").child(targetID).child(userID).setValue(true);
@@ -705,8 +702,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(sharedPreferencesContext).get("jwt");
         HashMap<String, String> body = new HashMap<>();*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         BestFriend bestFriend = new BestFriend(name, number);
@@ -717,8 +714,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
-                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         server_manageUserForParty(userID, eventID, "invited", "POST", new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
@@ -729,8 +726,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + receiverID
-                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + receiverID
+                + "/notifications?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
 /*        HashMap<String, String> body = new HashMap<>();*/
         //DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications").child(receiverID).child(type);
         //String uuid = UUID.randomUUID().toString(); //unique ID for each event
@@ -924,8 +921,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
-                + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
+                + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID);
         Log.i(TAG, "server_getUsersOfEvent: " + eventID);
         final ArrayList<User> attending = new ArrayList<>();
@@ -987,8 +984,8 @@ public final class DatabaseAccess {
     }
 
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
-  /*      String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");
+  /*      String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(sharedPreferencesContext).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);*/
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
@@ -1042,12 +1039,12 @@ public final class DatabaseAccess {
            }
        });
        //UNSURE ABOUT THIS ONE FOR NOW
-        /*String url = mainActivity.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
+        /*String url = sharedPreferencesContext.getString(R.string.server_url) + "events/find-by-coordinate?min_lat=" + minLat
                 + "&max_lat=" + maxLat + "&min_lng=" + minLng + "&max_lng=" + maxLng
                 + "&start_after=" + 1400000000 + "&end_after" + Calendar.getInstance().getTimeInMillis() / 1000
-                + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+                + "&access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         /*RequestComponents comp = new RequestComponents(url, "GET", null);
-        new HttpRequestTask(mainActivity, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
+        new HttpRequestTask(sharedPreferencesContext, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {
             @Override
             public void onResultReady(ArrayList<String> result) {
                 ArrayList<Party> parties = new ArrayList<>();
@@ -1069,8 +1066,8 @@ public final class DatabaseAccess {
 }
 
     public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "events/" + eventID
-                + "/invites?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID
+                + "/invites?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_invited").child(eventID);
         final ArrayList<String> userIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1119,8 +1116,8 @@ public final class DatabaseAccess {
      * Get Notification by UserID
      */
     public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-                + "/notifications?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
+                + "/notifications?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
         final ArrayList<Notification> notifications = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1142,8 +1139,8 @@ public final class DatabaseAccess {
      * Get events by keyword
      */
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
-                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
+                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         Query q1 = db.orderByChild("name").startAt(keyword).endAt(keyword + " zzzz");
@@ -1170,8 +1167,8 @@ public final class DatabaseAccess {
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/find-by-keyword?keyword="
-                + keyword + "&access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/find-by-keyword?keyword="
+                + keyword + "&access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
         RequestComponents comp = new RequestComponents(url, "GET", null);
 */
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
@@ -1200,10 +1197,10 @@ public final class DatabaseAccess {
      * Download Profile Picture from Server. Return bitmap or null.
      */
     public static void server_getProfilePicture(String userID, final OnResultReadyListener<Bitmap> delegate) {
-//        String url = mainActivity.getString(R.string.server_url) + "users/" + userID
-//                + "/profile-photo?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+//        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
+//                + "/profile-photo?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
 //        RequestComponents comp = new RequestComponents(url, "GET", null);
-//        new ImageDownloadTask(mainActivity, comp, new OnResultReadyListener<Bitmap>() {
+//        new ImageDownloadTask(sharedPreferencesContext, comp, new OnResultReadyListener<Bitmap>() {
 //            @Override
 //            public void onResultReady(Bitmap result) {
 //                if (result != null && delegate != null) {
@@ -1213,7 +1210,7 @@ public final class DatabaseAccess {
 //            }
 //        });
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(getTokenFromLocal(mainActivity).get("id"));
+        StorageReference storageRef = storage.getReference().child(getTokenFromLocal().get("id"));
 
         final long ONE_MEGABYTE = 1024 * 1024;
         storageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -1239,8 +1236,8 @@ public final class DatabaseAccess {
      * Delete Best Friend on server
      */
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate) {
-/*        String url = mainActivity.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(mainActivity).get("jwt");*/
+/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
+                getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         final DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         Query q1 = db.orderByChild("number").startAt(number);
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1272,9 +1269,9 @@ public final class DatabaseAccess {
      * User unfollow user from server. Return either success or error.
      */
     public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {/*
-        String url = mainActivity.getString(R.string.server_url) + "users/" + getTokenFromLocal(mainActivity).get("id")
-                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");*/
-        String localUserId = getTokenFromLocal(mainActivity).get("id");
+        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + getTokenFromLocal(sharedPreferencesContext).get("id")
+                + "/followings/" + userID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
+        String localUserId = getTokenFromLocal().get("id");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(localUserId);
         db.child(userID).removeValue();
         db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
@@ -1343,8 +1340,8 @@ public final class DatabaseAccess {
      */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
         /*RequestComponents comps[] = new RequestComponents[1];
-        String url = mainActivity.getString(R.string.server_url) + "users/" + userID + "/notifications/"
-                + notificationID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID + "/notifications/"
+                + notificationID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
 */
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
         db.child(notificationID).removeValue();
@@ -1356,8 +1353,8 @@ public final class DatabaseAccess {
      * Uninvite user to event. Return success or error.
      */
     public static void server_uninviteUser(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-        /*String url = mainActivity.getString(R.string.server_url) + "events/" + eventID + "/invites/"
-                + userID + "?access_token=" + getTokenFromLocal(mainActivity).get("jwt");
+        /*String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID + "/invites/"
+                + userID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
 
         */
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites");

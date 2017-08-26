@@ -72,7 +72,7 @@ public class HostControllerFragment extends Fragment {
         Log.d(HomeSwipeActivity.TAG, "HostControllerFragment.populateListView");
         final ProgressBar progressBar = (ProgressBar) mainActivity.findViewById(R.id.home_hostView_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+        server_getEventsOfUser(CurrentUser.getUser().getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                 if (result != null) {

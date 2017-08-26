@@ -29,7 +29,7 @@
 //
 //public class FriendsListFragment extends Fragment {
 //    private static final String ARG_PARAM1 = "param1";
-//    private FragmentActivity mainActivity;
+//    private FragmentActivity sharedPreferencesContext;
 //    private FriendsListFragment mainFragment;
 //
 //    public FriendsListFragment() {
@@ -57,7 +57,7 @@
 //        super.onViewCreated(view, savedInstanceState);
 //        final FriendsListFragment fragment = this;
 //        mainFragment = this;
-//        mainActivity = getActivity();
+//        sharedPreferencesContext = getActivity();
 //        DummyUser dummy = new DummyUser(getActivity());
 //
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
@@ -71,7 +71,7 @@
 //            public void onResultReady(List<User> result) {
 //                if ( result != null ) {
 //                    friendsUsers.addAll(result);
-//                    final CustomAdapter adapt = new CustomAdapter(mainActivity, mainFragment, friendsUsers);
+//                    final CustomAdapter adapt = new CustomAdapter(sharedPreferencesContext, mainFragment, friendsUsers);
 //                    friendsListView.setAdapter(adapt);
 //                }
 //            }

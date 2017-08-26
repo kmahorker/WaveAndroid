@@ -23,15 +23,15 @@
 //import java.util.List;
 //
 //public class UserNotificationCustomAdapter extends BaseAdapter {
-//    private Activity mainActivity;
+//    private Activity sharedPreferencesContext;
 //    private List<Notification> notifList;
 //    private static LayoutInflater inflater;
 //
-//    public UserNotificationCustomAdapter(Activity mainActivity, List<Notification> notifList) {
+//    public UserNotificationCustomAdapter(Activity sharedPreferencesContext, List<Notification> notifList) {
 //        super();
 //        this.notifList = notifList;
-//        this.mainActivity = mainActivity;
-//        inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        this.sharedPreferencesContext = sharedPreferencesContext;
+//        inflater = (LayoutInflater) sharedPreferencesContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //    }
 //
 //    @Override
@@ -80,11 +80,11 @@
 //                    holder.message = (TextView) finalLayoutView.findViewById(R.id.eachNotif_message);
 //                    holder.timeAgo = (TextView) finalLayoutView.findViewById(R.id.eachNotif_timeAgo);
 //
-//                    UtilityClass.getBitmapFromURL(mainActivity, sender[0].getProfilePic(), new OnResultReadyListener<Bitmap>() {
+//                    UtilityClass.getBitmapFromURL(sharedPreferencesContext, sender[0].getProfilePic(), new OnResultReadyListener<Bitmap>() {
 //                        @Override
 //                        public void onResultReady(Bitmap image) {
 //                            if (image != null)
-//                                holder.senderImage.setImageDrawable( UtilityClass.toRoundImage(mainActivity.getResources(), image));
+//                                holder.senderImage.setImageDrawable( UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), image));
 //                        }
 //                    });
 //
@@ -95,18 +95,18 @@
 //                    holder.sender.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
-//                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+//                            Intent intent = new Intent(sharedPreferencesContext, FriendProfileActivity.class);
 //                            intent.putExtra("userIDLong", sender[0].getUserID());
-//                            mainActivity.startActivity(intent);
+//                            sharedPreferencesContext.startActivity(intent);
 //                        }
 //                    });
 //
 //                    holder.message.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
-//                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+//                            Intent intent = new Intent(sharedPreferencesContext, FriendProfileActivity.class);
 //                            intent.putExtra("userIDLong", sender[0].getUserID());
-//                            mainActivity.startActivity(intent);
+//                            sharedPreferencesContext.startActivity(intent);
 //                        }
 //                    });
 //                }

@@ -84,7 +84,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.name.setText(user.getFull_name());
 
         Log.i(TAG, "containsID: UserID: " + user.getUserID());
-        if (user.getUserID().equals(CurrentUser.theUser.getUserID())) {
+        if (user.getUserID().equals(CurrentUser.getUser().getUserID())) {
             holder.follow.setVisibility(View.INVISIBLE);
         } else if (!containsID(following, user.getUserID())) {
             changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
@@ -106,13 +106,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                     });
                 } else {
                     //If follow from server is successful, then follow locally and change button.
-                    DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), user.getUserID(), new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_followUser(CurrentUser.getUser().getUserID(), user.getUserID(), new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
-                                DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), user.getUserID(), "", "following", null);
-                                DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.theUser.getUserID(), "", "followed", null);
+                                DatabaseAccess.server_createNotification(CurrentUser.getUser().getUserID(), user.getUserID(), "", "following", null);
+                                DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.getUser().getUserID(), "", "followed", null);
                             }
                         }
                     });

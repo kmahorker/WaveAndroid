@@ -32,12 +32,12 @@
 //    FriendsListFragment fragment;
 //    private static LayoutInflater inflater=null;
 //
-//    public CustomAdapter(FragmentActivity mainActivity, FriendsListFragment fragment, List<User> userList) {
+//    public CustomAdapter(FragmentActivity sharedPreferencesContext, FriendsListFragment fragment, List<User> userList) {
 //        super();
 //        this.userList.addAll(userList);
 //        //this.partyList.addAll(partyList);
 //        //result = friendsNamesList;
-//        context = mainActivity;
+//        context = sharedPreferencesContext;
 //        this.fragment = fragment;
 //        //imageId = friendsImagesList;
 //        inflater = ( LayoutInflater )context.

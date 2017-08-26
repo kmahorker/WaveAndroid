@@ -2,7 +2,6 @@ package com.thewavesocial.waveandroid.SocialFolder;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -128,10 +127,10 @@ public class FriendProfileActivity extends AppCompatActivity {
                 following_textview.setText(text);
             }
         });
-        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> followings) {
-                if (userID.equals(CurrentUser.theUser.getUserID()))
+                if (userID.equals(CurrentUser.getUser().getUserID()))
                     follow_button.setVisibility(View.INVISIBLE);
                 else if (!containsID(followings, userID))
                     changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
@@ -153,13 +152,13 @@ public class FriendProfileActivity extends AppCompatActivity {
                             });
                         } else {
                             //If follow from server is successful, then follow locally and change button.
-                            DatabaseAccess.server_followUser(CurrentUser.theUser.getUserID(), userID, new OnResultReadyListener<String>() {
+                            DatabaseAccess.server_followUser(CurrentUser.getUser().getUserID(), userID, new OnResultReadyListener<String>() {
                                 @Override
                                 public void onResultReady(String result) {
                                     if (result.equals("success")) {
                                         changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
-                                        DatabaseAccess.server_createNotification(CurrentUser.theUser.getUserID(), userID, "", "following", null);
-                                        DatabaseAccess.server_createNotification(userID, CurrentUser.theUser.getUserID(), "", "followed", null);
+                                        DatabaseAccess.server_createNotification(CurrentUser.getUser().getUserID(), userID, "", "following", null);
+                                        DatabaseAccess.server_createNotification(userID, CurrentUser.getUser().getUserID(), "", "followed", null);
                                     }
                                 }
                             });

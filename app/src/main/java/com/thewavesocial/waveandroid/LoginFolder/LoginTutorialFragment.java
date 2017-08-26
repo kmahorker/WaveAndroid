@@ -60,10 +60,10 @@ public class LoginTutorialFragment extends Fragment {
     //Unused Methods
 
 //    private void setupReferences(){
-//        largeTutorialImage = (ImageView)mainActivity.findViewById(R.id.tutorialBigImage);
-//        tutorialIcon = (ImageView)mainActivity.findViewById(R.id.tutorialIcon);
-//        tutorialLargeText = (TextView)mainActivity.findViewById(R.id.tutorialLargeText);
-//        tutorialDescription = (TextView)mainActivity.findViewById(R.id.tutorialDescription);
+//        largeTutorialImage = (ImageView)sharedPreferencesContext.findViewById(R.id.tutorialBigImage);
+//        tutorialIcon = (ImageView)sharedPreferencesContext.findViewById(R.id.tutorialIcon);
+//        tutorialLargeText = (TextView)sharedPreferencesContext.findViewById(R.id.tutorialLargeText);
+//        tutorialDescription = (TextView)sharedPreferencesContext.findViewById(R.id.tutorialDescription);
 //    }
 //
 //    private void changeInfo1(){

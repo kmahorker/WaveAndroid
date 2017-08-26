@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -85,7 +84,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActivity = (HomeSwipeActivity) getActivity();
-        User user = CurrentUser.theUser;
+        User user = CurrentUser.getUser();
 
         setupFloatingButtons();
         setupMapElements();
@@ -399,7 +398,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
 
     private void askToSendSOSMessage() {
-        if (CurrentUser.theUser.getBestFriends().isEmpty()) {
+        if (CurrentUser.getUser().getBestFriends().isEmpty()) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
             dialog.setTitle("Error")
                     .setMessage("No best friend contact specified")
@@ -420,13 +419,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         } else {
             AlertDialog.Builder fieldAlert = new AlertDialog.Builder(mainActivity);
             fieldAlert.setTitle("Send an alert to " +
-                    (CurrentUser.theUser.getBestFriends().get(0)).getName())
+                    (CurrentUser.getUser().getBestFriends().get(0)).getName())
                     .setMessage("A text will be sent to your friend notifying your current location.")
                     .setPositiveButton("SEND", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            sendSOSMessage(CurrentUser.theUser.getBestFriends().get(0).getName(),
-                                    CurrentUser.theUser.getBestFriends().get(0).getPhoneNumber());
+                            sendSOSMessage(CurrentUser.getUser().getBestFriends().get(0).getName(),
+                                    CurrentUser.getUser().getBestFriends().get(0).getPhoneNumber());
                         }
                     })
                     .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {

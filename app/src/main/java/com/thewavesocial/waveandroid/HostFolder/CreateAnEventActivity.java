@@ -47,7 +47,6 @@ import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
-import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.SocialFolder.FriendProfileActivity;
 import com.thewavesocial.waveandroid.UtilityClass;
@@ -87,7 +86,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         NewPartyInfo.initialize();
 
         followings = new ArrayList<>();
-        DatabaseAccess.server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 followings.addAll(result);
@@ -591,7 +590,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         public void savePage1() {
             NewPartyInfo.name = titleEditText.getText().toString();
             NewPartyInfo.price = 0;
-            NewPartyInfo.host_name = CurrentUser.theUser.getFull_name();
+            NewPartyInfo.host_name = CurrentUser.getUser().getFull_name();
             NewPartyInfo.date = startCalendar;
             NewPartyInfo.duration = endCalendar - startCalendar;
             NewPartyInfo.address = locationPlace.getAddress().toString();
@@ -727,7 +726,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
                 holder.name.setText(getItem(position).getFull_name());
 
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
@@ -794,7 +793,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(ViewHolder holder, final int position) {
-                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
+                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -937,7 +936,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
                 holder.name.setText(getItem(position).getFull_name());
 
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), friends.get(position).getProfilePic()));
+                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
                 if (inviteIDs.contains(friends.get(position).getUserID()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
@@ -1005,7 +1004,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             @Override
             public void onBindViewHolder(ViewHolder holder, final int position) {
 
-                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), userList.get(position).getProfilePic()));
+                //holder.imgView.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), userList.get(position).getProfilePic()));
                 holder.imgView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1078,7 +1077,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             lat = 0;
             lng = 0;
 
-            hostingUsers.add(DatabaseAccess.getTokenFromLocal(thisActivity).get("id"));
+            hostingUsers.add(DatabaseAccess.getTokenFromLocal().get("id"));
         }
 
 
@@ -1091,7 +1090,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
 
             try {
-                server_createNewParty(address, date, duration, emoji, CurrentUser.theUser.getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
+                server_createNewParty(address, date, duration, emoji, CurrentUser.getUser().getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
 /*                        int commaIndex = result.indexOf(',');
@@ -1150,7 +1149,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         threads_completion++;
         if (threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size())) {
             //Finish task
-            CurrentUser.setContext(thisActivity, new OnResultReadyListener<Boolean>() {
+            CurrentUser.loadBestFriends(new OnResultReadyListener<Boolean>() {
                 @Override
                 public void onResultReady(Boolean result) {
                     thisActivity.onBackPressed();

@@ -34,8 +34,8 @@
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setTitle("");
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
 //        ((HomeSwipeActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.actionbar_options);
-//        user = CurrentUser.theUser;
-//        setContext(getActivity(), new OnResultReadyListener<Boolean>() {
+//        user = CurrentUser.user;
+//        loadBestFriends(getActivity(), new OnResultReadyListener<Boolean>() {
 //            @Override
 //            public void onResultReady(Boolean result) {
 //                if ( result )

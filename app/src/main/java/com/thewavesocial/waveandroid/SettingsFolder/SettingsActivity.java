@@ -11,7 +11,6 @@ import android.widget.ImageView;
 
 import com.facebook.login.LoginManager;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
-import com.thewavesocial.waveandroid.LoginFolder.LaunchActivity;
 import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
 
@@ -96,10 +95,10 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         LoginManager.getInstance().logOut();
-                        DatabaseAccess.saveTokentoLocal(mainActivity, "");//, "");
+                        DatabaseAccess.saveTokentoLocal("");//, "");
 
                         //Clear all activities and go to LoginTutorial Page
-                        Intent intent = new Intent(getApplicationContext(), LaunchActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), LoginTutorialActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

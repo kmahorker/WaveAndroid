@@ -97,6 +97,6 @@
 //        newParty.setPrice(price);
 //        newParty.setStartingDateTime(startCalendar);
 //        newParty.setDuration(endCalendar);
-//        CurrentUser.theUser.getHosted().add(0, newParty.getPartyID());
+//        CurrentUser.user.getHosted().add(0, newParty.getPartyID());
 //    }
 //}

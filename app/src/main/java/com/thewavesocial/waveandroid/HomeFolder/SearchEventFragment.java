@@ -39,7 +39,7 @@ public class SearchEventFragment extends Fragment {
         searchbar = (SearchView) mainActivity.findViewById(R.id.home_mapsView_searchbar);
         eventListView = (ListView) view.findViewById(R.id.searchEvent_list);
 
-        server_getEventsOfUser(CurrentUser.theUser.getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+        server_getEventsOfUser(CurrentUser.getUser().getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                 performSearch(result);

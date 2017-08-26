@@ -65,7 +65,7 @@ public class SearchPeopleFragment extends Fragment {
     }
 
     private void getFollowingAndUpdateList(final ArrayList<User> result) {
-        server_getUserFollowing(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<User>>() {
+        server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> following) {
                 peopleListView.setAdapter(new SearchPeopleCustomAdapter(mainActivity, result, following));

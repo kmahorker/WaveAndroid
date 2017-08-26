@@ -31,10 +31,10 @@
 //    FriendsListFragment fragment;
 //    private static LayoutInflater inflater=null;
 //
-//    public AddFriendCustomAdapter(InviteFriendsActivity mainActivity, List<User> userList) {
+//    public AddFriendCustomAdapter(InviteFriendsActivity sharedPreferencesContext, List<User> userList) {
 //        super();
 //        this.userList.addAll(userList);
-//        context = mainActivity;
+//        context = sharedPreferencesContext;
 //        this.fragment = fragment;
 //        inflater = ( LayoutInflater )context.
 //                getSystemService(Context.LAYOUT_INFLATER_SERVICE);

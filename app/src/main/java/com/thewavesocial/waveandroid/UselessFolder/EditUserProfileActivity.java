@@ -36,7 +36,7 @@
 //    private ImageView profile_pic;
 //    private Calendar birthday;
 //    private User user;
-//    private Activity mainActivity;
+//    private Activity sharedPreferencesContext;
 //    private ViewGroup viewGroup;
 //    private final static int EDIT_PROFILEPIC_INTENT_ID = 8;
 //
@@ -45,8 +45,8 @@
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.profile_user_edit);
 //        viewGroup = (ViewGroup) findViewById(android.R.id.content).getRootView();
-//        mainActivity = this;
-//        user = CurrentUser.theUser;
+//        sharedPreferencesContext = this;
+//        user = CurrentUser.user;
 //
 //        updateFieldText();
 //        updateActionbar();
@@ -128,7 +128,7 @@
 //        edit_bday.setFocusable(false);
 //        edit_address.setText(user.getMapAddress().getAddress_string());
 //
-//        UtilityClass.getBitmapFromURL(mainActivity, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
+//        UtilityClass.getBitmapFromURL(sharedPreferencesContext, user.getProfilePic(), new OnResultReadyListener<Bitmap>() {
 //            @Override
 //            public void onResultReady(Bitmap image) {
 //                if (image != null)
@@ -158,7 +158,7 @@
 //        viewGroup.setOnTouchListener(new View.OnTouchListener() {
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });
@@ -166,7 +166,7 @@
 //        edit_bday.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                new DatePickerDialog(mainActivity, dateListener,
+//                new DatePickerDialog(sharedPreferencesContext, dateListener,
 //                        user.getBirthday().get(Calendar.YEAR),
 //                        user.getBirthday().get(Calendar.MONTH),
 //                        user.getBirthday().get(Calendar.DAY_OF_MONTH)).show();

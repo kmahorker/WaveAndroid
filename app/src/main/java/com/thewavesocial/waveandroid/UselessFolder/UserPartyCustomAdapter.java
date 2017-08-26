@@ -19,19 +19,19 @@
 //
 //public class UserPartyCustomAdapter extends BaseAdapter
 //{
-//    private Activity mainActivity ;
+//    private Activity sharedPreferencesContext ;
 //    private List<Party> partyList;
 //    private UserProfileFragment fragment;
 //    private static LayoutInflater inflater;
 //
-//    public UserPartyCustomAdapter(FragmentActivity mainActivity, UserProfileFragment fragment, List<Party> partyList)
+//    public UserPartyCustomAdapter(FragmentActivity sharedPreferencesContext, UserProfileFragment fragment, List<Party> partyList)
 //    {
 //        super();
 //        this.partyList = partyList;
 //        Party p = new Party();
-//        this.mainActivity = mainActivity;
+//        this.sharedPreferencesContext = sharedPreferencesContext;
 //        this.fragment = fragment;
-//        inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        inflater = (LayoutInflater) sharedPreferencesContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //    }
 //
 //    @Override
@@ -77,9 +77,9 @@
 //                @Override
 //                public void onClick(View v)
 //                {
-//                    Intent intent = new Intent(mainActivity, PartyProfileFragment.class);
+//                    Intent intent = new Intent(sharedPreferencesContext, PartyProfileFragment.class);
 //                    intent.putExtra("partyIDLong", getItem(position).getPartyID());
-//                    mainActivity.startActivity(intent);
+//                    sharedPreferencesContext.startActivity(intent);
 //                }
 //            });
 //            return layoutView;

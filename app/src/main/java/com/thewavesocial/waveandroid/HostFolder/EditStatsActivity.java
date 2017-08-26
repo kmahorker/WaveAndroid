@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,11 +26,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionApi;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.model.LatLng;
 import com.thewavesocial.waveandroid.AdaptersFolder.PartyAttendeesCustomAdapter;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
@@ -436,7 +432,7 @@ public class EditStatsActivity extends AppCompatActivity {
 //            public void onResultReady(List<User> result) {
 //                if ( result != null ) {
 //                    invitedUsers.addAll(result);
-//                    invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invitedUsers));
+//                    invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(sharedPreferencesContext, invitedUsers));
 //                }
 //            }
 //        });
@@ -577,7 +573,7 @@ public class EditStatsActivity extends AppCompatActivity {
     public void savePage() {
         NewPartyInfo.name = titleEditText.getText().toString();
         NewPartyInfo.price = 0;
-        NewPartyInfo.hostName = CurrentUser.theUser.getFull_name();
+        NewPartyInfo.hostName = CurrentUser.getUser().getFull_name();
         NewPartyInfo.startingDateTime = startCalendar;
         NewPartyInfo.endingDateTime = endCalendar;
         NewPartyInfo.address = locationPlace != null ? locationPlace.getAddress().toString() : locationEditText.getText().toString();
@@ -646,7 +642,7 @@ public class EditStatsActivity extends AppCompatActivity {
             max_age = party.getMax_age();
             address = party.getAddress();
 
-            //hostingUsers.add(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"));
+            //hostingUsers.add(DatabaseAccess.getTokenFromLocal(sharedPreferencesContext).get("id"));
         }
 
         //Compose all party information

@@ -29,7 +29,7 @@
 //    private EditText editLocation, editPrice;
 //    private ImageView maleMinus, malePlus, femaleMinus, femalePlus;
 //    private int startendDateCheck, startendTimeCheck;
-//    private CreateEventActivity mainActivity;
+//    private CreateEventActivity sharedPreferencesContext;
 //    private View mainView;
 //
 //    @Override
@@ -42,7 +42,7 @@
 //    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
 //    {
 //        super.onViewCreated(view, savedInstanceState);
-//        mainActivity = (CreateEventActivity)getActivity();
+//        sharedPreferencesContext = (CreateEventActivity)getActivity();
 //        mainView = view;
 //
 //        setupActionBar();
@@ -54,19 +54,19 @@
 //    private void setupInitialValues()
 //    {
 //
-//        editStartDate.setText( UtilityClass.dateToString( mainActivity.startCalendar));
-//        editEndDate.setText( UtilityClass.dateToString( mainActivity.endCalendar));
-//        editStartTime.setText( UtilityClass.timeToString( mainActivity.startCalendar));
-//        editEndTime.setText( UtilityClass.timeToString( mainActivity.endCalendar));
-//        editMaleCount.setText( mainActivity.maleCount + "");
-//        editFemaleCount.setText( mainActivity.femaleCount + "");
+//        editStartDate.setText( UtilityClass.dateToString( sharedPreferencesContext.startCalendar));
+//        editEndDate.setText( UtilityClass.dateToString( sharedPreferencesContext.endCalendar));
+//        editStartTime.setText( UtilityClass.timeToString( sharedPreferencesContext.startCalendar));
+//        editEndTime.setText( UtilityClass.timeToString( sharedPreferencesContext.endCalendar));
+//        editMaleCount.setText( sharedPreferencesContext.maleCount + "");
+//        editFemaleCount.setText( sharedPreferencesContext.femaleCount + "");
 //
-//        if ( mainActivity.privatePublic.equals("Private") )
+//        if ( sharedPreferencesContext.privatePublic.equals("Private") )
 //            privateText.performClick();
 //        else
 //            publicText.performClick();
 //
-//        if ( mainActivity.paidFree.equals("Paid") )
+//        if ( sharedPreferencesContext.paidFree.equals("Paid") )
 //            paidText.performClick();
 //        else
 //            freeText.performClick();
@@ -106,7 +106,7 @@
 //                privateText.setBackgroundResource(R.color.appColor);
 //                publicText.setTextColor(getResources().getColor(R.color.appColor));
 //                publicText.setBackgroundColor(Color.WHITE);
-//                mainActivity.privatePublic = "Private";
+//                sharedPreferencesContext.privatePublic = "Private";
 //            }
 //        });
 //
@@ -119,7 +119,7 @@
 //                publicText.setBackgroundResource(R.color.appColor);
 //                privateText.setTextColor(getResources().getColor(R.color.appColor));
 //                privateText.setBackgroundColor(Color.WHITE);
-//                mainActivity.privatePublic = "Public";
+//                sharedPreferencesContext.privatePublic = "Public";
 //            }
 //        });
 //
@@ -137,7 +137,7 @@
 //                editPrice.setClickable(true);
 //                editPrice.setBackgroundColor(Color.WHITE);
 //                dollarSign.setBackgroundColor(Color.WHITE);
-//                mainActivity.paidFree = "Paid";
+//                sharedPreferencesContext.paidFree = "Paid";
 //            }
 //        });
 //
@@ -156,7 +156,7 @@
 //                editPrice.clearFocus();
 //                editPrice.setBackgroundColor(Color.LTGRAY);
 //                dollarSign.setBackgroundColor(Color.LTGRAY);
-//                mainActivity.paidFree = "Free";
+//                sharedPreferencesContext.paidFree = "Free";
 //            }
 //        });
 //
@@ -165,10 +165,10 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                if (mainActivity.maleCount > 0)
+//                if (sharedPreferencesContext.maleCount > 0)
 //                {
-//                    mainActivity.maleCount--;
-//                    editMaleCount.setText(mainActivity.maleCount + "");
+//                    sharedPreferencesContext.maleCount--;
+//                    editMaleCount.setText(sharedPreferencesContext.maleCount + "");
 //                }
 //            }
 //        });
@@ -178,8 +178,8 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                mainActivity.maleCount++;
-//                editMaleCount.setText(mainActivity.maleCount+"");
+//                sharedPreferencesContext.maleCount++;
+//                editMaleCount.setText(sharedPreferencesContext.maleCount+"");
 //            }
 //        });
 //
@@ -188,10 +188,10 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                if (mainActivity.femaleCount > 0)
+//                if (sharedPreferencesContext.femaleCount > 0)
 //                {
-//                    mainActivity.femaleCount--;
-//                    editFemaleCount.setText(mainActivity.femaleCount + "");
+//                    sharedPreferencesContext.femaleCount--;
+//                    editFemaleCount.setText(sharedPreferencesContext.femaleCount + "");
 //                }
 //            }
 //        });
@@ -201,8 +201,8 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                mainActivity.femaleCount++;
-//                editFemaleCount.setText(mainActivity.femaleCount+"");
+//                sharedPreferencesContext.femaleCount++;
+//                editFemaleCount.setText(sharedPreferencesContext.femaleCount+"");
 //            }
 //        });
 //
@@ -213,9 +213,9 @@
 //            {
 //                startendDateCheck = 1;
 //                new DatePickerDialog(getContext(), dateListener,
-//                        mainActivity.startCalendar.get(Calendar.YEAR),
-//                        mainActivity.startCalendar.get(Calendar.MONTH),
-//                        mainActivity.startCalendar.get(Calendar.DAY_OF_MONTH)).show();
+//                        sharedPreferencesContext.startCalendar.get(Calendar.YEAR),
+//                        sharedPreferencesContext.startCalendar.get(Calendar.MONTH),
+//                        sharedPreferencesContext.startCalendar.get(Calendar.DAY_OF_MONTH)).show();
 //            }
 //        });
 //
@@ -226,9 +226,9 @@
 //            {
 //                startendDateCheck = 2;
 //                new DatePickerDialog(getContext(), dateListener,
-//                        mainActivity.endCalendar.get(Calendar.YEAR),
-//                        mainActivity.endCalendar.get(Calendar.MONTH),
-//                        mainActivity.endCalendar.get(Calendar.DAY_OF_MONTH)).show();
+//                        sharedPreferencesContext.endCalendar.get(Calendar.YEAR),
+//                        sharedPreferencesContext.endCalendar.get(Calendar.MONTH),
+//                        sharedPreferencesContext.endCalendar.get(Calendar.DAY_OF_MONTH)).show();
 //            }
 //        });
 //
@@ -239,8 +239,8 @@
 //            {
 //                startendTimeCheck = 1;
 //                new TimePickerDialog(getContext(), timeListener,
-//                        mainActivity.startCalendar.get(Calendar.HOUR),
-//                        mainActivity.startCalendar.get(Calendar.MINUTE), true).show();
+//                        sharedPreferencesContext.startCalendar.get(Calendar.HOUR),
+//                        sharedPreferencesContext.startCalendar.get(Calendar.MINUTE), true).show();
 //            }
 //        });
 //
@@ -251,8 +251,8 @@
 //            {
 //                startendTimeCheck = 2;
 //                new TimePickerDialog(getContext(), timeListener,
-//                        mainActivity.endCalendar.get(Calendar.HOUR),
-//                        mainActivity.endCalendar.get(Calendar.MINUTE), true).show();
+//                        sharedPreferencesContext.endCalendar.get(Calendar.HOUR),
+//                        sharedPreferencesContext.endCalendar.get(Calendar.MINUTE), true).show();
 //            }
 //        });
 //
@@ -261,7 +261,7 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });
@@ -274,17 +274,17 @@
 //        {
 //            if (startendDateCheck == 1)
 //            {
-//                mainActivity.startCalendar.set(Calendar.YEAR, y);
-//                mainActivity.startCalendar.set(Calendar.MONTH, m);
-//                mainActivity.startCalendar.set(Calendar.DAY_OF_MONTH, d);
-//                editStartDate.setText( UtilityClass.dateToString(mainActivity.startCalendar) );
+//                sharedPreferencesContext.startCalendar.set(Calendar.YEAR, y);
+//                sharedPreferencesContext.startCalendar.set(Calendar.MONTH, m);
+//                sharedPreferencesContext.startCalendar.set(Calendar.DAY_OF_MONTH, d);
+//                editStartDate.setText( UtilityClass.dateToString(sharedPreferencesContext.startCalendar) );
 //            }
 //            else if (startendDateCheck == 2)
 //            {
-//                mainActivity.endCalendar.set(Calendar.YEAR, y);
-//                mainActivity.endCalendar.set(Calendar.MONTH, m);
-//                mainActivity.endCalendar.set(Calendar.DAY_OF_MONTH, d);
-//                editEndDate.setText( UtilityClass.dateToString(mainActivity.endCalendar) );
+//                sharedPreferencesContext.endCalendar.set(Calendar.YEAR, y);
+//                sharedPreferencesContext.endCalendar.set(Calendar.MONTH, m);
+//                sharedPreferencesContext.endCalendar.set(Calendar.DAY_OF_MONTH, d);
+//                editEndDate.setText( UtilityClass.dateToString(sharedPreferencesContext.endCalendar) );
 //            }
 //        }
 //    };
@@ -296,15 +296,15 @@
 //        {
 //            if (startendTimeCheck == 1)
 //                {
-//                mainActivity.startCalendar.set(Calendar.HOUR, hr);
-//                mainActivity.startCalendar.set(Calendar.MINUTE, min);
-//                editStartTime.setText( UtilityClass.timeToString( mainActivity.startCalendar ) );
+//                sharedPreferencesContext.startCalendar.set(Calendar.HOUR, hr);
+//                sharedPreferencesContext.startCalendar.set(Calendar.MINUTE, min);
+//                editStartTime.setText( UtilityClass.timeToString( sharedPreferencesContext.startCalendar ) );
 //            }
 //            else if (startendTimeCheck == 2)
 //            {
-//                mainActivity.endCalendar.set(Calendar.HOUR, hr);
-//                mainActivity.endCalendar.set(Calendar.MINUTE, min);
-//                editEndTime.setText( UtilityClass.timeToString( mainActivity.endCalendar ) );
+//                sharedPreferencesContext.endCalendar.set(Calendar.HOUR, hr);
+//                sharedPreferencesContext.endCalendar.set(Calendar.MINUTE, min);
+//                editEndTime.setText( UtilityClass.timeToString( sharedPreferencesContext.endCalendar ) );
 //            }
 //        }
 //    };
@@ -330,15 +330,15 @@
 //                        editLocation.getText().toString().isEmpty() ||
 //                        editPrice.getText().toString().isEmpty() )
 //                {
-//                    UtilityClass.printAlertMessage(mainActivity, "Please enter all the party information.", "Error Creating Party", true);
+//                    UtilityClass.printAlertMessage(sharedPreferencesContext, "Please enter all the party information.", "Error Creating Party", true);
 //                }
-//                else if ( mainActivity.endCalendar.compareTo( mainActivity.startCalendar ) < 0 )
+//                else if ( sharedPreferencesContext.endCalendar.compareTo( sharedPreferencesContext.startCalendar ) < 0 )
 //                {
-//                    UtilityClass.printAlertMessage(mainActivity, "Your ending time should come after your starting time.","Error Creating Party", true);
+//                    UtilityClass.printAlertMessage(sharedPreferencesContext, "Your ending time should come after your starting time.","Error Creating Party", true);
 //                }
-//                else if ( mainActivity.maleCount + mainActivity.femaleCount == 0 )
+//                else if ( sharedPreferencesContext.maleCount + sharedPreferencesContext.femaleCount == 0 )
 //                {
-//                    UtilityClass.printAlertMessage(mainActivity, "Please specify the numbers of males and females", "Error Creating Party",true);
+//                    UtilityClass.printAlertMessage(sharedPreferencesContext, "Please specify the numbers of males and females", "Error Creating Party",true);
 //                }
 ////                else if ( latlng == null )
 ////                {
@@ -346,15 +346,15 @@
 ////                    fieldAlert.setMessage("Please specify a valid address.")
 ////                            .setCancelable(true)
 ////                            .show();
-////                UtilityClass.printAlertMessage(mainActivity, "Please specify a valid address.", true);
+////                UtilityClass.printAlertMessage(sharedPreferencesContext, "Please specify a valid address.", true);
 ////                    Log.d("Nope", "Invalid");
 ////                }
 //                else
 //                {
 ////                    Log.d("Cool", latlng.toString() + " " + editLocation.getText().toString());
-////                    mainActivity.location = new MapAddress( editLocation.getText().toString(), latlng );
-//                    mainActivity.price = Double.parseDouble(editPrice.getText().toString());
-//                    FragmentManager fragM = mainActivity.getSupportFragmentManager();
+////                    sharedPreferencesContext.location = new MapAddress( editLocation.getText().toString(), latlng );
+//                    sharedPreferencesContext.price = Double.parseDouble(editPrice.getText().toString());
+//                    FragmentManager fragM = sharedPreferencesContext.getSupportFragmentManager();
 //                    fragM.beginTransaction()
 //                            .replace(R.id.createEvent_fragment_container, new CreateEvent2Fragment())
 //                            .addToBackStack(null)

@@ -48,43 +48,18 @@ public class AddBestFriendActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_best_friend);
-        DatabaseAccess.saveTokentoLocal(thisActivity, "10");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
+        DatabaseAccess.saveTokentoLocal("10");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozMCwiaWF0IjoxNDk4NDQyMjE4LCJleHAiOjE1MDEwMzQyMTh9.p-pNgfKg6KL2kZeLrGJlw7k_7Yj1k8fLEYYjVgG-PQA");
 
-        if (mainActivity == null) {
-            UtilityClass.startProgressbar(thisActivity);
-            CurrentUser.setContext(this, new OnResultReadyListener<Boolean>() {
-                @Override
-                public void onResultReady(Boolean result) {
-                    UtilityClass.endProgressbar(thisActivity, result);
-                    if (result) {
-                        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
-                        linearLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                UtilityClass.hideKeyboard(thisActivity);
-                            }
-                        });
-                        setUpEditText();
-                        setUpActionBar();
-                        setUpTextViews();
-                    } else {
-                        Log.d("HomeSwipeActivity", "Set User Context Failed...");
-                    }
-                }
-            });
-        } else {
-            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
-            linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UtilityClass.hideKeyboard(thisActivity);
-                }
-            });
-            setUpActionBar();
-            setUpTextViews();
-            setUpEditText();
-        }
-
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_add_best_friend);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UtilityClass.hideKeyboard(thisActivity);
+            }
+        });
+        setUpActionBar();
+        setUpTextViews();
+        setUpEditText();
     }
 
     private void setUpActionBar() {
@@ -114,7 +89,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(thisActivity);
                 if (contact) {
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                    server_getBestFriends(CurrentUser.theUser.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                    server_getBestFriends(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(List<BestFriend> result) {
                             boolean duplicate = false;
@@ -125,11 +100,11 @@ public class AddBestFriendActivity extends AppCompatActivity {
                                 }
                             }
                             if (!duplicate) { //Add best friend to server if not a duplicate
-                                server_addBestFriend(name, phoneNumber, CurrentUser.theUser.getUserID(), new OnResultReadyListener<String>() {
+                                server_addBestFriend(name, phoneNumber, CurrentUser.getUser().getUserID(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         if (result.equals("success")) {
-                                            // CurrentUser.theUser.getBestFriends().add(new BestFriend(name, phoneNumber));
+                                            // CurrentUser.user.getBestFriends().add(new BestFriend(name, phoneNumber));
                                             //TODO: Update CurrentUser object with new BestFriend Object including name and phonenumber
                                             startActivity(intent);
                                         } else {

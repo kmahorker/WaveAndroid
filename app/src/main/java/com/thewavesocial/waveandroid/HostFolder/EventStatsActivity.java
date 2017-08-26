@@ -109,7 +109,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     public void onResultReady(Party result) {
                         if (result != null) {
                             party = result;
-                            //mainActivity.recreate();
+                            //sharedPreferencesContext.recreate();
                             loadActivity();
                             //setupPartyInfos();
                             Log.d("editedParty", result + "");
@@ -204,7 +204,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
     private void setupSpecialFields(int callerType, String hostID) {
         if (callerType == activityHostFragment) {
-            if (hostID.equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id")))
+            if (hostID.equals(DatabaseAccess.getTokenFromLocal().get("id")))
                 editView.setVisibility(View.VISIBLE);
             qrAction.setText("Open QR Scanner");
             qrAction.setOnClickListener(new View.OnClickListener() {
@@ -227,7 +227,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 @Override
                 public void onClick(View v) {
                     View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
-                    String id = CurrentUser.theUser.getUserID() + party.getPartyID();
+                    String id = CurrentUser.getUser().getUserID() + party.getPartyID();
                     ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode(id));
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
@@ -296,7 +296,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     }
 
                     //If coming from hostFragment and you are a host
-                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getTokenFromLocal(mainActivity).get("id"))) {
+                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getTokenFromLocal().get("id"))) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }

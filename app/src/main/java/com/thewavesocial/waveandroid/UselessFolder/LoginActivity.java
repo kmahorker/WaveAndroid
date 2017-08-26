@@ -36,7 +36,7 @@
 //    private EditText emailField, passField;
 //
 //    private ViewGroup viewGroup;
-//    private Activity mainActivity;
+//    private Activity sharedPreferencesContext;
 //    public static CallbackManager callbackManager;
 //
 //    @Override
@@ -45,7 +45,7 @@
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.login_layout);
 //        viewGroup = (ViewGroup) findViewById(android.R.id.content).getRootView();
-//        mainActivity = this;
+//        sharedPreferencesContext = this;
 //
 //        setupActionbar();
 //        setupReferences();
@@ -90,7 +90,7 @@
 //            @Override
 //            public void onError(FacebookException exception)
 //            {
-//                Toast.makeText(mainActivity, "Error Accessing Data", Toast.LENGTH_LONG);
+//                Toast.makeText(sharedPreferencesContext, "Error Accessing Data", Toast.LENGTH_LONG);
 //            }
 //        });
 //    }
@@ -98,13 +98,13 @@
 //    private void processJSONObject(JSONObject json)
 //    {
 //        System.out.println(json);
-//        Intent intentSignup = new Intent(mainActivity, SignupActivity.class);
+//        Intent intentSignup = new Intent(sharedPreferencesContext, SignupActivity.class);
 //        try
 //        {
 //            if ( json.getString("id") == "100000000000" )
 //            {
 //                //login
-//                Intent intentLogin = new Intent(mainActivity, HomeSwipeActivity.class);
+//                Intent intentLogin = new Intent(sharedPreferencesContext, HomeSwipeActivity.class);
 //                intentLogin.putExtra("userIDLong", json.getString("id"));
 //                startActivity(intentLogin);
 //                finish();
@@ -140,7 +140,7 @@
 //            @Override
 //            public boolean onTouch(View view, MotionEvent motionEvent)
 //            {
-//                UtilityClass.hideKeyboard(mainActivity);
+//                UtilityClass.hideKeyboard(sharedPreferencesContext);
 //                return true;
 //            }
 //        });
@@ -150,7 +150,7 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                Intent intent = new Intent(mainActivity, ForgotPasswordActivity.class);
+//                Intent intent = new Intent(sharedPreferencesContext, ForgotPasswordActivity.class);
 //                startActivity(intent);
 //            }
 //        });
@@ -160,7 +160,7 @@
 //            @Override
 //            public void onClick(View view)
 //            {
-//                Intent intent = new Intent(mainActivity, SignupActivity.class);
+//                Intent intent = new Intent(sharedPreferencesContext, SignupActivity.class);
 //                startActivity(intent);
 //            }
 //        });
@@ -176,18 +176,18 @@
 //                {
 //                    if (pass.equals("dmario123"))
 //                    {
-//                        Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+//                        Intent intent = new Intent(sharedPreferencesContext, HomeSwipeActivity.class);
 //                        startActivity(intent);
 //                        finish();
 //                    }
 //                    else
 //                    {
-//                        UtilityClass.printAlertMessage(mainActivity, "Incorrect Password. Please try again.", "Error: ", true);
+//                        UtilityClass.printAlertMessage(sharedPreferencesContext, "Incorrect Password. Please try again.", "Error: ", true);
 //                    }
 //                }
 //                else
 //                {
-//                    UtilityClass.printAlertMessage(mainActivity, "Unrecognized Email. Please create an account.", "Error: ", true);
+//                    UtilityClass.printAlertMessage(sharedPreferencesContext, "Unrecognized Email. Please create an account.", "Error: ", true);
 //                }
 //            }
 //        });

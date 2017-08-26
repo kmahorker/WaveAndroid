@@ -52,13 +52,27 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private Button facebookLogin;
     public ViewPager mPager;
     private CallbackManager callbackManager;
-    public final LoginTutorialActivity mainActivity = this;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseAccess.setContext(mainActivity);
+        DatabaseAccess.setContext(this);
+
+        String userID = DatabaseAccess.getTokenFromLocal().get("id");
+        if(!userID.equals("")){
+            DatabaseAccess.server_getUserObject(userID, new OnResultReadyListener<User>() {
+                @Override
+                public void onResultReady(User result) {
+                    if (result != null){
+                        Log.i(TAG, "user " + result.getFull_name() + " exists, starting HomeSwipeActivity...");
+                        CurrentUser.syncUser();
+                        startHomeSwipeActivity();
+                    }
+                }
+            });
+        }
+
         getSupportActionBar().hide();
         setContentView(R.layout.activity_login_tutorial);
 
@@ -83,12 +97,12 @@ public class LoginTutorialActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Toast.makeText(mainActivity, "Cancel", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginTutorialActivity.this, "Cancel", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException error) {
-                Toast.makeText(mainActivity, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginTutorialActivity.this, "Error" + error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
         facebookLogin = (Button) findViewById(R.id.facebook_login_button);
@@ -98,7 +112,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 Log.d(TAG, "Start login...");
                 List<String> permissions = new ArrayList<String>();
                 permissions.add("public_profile");
-                LoginManager.getInstance().logInWithReadPermissions(mainActivity, permissions);
+                LoginManager.getInstance().logInWithReadPermissions(LoginTutorialActivity.this, permissions);
             }
         });
     }
@@ -187,11 +201,11 @@ public class LoginTutorialActivity extends AppCompatActivity {
                                 @Override
                                 public void onResultReady(Boolean userInfoExists) {
                                     if (userInfoExists) {
-                                        Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
-                                        startActivity(intent);
+                                        startHomeSwipeActivity();
                                     } else {
                                         Log.i(TAG, "user info for " + user.getDisplayName() + " does not exist, creating new database entry...");
                                         createNewUserFromFacebookToken(token);
+                                        startHomeSwipeActivity();
                                     }
                                 }
                             });
@@ -205,6 +219,13 @@ public class LoginTutorialActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void startHomeSwipeActivity(){
+        Intent intent = new Intent(this, HomeSwipeActivity.class);
+        //do not add activity to back stack
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     private void createNewUserFromFacebookToken(final AccessToken token){
@@ -228,9 +249,9 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     @Override
                     public void onResultReady(String result) {
                         user.setUserID(result);
-                        DatabaseAccess.saveTokentoLocal(mainActivity, result);
-                        CurrentUser.setTheUser(user);
-                        Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", userID:" + result);
+                        DatabaseAccess.saveTokentoLocal(result);
+                        CurrentUser.syncUser();
+                        Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", userID:" + user.getUserID());
                     }
                 });
             }

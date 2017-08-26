@@ -95,7 +95,7 @@ public class SearchEventCustomAdapter extends BaseAdapter {
                     Toast.makeText(mainActivity, "Party Already Attending.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    DatabaseAccess.server_manageUserForParty(CurrentUser.theUser.getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_manageUserForParty(CurrentUser.getUser().getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if ( result.equals("success") ) {
