@@ -471,10 +471,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
-/*
-        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + getTokenFromLocal(sharedPreferencesContext).get("id")
-                + "/profile-photo?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");
-*/
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child(getTokenFromLocal().get("id").toString());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -583,63 +579,77 @@ public final class DatabaseAccess {
             default:
                 throw new RuntimeException("server_manageUserForParty: Invalid user_event relationship");
         }
-        server_changeEventRelationship("event_user", userID, eventID, action, change, new OnResultReadyListener<String>() {
+        server_changeEventRelationship(userID, eventID, action, change, new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
-                server_changeEventRelationship("user_event", userID, eventID, action, change, new OnResultReadyListener<String>() {
-                    @Override
-                    public void onResultReady(String result) {
-                        if(delegate != null)
-                            delegate.onResultReady("success");
-                    }
-                });
-            }
-        });
-    }
-
-    public static void server_changeEventRelationship(String dbChild, String userID, String eventID, final String action, final int change, final OnResultReadyListener<String> delegate){
-        DatabaseReference db;
-        if (dbChild == "event_user")
-            db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID).child(userID);
-        else
-            db = FirebaseDatabase.getInstance().getReference("user_event").child(userID).child(eventID);
-        db.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                if(mutableData.getValue(Integer.class) == null && action != "DELETE")
-                    mutableData.setValue(change);
-                else {
-                    if (action.equals("POST")) {
-                        mutableData.setValue(mutableData.getValue(Integer.class) + change + 128);
-                    }
-                    else if (action.equals("DELETE")){
-                        mutableData.setValue(mutableData.getValue(Integer.class) - change);
-                    }
-                }
-                return Transaction.success(mutableData);
-            }
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                // Transaction completed
-                Log.d(TAG, "postTransaction:onComplete:" + databaseError);
                 if(delegate != null)
                     delegate.onResultReady("success");
             }
         });
     }
 
-    public static void server_updateUser(String userID, HashMap<String, String> body, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
-        Iterator it = body.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            db.child(pair.getKey().toString()).setValue(pair.getValue()); //iterates through every value in body parameter and updates those values in database
-        }
+    /**
+     *
+     * @param userID Firebase key for user
+     * @param eventID Firebase key for event
+     * @param action "POST" or "DELETE"
+     * @param change the status change applied on top of existing bit array
+     * @param delegate callback
+     */
+    private static void server_changeEventRelationship(final String userID, final String eventID, final String action, final int change, final OnResultReadyListener<String> delegate){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                MutableData md_eu = mutableData.child("event_user").child(eventID).child(userID);
+                MutableData md_ue = mutableData.child("user_event").child(userID).child(eventID);
+                if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
+                    md_eu.setValue(change);
+                    md_ue.setValue(change);
+                }
+                else if (action.equals("POST")) {
+                    md_eu.setValue(md_eu.getValue(Integer.class) + change + 128);
+                    md_ue.setValue(md_ue.getValue(Integer.class) + change + 128);
+                }
+                else if (action.equals("DELETE")){
+                    md_eu.setValue(md_eu.getValue(Integer.class) - change);
+                    md_ue.setValue(md_ue.getValue(Integer.class) - change);
+                }
+                return Transaction.success(mutableData);
+            }
+            @Override
+            public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
+                // Transaction completed
+                Log.d(TAG, "server_changeEventRelationship:onComplete:" + error);
+                if(!committed){
+                    Log.w(TAG, "server_changeEventRelationship: Transaction complete but not committed", error.toException());
+                }
+                if(delegate != null)
+                    delegate.onResultReady("success");
+            }
+        });
+    }
+
+    /**
+     *
+     * @param userID Firebase key for user
+     * @param user User object as source of update
+     * @param delegate callback
+     */
+    public static void server_updateUser(String userID, User user, final OnResultReadyListener<String> delegate) {
+        FirebaseDatabase.getInstance().getReference("events")
+                .child(userID)
+                .setValue(user);
         if(delegate != null)
             delegate.onResultReady("success");
     }
 
+    /**
+     *
+     * @param partyID Firebase key for event
+     * @param party Party object as source of update
+     * @param delegate callback
+     */
     public static void server_updateParty(String partyID, Party party, final OnResultReadyListener<String> delegate) {
         FirebaseDatabase.getInstance().getReference("events")
                 .child(partyID)
@@ -651,8 +661,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
-        /*String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
-                + "/followings/" + targetID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         db.child("following").child(userID).child(targetID).setValue(true); //not so sure what value should appear as in followings list, so I just set it to the input targetID
         db.child("followers").child(targetID).child(userID).setValue(true);
@@ -662,9 +670,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getTokenFromLocal(sharedPreferencesContext).get("jwt");
-        HashMap<String, String> body = new HashMap<>();*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         BestFriend bestFriend = new BestFriend(name, number);
         db.setValue(bestFriend);
