@@ -1,16 +1,11 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.facebook.AccessToken;
 import com.firebase.geofire.GeoFire;
@@ -40,30 +35,10 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public final class DatabaseAccess {
     public static Context sharedPreferencesContext;
@@ -101,7 +76,7 @@ public final class DatabaseAccess {
 
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child(getCurrentUserId().toString());
+        StorageReference storageRef = storage.getReference().child(getCurrentUserId());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -118,6 +93,9 @@ public final class DatabaseAccess {
                 //Uri downloadUrl = taskSnapshot.getDownloadUrl();
             }
         });
+        if(delegate != null) {
+            delegate.onResultReady("success");
+        }
     }
 
     public static void server_SetCurrentUserByFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate) {
@@ -327,7 +305,7 @@ public final class DatabaseAccess {
             delegate.onResultReady("success");
     }
 
-    public static int notificationTypeGenerator(String type) {
+    private static int notificationTypeGenerator(String type) {
         switch (type) {
             case "following":
                 return 1;
@@ -450,8 +428,8 @@ public final class DatabaseAccess {
         final ArrayList<Party> hosting = new ArrayList<>();
         final ArrayList<Party> bouncing = new ArrayList<>();
         final ArrayList<Party> attending = new ArrayList<>();
-        final HashMap<String, ArrayList<Party>> parties = new HashMap();
-        final HashMap<String, Integer> partyIDsAndR = new HashMap(); //partyIDsAndRelationships
+        final HashMap<String, ArrayList<Party>> parties = new HashMap<>();
+        final HashMap<String, Integer> partyIDsAndR = new HashMap<>(); //partyIDsAndRelationships
         final ArrayList<String> partyIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -505,7 +483,7 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
+    private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         final ArrayList<Party> partyList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -528,8 +506,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID + "/users?access_token="
-                + getCurrentUserId(sharedPreferencesContext).get("jwt");*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID);
         Log.i(TAG, "server_getUsersOfEvent: " + eventID);
         final ArrayList<User> attending = new ArrayList<>();
@@ -537,8 +513,8 @@ public final class DatabaseAccess {
         final ArrayList<User> hosting = new ArrayList<>();
         final ArrayList<User> inviting = new ArrayList<>();
         final ArrayList<User> bouncing = new ArrayList<>();
-        final HashMap<String, ArrayList<User>> users = new HashMap();
-        final HashMap<String, Integer> userIDsAndR = new HashMap();
+        final HashMap<String, ArrayList<User>> users = new HashMap<>();
+        final HashMap<String, Integer> userIDsAndR = new HashMap<>();
         final ArrayList<String> userIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -691,7 +667,7 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
+    private static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
         final ArrayList<User> userList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -798,18 +774,6 @@ public final class DatabaseAccess {
      * Download Profile Picture from Server. Return bitmap or null.
      */
     public static void server_getProfilePicture(String userID, final OnResultReadyListener<Bitmap> delegate) {
-//        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
-//                + "/profile-photo?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");
-//        RequestComponents comp = new RequestComponents(url, "GET", null);
-//        new ImageDownloadTask(sharedPreferencesContext, comp, new OnResultReadyListener<Bitmap>() {
-//            @Override
-//            public void onResultReady(Bitmap result) {
-//                if (result != null && delegate != null) {
-//                    delegate.onResultReady(result);
-//                    Log.d("Image_Download", "Success");
-//                }
-//            }
-//        });
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child(getCurrentUserId());
 
@@ -837,8 +801,6 @@ public final class DatabaseAccess {
      * Delete Best Friend on server
      */
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getCurrentUserId(sharedPreferencesContext).get("jwt");*/
         final DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         Query q1 = db.orderByChild("number").startAt(number);
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -921,7 +883,7 @@ public final class DatabaseAccess {
             delegate.onResultReady("success");
     }
 
-    public static void updateFollowersCount(String userID, String targetID, final int mode){
+    private static void updateFollowersCount(String userID, String targetID, final int mode){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("following_count");
         db.runTransaction(new Transaction.Handler() {
             @Override
