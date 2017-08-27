@@ -44,6 +44,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
+import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
@@ -1090,7 +1091,8 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
 
             try {
-                server_createNewParty(address, date, duration, emoji, CurrentUser.getUser().getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, price, new OnResultReadyListener<String>() {
+                Party party = new Party(address, date, duration, emoji, CurrentUser.getUser().getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, null, price);
+                server_createNewParty( party, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
 /*                        int commaIndex = result.indexOf(',');

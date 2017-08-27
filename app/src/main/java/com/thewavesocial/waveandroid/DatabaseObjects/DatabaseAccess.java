@@ -523,61 +523,46 @@ public final class DatabaseAccess {
 
 //todo --------------------------------------------------------------------------------POST Requests
 
-    public static void server_createNewParty(String address,
-                                             long date,
-                                             long duration,
-                                             String emoji,
-                                             String host_id,
-                                             String host_name,
-                                             boolean e_public,
-                                             double lat,
-                                             double lng,
-                                             int max_age,
-                                             int min_age,
-                                             String name,
-                                             double price,
-                                             final OnResultReadyListener<String> delegate){
-
+    /**
+     * generate key for Party, set partyID, then add Party to Firebase and Geofire
+     * @param party Party to be stored; party.setPartyID() is called
+     * @param delegate callback; is invoked immediately and does not wait on Firebase; beware of race condition
+     * @return generated Firebase key
+     */
+    public static String server_createNewParty(Party party, final OnResultReadyListener<String> delegate){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
-        String eventID = db.push().getKey(); //unique ID for each event
+        String partyID = db.push().getKey(); //unique ID for each event
+        party.setPartyID(partyID);
+        db.child(partyID).setValue(party);
 
-        Party party = new Party(address, date, duration, emoji, host_id, host_name, e_public, lat, lng, max_age, min_age, name, eventID, price);
-        db.child(eventID).setValue(party);
-
+        //generate corresponding Geofire entry
         GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
-        geoFire.setLocation(eventID, new GeoLocation(lat, lng));
+        geoFire.setLocation(partyID, new GeoLocation(party.getLat(), party.getLng()));
 
         if(delegate != null)
-            delegate.onResultReady(eventID);
-
-/*	HashMap<String, String> event_info = new HashMap();
-	event_info.put("name", name);
-	event_info.put("emoji", emoji);
-	event_info.put("price", price + "");
-	event_info.put("address", address);
-	event_info.put("lat", lat + "");
-	event_info.put("lng", lng + "");
-	event_info.put("e_public", isPublic ? "1" : "0");
-	event_info.put("start_timestamp", startTimeStamp + "");
-	event_info.put("end_timestamp", endingTimeStamp + "");
-	event_info.put("min_age", minAge + "");
-	event_info.put("max_age", maxAge + "");*/ //obsolete
+            delegate.onResultReady(partyID);
+        return  partyID;
     }
 
-    public static void server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
+    /**
+     * generate key for User, set userID, then add User to Firebase
+     * @param user User to be stored; user.setUserID() is called
+     * @param delegate callback; is invoked immediately and does not wait on Firebase; beware of race condition
+     * @return generated Firebase key
+     */
+    public static String server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
-        String userID = db.push().getKey(); //unique ID for each event
+        String userID = db.push().getKey(); //unique ID for each user
         user.setUserID(userID);
         db.child(userID).setValue(user);
+
         if(delegate != null)
             delegate.onResultReady(userID);
+        return  userID;
     }
 
 
     public static void server_manageUserForParty(final String userID, final String eventID, final String relationship, final String action, final OnResultReadyListener<String> delegate) {
-        //RequestComponents[] comps = new RequestComponents[1];
-        //HashMap<String, String> about = new HashMap();
-        //about.put("relationship", relationship);
         final int change;
         switch(relationship){
             case "hosting":
@@ -596,8 +581,7 @@ public final class DatabaseAccess {
                 change = 4;
                 break;
             default:
-                change = 0;
-                break;
+                throw new RuntimeException("server_manageUserForParty: Invalid user_event relationship");
         }
         server_changeEventRelationship("event_user", userID, eventID, action, change, new OnResultReadyListener<String>() {
             @Override
@@ -690,8 +674,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_inviteUserToEvent(String userID, String eventID, final OnResultReadyListener<String> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID + "/invites/"
-                + userID + "?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
         server_manageUserForParty(userID, eventID, "invited", "POST", new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
@@ -702,13 +684,11 @@ public final class DatabaseAccess {
     }
 
     public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + receiverID
-                + "/notifications?access_token=" + getTokenFromLocal(sharedPreferencesContext).get("jwt");*/
-/*        HashMap<String, String> body = new HashMap<>();*/
-        //DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications").child(receiverID).child(type);
-        //String uuid = UUID.randomUUID().toString(); //unique ID for each event
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications").child(receiverID);
+        String key = db.push().getKey();
         int numType = notificationTypeGenerator(type);
         Notification notification = new Notification(senderID, numType, eventID);
+        db.child(key).setValue(notification);
         if(delegate != null)
             delegate.onResultReady("success");
     }
@@ -730,6 +710,11 @@ public final class DatabaseAccess {
         }
     }
 
+    /**
+     * retrieve a single User object from Firebase
+     * @param userID Firebase key referencing the User object under 'users'
+     * @param delegate callback; invoked with User if successful, null if not
+     */
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
@@ -741,30 +726,39 @@ public final class DatabaseAccess {
                     User user = dataSnapshot.getValue(User.class);
                     if(delegate != null)
                         delegate.onResultReady(user);
-                }
-                else
+                } else {
                     delegate.onResultReady(null);
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.d(HomeSwipeActivity.TAG, "ValueEventListener.onCancelled");
+                Log.w(HomeSwipeActivity.TAG, "server_getUserObject: ValueEventListener.onCancelled", databaseError.toException());
             }
         });
     }
 
+    /**
+     * retrieve a single Party object from Firebase
+     * @param partyID Firebase key referencing the Party object under 'events'
+     * @param delegate callback; invoked with Party if successful, null if not
+     */
     public static void server_getPartyObject(final String partyID, final OnResultReadyListener<Party> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getPartyObject onDataChange");
                 if(dataSnapshot.getValue() != null){
                     Party party = dataSnapshot.getValue(Party.class);
                     if(delegate != null)
                         delegate.onResultReady(party);
+                } else {
+                    delegate.onResultReady(null);
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.w(HomeSwipeActivity.TAG, "server_getPartyObject: ValueEventListener.onCancelled", databaseError.toException());
             }
         });
     }
