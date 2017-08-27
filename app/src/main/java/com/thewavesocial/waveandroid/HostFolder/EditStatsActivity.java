@@ -642,7 +642,7 @@ public class EditStatsActivity extends AppCompatActivity {
             max_age = party.getMax_age();
             address = party.getAddress();
 
-            //hostingUsers.add(DatabaseAccess.getTokenFromLocal(sharedPreferencesContext).get("id"));
+            //hostingUsers.add(DatabaseAccess.getCurrentUserId(sharedPreferencesContext).get("id"));
         }
 
         //Compose all party information

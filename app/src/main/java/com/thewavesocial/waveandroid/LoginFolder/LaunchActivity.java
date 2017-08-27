@@ -10,15 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
-import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
-import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 
 public class LaunchActivity extends AppCompatActivity {
@@ -31,7 +23,7 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup_layout);
         getSupportActionBar().hide();
-        DatabaseAccess.saveTokentoLocal("123");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
+        DatabaseAccess.saveCurrentUserId("123");//, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNywiaWF0IjoxNDkyODk5NDg0LCJleHAiOjE0OTU0OTE0ODR9.5lwF5yqZYummOw9qgHp0rq5SDe0eXNMpp1ebn4P9468");
 
         enterApp();
     }
@@ -72,7 +64,7 @@ public class LaunchActivity extends AppCompatActivity {
 //                db.addListenerForSingleValueEvent(new ValueEventListener() {
 //                    @Override
 //                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        if(dataSnapshot.hasChild(DatabaseAccess.getTokenFromLocal().get("id"))){
+//                        if(dataSnapshot.hasChild(DatabaseAccess.getCurrentUserId())){
 //                            CurrentUser.loadBestFriends(new OnResultReadyListener<Boolean>() {
 //                                @Override
 //                                public void onResultReady(Boolean result) {
@@ -90,8 +82,8 @@ public class LaunchActivity extends AppCompatActivity {
 //                    }
 //                });
 /*                String url = getString(R.string.server_url) + "users/"
-                        + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("id") + "?access_token="
-                        + DatabaseAccess.getTokenFromLocal(LaunchActivity.this).get("jwt");
+                        + DatabaseAccess.getCurrentUserId(LaunchActivity.this).get("id") + "?access_token="
+                        + DatabaseAccess.getCurrentUserId(LaunchActivity.this).get("jwt");
                 RequestComponents comp = new RequestComponents(url, "GET", null);
 
                 new DatabaseAccess.HttpRequestTask(LaunchActivity.this, new RequestComponents[]{comp}, new OnResultReadyListener<ArrayList<String>>() {

@@ -95,7 +95,7 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         LoginManager.getInstance().logOut();
-                        DatabaseAccess.saveTokentoLocal("");//, "");
+                        DatabaseAccess.saveCurrentUserId("");//, "");
 
                         //Clear all activities and go to LoginTutorial Page
                         Intent intent = new Intent(getApplicationContext(), LoginTutorialActivity.class);

@@ -60,14 +60,14 @@ public class LoginTutorialActivity extends AppCompatActivity {
         Log.d(TAG, "LoginTutorialActivity.onCreate");
         DatabaseAccess.setContext(this);
 
-        final String userID = DatabaseAccess.getTokenFromLocal().get("id");
+        final String userID = DatabaseAccess.getCurrentUserId();
         if(!userID.equals("")){
             DatabaseAccess.server_getUserObject(userID, new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
                     if (result != null){
                         Log.i(TAG, "user " + result.getFull_name() + " exists, starting HomeSwipeActivity...");
-                        DatabaseAccess.saveTokentoLocal(userID);
+                        DatabaseAccess.saveCurrentUserId(userID);
                         CurrentUser.syncUser(new OnResultReadyListener<Boolean>() {
                             @Override
                             public void onResultReady(Boolean result) {
@@ -259,7 +259,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 DatabaseAccess.server_createNewUser(user, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
-                        DatabaseAccess.saveTokentoLocal(result);
+                        DatabaseAccess.saveCurrentUserId(result);
                         CurrentUser.syncUser();
                         Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", facebookID:" + user.getFacebookID());
                         if(delegate != null){

@@ -21,15 +21,15 @@ public final class CurrentUser {
      */
     public static void loadBestFriends(final OnResultReadyListener<Boolean> delegate) {
         Log.d(HomeSwipeActivity.TAG, "CurrentUser.loadBestFriends");
-        if(getTokenFromLocal().get("id").equals("")){
+        if(getCurrentUserId().equals("")){
             throw new RuntimeException("id is not set.");
         }
-        server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
+        server_getUserObject(getCurrentUserId(), new OnResultReadyListener<User>() {
             @Override
             public void onResultReady(User result) {
                 CurrentUser.user = result;
                 Log.i(TAG, "Current user set. name:" + user.getFull_name());
-                server_getBestFriends(getTokenFromLocal().get("id"), new OnResultReadyListener<List<BestFriend>>() {
+                server_getBestFriends(getCurrentUserId(), new OnResultReadyListener<List<BestFriend>>() {
                     @Override
                     public void onResultReady(List<BestFriend> result) {
                         CurrentUser.getUser().setBestFriends(new ArrayList<BestFriend>());
@@ -56,7 +56,7 @@ public final class CurrentUser {
     }
 
     /**
-     * updates current user object with Firebase, using the Firebase id form DatabaseAccess.getTokenFromLocal
+     * updates current user object with Firebase, using the Firebase id form DatabaseAccess.getCurrentUserId
      */
     public static void syncUser() {
         syncUser(null);
@@ -67,6 +67,6 @@ public final class CurrentUser {
     }
 
     public static String getKey() {
-        return DatabaseAccess.getTokenFromLocal().get("id");
+        return DatabaseAccess.getCurrentUserId();
     }
 }

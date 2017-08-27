@@ -1078,7 +1078,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             lat = 0;
             lng = 0;
 
-            hostingUsers.add(DatabaseAccess.getTokenFromLocal().get("id"));
+            hostingUsers.add(DatabaseAccess.getCurrentUserId());
         }
 
 

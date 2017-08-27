@@ -204,7 +204,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
     private void setupSpecialFields(int callerType, String hostID) {
         if (callerType == activityHostFragment) {
-            if (hostID.equals(DatabaseAccess.getTokenFromLocal().get("id")))
+            if (hostID.equals(DatabaseAccess.getCurrentUserId()))
                 editView.setVisibility(View.VISIBLE);
             qrAction.setText("Open QR Scanner");
             qrAction.setOnClickListener(new View.OnClickListener() {
@@ -296,7 +296,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     }
 
                     //If coming from hostFragment and you are a host
-                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getTokenFromLocal().get("id"))) {
+                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getCurrentUserId())) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }

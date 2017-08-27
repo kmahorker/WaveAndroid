@@ -54,7 +54,7 @@ public class HomeSwipeActivity extends AppCompatActivity {
             throw new RuntimeException("current user is not set.");
 //            Log.i(TAG, "onCreate: No current user.");
 //            UtilityClass.startProgressbar(mainActivity);
-//            DatabaseAccess.server_getUserObject(getTokenFromLocal().get("id"), new OnResultReadyListener<User>() {
+//            DatabaseAccess.server_getUserObject(getCurrentUserId(), new OnResultReadyListener<User>() {
 //                @Override
 //                public void onResultReady(User result) {
 //                    if (result != null) {
