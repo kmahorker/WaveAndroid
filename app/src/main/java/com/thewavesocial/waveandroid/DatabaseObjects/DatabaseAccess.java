@@ -406,7 +406,7 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
                    followingIDlist.add(postSnapshot.getKey());
-                Log.i(TAG, "onDataChange: FollowingIDList for user " + userID + ": " + followingIDlist);
+                Log.i(TAG, "server_getUserFollowing: " + dataSnapshot.toString());
                 server_getUsersFromIDs(followingIDlist, new OnResultReadyListener<ArrayList<User>>() {
                     @Override
                     public void onResultReady(ArrayList<User> result) {
@@ -421,7 +421,6 @@ public final class DatabaseAccess {
         });
     }
     public static void server_getEventsOfUser(final String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        Log.d(TAG, "server_getEventsOfUser: entry:" + userID);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("user_event").child(userID);
         final ArrayList<Party> invited = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();
@@ -434,7 +433,6 @@ public final class DatabaseAccess {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "server_getEventsOfUser: " + userID);
                 Log.d(TAG, "server_getEventsOfUser: " + dataSnapshot.toString());
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     partyIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
@@ -600,7 +598,7 @@ public final class DatabaseAccess {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                Log.d(HomeSwipeActivity.TAG, "onKeyEntered key:" + key);
+                Log.d(TAG, "server_getEventsInDistance onKeyEntered:" + key);
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events").child(key);
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -614,19 +612,19 @@ public final class DatabaseAccess {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.e(HomeSwipeActivity.TAG, "server_getEventsInDistance", databaseError.toException());
+                        Log.e(TAG, "server_getEventsInDistance", databaseError.toException());
                     }
                 });
             }
 
             @Override
             public void onKeyExited(String key) {
-
+                Log.d(TAG, "server_getEventsInDistance onKeyExited:" + key);
             }
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
-
+                Log.d(TAG, "server_getEventsInDistance onKeyMoved:" + key);
             }
 
             @Override

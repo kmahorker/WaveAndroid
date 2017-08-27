@@ -340,7 +340,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 )/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/
         );
         marker.setTag(party);
-        Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\")");
+        Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\" ID:" + party.getPartyID() + ")");
     }
 
 
