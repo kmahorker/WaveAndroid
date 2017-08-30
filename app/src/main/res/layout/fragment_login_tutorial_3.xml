@@ -31,11 +31,11 @@
             android:layout_marginRight="43dp"
             android:orientation="horizontal">
 
+            <!--android:layout_marginTop="11dp"-->
             <ImageView
                 android:id="@+id/tutorialIcon_3"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="11dp"
                 app:srcCompat="@drawable/tutorial_host_icon" />
 
             <TextView

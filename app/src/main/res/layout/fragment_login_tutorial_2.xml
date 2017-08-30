@@ -12,13 +12,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!--android:layout_weight="0.56" is manually adjusted to align with other pages-->
         <ImageView
             android:id="@+id/tutorialBigImage_2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_marginBottom="50dp"
-            android:layout_weight="0.7"
+            android:layout_weight="0.56"
             app:srcCompat="@drawable/tutorial_page_2"/>
 
         <LinearLayout
@@ -31,11 +32,11 @@
             android:layout_marginRight="43dp"
             android:orientation="horizontal">
 
+            <!--android:layout_marginTop="11dp"-->
             <ImageView
                 android:id="@+id/tutorialIcon_2"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="11dp"
                 app:srcCompat="@drawable/tutorial_search_icon" />
 
             <TextView
