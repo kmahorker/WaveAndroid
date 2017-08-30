@@ -45,7 +45,7 @@
                 android:layout_marginLeft="10dp"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="3"
-                android:text="Search for a friend or an event"
+                android:text="@string/login_tutorial_title_2"
                 android:textColor="#000000"
                 android:textSize="22dp" />
 
@@ -61,7 +61,7 @@
             android:layout_weight="0.15"
             android:lineSpacingExtra="2dp"
             android:maxLines="5"
-            android:text="Use the Search Box to find and follow a friend. Tap on the Events box to find events happening near you."
+            android:text="@string/login_tutorial_text_2"
             android:textColor="#8E8E93"
             android:textSize="16dp" />
 

@@ -44,7 +44,7 @@
                 android:layout_marginLeft="10dp"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="3"
-                android:text="Find parties near you"
+                android:text="@string/login_tutorial_title_1"
                 android:textColor="#000000"
                 android:textSize="22dp" />
 
@@ -60,7 +60,7 @@
             android:layout_weight="0.15"
             android:lineSpacingExtra="2dp"
             android:maxLines="5"
-            android:text="Tap on a house icon to check it out. You can see who's going to an event and when and where it's going down."
+            android:text="@string/login_tutorial_text_1"
             android:textColor="#8E8E93"
             android:textSize="16dp" />
 

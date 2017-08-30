@@ -45,7 +45,7 @@
                 android:layout_marginLeft="10dp"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="3"
-                android:text="Host parties and invite friends"
+                android:text="@string/login_tutorial_title_3"
                 android:textColor="#000000"
                 android:textSize="22dp" />
 
@@ -61,7 +61,7 @@
             android:layout_weight="0.15"
             android:lineSpacingExtra="2dp"
             android:maxLines="5"
-            android:text="Just tap on a house icon to see who's going to a party and when it's getting shut down"
+            android:text="@string/login_tutorial_text_3"
             android:textColor="#8E8E93"
             android:textSize="16dp" />
 

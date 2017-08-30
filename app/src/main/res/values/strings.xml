@@ -16,5 +16,11 @@
     <string name="follow_row_following">Following</string>
     <string name="follow_row_follow">Follow</string>
     <string name="server_url">https://api.theplugsocial.com/v1/</string>
+    <string name="login_tutorial_title_1">Find parties near you</string>
+    <string name="login_tutorial_text_1">Tap on a house icon to check it out. You can see who\'s going to an event and when and where it\'s going down.</string>
+    <string name="login_tutorial_title_2">Search for a friend or an event</string>
+    <string name="login_tutorial_text_2">Use the Search Box to find and follow a friend. Tap on the Events box to find events happening near you.</string>
+    <string name="login_tutorial_title_3">Host parties and invite friends</string>
+    <string name="login_tutorial_text_3">Just tap on a house icon to see who\'s going to a party and when it\'s getting shut down</string>
 
 </resources>
