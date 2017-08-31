@@ -203,6 +203,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                                 @Override
                                 public void onResultReady(User userInfo) {
                                     if (userInfo != null) {
+                                        CurrentUser.setUser(userInfo);
                                         startHomeSwipeActivity();
                                     } else {
                                         Log.i(TAG, "user info for " + firebaseUser.getDisplayName() + " does not exist, creating new database entry...");
@@ -256,6 +257,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     @Override
                     public void onResultReady(String result) {
                         Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", facebookID:" + user.getFacebookID());
+                        //sync instead of returning User directly to ensure data is consistent with subsequent login
                         CurrentUser.syncUser(new OnResultReadyListener<User>() {
                             @Override
                             public void onResultReady(User result) {
