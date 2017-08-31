@@ -462,8 +462,10 @@ public final class UtilityClass {
 
     public static List<String> partyListToNames(List<Party> parties){
         List<String> stringNames = new ArrayList<>();
-        for(Party p : parties){
-            stringNames.add(p.getName());
+        if(parties != null) {
+            for (Party p : parties) {
+                stringNames.add(p.getName());
+            }
         }
         return stringNames;
     }
