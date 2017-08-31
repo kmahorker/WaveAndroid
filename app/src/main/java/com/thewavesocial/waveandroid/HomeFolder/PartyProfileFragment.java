@@ -192,9 +192,11 @@ public class PartyProfileFragment extends Fragment {
     }
 
     private boolean containsID(List<Party> following, String partyID) {
-        for ( Party party : following ) {
-            if ( party.getPartyID().equals(partyID) ) {
-                return true;
+        if ( following != null ) {
+            for (Party party : following) {
+                if (party.getPartyID().equals(partyID)) {
+                    return true;
+                }
             }
         }
         return false;
