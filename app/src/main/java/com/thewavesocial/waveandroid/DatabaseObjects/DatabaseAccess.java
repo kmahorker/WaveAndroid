@@ -42,9 +42,24 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class DatabaseAccess {
-    public static Context sharedPreferencesContext;
-    public static final String TAG = HomeSwipeActivity.TAG;
+    private static final String PATH_TO_EVENTS = "events";
+    private static final String PATH_TO_USERS = "users";
+    private static final String PATH_TO_EVENT_USER = "event_user";
+    private static final String PATH_TO_BESTFRIENDS = "bestfriends";
+    private static final String PATH_TO_FOLLOWER_COUNT = "follower_count";
+    private static final String PATH_TO_FOLLOWING = "following";
+    private static final String PATH_TO_FOLLOWERS = "followers";
+    private static final String PATH_TO_USER_EVENT = "user_event";
+    private static final String PATH_TO_NOTIFICATIONS = "notifications";
     private static final String PATH_TO_GEOFIRE = "geofire";
+
+    //ignore the warning; storing ApplicationContext is safe (//stackoverflow.com/questions/37709918/)
+    private static Context sharedPreferencesContext;
+
+    public static final String TAG = HomeSwipeActivity.TAG;
+
+    //prevent instantiation
+    private DatabaseAccess(){}
 
     /**
      * Initialize sharedPreferencesContext
@@ -100,7 +115,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_SetCurrentUserByFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
         //ensure the key is same in User class
         db.orderByChild("userID")
                 .equalTo(token.getUserId())
@@ -134,7 +149,7 @@ public final class DatabaseAccess {
      * @return generated Firebase key
      */
     public static String server_createNewParty(Party party, final OnResultReadyListener<String> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
         String partyID = db.push().getKey(); //unique ID for each event
         party.setPartyID(partyID);
         db.child(partyID).setValue(party);
@@ -155,7 +170,7 @@ public final class DatabaseAccess {
      * @return generated Firebase key
      */
     public static String server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("users");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child(PATH_TO_USERS);
         String userID = db.push().getKey(); //unique ID for each user
         user.setUserID(userID);
         db.child(userID).setValue(user);
@@ -209,8 +224,8 @@ public final class DatabaseAccess {
         db.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                MutableData md_eu = mutableData.child("event_user").child(eventID).child(userID);
-                MutableData md_ue = mutableData.child("user_event").child(userID).child(eventID);
+                MutableData md_eu = mutableData.child(PATH_TO_EVENT_USER).child(eventID).child(userID);
+                MutableData md_ue = mutableData.child(PATH_TO_USER_EVENT).child(userID).child(eventID);
                 if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
                     md_eu.setValue(change);
                     md_ue.setValue(change);
@@ -245,7 +260,7 @@ public final class DatabaseAccess {
      * @param delegate callback
      */
     public static void server_updateUser(String userID, User user, final OnResultReadyListener<String> delegate) {
-        FirebaseDatabase.getInstance().getReference("events")
+        FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS)
                 .child(userID)
                 .setValue(user);
         if(delegate != null)
@@ -259,7 +274,7 @@ public final class DatabaseAccess {
      * @param delegate callback
      */
     public static void server_updateParty(String partyID, Party party, final OnResultReadyListener<String> delegate) {
-        FirebaseDatabase.getInstance().getReference("events")
+        FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS)
                 .child(partyID)
                 .setValue(party);
         new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE))
@@ -270,7 +285,7 @@ public final class DatabaseAccess {
 
     public static void server_followUser(String userID, String targetID, final OnResultReadyListener<String> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        db.child("following").child(userID).child(targetID).setValue(true); //not so sure what value should appear as in followings list, so I just set it to the input targetID
+        db.child(PATH_TO_FOLLOWING).child(userID).child(targetID).setValue(true); //not so sure what value should appear as in followings list, so I just set it to the input targetID
         db.child("followers").child(targetID).child(userID).setValue(true);
         updateFollowersCount(userID, targetID, 1);
         if(delegate != null)
@@ -278,7 +293,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_addBestFriend(String name, String number, String userId, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userId).child(PATH_TO_BESTFRIENDS);
         BestFriend bestFriend = new BestFriend(name, number);
         db.setValue(bestFriend);
         //db.child("userID").setValue(userId);
@@ -297,7 +312,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_createNotification(String receiverID, String senderID, String eventID, String type, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("notifications").child(receiverID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_NOTIFICATIONS).child(receiverID);
         String key = db.push().getKey();
         int numType = notificationTypeGenerator(type);
         Notification notification = new Notification(senderID, numType, eventID);
@@ -308,7 +323,7 @@ public final class DatabaseAccess {
 
     private static int notificationTypeGenerator(String type) {
         switch (type) {
-            case "following":
+            case PATH_TO_FOLLOWING:
                 return 1;
             case "followed":
                 return 2;
@@ -330,7 +345,7 @@ public final class DatabaseAccess {
      */
     public static void server_getUserObject(final String userID, final OnResultReadyListener<User> delegate) {
         Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject");
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -356,7 +371,7 @@ public final class DatabaseAccess {
      * @param delegate callback; invoked with Party if successful, null if not
      */
     public static void server_getPartyObject(final String partyID, final OnResultReadyListener<Party> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(partyID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS).child(partyID);
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -377,7 +392,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUserFollowers(String userID, final OnResultReadyListener<List<User>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_FOLLOWERS).child(userID);
         Log.i(TAG, "server_getUserFollowers: " + db);
         final ArrayList<String> followerIDlist = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -400,7 +415,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUserFollowing(final String userID, final OnResultReadyListener<List<User>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_FOLLOWING).child(userID);
         final ArrayList<String> followingIDlist = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -422,7 +437,7 @@ public final class DatabaseAccess {
         });
     }
     public static void server_getEventsOfUser(final String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("user_event").child(userID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USER_EVENT).child(userID);
         final ArrayList<Party> invited = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();
         final ArrayList<Party> hosting = new ArrayList<>();
@@ -483,7 +498,7 @@ public final class DatabaseAccess {
     }
 
     private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
         final ArrayList<Party> partyList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -505,7 +520,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_user").child(eventID);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENT_USER).child(eventID);
         Log.i(TAG, "server_getUsersOfEvent: " + eventID);
         final ArrayList<User> attending = new ArrayList<>();
         final ArrayList<User> going = new ArrayList<>();
@@ -571,7 +586,7 @@ public final class DatabaseAccess {
     }
 
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userId).child(PATH_TO_BESTFRIENDS);
         final ArrayList<BestFriend> bestfriends = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -601,7 +616,7 @@ public final class DatabaseAccess {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 Log.d(TAG, "server_getEventsInDistance onKeyEntered:" + key);
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("events").child(key);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS).child(key);
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -641,34 +656,8 @@ public final class DatabaseAccess {
         });
     }
 
-
-    public static void server_getInvitesOfEvent(String eventID, final OnResultReadyListener<ArrayList<User>> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/" + eventID
-                + "/invites?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("event_invited").child(eventID);
-        final ArrayList<String> userIDs = new ArrayList<>();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    userIDs.add(postSnapshot.getKey());
-                //Log.d("Get Invites of Event", result.get(0));
-                server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
-                    @Override
-                    public void onResultReady(ArrayList<User> result) {
-                        if (delegate != null)
-                            delegate.onResultReady(result);
-                    }
-                });
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
     private static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
         final ArrayList<User> userList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -693,9 +682,7 @@ public final class DatabaseAccess {
      * Get Notification by UserID
      */
     public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID
-                + "/notifications?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");*/
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID).child("notifications");
         final ArrayList<Notification> notifications = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -716,7 +703,7 @@ public final class DatabaseAccess {
      * Get events by keyword
      */
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
         Query q1 = db.orderByChild("name").startAt(keyword).endAt(keyword + " zzzz");
         final ArrayList<Party> parties = new ArrayList<>();
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -741,7 +728,7 @@ public final class DatabaseAccess {
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
         Query q1 = db.orderByChild("first_name").startAt(keyword).endAt(keyword + "zzzz");
         final ArrayList<User> users = new ArrayList<>();
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -794,7 +781,7 @@ public final class DatabaseAccess {
      * Delete Best Friend on server
      */
     public static void server_deleteBestFriend(String userId, String number, final OnResultReadyListener<String> delegate) {
-        final DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
+        final DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userId).child(PATH_TO_BESTFRIENDS);
         Query q1 = db.orderByChild("number").startAt(number);
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -821,7 +808,7 @@ public final class DatabaseAccess {
         //should fire delegate(Exception e) after either one fails.
 
         final TaskCompletionSource<String> tcs1 = new TaskCompletionSource<>();
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
         db.child(partyID).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -863,13 +850,11 @@ public final class DatabaseAccess {
     /**
      * User unfollow user from server. Return either success or error.
      */
-    public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {/*
-        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + getCurrentUserId(sharedPreferencesContext).get("id")
-                + "/followings/" + userID + "?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");*/
+    public static void server_unfollow(String userID, final OnResultReadyListener<String> delegate) {
         String localUserId = getCurrentUserId();
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("following").child(localUserId);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_FOLLOWING).child(localUserId);
         db.child(userID).removeValue();
-        db = FirebaseDatabase.getInstance().getReference("followers").child(userID);
+        db = FirebaseDatabase.getInstance().getReference(PATH_TO_FOLLOWERS).child(userID);
         db.child(localUserId).removeValue();
         updateFollowersCount(localUserId, userID, 0);
         if (delegate != null)
@@ -877,7 +862,7 @@ public final class DatabaseAccess {
     }
 
     private static void updateFollowersCount(String userID, String targetID, final int mode){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("following_count");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID).child("following_count");
         db.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -903,7 +888,7 @@ public final class DatabaseAccess {
             }
         });
 
-        db = FirebaseDatabase.getInstance().getReference("users").child(targetID).child("follower_count");
+        db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(targetID).child(PATH_TO_FOLLOWER_COUNT);
         db.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -934,7 +919,7 @@ public final class DatabaseAccess {
      * Delete notification. Return success or error.
      */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID).child(PATH_TO_NOTIFICATIONS);
         db.child(notificationID).removeValue();
         if (delegate != null)
             delegate.onResultReady("success");
@@ -948,7 +933,7 @@ public final class DatabaseAccess {
                 + userID + "?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");
 
         */
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("events").child(eventID).child("invites");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS).child(eventID).child("invites");
         db.child(userID).removeValue();
         if (delegate != null)
             delegate.onResultReady("success");
