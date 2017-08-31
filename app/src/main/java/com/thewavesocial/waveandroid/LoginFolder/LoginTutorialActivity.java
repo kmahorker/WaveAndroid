@@ -235,7 +235,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private void startHomeSwipeActivity(){
         Intent intent = new Intent(this, HomeSwipeActivity.class);
         //do not add activity to back stack
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        //intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 
