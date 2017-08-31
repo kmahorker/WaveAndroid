@@ -39,9 +39,6 @@
             android:name=".LoginFolder.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginFolder.LaunchActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".SocialFolder.FollowActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -571,10 +571,6 @@ public final class DatabaseAccess {
     }
 
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
-  /*      String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userId + "/bestfriends?access_token=" +
-                getCurrentUserId(sharedPreferencesContext).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);*/
-
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userId).child("bestfriends");
         final ArrayList<BestFriend> bestfriends = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -720,9 +716,6 @@ public final class DatabaseAccess {
      * Get events by keyword
      */
     public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "events/find-by-keyword?keyword=" + keyword
-                + "&start_after=1400000000&end_after=" + Calendar.getInstance().getTimeInMillis() / 1000 + "&access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("events");
         Query q1 = db.orderByChild("name").startAt(keyword).endAt(keyword + " zzzz");
         final ArrayList<Party> parties = new ArrayList<>();
@@ -748,10 +741,6 @@ public final class DatabaseAccess {
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-/*        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/find-by-keyword?keyword="
-                + keyword + "&access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");
-        RequestComponents comp = new RequestComponents(url, "GET", null);
-*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users");
         Query q1 = db.orderByChild("first_name").startAt(keyword).endAt(keyword + "zzzz");
         final ArrayList<User> users = new ArrayList<>();
@@ -945,10 +934,6 @@ public final class DatabaseAccess {
      * Delete notification. Return success or error.
      */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
-        /*RequestComponents comps[] = new RequestComponents[1];
-        String url = sharedPreferencesContext.getString(R.string.server_url) + "users/" + userID + "/notifications/"
-                + notificationID + "?access_token=" + getCurrentUserId(sharedPreferencesContext).get("jwt");
-*/
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("users").child(userID).child("notifications");
         db.child(notificationID).removeValue();
         if (delegate != null)
