@@ -58,23 +58,18 @@ public class LoginTutorialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "LoginTutorialActivity.onCreate");
-        DatabaseAccess.setContext(this);
 
-        final String userID = DatabaseAccess.getCurrentUserId();
-        if(!userID.equals("")){
-            DatabaseAccess.server_getUserObject(userID, new OnResultReadyListener<User>() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null){
+            DatabaseAccess.server_getUserObjectWithFriends(user.getUid(), new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {
-                    if (result != null){
-                        Log.i(TAG, "user " + result.getFull_name() + " exists, starting HomeSwipeActivity...");
-                        DatabaseAccess.saveCurrentUserId(userID);
-                        CurrentUser.syncUser(new OnResultReadyListener<Boolean>() {
-                            @Override
-                            public void onResultReady(Boolean result) {
-                                //only start home swipe after loading, otherwise there is race condition.
-                                startHomeSwipeActivity();
-                            }
-                        });
+                    if(result != null) {
+                        Log.d(TAG, "Firebase is authenticated and user info exists; starting HomeSwipeActivity ...");
+                        CurrentUser.setUser(result);
+                        startHomeSwipeActivity();
+                    } else {
+                        Log.d(TAG, "Firebase is authenticated but user info does not exist");
                     }
                 }
             });
@@ -116,7 +111,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
         facebookLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "Start login...");
+                Log.d(TAG, "Start Facebook login...");
                 List<String> permissions = new ArrayList<String>();
                 permissions.add("public_profile");
                 LoginManager.getInstance().logInWithReadPermissions(LoginTutorialActivity.this, permissions);
@@ -193,25 +188,25 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            final FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser firebaseUser = mAuth.getCurrentUser();
                             Log.i(TAG,
                                     "signInWithCredential:Success\n" +
                                     "facebook ID(AccessToken):" + token.getUserId() + "\n" +
-                                    "provider0 ID(FirebaseUser):" + user.getProviderData().get(1).getUid() + "\n" +
-                                    "name:" + user.getDisplayName() + "\n" +
-                                    "email:" + user.getEmail() + "\n" +
-                                    "providers:" + user.getProviders() + "\n" +
-                                    "photo URL:" + user.getPhotoUrl() + "\n"
+                                    "provider0 ID(FirebaseUser):" + firebaseUser.getProviderData().get(1).getUid() + "\n" +
+                                    "name:" + firebaseUser.getDisplayName() + "\n" +
+                                    "email:" + firebaseUser.getEmail() + "\n" +
+                                    "providers:" + firebaseUser.getProviders() + "\n" +
+                                    "photo URL:" + firebaseUser.getPhotoUrl() + "\n"
                             );
 
-                            DatabaseAccess.server_SetCurrentUserByFacebookToken(token, new OnResultReadyListener<Boolean>() {
+                            DatabaseAccess.server_getUserObject(firebaseUser.getUid(), new OnResultReadyListener<User>() {
                                 @Override
-                                public void onResultReady(Boolean userInfoExists) {
-                                    if (userInfoExists) {
+                                public void onResultReady(User userInfo) {
+                                    if (userInfo != null) {
                                         startHomeSwipeActivity();
                                     } else {
-                                        Log.i(TAG, "user info for " + user.getDisplayName() + " does not exist, creating new database entry...");
-                                        createNewUserFromFacebookToken(token, new OnResultReadyListener<Boolean>() {
+                                        Log.i(TAG, "user info for " + firebaseUser.getDisplayName() + " does not exist, creating new database entry...");
+                                        createNewUserFromFacebookToken(token, firebaseUser.getUid(), new OnResultReadyListener<Boolean>() {
                                             @Override
                                             public void onResultReady(Boolean result) {
                                                 startHomeSwipeActivity();
@@ -239,18 +234,19 @@ public class LoginTutorialActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createNewUserFromFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate){
+    private void createNewUserFromFacebookToken(final AccessToken token, final String uid, final OnResultReadyListener<Boolean> delegate){
         final GraphRequest request = GraphRequest.newMeRequest(token, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                 final User user = new User();
                 try {
-                    Log.i(TAG, "createNewUserFromFacebookToken: facebook info received:" + jsonObject.toString(1));
+                    Log.i(TAG, "createNewUserFromFacebookToken: facebook info received:" + jsonObject.toString(2));
                     //https://developers.facebook.com/docs/android/graph/
                     user.setFacebookID(jsonObject.getString("id"));
                     user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
                     user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
                     user.setGender(jsonObject.getString("gender"));
+                    user.setUserID(uid);
                 }catch (JSONException e){
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -259,12 +255,15 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 DatabaseAccess.server_createNewUser(user, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
-                        DatabaseAccess.saveCurrentUserId(result);
-                        CurrentUser.syncUser();
                         Log.i(TAG, "createNewUserFromFacebookToken:Success - name:" + user.getFull_name() + ", key:" + result + ", facebookID:" + user.getFacebookID());
-                        if(delegate != null){
-                            delegate.onResultReady(true);
-                        }
+                        CurrentUser.syncUser(new OnResultReadyListener<User>() {
+                            @Override
+                            public void onResultReady(User result) {
+                                    if(delegate != null){
+                                    delegate.onResultReady(true);
+                                }
+                            }
+                        });
                     }
                 });
             }

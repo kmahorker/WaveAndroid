@@ -13,46 +13,21 @@ import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.*;
 
 //Nothing changed
 public final class CurrentUser {
-    private static User user = new User();
+    private static User user;
     public static final String TAG = HomeSwipeActivity.TAG;
-
-    /**
-     * Initialize user object
-     */
-    public static void loadBestFriends(final OnResultReadyListener<Boolean> delegate) {
-        Log.d(HomeSwipeActivity.TAG, "CurrentUser.loadBestFriends");
-        if(getCurrentUserId().equals("")){
-            throw new RuntimeException("id is not set.");
-        }
-        server_getUserObject(getCurrentUserId(), new OnResultReadyListener<User>() {
-            @Override
-            public void onResultReady(User result) {
-                CurrentUser.user = result;
-                Log.i(TAG, "Current user set. name:" + user.getFull_name());
-                server_getBestFriends(getCurrentUserId(), new OnResultReadyListener<List<BestFriend>>() {
-                    @Override
-                    public void onResultReady(List<BestFriend> result) {
-                        CurrentUser.getUser().setBestFriends(new ArrayList<BestFriend>());
-                        if (result != null)
-                            CurrentUser.getUser().getBestFriends().addAll(result);
-
-                        if (delegate == null)
-                            return;
-                        if (CurrentUser.getUser().getUserID() != null)
-                            delegate.onResultReady(true);
-                        else
-                            delegate.onResultReady(false);
-                    }
-                });
-            }
-        });
-    }
 
     /**
      * Set main user object
      */
-    public static void syncUser(final OnResultReadyListener<Boolean> delegate) {
-        loadBestFriends(delegate);
+    public static void syncUser(final OnResultReadyListener<User> delegate) {
+        Log.d(HomeSwipeActivity.TAG, "CurrentUser.loadBestFriends");
+        server_getUserObjectWithFriends(getCurrentUserId(), new OnResultReadyListener<User>() {
+            @Override
+            public void onResultReady(User result) {
+                CurrentUser.user = result;
+                delegate.onResultReady(result);
+            }
+        });
     }
 
     /**
@@ -62,11 +37,11 @@ public final class CurrentUser {
         syncUser(null);
     }
 
-    public static User getUser() {
-        return user;
+    public static void setUser(User user) {
+        CurrentUser.user = user;
     }
 
-    public static String getKey() {
-        return DatabaseAccess.getCurrentUserId();
+    public static User getUser() {
+        return user;
     }
 }

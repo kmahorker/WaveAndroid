@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,41 +54,19 @@ public final class DatabaseAccess {
     private static final String PATH_TO_NOTIFICATIONS = "notifications";
     private static final String PATH_TO_GEOFIRE = "geofire";
 
-    //ignore the warning; storing ApplicationContext is safe (//stackoverflow.com/questions/37709918/)
-    private static Context sharedPreferencesContext;
-
     public static final String TAG = HomeSwipeActivity.TAG;
 
     //prevent instantiation
     private DatabaseAccess(){}
 
-    /**
-     * Initialize sharedPreferencesContext
-     */
-    public static void setContext(Context context) {
-        sharedPreferencesContext = context.getApplicationContext();
-    }
-
 //todo -------------------------------------------------------------------------Local Save Functions
 
     /**
-     * Save Firebase user ID for current user to persistent storage
-     * @param id user ID for current user
-     */
-    public static void saveCurrentUserId(String id) {
-        SharedPreferences pref = sharedPreferencesContext.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("id", id);
-        editor.apply();
-    }
-
-    /**
-     * Retrieve Firebase user ID for current user from persistent storage
+     * Retrieve Firebase user ID for current user from FirebaseAuth
      * @return user ID for current user
      */
     public static String getCurrentUserId() {
-        SharedPreferences pref = sharedPreferencesContext.getSharedPreferences("USER_INFO", Context.MODE_PRIVATE);
-        return pref.getString("id", "");
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     public static void server_upload_image(Bitmap bitmap, final OnResultReadyListener<String> delegate) {
@@ -113,32 +92,6 @@ public final class DatabaseAccess {
             delegate.onResultReady("success");
         }
     }
-
-    public static void server_SetCurrentUserByFacebookToken(final AccessToken token, final OnResultReadyListener<Boolean> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
-        //ensure the key is same in User class
-        db.orderByChild("userID")
-                .equalTo(token.getUserId())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getChildrenCount() > 0) {
-                            DataSnapshot userSnapshot = dataSnapshot.getChildren().iterator().next();
-                            DatabaseAccess.saveCurrentUserId(userSnapshot.getKey());
-                            CurrentUser.syncUser();
-                            delegate.onResultReady(true);
-                        } else {
-                            delegate.onResultReady(false);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        throw new RuntimeException("Listener failed; check security rules.");
-                    }
-                });
-    }
-
 
 //todo --------------------------------------------------------------------------------POST Requests
 
@@ -167,17 +120,15 @@ public final class DatabaseAccess {
      * generate key for User, set userID, then add User to Firebase
      * @param user User to be stored; user.setUserID() is called
      * @param delegate callback; is invoked immediately and does not wait on Firebase; beware of race condition
-     * @return generated Firebase key
      */
-    public static String server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
+    public static void server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
+        Log.i(TAG, "server_createNewUser: info received:" + user.toString());
+        if(user.getUserID() == null)
+            throw new RuntimeException("userID needs to be set!");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child(PATH_TO_USERS);
-        String userID = db.push().getKey(); //unique ID for each user
-        user.setUserID(userID);
-        db.child(userID).setValue(user);
-
+        db.child(user.getUserID()).setValue(user);
         if(delegate != null)
-            delegate.onResultReady(userID);
-        return  userID;
+            delegate.onResultReady(user.getUserID());
     }
 
 
@@ -255,13 +206,12 @@ public final class DatabaseAccess {
 
     /**
      *
-     * @param userID Firebase key for user
      * @param user User object as source of update
      * @param delegate callback
      */
-    public static void server_updateUser(String userID, User user, final OnResultReadyListener<String> delegate) {
+    public static void server_updateUser(User user, final OnResultReadyListener<String> delegate) {
         FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS)
-                .child(userID)
+                .child(user.getUserID())
                 .setValue(user);
         if(delegate != null)
             delegate.onResultReady("success");
@@ -352,6 +302,7 @@ public final class DatabaseAccess {
                 Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject onDataChange");
                 if(dataSnapshot.getValue() != null) {
                     User user = dataSnapshot.getValue(User.class);
+                    user.setUserID(dataSnapshot.getKey());
                     if(delegate != null)
                         delegate.onResultReady(user);
                 } else {
@@ -361,6 +312,25 @@ public final class DatabaseAccess {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(HomeSwipeActivity.TAG, "server_getUserObject: ValueEventListener.onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    public static void server_getUserObjectWithFriends(@NonNull String userID, @NonNull final OnResultReadyListener<User> delegate) {
+        server_getUserObject(userID, new OnResultReadyListener<User>() {
+            @Override
+            public void onResultReady(final User user) {
+                if(user != null) {
+                    server_getBestFriends(user.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                        @Override
+                        public void onResultReady(final List<BestFriend> result) {
+                            user.setBestFriends(result);
+                            delegate.onResultReady(user);
+                        }
+                    });
+                }else{
+                    delegate.onResultReady(null);
+                }
             }
         });
     }

@@ -1151,9 +1151,9 @@ public class CreateAnEventActivity extends AppCompatActivity {
         threads_completion++;
         if (threads_completion >= (NewPartyInfo.invitingUsers.size() + NewPartyInfo.bouncingUsers.size() + NewPartyInfo.hostingUsers.size())) {
             //Finish task
-            CurrentUser.loadBestFriends(new OnResultReadyListener<Boolean>() {
+            CurrentUser.syncUser(new OnResultReadyListener<User>() {
                 @Override
-                public void onResultReady(Boolean result) {
+                public void onResultReady(User user) {
                     thisActivity.onBackPressed();
                     thisActivity.finish();
                 }

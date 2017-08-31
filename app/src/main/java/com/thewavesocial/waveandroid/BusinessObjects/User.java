@@ -63,6 +63,7 @@ public class User implements Parcelable {
 
     //Setter Block
 
+    @Exclude
     public void setUserID(String userID) { this.userID = userID; }
 
     public void setFacebookID(String facebookID) {
@@ -103,6 +104,7 @@ public class User implements Parcelable {
 
     public int getFollowing_count() {return following_count; }
 
+    @Exclude
     public String getUserID() { return userID; }
 
     public String getFacebookID() {

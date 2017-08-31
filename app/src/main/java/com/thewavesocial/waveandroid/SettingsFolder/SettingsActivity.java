@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.LoginFolder.LoginTutorialActivity;
 import com.thewavesocial.waveandroid.R;
@@ -94,8 +95,10 @@ public class SettingsActivity extends AppCompatActivity {
                 dialog.setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //logout of Facebook
                         LoginManager.getInstance().logOut();
-                        DatabaseAccess.saveCurrentUserId("");//, "");
+                        //logout of Firebase
+                        FirebaseAuth.getInstance().signOut();
 
                         //Clear all activities and go to LoginTutorial Page
                         Intent intent = new Intent(getApplicationContext(), LoginTutorialActivity.class);
