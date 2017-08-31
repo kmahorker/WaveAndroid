@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -522,39 +523,44 @@ public final class DatabaseAccess {
                     userIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
                     userIDs.add(postSnapshot.getKey());
                 }
-                server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
-                    @Override
-                    public void onResultReady(ArrayList<User> result) {
-                        for(User user : result) {
-                            int userRelationship = userIDsAndR.get(user.getUserID());
-                            if (userRelationship >= 128) {
-                                userRelationship -= 128;
-                                inviting.add(user);
+                //Apparently data snapshot calls need a few seconds break (it'll return nothing if not)
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
+                            @Override
+                            public void onResultReady(ArrayList<User> result) {
+                                for(User user : result) {
+                                    int userRelationship = userIDsAndR.get(user.getUserID());
+                                    if (userRelationship >= 128) {
+                                        userRelationship -= 128;
+                                        inviting.add(user);
+                                    }
+                                    if (userRelationship >= 64) {
+                                        userRelationship -= 64;
+                                        attending.add(user);
+                                    }
+                                    if (userRelationship >= 8) {
+                                        userRelationship -= 8;
+                                        hosting.add(user);
+                                    }
+                                    if (userRelationship >= 4) {
+                                        userRelationship -= 4;
+                                        going.add(user);
+                                    }
+                                    if (userRelationship >= 2)
+                                        bouncing.add(user);
+                                    users.put("attending", attending);
+                                    users.put("hosting", hosting);
+                                    users.put("bouncing", bouncing);
+                                    users.put("going", going);
+                                    users.put("inviting", inviting);
+                                }
+                                if(delegate != null)
+                                    delegate.onResultReady(users);
                             }
-                            if (userRelationship >= 64) {
-                                userRelationship -= 64;
-                                attending.add(user);
-                            }
-                            if (userRelationship >= 8) {
-                                userRelationship -= 8;
-                                hosting.add(user);
-                            }
-                            if (userRelationship >= 4) {
-                                userRelationship -= 4;
-                                going.add(user);
-                            }
-                            if (userRelationship >= 2)
-                                bouncing.add(user);
-                            users.put("attending", attending);
-                            users.put("hosting", hosting);
-                            users.put("bouncing", bouncing);
-                            users.put("going", going);
-                            users.put("inviting", inviting);
-                        }
-                        if(delegate != null)
-                            delegate.onResultReady(users);
+                        });
                     }
-                });
+                }, 5000);
             }
 
 
