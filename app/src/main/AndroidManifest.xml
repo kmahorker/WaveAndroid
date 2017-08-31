@@ -46,10 +46,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".HostFolder.CreateAnEventActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginFolder.AddBestFriendActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".HostFolder.EditStatsActivity"
             android:screenOrientation="portrait" />
@@ -61,6 +61,7 @@
         </activity>
         <activity
             android:name=".LoginFolder.LoginTutorialActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,8 +74,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".SettingsFolder.SettingsActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".SettingsFolder.EditBestFriendActivity"></activity>
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsFolder.EditBestFriendActivity"/>
     </application>
 
 </manifest>
