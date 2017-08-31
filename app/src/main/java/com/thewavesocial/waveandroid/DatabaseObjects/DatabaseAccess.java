@@ -532,16 +532,18 @@ public final class DatabaseAccess {
                                         userRelationship -= 4;
                                         going.add(user);
                                     }
-                                    if (userRelationship >= 2)
+                                    if (userRelationship >= 2) {
                                         bouncing.add(user);
+                                    }
+                                }
+                                if(delegate != null) {
                                     users.put("attending", attending);
                                     users.put("hosting", hosting);
                                     users.put("bouncing", bouncing);
                                     users.put("going", going);
                                     users.put("inviting", inviting);
-                                }
-                                if(delegate != null)
                                     delegate.onResultReady(users);
+                                }
                             }
                         });
                     }
@@ -634,8 +636,10 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(String userID: userIDlist){
                     User user = dataSnapshot.child(userID).getValue(User.class);
-                    user.setUserID(userID);
-                    userList.add(user);
+                    if(user != null){
+                        user.setUserID(userID);
+                        userList.add(user);
+                    }
                 }
                 if (delegate != null)
                     delegate.onResultReady(userList);
