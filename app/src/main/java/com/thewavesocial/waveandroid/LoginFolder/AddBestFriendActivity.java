@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
-import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
@@ -87,7 +86,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(thisActivity);
                 if (contact) {
                     List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                    server_getBestFriends(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                    server_getBestFriends(CurrentUser.getUser().getId(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(List<BestFriend> result) {
                             boolean duplicate = false;
@@ -98,7 +97,7 @@ public class AddBestFriendActivity extends AppCompatActivity {
                                 }
                             }
                             if (!duplicate) { //Add best friend to server if not a duplicate
-                                server_addBestFriend(name, phoneNumber, CurrentUser.getUser().getUserID(), new OnResultReadyListener<String>() {
+                                server_addBestFriend(name, phoneNumber, CurrentUser.getUser().getId(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         if (result.equals("success")) {

@@ -65,7 +65,7 @@ public class PartyProfileFragment extends Fragment {
 
         setupReferences();
 
-        server_getEventsOfUser(CurrentUser.getUser().getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+        server_getEventsOfUser(CurrentUser.getUser().getId(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                 setupOnClicks(result);
@@ -77,16 +77,16 @@ public class PartyProfileFragment extends Fragment {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (containsID(userParties.get("hosting"), party.getPartyID()))
+                if (containsID(userParties.get("hosting"), party.getId()))
                     Toast.makeText(mainActivity, "Party Already Hosting.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("bouncing"), party.getPartyID()))
+                else if (containsID(userParties.get("bouncing"), party.getId()))
                     Toast.makeText(mainActivity, "Party Already Bouncing.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("going"),party.getPartyID()))
+                else if (containsID(userParties.get("going"),party.getId()))
                     Toast.makeText(mainActivity, "Party Already Going.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("attending"),party.getPartyID()))
+                else if (containsID(userParties.get("attending"),party.getId()))
                     Toast.makeText(mainActivity, "Party Already attending.", Toast.LENGTH_LONG).show();
                 else {
-                    DatabaseAccess.server_manageUserForParty(CurrentUser.getUser().getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_manageUserForParty(CurrentUser.getUser().getId(), party.getId(), "going", "POST", new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if ( result.equals("success") ) {
@@ -147,7 +147,7 @@ public class PartyProfileFragment extends Fragment {
 
         sample = new ArrayList();
 
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(final HashMap<String, ArrayList<User>> result) {
                 if ( result != null ) {
@@ -162,7 +162,7 @@ public class PartyProfileFragment extends Fragment {
                                 mainActivity.startActivity(intent);
                             }
                         });
-                        server_getEventsOfUser(result.get("hosting").get(0).getUserID(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
+                        server_getEventsOfUser(result.get("hosting").get(0).getId(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                             @Override
                             public void onResultReady(HashMap<String, ArrayList<Party>> result) {
                                 hostedEvents.setAdapter(new ArrayAdapter<>(mainActivity, android.R.layout.simple_list_item_1,
@@ -194,7 +194,7 @@ public class PartyProfileFragment extends Fragment {
     private boolean containsID(List<Party> following, String partyID) {
         if ( following != null ) {
             for (Party party : following) {
-                if (party.getPartyID().equals(partyID)) {
+                if (party.getId().equals(partyID)) {
                     return true;
                 }
             }

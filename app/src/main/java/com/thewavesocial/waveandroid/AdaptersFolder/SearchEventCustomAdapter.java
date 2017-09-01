@@ -85,17 +85,17 @@ public class SearchEventCustomAdapter extends BaseAdapter {
         holder.go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (containsID(userParties.get("hosting"), party.getPartyID()))
+                if (containsID(userParties.get("hosting"), party.getId()))
                     Toast.makeText(mainActivity, "Party Already Hosting.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("bouncing"), party.getPartyID()))
+                else if (containsID(userParties.get("bouncing"), party.getId()))
                     Toast.makeText(mainActivity, "Party Already Bouncing.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("going"),party.getPartyID()))
+                else if (containsID(userParties.get("going"),party.getId()))
                     Toast.makeText(mainActivity, "Party Already Going.", Toast.LENGTH_LONG).show();
-                else if (containsID(userParties.get("attending"), party.getPartyID())) {
+                else if (containsID(userParties.get("attending"), party.getId())) {
                     Toast.makeText(mainActivity, "Party Already Attending.", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    DatabaseAccess.server_manageUserForParty(CurrentUser.getUser().getUserID(), party.getPartyID(), "going", "POST", new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_manageUserForParty(CurrentUser.getUser().getId(), party.getId(), "going", "POST", new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if ( result.equals("success") ) {
@@ -126,7 +126,7 @@ public class SearchEventCustomAdapter extends BaseAdapter {
 
     private boolean containsID(List<Party> following, String partyID) {
         for ( Party party : following ) {
-            if ( party.getPartyID().equals(partyID) ) {
+            if ( party.getId().equals(partyID) ) {
                 return true;
             }
         }

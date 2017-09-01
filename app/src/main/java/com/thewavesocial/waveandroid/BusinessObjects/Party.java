@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Party implements Parcelable {
+public class Party extends CustomFirebaseObject implements Parcelable {
 
     private String address;
     private long date;
@@ -18,7 +18,6 @@ public class Party implements Parcelable {
     private int max_age;
     private int min_age;
     private String name;
-    private String partyID;
     private double price;
 
     public Party() {
@@ -34,7 +33,7 @@ public class Party implements Parcelable {
         this.max_age = 100;
         this.min_age = 18;
         this.name = "";
-        this.partyID = "123";
+        this.setId("");
         this.price = 0;
     }
 
@@ -51,7 +50,7 @@ public class Party implements Parcelable {
         this.max_age = max_age;
         this.min_age = min_age;
         this.name = name;
-        this.partyID = partyID;
+        this.setId(partyID);
         this.price = price;
     }
 
@@ -152,14 +151,6 @@ public class Party implements Parcelable {
         this.name = name;
     }
 
-    public String getPartyID() {
-        return partyID;
-    }
-
-    public void setPartyID(String partyID) {
-        this.partyID = partyID;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -182,7 +173,7 @@ public class Party implements Parcelable {
         max_age = in.readInt();
         min_age = in.readInt();
         name = in.readString();
-        partyID = in.readString();
+        this.setId(in.readString());
         price = in.readDouble();
     }
 
@@ -205,7 +196,7 @@ public class Party implements Parcelable {
         dest.writeInt(max_age);
         dest.writeInt(min_age);
         dest.writeString(name);
-        dest.writeString(partyID);
+        dest.writeString(this.getId());
         dest.writeDouble(price);
     }
 

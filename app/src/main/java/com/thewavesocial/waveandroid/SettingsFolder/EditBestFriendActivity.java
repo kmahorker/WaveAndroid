@@ -59,7 +59,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
         doneTextView.setTextColor(getResources().getColor(R.color.grey_default));
 
 
-        server_getBestFriends(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+        server_getBestFriends(CurrentUser.getUser().getId(), new OnResultReadyListener<List<BestFriend>>() {
             @Override
             public void onResultReady(List<BestFriend> result) {
                 if(result != null){
@@ -136,7 +136,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                 UtilityClass.hideKeyboard(thisActivity);
                 if (contact) {
                     final List<BestFriend> bestFriends = new ArrayList<BestFriend>();
-                    server_getBestFriends(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                    server_getBestFriends(CurrentUser.getUser().getId(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(List<BestFriend> result) {
                             boolean duplicate = false;
@@ -149,7 +149,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                             }
                             if (!duplicate) { //Add best friend to server if not a duplicate
                                 if(bestFriends.size() == 1) {
-                                    server_deleteBestFriend(CurrentUser.getUser().getUserID(), bestFriends.get(0).getPhoneNumber(), new OnResultReadyListener<String>() {
+                                    server_deleteBestFriend(CurrentUser.getUser().getId(), bestFriends.get(0).getPhoneNumber(), new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             if (result.equals("success")) {
@@ -160,7 +160,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                                         }
                                     });
                                 }
-                                server_addBestFriend(name, phoneNumber, CurrentUser.getUser().getUserID(), new OnResultReadyListener<String>() {
+                                server_addBestFriend(name, phoneNumber, CurrentUser.getUser().getId(), new OnResultReadyListener<String>() {
                                     @Override
                                     public void onResultReady(String result) {
                                         if (result.equals("success")) {

@@ -47,7 +47,7 @@ public class FriendProfileActivity extends AppCompatActivity {
         // access current friend data
         Intent intent = getIntent();
         friend = (User) intent.getExtras().get("userObject");
-        userID = friend.getUserID();
+        userID = friend.getId();
 
         setupActionbar();
         setupProfileInfo();
@@ -109,28 +109,28 @@ public class FriendProfileActivity extends AppCompatActivity {
         follow_button = (TextView) mainActivity.findViewById(R.id.friend_follow_button);
 
         // TODO: 07/01/2017 Add loading spinners
-        Log.i(TAG, "Friend profile ID: " + friend.getUserID());
+        Log.i(TAG, "Friend profile ID: " + friend.getId());
         Log.i(TAG, "Friend following count: " + Integer.toString(friend.getFollower_count()));
 /*        followers_textview.setText(Integer.toString(friend.getFollower_count()) + "\nfollowers");
         following_textview.setText(Integer.toString(friend.getFollowing_count())+ "\nfollowings");*/
-        DatabaseAccess.server_getUserFollowers(friend.getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowers(friend.getId(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 String text = result.size() + "\nfollowers";
                 followers_textview.setText(text);
             }
         });
-        DatabaseAccess.server_getUserFollowing(friend.getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(friend.getId(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(final List<User> followings) {
                 String text = followings.size() + "\nfollowing";
                 following_textview.setText(text);
             }
         });
-        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getId(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> followings) {
-                if (userID.equals(CurrentUser.getUser().getUserID()))
+                if (userID.equals(CurrentUser.getUser().getId()))
                     follow_button.setVisibility(View.INVISIBLE);
                 else if (!containsID(followings, userID))
                     changeButton("Follow", R.color.appColor, R.drawable.round_corner_red_edge);
@@ -152,13 +152,13 @@ public class FriendProfileActivity extends AppCompatActivity {
                             });
                         } else {
                             //If follow from server is successful, then follow locally and change button.
-                            DatabaseAccess.server_followUser(CurrentUser.getUser().getUserID(), userID, new OnResultReadyListener<String>() {
+                            DatabaseAccess.server_followUser(CurrentUser.getUser().getId(), userID, new OnResultReadyListener<String>() {
                                 @Override
                                 public void onResultReady(String result) {
                                     if (result.equals("success")) {
                                         changeButton("Following", R.color.white_solid, R.drawable.round_corner_red);
-                                        DatabaseAccess.server_createNotification(CurrentUser.getUser().getUserID(), userID, "", "following", null);
-                                        DatabaseAccess.server_createNotification(userID, CurrentUser.getUser().getUserID(), "", "followed", null);
+                                        DatabaseAccess.server_createNotification(CurrentUser.getUser().getId(), userID, "", "following", null);
+                                        DatabaseAccess.server_createNotification(userID, CurrentUser.getUser().getId(), "", "followed", null);
                                     }
                                 }
                             });
@@ -197,7 +197,7 @@ public class FriendProfileActivity extends AppCompatActivity {
 
     private boolean containsID(List<User> following, String userID) {
         for ( User user : following ) {
-            if ( user.getUserID().equals(userID) ) {
+            if ( user.getId().equals(userID) ) {
                 return true;
             }
         }

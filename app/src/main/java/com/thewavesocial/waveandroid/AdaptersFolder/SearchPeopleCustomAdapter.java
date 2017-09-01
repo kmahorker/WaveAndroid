@@ -71,7 +71,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
         holder.follow = (TextView) layoutView.findViewById(R.id.eachSearchPeople_follow);
 
         if (holder.image.getDrawable() == null) {
-            DatabaseAccess.server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
+            DatabaseAccess.server_getProfilePicture(user.getId(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
                     if (result != null) {
@@ -83,10 +83,10 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
 
         holder.name.setText(user.getFull_name());
 
-        Log.i(TAG, "containsID: UserID: " + user.getUserID());
-        if (user.getUserID().equals(CurrentUser.getUser().getUserID())) {
+        Log.i(TAG, "containsID: UserID: " + user.getId());
+        if (user.getId().equals(CurrentUser.getUser().getId())) {
             holder.follow.setVisibility(View.INVISIBLE);
-        } else if (!containsID(following, user.getUserID())) {
+        } else if (!containsID(following, user.getId())) {
             changeButton(holder.follow, "Follow", R.color.appColor, R.drawable.round_corner_red_edge);
         } else {
             changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
@@ -96,7 +96,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
             public void onClick(View view) {
                 if (holder.follow.getText().equals("Following")) {
                     //If delete from server is successful, then delete locally and change button.
-                    DatabaseAccess.server_unfollow(user.getUserID(), new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_unfollow(user.getId(), new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
@@ -106,13 +106,13 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
                     });
                 } else {
                     //If follow from server is successful, then follow locally and change button.
-                    DatabaseAccess.server_followUser(CurrentUser.getUser().getUserID(), user.getUserID(), new OnResultReadyListener<String>() {
+                    DatabaseAccess.server_followUser(CurrentUser.getUser().getId(), user.getId(), new OnResultReadyListener<String>() {
                         @Override
                         public void onResultReady(String result) {
                             if (result.equals("success")) {
                                 changeButton(holder.follow, "Following", R.color.white_solid, R.drawable.round_corner_red);
-                                DatabaseAccess.server_createNotification(CurrentUser.getUser().getUserID(), user.getUserID(), "", "following", null);
-                                DatabaseAccess.server_createNotification(user.getUserID(), CurrentUser.getUser().getUserID(), "", "followed", null);
+                                DatabaseAccess.server_createNotification(CurrentUser.getUser().getId(), user.getId(), "", "following", null);
+                                DatabaseAccess.server_createNotification(user.getId(), CurrentUser.getUser().getId(), "", "followed", null);
                             }
                         }
                     });
@@ -149,7 +149,7 @@ public class SearchPeopleCustomAdapter extends BaseAdapter {
 
     private boolean containsID(List<User> following, String userID) {
         for ( User user : following ) {
-            if ( user.getUserID().equals(userID) ) {
+            if ( user.getId().equals(userID) ) {
                 return true;
             }
         }

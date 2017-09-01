@@ -87,13 +87,13 @@ public class CreateAnEventActivity extends AppCompatActivity {
         NewPartyInfo.initialize();
 
         followings = new ArrayList<>();
-        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
+        DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getId(), new OnResultReadyListener<List<User>>() {
             @Override
             public void onResultReady(List<User> result) {
                 followings.addAll(result);
                 followings.add(new User()); //Make up for display offset
                 /*for (final User user : followings) {
-                    server_getProfilePicture(user.getUserID(), new OnResultReadyListener<Bitmap>() {
+                    server_getProfilePicture(user.getId(), new OnResultReadyListener<Bitmap>() {
                         @Override
                         public void onResultReady(Bitmap result) {
                             user.setProfilePic(result);
@@ -728,19 +728,19 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFull_name());
 
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
-                if (inviteIDs.contains(friends.get(position).getUserID()))
+                if (inviteIDs.contains(friends.get(position).getId()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!inviteIDs.contains(friends.get(position).getUserID())) {
-                            inviteIDs.add(friends.get(position).getUserID());
+                        if (!inviteIDs.contains(friends.get(position).getId())) {
+                            inviteIDs.add(friends.get(position).getId());
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                         } else {
-                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
+                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                         }
@@ -938,19 +938,19 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 holder.name.setText(getItem(position).getFull_name());
 
                 //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
-                if (inviteIDs.contains(friends.get(position).getUserID()))
+                if (inviteIDs.contains(friends.get(position).getId()))
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                 else
                     holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                 holder.select.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!inviteIDs.contains(friends.get(position).getUserID())) {
-                            inviteIDs.add(friends.get(position).getUserID());
+                        if (!inviteIDs.contains(friends.get(position).getId())) {
+                            inviteIDs.add(friends.get(position).getId());
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
                         } else {
-                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getUserID()));
+                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
                             invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
                             holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
                         }
@@ -1033,7 +1033,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
         for (int i = 0; i < listIDs.size(); i++) {
             boolean found = false;
             for (int j = 0; j < followings.size() && !found; j++) {
-                if ( listIDs.get(i).equals(followings.get(j).getUserID()) ) {
+                if ( listIDs.get(i).equals(followings.get(j).getId()) ) {
                     users.add(followings.get(j));
                     found = true;
                 }
@@ -1091,7 +1091,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
             }
 
             try {
-                Party party = new Party(address, date, duration, emoji, CurrentUser.getUser().getUserID(), host_name, e_public, lat, lng, max_age, min_age, name, null, price);
+                Party party = new Party(address, date, duration, emoji, CurrentUser.getUser().getId(), host_name, e_public, lat, lng, max_age, min_age, name, null, price);
                 server_createNewParty( party, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {

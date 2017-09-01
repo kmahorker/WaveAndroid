@@ -26,7 +26,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SearchView;
@@ -54,9 +53,6 @@ import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
@@ -340,7 +336,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 )/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/
         );
         marker.setTag(party);
-        Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\" ID:" + party.getPartyID() + ")");
+        Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\" ID:" + party.getId() + ")");
     }
 
 

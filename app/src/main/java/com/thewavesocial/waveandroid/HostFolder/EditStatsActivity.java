@@ -132,7 +132,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     List<User> updatedList = new ArrayList<>();
                     updatedList = data.getExtras().getParcelableArrayList("updatedList");
                     for (User user : updatedList) {
-                        updatedListUserIds.add(Integer.parseInt(user.getUserID()));
+                        updatedListUserIds.add(Integer.parseInt(user.getId()));
                     }
                     NewPartyInfo.invitingUsers = updatedListUserIds;
                     inviteTextView.setText("INVITED (" + updatedList.size() + ")");
@@ -148,7 +148,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     List<User> updatedList = new ArrayList<>();
                     updatedList = data.getExtras().getParcelableArrayList("updatedList");
                     for (User user : updatedList) {
-                        updatedListUserIds.add(Integer.parseInt(user.getUserID()));
+                        updatedListUserIds.add(Integer.parseInt(user.getId()));
                     }
                     NewPartyInfo.bouncingUsers = updatedListUserIds;
                     bouncingTextView.setText("BOUNCERS (" + updatedList.size() + ")");
@@ -200,7 +200,7 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                server_deleteParty(party.getPartyID(), new OnResultReadyListener<Exception>() {
+                server_deleteParty(party.getId(), new OnResultReadyListener<Exception>() {
                     @Override
                     public void onResultReady(Exception e) {
                         // TODO: 04/20/2017 Remove party from server
@@ -406,7 +406,7 @@ public class EditStatsActivity extends AppCompatActivity {
 //            }
 //        }
 
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 List<User> invited = result.get("inviting");
@@ -437,7 +437,7 @@ public class EditStatsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if (result != null) {
@@ -620,7 +620,7 @@ public class EditStatsActivity extends AppCompatActivity {
             hostName = party.getHost_name();
             startingDateTime = party.getDate();
             endingDateTime = party.getDate() + party.getDuration();
-            server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+            server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
                 @Override
                 public void onResultReady(HashMap<String, ArrayList<User>> result) {
                     if (result != null) {
@@ -666,7 +666,7 @@ public class EditStatsActivity extends AppCompatActivity {
                 newParty.put("min_age", minAge + "");
                 newParty.put("max_age", maxAge + "");*/
 
-                final String eventId = party.getPartyID();
+                final String eventId = party.getId();
 
                 server_updateParty(eventId, party, new OnResultReadyListener<String>() {
                     @Override
@@ -687,13 +687,13 @@ public class EditStatsActivity extends AppCompatActivity {
         }
 
         public static void updateInvites(){
-            final String eventId = party.getPartyID();
+            final String eventId = party.getId();
 
             List<Integer> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
             originalInviting.removeAll(invitingDuplicates);
             invitingUsers.removeAll(invitingDuplicates);
             for(final int id : originalInviting){
-                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
+                server_uninviteUser(id + "", party.getId(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
@@ -702,8 +702,8 @@ public class EditStatsActivity extends AppCompatActivity {
                                 public void onResultReady(ArrayList<Notification> result) {
                                     if(result!= null) {
                                         for(Notification notif : result){
-                                            if(notif.getSenderID().equals(party.getPartyID())){
-                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                            if(notif.getSenderID().equals(party.getId())){
+                                                server_deleteNotification(id + "", notif.getId(), new OnResultReadyListener<String>() {
                                                     @Override
                                                     public void onResultReady(String result) {
                                                         if(result.equals("success")){
@@ -736,7 +736,7 @@ public class EditStatsActivity extends AppCompatActivity {
         }
 
         public static void updateBouncers(){
-            final String eventId = party.getPartyID();
+            final String eventId = party.getId();
             List<Integer> conflicts = UtilityClass.findDuplicates(bouncingUsers, invitingUsers);
             invitingUsers.removeAll(conflicts);
             Log.d("conflicts", conflicts + "");
@@ -769,7 +769,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
             //updateInvites();
             for(final int id : conflicts){
-                server_uninviteUser(id + "", party.getPartyID(), new OnResultReadyListener<String>() {
+                server_uninviteUser(id + "", party.getId(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
@@ -778,8 +778,8 @@ public class EditStatsActivity extends AppCompatActivity {
                                 public void onResultReady(ArrayList<Notification> result) {
                                     if(result!= null) {
                                         for(Notification notif : result){
-                                            if(notif.getSenderID().equals(party.getPartyID())){
-                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                            if(notif.getSenderID().equals(party.getId())){
+                                                server_deleteNotification(id + "", notif.getId(), new OnResultReadyListener<String>() {
                                                     @Override
                                                     public void onResultReady(String result) {
                                                         if(result.equals("success")){
@@ -805,7 +805,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
 
             for(final int id : originalBouncing){
-                server_manageUserForParty(id + "", party.getPartyID(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
+                server_manageUserForParty(id + "", party.getId(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
@@ -814,8 +814,8 @@ public class EditStatsActivity extends AppCompatActivity {
                                 public void onResultReady(ArrayList<Notification> result) {
                                     if(result != null) {
                                         for (Notification notif : result) {
-                                            if (notif.getSenderID().equals(party.getPartyID())) {
-                                                server_deleteNotification(id + "", notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                            if (notif.getSenderID().equals(party.getId())) {
+                                                server_deleteNotification(id + "", notif.getId(), new OnResultReadyListener<String>() {
                                                     @Override
                                                     public void onResultReady(String result) {
                                                         if (result.equals("success")) {
@@ -848,7 +848,7 @@ public class EditStatsActivity extends AppCompatActivity {
         }
 
         public static void updateHosting(){
-            final String eventId = party.getPartyID();
+            final String eventId = party.getId();
 
             List<String> hostingDuplicates = UtilityClass.findDuplicates(hostingUsers, originalHosting);
             originalHosting.removeAll(hostingDuplicates);
@@ -856,7 +856,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
 
             for(final String id : originalHosting){
-                server_manageUserForParty(id, party.getPartyID(), "hosting", "DELETE", new OnResultReadyListener<String>() {
+                server_manageUserForParty(id, party.getId(), "hosting", "DELETE", new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
                         if(result.equals("success")){
@@ -865,8 +865,8 @@ public class EditStatsActivity extends AppCompatActivity {
                                 public void onResultReady(ArrayList<Notification> result) {
                                     if(result != null) {
                                         for(Notification notif : result){
-                                            if(notif.getSenderID().equals(party.getPartyID())){
-                                                server_deleteNotification(id, notif.getNotificationID(), new OnResultReadyListener<String>() {
+                                            if(notif.getSenderID().equals(party.getId())){
+                                                server_deleteNotification(id, notif.getId(), new OnResultReadyListener<String>() {
                                                     @Override
                                                     public void onResultReady(String result) {
                                                         if (result.equals("success")) {

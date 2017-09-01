@@ -52,7 +52,7 @@ public class PartyAttendeesCustomAdapter extends RecyclerView.Adapter<PartyAtten
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (holder.imgView.getDrawable() == null) {
-            DatabaseAccess.server_getProfilePicture(userList.get(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+            DatabaseAccess.server_getProfilePicture(userList.get(position).getId(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
                     if (result != null) {

@@ -247,7 +247,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                     user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
                     user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
                     user.setGender(jsonObject.getString("gender"));
-                    user.setUserID(uid);
+                    user.setId(uid);
                 }catch (JSONException e){
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();

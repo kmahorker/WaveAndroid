@@ -16,10 +16,9 @@ import java.util.List;
  * - Wei Tung
  */
 //public class User implements Parcelable
-public class User implements Parcelable {
+public class User extends CustomFirebaseObject implements Parcelable {
     private String facebookID;
     @Exclude //userID represents the Firebase key, so it should not be stored
-    private String userID; //
     private String first_name; //
     private String last_name; //
     private String gender; //
@@ -30,7 +29,7 @@ public class User implements Parcelable {
    // private Bitmap profilePic; //
 
     public User() {
-        userID = ""; //
+        this.setId("");
         first_name = ""; //
         last_name = ""; //
         gender = ""; //
@@ -49,7 +48,7 @@ public class User implements Parcelable {
         //        Calendar birthday,
                 List<BestFriend> bestFriends) {
                 //Bitmap profilePic) {
-        this.userID = userID;
+        this.setId(userID);
         this.facebookID = facebookID;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -62,9 +61,6 @@ public class User implements Parcelable {
     }
 
     //Setter Block
-
-    @Exclude
-    public void setUserID(String userID) { this.userID = userID; }
 
     public void setFacebookID(String facebookID) {
         this.facebookID = facebookID;
@@ -103,9 +99,6 @@ public class User implements Parcelable {
     public int getFollower_count() {return follower_count; }
 
     public int getFollowing_count() {return following_count; }
-
-    @Exclude
-    public String getUserID() { return userID; }
 
     public String getFacebookID() {
         return facebookID;
@@ -158,7 +151,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
-        userID = in.readString();
+        this.setId(in.readString());
         first_name = in.readString();
         last_name = in.readString();
         gender = in.readString();
@@ -179,7 +172,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(userID);
+        dest.writeString(this.getId());
         dest.writeString(first_name);
         dest.writeString(last_name);
         dest.writeString(gender);

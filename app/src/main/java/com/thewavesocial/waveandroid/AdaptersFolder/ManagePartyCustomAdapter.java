@@ -79,7 +79,7 @@ public class ManagePartyCustomAdapter extends BaseAdapter {
             holder.partyEmoji.setText(party.getEmoji());
         }
         holder.partyname.setText(party.getName());
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 holder.partyInfo.setText(getCustomInfoText(party, result.get("going").size()));

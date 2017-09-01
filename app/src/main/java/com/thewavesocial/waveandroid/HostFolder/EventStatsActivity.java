@@ -104,7 +104,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EDIT_STATS_REQUEST) {
             if (resultCode == RESULT_OK) {
-                server_getPartyObject(party.getPartyID(), new OnResultReadyListener<Party>() {
+                server_getPartyObject(party.getId(), new OnResultReadyListener<Party>() {
                     @Override
                     public void onResultReady(Party result) {
                         if (result != null) {
@@ -140,20 +140,20 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
         for ( int i = 0; i < goingList.size() && !found; i++ ) {
             final User each = goingList.get(i);
-            if ( rawID.contains(each.getUserID()) ) {
+            if ( rawID.contains(each.getId()) ) {
                 found = true;
                 user = each;
             }
         }
 
-        if ( !rawID.contains(party.getPartyID()) || !found )
+        if ( !rawID.contains(party.getId()) || !found )
             Log.d("Error", "User Not Found");
         else
             displayUserProfile(user);
     }
 
     private void displayUserProfile(final User each) {
-        DatabaseAccess.server_getProfilePicture(each.getUserID(), new OnResultReadyListener<Bitmap>() {
+        DatabaseAccess.server_getProfilePicture(each.getId(), new OnResultReadyListener<Bitmap>() {
             @Override
             public void onResultReady(Bitmap result) {
                 View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_scan_view, null);
@@ -182,7 +182,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void acceptUserToParty(final User each) {
-        DatabaseAccess.server_manageUserForParty(each.getUserID(), party.getPartyID(), "attending", "POST", new OnResultReadyListener<String>() {
+        DatabaseAccess.server_manageUserForParty(each.getId(), party.getId(), "attending", "POST", new OnResultReadyListener<String>() {
             @Override
             public void onResultReady(String result) {
                 if ( result.equals("success") ) {
@@ -227,7 +227,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                 @Override
                 public void onClick(View v) {
                     View view = LayoutInflater.from(mainActivity).inflate(R.layout.qr_code_view, null);
-                    String id = CurrentUser.getUser().getUserID() + party.getPartyID();
+                    String id = CurrentUser.getUser().getId() + party.getId();
                     ((ImageView) view.findViewById(R.id.qr_code_image_view)).setImageBitmap(getQRCode(id));
 
                     AlertDialog.Builder dialog = new AlertDialog.Builder(mainActivity);
@@ -280,7 +280,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         timeView.setText(time + "");
         hostView.setText(party.getHost_name());
 
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(final HashMap<String, ArrayList<User>> result) {
                 if (result != null) {
@@ -410,7 +410,7 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
         Marker marker = mMap.addMarker(new MarkerOptions()
                 .position(latlng)
                 .icon(BitmapDescriptorFactory.fromBitmap(UtilityClass.overlay(BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.pin), emojiText.getDrawingCache()))));
-        marker.setTag(party.getPartyID());
+        marker.setTag(party.getId());
     }
 
 

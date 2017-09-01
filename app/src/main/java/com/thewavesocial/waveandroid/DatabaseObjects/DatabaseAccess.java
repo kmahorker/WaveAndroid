@@ -1,14 +1,11 @@
 package com.thewavesocial.waveandroid.DatabaseObjects;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.facebook.AccessToken;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -31,7 +28,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
-import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -97,14 +93,14 @@ public final class DatabaseAccess {
 
     /**
      * generate key for Party, set partyID, then add Party to Firebase and Geofire
-     * @param party Party to be stored; party.setPartyID() is called
+     * @param party Party to be stored; party.setId() is called
      * @param delegate callback; is invoked immediately and does not wait on Firebase; beware of race condition
      * @return generated Firebase key
      */
     public static String server_createNewParty(Party party, final OnResultReadyListener<String> delegate){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
         String partyID = db.push().getKey(); //unique ID for each event
-        party.setPartyID(partyID);
+        party.setId(partyID);
         db.child(partyID).setValue(party);
 
         //generate corresponding Geofire entry
@@ -118,17 +114,17 @@ public final class DatabaseAccess {
 
     /**
      * generate key for User, set userID, then add User to Firebase
-     * @param user User to be stored; user.setUserID() is called
+     * @param user User to be stored; user.setId() is called
      * @param delegate callback; is invoked immediately and does not wait on Firebase; beware of race condition
      */
     public static void server_createNewUser(User user, final OnResultReadyListener<String> delegate) {
         Log.i(TAG, "server_createNewUser: info received:" + user.toString());
-        if(user.getUserID() == null)
+        if(user.getId() == null)
             throw new RuntimeException("userID needs to be set!");
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child(PATH_TO_USERS);
-        db.child(user.getUserID()).setValue(user);
+        db.child(user.getId()).setValue(user);
         if(delegate != null)
-            delegate.onResultReady(user.getUserID());
+            delegate.onResultReady(user.getId());
     }
 
 
@@ -211,7 +207,7 @@ public final class DatabaseAccess {
      */
     public static void server_updateUser(User user, final OnResultReadyListener<String> delegate) {
         FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS)
-                .child(user.getUserID())
+                .child(user.getId())
                 .setValue(user);
         if(delegate != null)
             delegate.onResultReady("success");
@@ -302,7 +298,7 @@ public final class DatabaseAccess {
                 Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getUserObject onDataChange");
                 if(dataSnapshot.getValue() != null) {
                     User user = dataSnapshot.getValue(User.class);
-                    user.setUserID(dataSnapshot.getKey());
+                    user.setId(dataSnapshot.getKey());
                     if(delegate != null)
                         delegate.onResultReady(user);
                 } else {
@@ -321,7 +317,7 @@ public final class DatabaseAccess {
             @Override
             public void onResultReady(final User user) {
                 if(user != null) {
-                    server_getBestFriends(user.getUserID(), new OnResultReadyListener<List<BestFriend>>() {
+                    server_getBestFriends(user.getId(), new OnResultReadyListener<List<BestFriend>>() {
                         @Override
                         public void onResultReady(final List<BestFriend> result) {
                             user.setBestFriends(result);
@@ -408,12 +404,6 @@ public final class DatabaseAccess {
     }
     public static void server_getEventsOfUser(final String userID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USER_EVENT).child(userID);
-        final ArrayList<Party> invited = new ArrayList<>();
-        final ArrayList<Party> going = new ArrayList<>();
-        final ArrayList<Party> hosting = new ArrayList<>();
-        final ArrayList<Party> bouncing = new ArrayList<>();
-        final ArrayList<Party> attending = new ArrayList<>();
-        final HashMap<String, ArrayList<Party>> parties = new HashMap<>();
         final HashMap<String, Integer> partyIDsAndR = new HashMap<>(); //partyIDsAndRelationships
         final ArrayList<String> partyIDs = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -428,8 +418,13 @@ public final class DatabaseAccess {
                 server_getPartiesFromIDs(partyIDs, new OnResultReadyListener<ArrayList<Party>>() {
                     @Override
                     public void onResultReady(ArrayList<Party> result) {
+                        final ArrayList<Party> invited = new ArrayList<>();
+                        final ArrayList<Party> going = new ArrayList<>();
+                        final ArrayList<Party> hosting = new ArrayList<>();
+                        final ArrayList<Party> bouncing = new ArrayList<>();
+                        final ArrayList<Party> attending = new ArrayList<>();
                         for(Party party : result) {
-                            int userRelationship = partyIDsAndR.get(party.getPartyID());
+                            int userRelationship = partyIDsAndR.get(party.getId());
                             if (userRelationship >= 128) {
                                 userRelationship -= 128;
                                 invited.add(party);
@@ -451,6 +446,7 @@ public final class DatabaseAccess {
                             }
                         }
 
+                        final HashMap<String, ArrayList<Party>> parties = new HashMap<>();
                         parties.put("attending", attending);
                         parties.put("hosting", hosting);
                         parties.put("bouncing", bouncing);
@@ -464,28 +460,6 @@ public final class DatabaseAccess {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
-        final ArrayList<Party> partyList = new ArrayList<>();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(String eventID: partyIDlist){
-                    Party party = dataSnapshot.child(eventID).getValue(Party.class);
-                    party.setPartyID(eventID);
-                    partyList.add(party);
-                }
-                if (delegate != null)
-                    delegate.onResultReady(partyList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
             }
         });
     }
@@ -516,7 +490,7 @@ public final class DatabaseAccess {
                             @Override
                             public void onResultReady(ArrayList<User> result) {
                                 for(User user : result) {
-                                    int userRelationship = userIDsAndR.get(user.getUserID());
+                                    int userRelationship = userIDsAndR.get(user.getId());
                                     if (userRelationship >= 128) {
                                         userRelationship -= 128;
                                         inviting.add(user);
@@ -594,7 +568,7 @@ public final class DatabaseAccess {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             Party party = dataSnapshot.getValue(Party.class);
-                            party.setPartyID(dataSnapshot.getKey());
+                            party.setId(dataSnapshot.getKey());
                             onKeyEnteredDelegate.onResultReady(party);
                         }
                     }
@@ -637,12 +611,36 @@ public final class DatabaseAccess {
                 for(String userID: userIDlist){
                     User user = dataSnapshot.child(userID).getValue(User.class);
                     if(user != null){
-                        user.setUserID(userID);
+                        user.setId(userID);
                         userList.add(user);
                     }
                 }
                 if (delegate != null)
                     delegate.onResultReady(userList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
+        final ArrayList<Party> partyList = new ArrayList<>();
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(String eventID: partyIDlist){
+                    Party party = dataSnapshot.child(eventID).getValue(Party.class);
+                    if(party != null) {
+                        party.setId(eventID);
+                        partyList.add(party);
+                    }
+                }
+                if (delegate != null)
+                    delegate.onResultReady(partyList);
             }
 
             @Override
@@ -685,7 +683,7 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Party each_party = postSnapshot.getValue(Party.class);
-                    each_party.setPartyID(postSnapshot.getKey());
+                    each_party.setId(postSnapshot.getKey());
                     parties.add(each_party);
                 }
                 //Log.d("Get Invites of Event", result.get(0));
@@ -711,7 +709,7 @@ public final class DatabaseAccess {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     User user = postSnapshot.getValue(User.class);
                     //Log.i(TAG, "onDataChange: Found key: " + postSnapshot.getKey());
-                    user.setUserID(postSnapshot.getKey());
+                    user.setId(postSnapshot.getKey());
                     users.add(user);
                     //Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFull_name());
                 }

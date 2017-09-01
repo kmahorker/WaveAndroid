@@ -149,15 +149,15 @@ public class UserActionAdapter extends BaseAdapter {
                         UtilityClass.startProgressbar(mainActivity);
                         final String type = (notifList.get(position).getRequestType() == Notification.TYPE_INVITE_GOING) ? "going" : "bouncing";
 
-                        server_manageUserForParty(CurrentUser.getUser().getUserID(), notifList.get(position).getSenderID(), type, "POST", new OnResultReadyListener<String>() {
+                        server_manageUserForParty(CurrentUser.getUser().getId(), notifList.get(position).getSenderID(), type, "POST", new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
                                 if (result.equals("success")) {
-                                    server_createNotification(CurrentUser.getUser().getUserID(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
+                                    server_createNotification(CurrentUser.getUser().getId(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             if (result.equals("success")) {
-                                                server_deleteNotification(CurrentUser.getUser().getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                                                server_deleteNotification(CurrentUser.getUser().getId(), notifList.get(position).getId(), new OnResultReadyListener<String>() {
                                                     @Override
                                                     public void onResultReady(String result) {
                                                         if (result.equals("success")) {
@@ -173,7 +173,7 @@ public class UserActionAdapter extends BaseAdapter {
                                                 UtilityClass.endProgressbar(mainActivity, false);
                                         }
                                     });
-                                    server_uninviteUser(CurrentUser.getUser().getUserID(), notifList.get(position).getSenderID(), null);
+                                    server_uninviteUser(CurrentUser.getUser().getId(), notifList.get(position).getSenderID(), null);
                                 } else
                                     UtilityClass.endProgressbar(mainActivity, false);
                             }
@@ -185,7 +185,7 @@ public class UserActionAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         UtilityClass.startProgressbar(mainActivity);
-                        server_deleteNotification(CurrentUser.getUser().getUserID(), notifList.get(position).getNotificationID(), new OnResultReadyListener<String>() {
+                        server_deleteNotification(CurrentUser.getUser().getId(), notifList.get(position).getId(), new OnResultReadyListener<String>() {
                             @Override
                             public void onResultReady(String result) {
                                 if (result.equals("success")) {
@@ -234,7 +234,7 @@ public class UserActionAdapter extends BaseAdapter {
         if (party.getEmoji() != null && !party.getEmoji().isEmpty())
             holder.partyEmoji.setText(party.getEmoji());
         holder.partyname.setText(party.getName());
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 holder.partyInfo.setText(getCustomInfoText(party, result.get("going").size()));

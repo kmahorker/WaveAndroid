@@ -69,7 +69,7 @@ public class EditListActivity extends AppCompatActivity {
         LAYOUT_TYPE = getIntent().getExtras().getInt("layout");
 
         //Get follower, attending or bouncing users
-        server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+        server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
                 if (result != null) {
@@ -88,13 +88,13 @@ public class EditListActivity extends AppCompatActivity {
 
                     //Get user followings
                     users = new ArrayList<>();
-                    DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getUserID(), new OnResultReadyListener<List<User>>() {
+                    DatabaseAccess.server_getUserFollowing(CurrentUser.getUser().getId(), new OnResultReadyListener<List<User>>() {
                         @Override
                         public void onResultReady(List<User> result) {
                             users.addAll(result);
                             switch (LAYOUT_TYPE) {
                                 case 1:
-                                    server_getUsersOfEvent(party.getPartyID(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
+                                    server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
                                         @Override
                                         public void onResultReady(HashMap<String, ArrayList<User>> result) {
                                             ArrayList<User> bouncers = result.get("bouncing");
@@ -182,12 +182,12 @@ public class EditListActivity extends AppCompatActivity {
 //                    case 1:
 //
 ////                        for ( User user : invites ) {
-////                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "attending", "POST", null);
+////                            server_manageUserForParty(user.getId(), party.getId(), "attending", "POST", null);
 ////                        }
 //                        break;
 //                    case 2:
 ////                        for ( User user : invites ) {
-////                            server_manageUserForParty(user.getUserID(), party.getPartyID(), "bouncing", "POST", null);
+////                            server_manageUserForParty(user.getId(), party.getId(), "bouncing", "POST", null);
 ////                        }
 //                        break;
 //                }
@@ -276,7 +276,7 @@ public class EditListActivity extends AppCompatActivity {
             holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
             holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
             holder.name.setText(getItem(position).getFull_name());
-            server_getProfilePicture(getItem(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+            server_getProfilePicture(getItem(position).getId(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
                     holder.profile.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));
@@ -366,7 +366,7 @@ public class EditListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, final int position) {
-            server_getProfilePicture(userList.get(position).getUserID(), new OnResultReadyListener<Bitmap>() {
+            server_getProfilePicture(userList.get(position).getId(), new OnResultReadyListener<Bitmap>() {
                 @Override
                 public void onResultReady(Bitmap result) {
                     holder.imgView.setImageDrawable(UtilityClass.toRoundImage(mainActivity.getResources(), result));

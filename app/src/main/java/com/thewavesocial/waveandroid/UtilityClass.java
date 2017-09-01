@@ -388,7 +388,7 @@ public final class UtilityClass {
     public static List<String> userObjectToStringId(List<User> userList) {
         List<String> result = new ArrayList<>();
         for (User user : userList) {
-            result.add((user.getUserID()));
+            result.add((user.getId()));
         }
         return result;
     }
@@ -401,7 +401,7 @@ public final class UtilityClass {
     public static List<Integer> userObjectToIntegerId(List<User> userList) {
         List<Integer> result = new ArrayList<>();
         for (User user : userList) {
-            result.add(Integer.parseInt(user.getUserID()));
+            result.add(Integer.parseInt(user.getId()));
         }
         return result;
     }

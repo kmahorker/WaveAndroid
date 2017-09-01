@@ -9,7 +9,7 @@ import java.util.Calendar;
  * Created by Wei-Tung on 02/18/2017.
  * Stores all notifications:
  */
-public class Notification implements Parcelable {
+public class Notification extends CustomFirebaseObject implements Parcelable {
     public static final int TYPE_FOLLOWING = 1;
     public static final int TYPE_FOLLOWED = 2;
     public static final int TYPE_HOSTING = 3;
@@ -18,7 +18,7 @@ public class Notification implements Parcelable {
     public static final int TYPE_INVITE_GOING = 6;
     public static final int TYPE_INVITE_BOUNCING = 7;
 
-    private String message, senderID, receiverID, notificationID, eid;
+    private String message, senderID, receiverID, id, eid;
     private long create_time;
     private int requestType;
 
@@ -27,7 +27,7 @@ public class Notification implements Parcelable {
         message = "";
         requestType = 0;
         senderID = "";
-        notificationID = "";
+        id = "";
         create_time = 0;
     }
 
@@ -109,10 +109,6 @@ public class Notification implements Parcelable {
             return new Notification[size];
         }
     };
-
-    public String getNotificationID() {
-        return notificationID;
-    }
 
     public long getCreate_time() {
         return create_time;
