@@ -296,17 +296,22 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
                     }
 
                     //If coming from hostFragment and you are a host
-                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getCurrentUserId())) {
+                    if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getCurrentUserId())
+                            && result.get("inviting") != null) {
                         invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
                         populateHorizontalList(result.get("inviting"), listInvited);
                     }
 
                     goingList = result.get("going");
-                    goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
-                    populateHorizontalList(goingList, listGoing);
+                    if ( goingList != null ) {
+                        goingView.setText("FRIENDS GOING (" + goingList.size() + ")");
+                        populateHorizontalList(goingList, listGoing);
+                    }
 
-                    bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
-                    populateHorizontalList(result.get("bouncing"), listBouncing);
+                    if ( result.get("bouncing") != null ) {
+                        bounceView.setText("BOUNCERS (" + result.get("bouncing").size() + ")");
+                        populateHorizontalList(result.get("bouncing"), listBouncing);
+                    }
 
                     attending = male = female = 0;
                     for ( User each : result.get("attending") ) {

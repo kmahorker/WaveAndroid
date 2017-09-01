@@ -183,7 +183,6 @@ public final class DatabaseAccess {
                     delegate.onResultReady("success");
                     return;
                 } else if ( hasData && action.equals("POST")) {
-                    Log.i(TAG,dataSnapshot.toString());
                     newVal = dataSnapshot.getValue(Integer.class) | change;
                 } else if ( hasData && action.equals("DELETE")){
                     newVal = dataSnapshot.getValue(Integer.class) & ~change;
@@ -198,7 +197,6 @@ public final class DatabaseAccess {
 
                 relationshipUpdate.put(PATH_TO_EVENT_USER+'/'+eventID+'/'+userID, newVal);
                 relationshipUpdate.put(PATH_TO_USER_EVENT+'/'+userID+'/'+eventID, newVal);
-                Log.i(TAG, "server_changeEventRelationship relationshipUpdate=" + relationshipUpdate.toString());
                 FirebaseDatabase.getInstance().getReference().updateChildren(relationshipUpdate, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -213,39 +211,6 @@ public final class DatabaseAccess {
 
             }
         });
-
-
-//        db.runTransaction(new Transaction.Handler() {
-//            @Override
-//            public Transaction.Result doTransaction(MutableData mutableData) {
-//                MutableData md_eu = mutableData.child(PATH_TO_EVENT_USER).child(eventID).child(userID);
-//                MutableData md_ue = mutableData.child(PATH_TO_USER_EVENT).child(userID).child(eventID);
-//                Log.d(TAG, "server_changeEventRelationship doTransaction("+action+", "+ change+") with existing rel:" + md_eu.getValue(Integer.class));
-//                if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
-//                    md_eu.setValue( change );
-//                    md_ue.setValue( change );
-//                }
-//                else if (action.equals("POST")) {
-//                    md_eu.setValue( md_eu.getValue(Integer.class) | change );
-//                    md_ue.setValue( md_ue.getValue(Integer.class) | change );
-//                }
-//                else if (action.equals("DELETE")){
-//                    md_eu.setValue( md_eu.getValue(Integer.class) & ~change );
-//                    md_ue.setValue( md_ue.getValue(Integer.class) & ~change );
-//                }
-//                return Transaction.success(mutableData);
-//            }
-//            @Override
-//            public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
-//                // Transaction completed
-//                Log.d(TAG, "server_changeEventRelationship:onComplete:" + error);
-//                if(!committed){
-//                    Log.w(TAG, "server_changeEventRelationship: Transaction complete but not committed", error.toException());
-//                }
-//                if(delegate != null)
-//                    delegate.onResultReady("success");
-//            }
-//        });
     }
 
     /**
