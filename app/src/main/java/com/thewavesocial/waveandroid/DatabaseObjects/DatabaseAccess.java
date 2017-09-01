@@ -51,6 +51,12 @@ public final class DatabaseAccess {
     private static final String PATH_TO_NOTIFICATIONS = "notifications";
     private static final String PATH_TO_GEOFIRE = "geofire";
 
+    public static final int INVITED = 128;
+    public static final int ATTENDING = 64;
+    public static final int HOSTING = 8;
+    public static final int GOING = 4;
+    public static final int BOUNCING = 2;
+
     public static final String TAG = HomeSwipeActivity.TAG;
 
     //prevent instantiation
@@ -133,30 +139,24 @@ public final class DatabaseAccess {
         final int change;
         switch(relationship){
             case "hosting":
-                change = 8;
+                change = HOSTING;
                 break;
             case "bouncing":
-                change = 130;
+                change = BOUNCING;
                 break;
             case "invited":
-                change = 132;
+                change = INVITED;
                 break;
             case "attending":
-                change = 64;
+                change = ATTENDING;
                 break;
             case "going":
-                change = 4;
+                change = GOING;
                 break;
             default:
                 throw new RuntimeException("server_manageUserForParty: Invalid user_event relationship");
         }
-        server_changeEventRelationship(userID, eventID, action, change, new OnResultReadyListener<String>() {
-            @Override
-            public void onResultReady(String result) {
-                if(delegate != null)
-                    delegate.onResultReady("success");
-            }
-        });
+        server_changeEventRelationship(userID, eventID, action, change, delegate);
     }
 
     /**
@@ -175,16 +175,16 @@ public final class DatabaseAccess {
                 MutableData md_eu = mutableData.child(PATH_TO_EVENT_USER).child(eventID).child(userID);
                 MutableData md_ue = mutableData.child(PATH_TO_USER_EVENT).child(userID).child(eventID);
                 if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
-                    md_eu.setValue(change);
-                    md_ue.setValue(change);
+                    md_eu.setValue( change );
+                    md_ue.setValue( change );
                 }
                 else if (action.equals("POST")) {
-                    md_eu.setValue(md_eu.getValue(Integer.class) + change + 128);
-                    md_ue.setValue(md_ue.getValue(Integer.class) + change + 128);
+                    md_eu.setValue( md_eu.getValue(Integer.class) | change );
+                    md_ue.setValue( md_ue.getValue(Integer.class) | change );
                 }
                 else if (action.equals("DELETE")){
-                    md_eu.setValue(md_eu.getValue(Integer.class) - change);
-                    md_ue.setValue(md_ue.getValue(Integer.class) - change);
+                    md_eu.setValue( md_eu.getValue(Integer.class) & ~change );
+                    md_ue.setValue( md_ue.getValue(Integer.class) & ~change );
                 }
                 return Transaction.success(mutableData);
             }
@@ -435,23 +435,19 @@ public final class DatabaseAccess {
                         final ArrayList<T> attending = new ArrayList<>();
                         for(T object : result) {
                             int userRelationship = objectIdAndRelationships.get(object.getId());
-                            if (userRelationship >= 128) {
-                                userRelationship -= 128;
+                            if ( (userRelationship & INVITED) == INVITED ) {
                                 invited.add(object);
                             }
-                            if (userRelationship >= 64) {
-                                userRelationship -= 64;
+                            if ( (userRelationship & ATTENDING) == ATTENDING ) {
                                 attending.add(object);
                             }
-                            if (userRelationship >= 8) {
-                                userRelationship -= 8;
+                            if ( (userRelationship & HOSTING) == HOSTING ) {
                                 hosting.add(object);
                             }
-                            if (userRelationship >= 4) {
-                                userRelationship -= 4;
+                            if ( (userRelationship & GOING) == GOING ) {
                                 going.add(object);
                             }
-                            if (userRelationship >= 2) {
+                            if ( (userRelationship & BOUNCING) == BOUNCING ) {
                                 bouncing.add(object);
                             }
                         }
