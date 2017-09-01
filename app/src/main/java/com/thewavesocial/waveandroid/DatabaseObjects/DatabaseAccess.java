@@ -403,51 +403,60 @@ public final class DatabaseAccess {
             }
         });
     }
-    public static void server_getEventsOfUser(final String userID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USER_EVENT).child(userID);
-        final HashMap<String, Integer> partyIDsAndR = new HashMap<>(); //partyIDsAndRelationships
-        final ArrayList<String> partyIDs = new ArrayList<>();
+
+    public static <T extends CustomFirebaseObject> void server_getObjectsofObject(
+            final String targetObjectId,
+            final String PATH_OF_REATIONSHIP,
+            final String PATH_OF_RESULT_TYPE,
+            final Class<T> resultClass,
+            @NonNull final OnResultReadyListener<HashMap<String, ArrayList<T>>> delegate) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_OF_REATIONSHIP).child(targetObjectId);
+        final HashMap<String, Integer> objectIdAndRelationships = new HashMap<>();
+        final ArrayList<String> objectIds = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "server_getEventsOfUser: " + dataSnapshot.toString());
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    partyIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
-                    partyIDs.add(postSnapshot.getKey());
+                    objectIdAndRelationships.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
+                    objectIds.add(postSnapshot.getKey());
                     //
                 }
-                server_getPartiesFromIDs(partyIDs, new OnResultReadyListener<ArrayList<Party>>() {
+                server_getObjectsFromIDs(
+                        objectIds,
+                        PATH_OF_RESULT_TYPE,
+                        resultClass,
+                        new OnResultReadyListener<ArrayList<T>>() {
                     @Override
-                    public void onResultReady(ArrayList<Party> result) {
-                        final ArrayList<Party> invited = new ArrayList<>();
-                        final ArrayList<Party> going = new ArrayList<>();
-                        final ArrayList<Party> hosting = new ArrayList<>();
-                        final ArrayList<Party> bouncing = new ArrayList<>();
-                        final ArrayList<Party> attending = new ArrayList<>();
-                        for(Party party : result) {
-                            int userRelationship = partyIDsAndR.get(party.getId());
+                    public void onResultReady(ArrayList<T> result) {
+                        final ArrayList<T> invited = new ArrayList<>();
+                        final ArrayList<T> going = new ArrayList<>();
+                        final ArrayList<T> hosting = new ArrayList<>();
+                        final ArrayList<T> bouncing = new ArrayList<>();
+                        final ArrayList<T> attending = new ArrayList<>();
+                        for(T object : result) {
+                            int userRelationship = objectIdAndRelationships.get(object.getId());
                             if (userRelationship >= 128) {
                                 userRelationship -= 128;
-                                invited.add(party);
+                                invited.add(object);
                             }
                             if (userRelationship >= 64) {
                                 userRelationship -= 64;
-                                attending.add(party);
+                                attending.add(object);
                             }
                             if (userRelationship >= 8) {
                                 userRelationship -= 8;
-                                hosting.add(party);
+                                hosting.add(object);
                             }
                             if (userRelationship >= 4) {
                                 userRelationship -= 4;
-                                going.add(party);
+                                going.add(object);
                             }
                             if (userRelationship >= 2) {
-                                bouncing.add(party);
+                                bouncing.add(object);
                             }
                         }
 
-                        final HashMap<String, ArrayList<Party>> parties = new HashMap<>();
+                        final HashMap<String, ArrayList<T>> parties = new HashMap<>();
                         parties.put("attending", attending);
                         parties.put("hosting", hosting);
                         parties.put("bouncing", bouncing);
@@ -465,71 +474,12 @@ public final class DatabaseAccess {
         });
     }
 
+    public static void server_getEventsOfUser(final String userID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
+        server_getObjectsofObject(userID, PATH_TO_USER_EVENT, PATH_TO_EVENTS, Party.class, delegate);
+    }
+
     public static void server_getUsersOfEvent(final String eventID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENT_USER).child(eventID);
-        Log.i(TAG, "server_getUsersOfEvent: " + eventID);
-        final ArrayList<User> attending = new ArrayList<>();
-        final ArrayList<User> going = new ArrayList<>();
-        final ArrayList<User> hosting = new ArrayList<>();
-        final ArrayList<User> inviting = new ArrayList<>();
-        final ArrayList<User> bouncing = new ArrayList<>();
-        final HashMap<String, ArrayList<User>> users = new HashMap<>();
-        final HashMap<String, Integer> userIDsAndR = new HashMap<>();
-        final ArrayList<String> userIDs = new ArrayList<>();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Log.i(TAG, "onDataChange: " + postSnapshot.getKey());
-                    userIDsAndR.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
-                    userIDs.add(postSnapshot.getKey());
-                }
-                //Apparently data snapshot calls need a few seconds break (it'll return nothing if not)
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        server_getUsersFromIDs(userIDs, new OnResultReadyListener<ArrayList<User>>() {
-                            @Override
-                            public void onResultReady(ArrayList<User> result) {
-                                for(User user : result) {
-                                    int userRelationship = userIDsAndR.get(user.getId());
-                                    if (userRelationship >= 128) {
-                                        userRelationship -= 128;
-                                        inviting.add(user);
-                                    }
-                                    if (userRelationship >= 64) {
-                                        userRelationship -= 64;
-                                        attending.add(user);
-                                    }
-                                    if (userRelationship >= 8) {
-                                        userRelationship -= 8;
-                                        hosting.add(user);
-                                    }
-                                    if (userRelationship >= 4) {
-                                        userRelationship -= 4;
-                                        going.add(user);
-                                    }
-                                    if (userRelationship >= 2) {
-                                        bouncing.add(user);
-                                    }
-                                }
-
-                                users.put("attending", attending);
-                                users.put("hosting", hosting);
-                                users.put("bouncing", bouncing);
-                                users.put("going", going);
-                                users.put("inviting", inviting);
-                                delegate.onResultReady(users);
-                            }
-                        });
-                    }
-                }, 5000);
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        server_getObjectsofObject(eventID, PATH_TO_EVENT_USER, PATH_TO_USERS, User.class, delegate);
     }
 
     public static void server_getBestFriends(String userId, final OnResultReadyListener<List<BestFriend>> delegate) {
@@ -605,9 +555,9 @@ public final class DatabaseAccess {
 
     private static <T extends CustomFirebaseObject> void server_getObjectsFromIDs(
             final ArrayList<String> idList,
-            final OnResultReadyListener<ArrayList<T>> delegate,
             final String PATH,
-            final Class<T> objectClass){
+            final Class<T> objectClass,
+            final OnResultReadyListener<ArrayList<T>> delegate){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH);
         final ArrayList<T> objectList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -632,11 +582,11 @@ public final class DatabaseAccess {
     }
 
     private static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
-        server_getObjectsFromIDs(userIDlist, delegate, PATH_TO_USERS, User.class);
+        server_getObjectsFromIDs(userIDlist, PATH_TO_USERS, User.class, delegate);
     }
 
     private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
-        server_getObjectsFromIDs(partyIDlist, delegate, PATH_TO_EVENTS, Party.class);
+        server_getObjectsFromIDs(partyIDlist, PATH_TO_EVENTS, Party.class, delegate);
     }
 
     /**
@@ -661,23 +611,27 @@ public final class DatabaseAccess {
     }
 
     /**
-     * Get events by keyword
+     * Get CustomFirebaseObject by keyword
      */
-    public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
-        Query q1 = db.orderByChild("name").startAt(keyword).endAt(keyword + " zzzz");
-        final ArrayList<Party> parties = new ArrayList<>();
+    private static <T extends CustomFirebaseObject> void server_getObjectsByKeyword(
+            String keyword,
+            final String PATH,
+            final String searchIndex,
+            final Class<T> objectClass,
+            final OnResultReadyListener<ArrayList<T>> delegate) {
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH);
+        Query q1 = db.orderByChild(searchIndex).startAt(keyword).endAt(keyword + " zzzz");
+        final ArrayList<T> objects = new ArrayList<>();
         q1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Party each_party = postSnapshot.getValue(Party.class);
-                    each_party.setId(postSnapshot.getKey());
-                    parties.add(each_party);
+                    T object = postSnapshot.getValue(objectClass);
+                    object.setId(postSnapshot.getKey());
+                    objects.add(object);
                 }
-                //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
-                    delegate.onResultReady(parties);
+                    delegate.onResultReady(objects);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -686,29 +640,17 @@ public final class DatabaseAccess {
     }
 
     /**
+     * Get events by keyword
+     */
+    public static void server_getEventsByKeyword(String keyword, final OnResultReadyListener<ArrayList<Party>> delegate) {
+        server_getObjectsByKeyword(keyword, PATH_TO_EVENTS, "name", Party.class, delegate);
+    }
+
+    /**
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
-        Query q1 = db.orderByChild("first_name").startAt(keyword).endAt(keyword + "zzzz");
-        final ArrayList<User> users = new ArrayList<>();
-        q1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    User user = postSnapshot.getValue(User.class);
-                    //Log.i(TAG, "onDataChange: Found key: " + postSnapshot.getKey());
-                    user.setId(postSnapshot.getKey());
-                    users.add(user);
-                    //Log.i(TAG, "onDataChange: Found user: "+ postSnapshot.getValue(User.class).getFull_name());
-                }
-                if (delegate != null)
-                    delegate.onResultReady(users);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        server_getObjectsByKeyword(keyword, PATH_TO_EVENTS, "first_name", User.class, delegate);
     }
 
     /**
