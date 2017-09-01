@@ -406,7 +406,7 @@ public final class DatabaseAccess {
             }
         });
     }
-    public static void server_getEventsOfUser(final String userID, final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
+    public static void server_getEventsOfUser(final String userID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<Party>>> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USER_EVENT).child(userID);
         final ArrayList<Party> invited = new ArrayList<>();
         final ArrayList<Party> going = new ArrayList<>();
@@ -446,16 +446,17 @@ public final class DatabaseAccess {
                                 userRelationship -= 4;
                                 going.add(party);
                             }
-                            if (userRelationship >= 2)
+                            if (userRelationship >= 2) {
                                 bouncing.add(party);
-                            parties.put("attending", attending);
-                            parties.put("hosting", hosting);
-                            parties.put("bouncing", bouncing);
-                            parties.put("going", going);
-                            parties.put("invited", invited);
+                            }
                         }
-                        if(delegate != null)
-                            delegate.onResultReady(parties);
+
+                        parties.put("attending", attending);
+                        parties.put("hosting", hosting);
+                        parties.put("bouncing", bouncing);
+                        parties.put("going", going);
+                        parties.put("invited", invited);
+                        delegate.onResultReady(parties);
                     }
                 });
             }
@@ -489,7 +490,7 @@ public final class DatabaseAccess {
         });
     }
 
-    public static void server_getUsersOfEvent(final String eventID, final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
+    public static void server_getUsersOfEvent(final String eventID, @NonNull final OnResultReadyListener<HashMap<String, ArrayList<User>>> delegate) {
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENT_USER).child(eventID);
         Log.i(TAG, "server_getUsersOfEvent: " + eventID);
         final ArrayList<User> attending = new ArrayList<>();
@@ -536,14 +537,13 @@ public final class DatabaseAccess {
                                         bouncing.add(user);
                                     }
                                 }
-                                if(delegate != null) {
-                                    users.put("attending", attending);
-                                    users.put("hosting", hosting);
-                                    users.put("bouncing", bouncing);
-                                    users.put("going", going);
-                                    users.put("inviting", inviting);
-                                    delegate.onResultReady(users);
-                                }
+
+                                users.put("attending", attending);
+                                users.put("hosting", hosting);
+                                users.put("bouncing", bouncing);
+                                users.put("going", going);
+                                users.put("inviting", inviting);
+                                delegate.onResultReady(users);
                             }
                         });
                     }
