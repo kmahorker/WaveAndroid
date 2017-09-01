@@ -28,6 +28,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.thewavesocial.waveandroid.BusinessObjects.BestFriend;
+import com.thewavesocial.waveandroid.BusinessObjects.CustomFirebaseObject;
 import com.thewavesocial.waveandroid.BusinessObjects.Notification;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
@@ -602,21 +603,25 @@ public final class DatabaseAccess {
         });
     }
 
-    private static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS);
-        final ArrayList<User> userList = new ArrayList<>();
+    private static <T extends CustomFirebaseObject> void server_getObjectsFromIDs(
+            final ArrayList<String> idList,
+            final OnResultReadyListener<ArrayList<T>> delegate,
+            final String PATH,
+            final Class<T> objectClass){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH);
+        final ArrayList<T> objectList = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(String userID: userIDlist){
-                    User user = dataSnapshot.child(userID).getValue(User.class);
-                    if(user != null){
-                        user.setId(userID);
-                        userList.add(user);
+                for(String objectId: idList){
+                    T object = dataSnapshot.child(objectId).getValue(objectClass);
+                    if(object != null){
+                        object.setId(objectId);
+                        objectList.add(object);
                     }
                 }
                 if (delegate != null)
-                    delegate.onResultReady(userList);
+                    delegate.onResultReady(objectList);
             }
 
             @Override
@@ -626,28 +631,12 @@ public final class DatabaseAccess {
         });
     }
 
+    private static void server_getUsersFromIDs(final ArrayList<String> userIDlist, final OnResultReadyListener<ArrayList<User>> delegate){
+        server_getObjectsFromIDs(userIDlist, delegate, PATH_TO_USERS, User.class);
+    }
+
     private static void server_getPartiesFromIDs(final ArrayList<String> partyIDlist, final OnResultReadyListener<ArrayList<Party>> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS);
-        final ArrayList<Party> partyList = new ArrayList<>();
-        db.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(String eventID: partyIDlist){
-                    Party party = dataSnapshot.child(eventID).getValue(Party.class);
-                    if(party != null) {
-                        party.setId(eventID);
-                        partyList.add(party);
-                    }
-                }
-                if (delegate != null)
-                    delegate.onResultReady(partyList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        server_getObjectsFromIDs(partyIDlist, delegate, PATH_TO_EVENTS, Party.class);
     }
 
     /**
