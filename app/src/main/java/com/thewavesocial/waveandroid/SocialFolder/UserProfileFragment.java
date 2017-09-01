@@ -171,6 +171,7 @@ public class UserProfileFragment extends Fragment {
         goingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 flag_list_type = LIST_GOING;
                 UtilityClass.hideKeyboard(mainActivity);
 
@@ -180,6 +181,7 @@ public class UserProfileFragment extends Fragment {
                 server_getEventsOfUser(getCurrentUserId(), new OnResultReadyListener<HashMap<String, ArrayList<Party>>>() {
                     @Override
                     public void onResultReady(HashMap<String, ArrayList<Party>> result) {
+                        progressBar.setVisibility(View.INVISIBLE);
                         if (result != null) {
                             TreeMap<Long, Party> partyTreeMap = new TreeMap<>();
                             for ( Party party : result.get("going") ) {
@@ -191,6 +193,7 @@ public class UserProfileFragment extends Fragment {
                                     partyTreeMap.put(time, party);
                                 }
                             }
+
 
                             List<Party> new_list = new ArrayList<>();
                             for ( Long key : partyTreeMap.keySet() ) {
