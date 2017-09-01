@@ -243,15 +243,25 @@ public class LoginTutorialActivity extends AppCompatActivity {
                 try {
                     Log.i(TAG, "createNewUserFromFacebookToken: facebook info received:" + jsonObject.toString(2));
                     //https://developers.facebook.com/docs/android/graph/
-                    user.setFacebookID(jsonObject.getString("id"));
-                    user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
-                    user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
-                    user.setGender(jsonObject.getString("gender"));
-                    user.setId(uid);
+
+                    if ( jsonObject.has("id")) {
+                        user.setFacebookID(jsonObject.getString("id"));
+                    }
+                    if ( jsonObject.has("name") && !jsonObject.isNull("name") && !jsonObject.getString("name").isEmpty() ) {
+                        user.setFirst_name(jsonObject.getString("name").substring(0, jsonObject.getString("name").indexOf(' ')));
+                        user.setLast_name(jsonObject.getString("name").substring(jsonObject.getString("name").lastIndexOf(' ') + 1));
+                    }
+                    if ( jsonObject.has("gender") ) {
+                        user.setGender(jsonObject.getString("gender"));
+                    }
+
+
                 }catch (JSONException e){
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
                 }
+
+                user.setId(uid); //will always get called
 
                 DatabaseAccess.server_createNewUser(user, new OnResultReadyListener<String>() {
                     @Override
