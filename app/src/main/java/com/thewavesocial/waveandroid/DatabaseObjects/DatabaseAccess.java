@@ -603,7 +603,7 @@ public final class DatabaseAccess {
      * Get Notification by UserID
      */
     public static void server_getNotificationsOfUser(String userID, final OnResultReadyListener<ArrayList<Notification>> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID).child("notifications");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_NOTIFICATIONS).child(userID);
         final ArrayList<Notification> notifications = new ArrayList<>();
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
