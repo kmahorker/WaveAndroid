@@ -664,7 +664,7 @@ public final class DatabaseAccess {
      * Get users by keyword
      */
     public static void server_getUsersByKeyword(String keyword, final OnResultReadyListener<ArrayList<User>> delegate) {
-        server_getObjectsByKeyword(keyword, PATH_TO_EVENTS, "first_name", User.class, delegate);
+        server_getObjectsByKeyword(keyword, PATH_TO_USERS, "first_name", User.class, delegate);
     }
 
     /**
