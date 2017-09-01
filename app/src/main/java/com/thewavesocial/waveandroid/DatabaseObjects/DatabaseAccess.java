@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class DatabaseAccess {
     private static final String PATH_TO_EVENTS = "events";
@@ -168,37 +170,82 @@ public final class DatabaseAccess {
      * @param delegate callback
      */
     private static void server_changeEventRelationship(final String userID, final String eventID, final String action, final int change, final OnResultReadyListener<String> delegate){
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-        db.runTransaction(new Transaction.Handler() {
+        final DatabaseReference db = FirebaseDatabase.getInstance().getReference().child(PATH_TO_EVENT_USER).child(eventID).child(userID);
+        db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                MutableData md_eu = mutableData.child(PATH_TO_EVENT_USER).child(eventID).child(userID);
-                MutableData md_ue = mutableData.child(PATH_TO_USER_EVENT).child(userID).child(eventID);
-                if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
-                    md_eu.setValue( change );
-                    md_ue.setValue( change );
-                }
-                else if (action.equals("POST")) {
-                    md_eu.setValue( md_eu.getValue(Integer.class) | change );
-                    md_ue.setValue( md_ue.getValue(Integer.class) | change );
-                }
-                else if (action.equals("DELETE")){
-                    md_eu.setValue( md_eu.getValue(Integer.class) & ~change );
-                    md_ue.setValue( md_ue.getValue(Integer.class) & ~change );
-                }
-                return Transaction.success(mutableData);
-            }
-            @Override
-            public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
-                // Transaction completed
-                Log.d(TAG, "server_changeEventRelationship:onComplete:" + error);
-                if(!committed){
-                    Log.w(TAG, "server_changeEventRelationship: Transaction complete but not committed", error.toException());
-                }
-                if(delegate != null)
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> relationshipUpdate = new HashMap<>();
+                boolean hasData = dataSnapshot != null && dataSnapshot.getValue() != null;
+                int newVal;
+                if( !hasData && action.equals("POST")) {
+                    newVal = change;
+                } else if ( !hasData && action.equals("DELETE")) {
                     delegate.onResultReady("success");
+                    return;
+                } else if ( hasData && action.equals("POST")) {
+                    Log.i(TAG,dataSnapshot.toString());
+                    newVal = dataSnapshot.getValue(Integer.class) | change;
+                } else if ( hasData && action.equals("DELETE")){
+                    newVal = dataSnapshot.getValue(Integer.class) & ~change;
+                }else{
+                    throw new RuntimeException("server_changeEventRelationship: Bad parameter action");
+                }
+
+                if( hasData && dataSnapshot.getValue(Integer.class) == newVal){
+                    delegate.onResultReady("success");
+                    return;
+                }
+
+                relationshipUpdate.put(PATH_TO_EVENT_USER+'/'+eventID+'/'+userID, newVal);
+                relationshipUpdate.put(PATH_TO_USER_EVENT+'/'+userID+'/'+eventID, newVal);
+                Log.i(TAG, "server_changeEventRelationship relationshipUpdate=" + relationshipUpdate.toString());
+                FirebaseDatabase.getInstance().getReference().updateChildren(relationshipUpdate, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if(delegate != null)
+                            delegate.onResultReady("success");
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+
+//        db.runTransaction(new Transaction.Handler() {
+//            @Override
+//            public Transaction.Result doTransaction(MutableData mutableData) {
+//                MutableData md_eu = mutableData.child(PATH_TO_EVENT_USER).child(eventID).child(userID);
+//                MutableData md_ue = mutableData.child(PATH_TO_USER_EVENT).child(userID).child(eventID);
+//                Log.d(TAG, "server_changeEventRelationship doTransaction("+action+", "+ change+") with existing rel:" + md_eu.getValue(Integer.class));
+//                if(md_eu.getValue(Integer.class) == null && action.equals("POST")) {
+//                    md_eu.setValue( change );
+//                    md_ue.setValue( change );
+//                }
+//                else if (action.equals("POST")) {
+//                    md_eu.setValue( md_eu.getValue(Integer.class) | change );
+//                    md_ue.setValue( md_ue.getValue(Integer.class) | change );
+//                }
+//                else if (action.equals("DELETE")){
+//                    md_eu.setValue( md_eu.getValue(Integer.class) & ~change );
+//                    md_ue.setValue( md_ue.getValue(Integer.class) & ~change );
+//                }
+//                return Transaction.success(mutableData);
+//            }
+//            @Override
+//            public void onComplete(DatabaseError error, boolean committed, DataSnapshot currentData) {
+//                // Transaction completed
+//                Log.d(TAG, "server_changeEventRelationship:onComplete:" + error);
+//                if(!committed){
+//                    Log.w(TAG, "server_changeEventRelationship: Transaction complete but not committed", error.toException());
+//                }
+//                if(delegate != null)
+//                    delegate.onResultReady("success");
+//            }
+//        });
     }
 
     /**
@@ -410,6 +457,7 @@ public final class DatabaseAccess {
             final String PATH_OF_RESULT_TYPE,
             final Class<T> resultClass,
             @NonNull final OnResultReadyListener<HashMap<String, ArrayList<T>>> delegate) {
+        Log.i(TAG, "server_getObjectsofObject:" + targetObjectId + PATH_OF_REATIONSHIP + PATH_OF_RESULT_TYPE);
         DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_OF_REATIONSHIP).child(targetObjectId);
         final HashMap<String, Integer> objectIdAndRelationships = new HashMap<>();
         final ArrayList<String> objectIds = new ArrayList<>();
@@ -417,6 +465,7 @@ public final class DatabaseAccess {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Log.i(TAG, "server_getObjectsofObject:" + postSnapshot);
                     objectIdAndRelationships.put(postSnapshot.getKey(), postSnapshot.getValue(Integer.class));
                     objectIds.add(postSnapshot.getKey());
                     //
