@@ -357,6 +357,7 @@ public final class DatabaseAccess {
                 Log.d(HomeSwipeActivity.TAG, "DatabaseAccess.server_getPartyObject onDataChange");
                 if(dataSnapshot.getValue() != null){
                     Party party = dataSnapshot.getValue(Party.class);
+                    party.setId(dataSnapshot.getKey());
                     if(delegate != null)
                         delegate.onResultReady(party);
                 } else {
