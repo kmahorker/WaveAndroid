@@ -409,7 +409,7 @@ public class EditStatsActivity extends AppCompatActivity {
         server_getUsersOfEvent(party.getId(), new OnResultReadyListener<HashMap<String, ArrayList<User>>>() {
             @Override
             public void onResultReady(HashMap<String, ArrayList<User>> result) {
-                List<User> invited = result.get("inviting");
+                List<User> invited = result.get("invited");
                 invitedRecyclerView.setAdapter(new PartyAttendeesCustomAdapter(mainActivity, invited));
                 inviteTextView = (TextView) findViewById(R.id.invite_text);
 
@@ -628,7 +628,7 @@ public class EditStatsActivity extends AppCompatActivity {
                         originalHosting = hostingUsers;
                         bouncingUsers = UtilityClass.userObjectToIntegerId(result.get("bouncing"));
                         originalBouncing = bouncingUsers;
-                        invitingUsers = UtilityClass.userObjectToIntegerId(result.get("inviting"));
+                        invitingUsers = UtilityClass.userObjectToIntegerId(result.get("invited"));
                         originalInviting = invitingUsers;
                     }
                 }
