@@ -507,8 +507,10 @@ public final class DatabaseAccess {
                 }
                 else
                     if (delegate != null) {
-                        delegate.onResultReady(null);
-                }
+                        List<BestFriend> empty = new ArrayList<>();
+                        delegate.onResultReady(empty);
+                    }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
