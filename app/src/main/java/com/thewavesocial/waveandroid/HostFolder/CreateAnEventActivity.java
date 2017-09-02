@@ -722,38 +722,42 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 } else {
                     holder = (Holder) layoutView.getTag();
                 }
-                holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
-                holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
-                holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                holder.name.setText(getItem(position).getFull_name());
 
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
-                if (inviteIDs.contains(friends.get(position).getId()))
-                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
-                else
-                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
-                holder.select.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!inviteIDs.contains(friends.get(position).getId())) {
-                            inviteIDs.add(friends.get(position).getId());
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
-                        } else {
-                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                if (!getItem(position).getId().isEmpty()) {
+                    holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
+                    holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
+                    holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
+                    holder.name.setText(getItem(position).getFull_name());
+                    holder.profile.setImageDrawable(getResources().getDrawable(R.drawable.round_shape_grey));
+
+                    //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
+                    if (inviteIDs.contains(friends.get(position).getId()))
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
+                    else
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                    holder.select.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!inviteIDs.contains(friends.get(position).getId())) {
+                                inviteIDs.add(friends.get(position).getId());
+                                invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
+                                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
+                            } else {
+                                inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
+                                invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
+                                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                            }
                         }
-                    }
-                });
-                layoutView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userObject", getItem(position));
-                        startActivity(intent);
-                    }
-                });
+                    });
+                    layoutView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userObject", getItem(position));
+                            startActivity(intent);
+                        }
+                    });
+                }
                 return layoutView;
             }
 
@@ -932,39 +936,43 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 } else {
                     holder = (Holder) layoutView.getTag();
                 }
-                holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
-                holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
-                holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
-                holder.name.setText(getItem(position).getFull_name());
 
-                //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
-                if (inviteIDs.contains(friends.get(position).getId()))
-                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
-                else
-                    holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
-                holder.select.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!inviteIDs.contains(friends.get(position).getId())) {
-                            inviteIDs.add(friends.get(position).getId());
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
-                        } else {
-                            inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
-                            invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
-                            holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                if (!getItem(position).getId().isEmpty()) {
+                    holder.profile = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_profile);
+                    holder.name = (TextView) layoutView.findViewById(R.id.eachCreateEvent_invite_name);
+                    holder.select = (ImageView) layoutView.findViewById(R.id.eachCreateEvent_invite_button);
+                    holder.name.setText(getItem(position).getFull_name());
+                    holder.profile.setImageDrawable(getResources().getDrawable(R.drawable.round_shape_grey));
+
+                    //holder.profile.setImageDrawable(UtilityClass.toRoundImage(sharedPreferencesContext.getResources(), friends.get(position).getProfilePic()));
+                    if (inviteIDs.contains(friends.get(position).getId()))
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
+                    else
+                        holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                    holder.select.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!inviteIDs.contains(friends.get(position).getId())) {
+                                inviteIDs.add(friends.get(position).getId());
+                                invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
+                                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.checkmark));
+                            } else {
+                                inviteIDs.remove(inviteIDs.indexOf(friends.get(position).getId()));
+                                invite_list.setAdapter(new SelectedAdapter(getUsersFromFollowing(inviteIDs)));
+                                holder.select.setImageDrawable(getHandledDrawable(mainActivity, R.drawable.plus_button));
+                            }
                         }
-                    }
-                });
+                    });
 
-                layoutView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
-                        intent.putExtra("userObject", getItem(position));
-                        startActivity(intent);
-                    }
-                });
+                    layoutView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(mainActivity, FriendProfileActivity.class);
+                            intent.putExtra("userObject", getItem(position));
+                            startActivity(intent);
+                        }
+                    });
+                }
                 return layoutView;
             }
 
