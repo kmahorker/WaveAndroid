@@ -58,9 +58,9 @@ public class EditListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_list);
         mainActivity = this;
 
+        setupReferences();
         initialize();
         setupActionBar();
-        setupReferences();
         setupFunctionality();
     }
 
@@ -75,7 +75,7 @@ public class EditListActivity extends AppCompatActivity {
                 if (result != null) {
                     switch (LAYOUT_TYPE) {
                         case 1:
-                            invites = result.get("inviting");
+                            invites = result.get("invited");
                             break;
                         case 2:
                             invites = result.get("bouncing");

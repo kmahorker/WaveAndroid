@@ -135,6 +135,9 @@ public class UserActionAdapter extends BaseAdapter {
                 notifList.get(position).getRequestType() == Notification.TYPE_INVITE_BOUNCING) //Friend type notification
         {
             final Party party = (Party) senderObjects.get(position);
+            if ( party == null )
+                return layoutView;
+
             holder.sender.setText("\"" + party.getName() + "\"");
             holder.accept.setVisibility(View.INVISIBLE);
             holder.decline.setVisibility(View.INVISIBLE);

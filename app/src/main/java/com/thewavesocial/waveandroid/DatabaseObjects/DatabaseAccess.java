@@ -611,8 +611,11 @@ public final class DatabaseAccess {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                    notifications.add(postSnapshot.getValue(Notification.class));
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Notification each = postSnapshot.getValue(Notification.class);
+                    each.setId(dataSnapshot.getKey());
+                    notifications.add(each);
+                }
                 //Log.d("Get Invites of Event", result.get(0));
                 if (delegate != null)
                     delegate.onResultReady(notifications);
@@ -835,7 +838,7 @@ public final class DatabaseAccess {
      * Delete notification. Return success or error.
      */
     public static void server_deleteNotification(String userID, String notificationID, final OnResultReadyListener<String> delegate) {
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_USERS).child(userID).child(PATH_TO_NOTIFICATIONS);
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference(PATH_TO_NOTIFICATIONS).child(userID);
         db.child(notificationID).removeValue();
         if (delegate != null)
             delegate.onResultReady("success");

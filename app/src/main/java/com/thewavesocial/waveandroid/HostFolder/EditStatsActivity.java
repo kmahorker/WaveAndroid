@@ -35,6 +35,7 @@ import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
 import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
+import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
@@ -128,11 +129,11 @@ public class EditStatsActivity extends AppCompatActivity {
         switch (requestCode) {
             case EDIT_INVITE_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    List<Integer> updatedListUserIds = new ArrayList<>();
+                    List<String> updatedListUserIds = new ArrayList<>();
                     List<User> updatedList = new ArrayList<>();
                     updatedList = data.getExtras().getParcelableArrayList("updatedList");
                     for (User user : updatedList) {
-                        updatedListUserIds.add(Integer.parseInt(user.getId()));
+                        updatedListUserIds.add(user.getId());
                     }
                     NewPartyInfo.invitingUsers = updatedListUserIds;
                     inviteTextView.setText("INVITED (" + updatedList.size() + ")");
@@ -144,11 +145,11 @@ public class EditStatsActivity extends AppCompatActivity {
                 break;
             case EDIT_BOUNCER_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    List<Integer> updatedListUserIds = new ArrayList<>();
+                    List<String> updatedListUserIds = new ArrayList<>();
                     List<User> updatedList = new ArrayList<>();
                     updatedList = data.getExtras().getParcelableArrayList("updatedList");
                     for (User user : updatedList) {
-                        updatedListUserIds.add(Integer.parseInt(user.getId()));
+                        updatedListUserIds.add(user.getId());
                     }
                     NewPartyInfo.bouncingUsers = updatedListUserIds;
                     bouncingTextView.setText("BOUNCERS (" + updatedList.size() + ")");
@@ -189,7 +190,20 @@ public class EditStatsActivity extends AppCompatActivity {
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(mainActivity, "Todo: Delete this party from all attendees.", Toast.LENGTH_LONG).show();
+                                server_deleteParty(party.getId(), new OnResultReadyListener<Exception>() {
+                                    @Override
+                                    public void onResultReady(Exception e) {
+                                        // TODO: 04/20/2017 Remove party from server
+                                        // TODO: 04/20/2017 Notify all users
+                                        if (e != null) {
+                                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Intent intent = new Intent(mainActivity, HomeSwipeActivity.class);
+                                            startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
+                                            mainActivity.finish();
+                                        }
+                                    }
+                                });
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -200,19 +214,6 @@ public class EditStatsActivity extends AppCompatActivity {
                         })
                         .setCancelable(true)
                         .show();
-                server_deleteParty(party.getId(), new OnResultReadyListener<Exception>() {
-                    @Override
-                    public void onResultReady(Exception e) {
-                        // TODO: 04/20/2017 Remove party from server
-                        // TODO: 04/20/2017 Notify all users
-                        if (e != null) {
-                            Toast.makeText(mainActivity, "Fail to delete party.", Toast.LENGTH_LONG).show();
-                        } else {
-                            Intent intent = new Intent(mainActivity, HostControllerFragment.class);
-                            startActivity(intent); // TODO: 04/20/2017 Back to hostFragment
-                        }
-                    }
-                });
             }
         });
     }
@@ -602,16 +603,16 @@ public class EditStatsActivity extends AppCompatActivity {
         static double lat;
         static double lng;
         static List<String> hostingUsers;
-        static List<Integer> bouncingUsers;
-        static List<Integer> invitingUsers;
+        static List<String> bouncingUsers;
+        static List<String> invitingUsers;
         static boolean e_public;
         static String partyEmoji;
         static int min_age;
         static int max_age;
 
         static List<String> originalHosting;
-        static List<Integer> originalBouncing;
-        static List<Integer> originalInviting;
+        static List<String> originalBouncing;
+        static List<String> originalInviting;
 
         //Initialize party information
         public static void initialize() {
@@ -689,10 +690,10 @@ public class EditStatsActivity extends AppCompatActivity {
         public static void updateInvites(){
             final String eventId = party.getId();
 
-            List<Integer> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
+            List<String> invitingDuplicates = UtilityClass.findDuplicates(invitingUsers, originalInviting);
             originalInviting.removeAll(invitingDuplicates);
             invitingUsers.removeAll(invitingDuplicates);
-            for(final int id : originalInviting){
+            for(final String id : originalInviting){
                 server_uninviteUser(id + "", party.getId(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
@@ -721,7 +722,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     }
                 });
             }
-            for(final int userID : invitingUsers){
+            for(final String userID : invitingUsers){
                 server_inviteUserToEvent(userID + "", eventId, new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
@@ -737,7 +738,7 @@ public class EditStatsActivity extends AppCompatActivity {
 
         public static void updateBouncers(){
             final String eventId = party.getId();
-            List<Integer> conflicts = UtilityClass.findDuplicates(bouncingUsers, invitingUsers);
+            List<String> conflicts = UtilityClass.findDuplicates(bouncingUsers, invitingUsers);
             invitingUsers.removeAll(conflicts);
             Log.d("conflicts", conflicts + "");
 
@@ -768,7 +769,7 @@ public class EditStatsActivity extends AppCompatActivity {
             invitedTextView.setText("INVITED (" + invitingUsers.size() + ")");
 
             //updateInvites();
-            for(final int id : conflicts){
+            for(final String id : conflicts){
                 server_uninviteUser(id + "", party.getId(), new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
@@ -799,12 +800,12 @@ public class EditStatsActivity extends AppCompatActivity {
             }
 
 
-            List<Integer> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
+            List<String> bouncingDuplicates = UtilityClass.findDuplicates(bouncingUsers, originalBouncing);
             originalBouncing.removeAll(bouncingDuplicates);
             bouncingUsers.removeAll(bouncingDuplicates);
 
 
-            for(final int id : originalBouncing){
+            for(final String id : originalBouncing){
                 server_manageUserForParty(id + "", party.getId(), "bouncing", "DELETE", new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {
@@ -834,7 +835,7 @@ public class EditStatsActivity extends AppCompatActivity {
                 });
             }
 
-            for(final int userID: bouncingUsers){
+            for(final String userID: bouncingUsers){
                 server_manageUserForParty(userID + "", eventId, "bouncing", "POST", new OnResultReadyListener<String>() {
                     @Override
                     public void onResultReady(String result) {

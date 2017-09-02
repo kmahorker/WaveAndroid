@@ -398,18 +398,18 @@ public final class UtilityClass {
      * @param userList list of users
      * @return list of IDs
      */
-    public static List<Integer> userObjectToIntegerId(List<User> userList) {
-        List<Integer> result = new ArrayList<>();
+    public static List<String> userObjectToIntegerId(List<User> userList) {
+        List<String> result = new ArrayList<>();
         for (User user : userList) {
-            result.add(Integer.parseInt(user.getId()));
+            result.add(user.getId());
         }
         return result;
     }
 
 
-    public static List<User> IntegerIdtoUserObject(List<Integer> userIdList){
+    public static List<User> IntegerIdtoUserObject(List<String> userIdList){
         final List<User> resultList = new ArrayList<>();
-        for(Integer i : userIdList) {
+        for(String i : userIdList) {
             DatabaseAccess.server_getUserObject(i + "", new OnResultReadyListener<User>() {
                 @Override
                 public void onResultReady(User result) {

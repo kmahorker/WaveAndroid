@@ -297,9 +297,9 @@ public class EventStatsActivity extends AppCompatActivity implements OnMapReadyC
 
                     //If coming from hostFragment and you are a host
                     if (callerType == activityHostFragment && party.getHost_id().equals(DatabaseAccess.getCurrentUserId())
-                            && result.get("inviting") != null) {
-                        invitedView.setText("INVITED (" + result.get("inviting").size() + ")");
-                        populateHorizontalList(result.get("inviting"), listInvited);
+                            && result.get("invited") != null) {
+                        invitedView.setText("INVITED (" + result.get("invited").size() + ")");
+                        populateHorizontalList(result.get("invited"), listInvited);
                     }
 
                     goingList = result.get("going");
