@@ -617,7 +617,7 @@ public final class DatabaseAccess {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Notification each = postSnapshot.getValue(Notification.class);
-                    each.setId(dataSnapshot.getKey());
+                    each.setId(postSnapshot.getKey());
                     notifications.add(each);
                 }
                 //Log.d("Get Invites of Event", result.get(0));
