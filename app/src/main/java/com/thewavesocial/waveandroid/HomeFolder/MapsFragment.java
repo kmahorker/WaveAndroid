@@ -330,12 +330,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         LatLng partyLatLng = new LatLng(party.getLat(), party.getLng());
         Marker marker = mMap.addMarker(new MarkerOptions().position(partyLatLng));
+        marker.setVisible(false);
         marker.setIcon(
                 BitmapDescriptorFactory.fromBitmap(
                         UtilityClass.overlay(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.pin), emojiText.getDrawingCache())
                 )/*writeOnDrawable(R.drawable.pin, party.getEmoji()).getBitmap())*/
         );
         marker.setTag(party);
+        marker.setVisible(true);
         Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\" ID:" + party.getId() + ")");
     }
 
