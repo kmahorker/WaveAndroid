@@ -282,16 +282,20 @@ public final class DatabaseAccess {
 
     private static int notificationTypeGenerator(String type) {
         switch (type) {
-            case PATH_TO_FOLLOWING:
-                return 1;
+            case "following":
+                return Notification.TYPE_FOLLOWING;
             case "followed":
-                return 2;
+                return Notification.TYPE_FOLLOWED;
             case "hosting":
-                return 3;
+                return Notification.TYPE_HOSTING;
             case "going":
-                return 4;
+                return Notification.TYPE_GOING;
             case "bouncing":
-                return 5;
+                return Notification.TYPE_BOUNCING;
+            case "invite_bouncing":
+                return Notification.TYPE_INVITE_BOUNCING;
+            case "invite_going":
+                return Notification.TYPE_INVITE_GOING;
             default:
                 return 0;
         }
