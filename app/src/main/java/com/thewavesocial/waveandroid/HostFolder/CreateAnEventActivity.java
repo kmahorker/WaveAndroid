@@ -1094,7 +1094,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                 Party party = new Party(address, date, duration, emoji, CurrentUser.getUser().getId(), host_name, e_public, lat, lng, max_age, min_age, name, null, price);
                 server_createNewParty( party, new OnResultReadyListener<String>() {
                     @Override
-                    public void onResultReady(String result) {
+                    public void onResultReady(final String partyID) {
 /*                        int commaIndex = result.indexOf(',');
                         if (commaIndex == -1 || !result.substring(0, commaIndex).equals("success")) {
                             Log.d("Compose Party", "Unsuccessful");
@@ -1104,22 +1104,22 @@ public class CreateAnEventActivity extends AppCompatActivity {
                         final String eventId = result.substring(commaIndex + 1);*/
 
                         for (final String id : invitingUsers) {
-                            server_inviteUserToEvent(id, result, new OnResultReadyListener<String>() {
+                            server_inviteUserToEvent(id, partyID, new OnResultReadyListener<String>() {
                                 @Override
                                 public void onResultReady(String result) {
                                     Log.d("addInvitedUser", result + "");
-                                    DatabaseAccess.server_createNotification(id, "", result, "invite_going", null);
+                                    DatabaseAccess.server_createNotification(id, partyID, result, "invite_going", null);
                                     completeThreads();
                                 }
                             });
                         }
 
                         for (final String id : bouncingUsers) {
-                            server_manageUserForParty(id, result, "bouncing", "POST", new OnResultReadyListener<String>() {
+                            server_manageUserForParty(id, partyID, "bouncing", "POST", new OnResultReadyListener<String>() {
                                 @Override
                                 public void onResultReady(String result) {
                                     if(result.equals("success")){
-                                        DatabaseAccess.server_createNotification(id, "", result, "invite_bouncing", null);
+                                        DatabaseAccess.server_createNotification(id, partyID, result, "invite_bouncing", null);
                                         completeThreads();
                                     }
                                 }
@@ -1128,11 +1128,11 @@ public class CreateAnEventActivity extends AppCompatActivity {
                         }
 
                         for (final String hostingId : hostingUsers) {
-                            server_manageUserForParty(hostingId, result, "hosting", "POST", new OnResultReadyListener<String>() {
+                            server_manageUserForParty(hostingId, partyID, "hosting", "POST", new OnResultReadyListener<String>() {
                                 @Override
                                 public void onResultReady(String result) {
                                     Log.d("addHostingUser", result + "");
-                                    DatabaseAccess.server_createNotification(hostingId, "", result, "hosting", null);
+                                    DatabaseAccess.server_createNotification(hostingId, partyID, result, "hosting", null);
                                     completeThreads();
                                 }
                             });
