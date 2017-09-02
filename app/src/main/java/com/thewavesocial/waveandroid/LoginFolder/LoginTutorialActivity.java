@@ -36,6 +36,7 @@ import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
+import com.thewavesocial.waveandroid.UtilityClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -181,6 +182,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d("FacebookLogin", "");
 
+        UtilityClass.startProgressbar(this);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -224,6 +226,7 @@ public class LoginTutorialActivity extends AppCompatActivity {
                             Toast.makeText(LoginTutorialActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+                        UtilityClass.endProgressbar(LoginTutorialActivity.this, true);
                     }
                 });
     }
