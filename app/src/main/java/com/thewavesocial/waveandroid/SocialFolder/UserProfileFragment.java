@@ -309,11 +309,11 @@ public class UserProfileFragment extends Fragment {
      * Load the next LOAD_SIZE notifications.
      */
     private void loadNotifications() {
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
             @Override
             public void onResultReady(ArrayList<Object> result) {
-                progressBar.setVisibility(View.INVISIBLE);
+//                progressBar.setVisibility(View.INVISIBLE);
                 flag_loading_notif = false;
                 senderObjects.addAll(result);
                 adapter.notifyDataSetChanged();
