@@ -727,7 +727,7 @@ public class EditStatsActivity extends AppCompatActivity {
                     @Override
                     public void onResultReady(String result) {
                         Log.d("addInvitedUser", result + "");
-                        DatabaseAccess.server_createNotification(userID+ "", "", eventId, "invite_going", null);
+                        DatabaseAccess.server_createNotification(userID, eventId, eventId, "invite_going", null);
                         //completeThreads();
                     }
                 });
