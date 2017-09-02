@@ -164,7 +164,7 @@ public class EditBestFriendActivity extends AppCompatActivity {
                                     @Override
                                     public void onResultReady(String result) {
                                         if (result.equals("success")) {
-                                            // CurrentUser.user.getBestFriends().add(new BestFriend(name, phoneNumber));
+                                            CurrentUser.getUser().getBestFriends().add(new BestFriend(name, phoneNumber));
                                             onBackPressed();
                                         } else {
                                             Toast.makeText(getApplicationContext(), "Error adding a best friend", Toast.LENGTH_SHORT).show();
