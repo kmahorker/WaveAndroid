@@ -141,6 +141,7 @@ public class UserProfileFragment extends Fragment {
         activityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action_listView.setAdapter(null);
                 flag_list_type = LIST_ACTIVITY;
                 UtilityClass.hideKeyboard(mainActivity);
 
@@ -150,19 +151,21 @@ public class UserProfileFragment extends Fragment {
                     @Override
                     public void onResultReady(ArrayList<Notification> result) {
                         if (result != null) {
-                            progressBar.setVisibility(View.VISIBLE);
                             notifications_offset = 0;
                             notifications = sortNotifications(result);
-                            getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
-                                @Override
-                                public void onResultReady(ArrayList<Object> result) {
-                                    progressBar.setVisibility(View.INVISIBLE);
-                                    flag_loading_notif = false;
-                                    senderObjects = result;
-                                    adapter = new UserActionAdapter(mainActivity, notifications, senderObjects);
-                                    action_listView.setAdapter(adapter);
-                                }
-                            });
+                            if ( notifications.size() > 0 ) {
+                                progressBar.setVisibility(View.VISIBLE);
+                                getSenderObjects(notifications_offset, LOAD_SIZE, new OnResultReadyListener<ArrayList<Object>>() {
+                                    @Override
+                                    public void onResultReady(ArrayList<Object> result) {
+                                        progressBar.setVisibility(View.INVISIBLE);
+                                        flag_loading_notif = false;
+                                        senderObjects = result;
+                                        adapter = new UserActionAdapter(mainActivity, notifications, senderObjects);
+                                        action_listView.setAdapter(adapter);
+                                    }
+                                });
+                            }
                         }
                     }
                 });
@@ -171,6 +174,7 @@ public class UserProfileFragment extends Fragment {
         goingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                action_listView.setAdapter(null);
                 progressBar.setVisibility(View.VISIBLE);
                 flag_list_type = LIST_GOING;
                 UtilityClass.hideKeyboard(mainActivity);
