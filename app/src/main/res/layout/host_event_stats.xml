@@ -92,7 +92,6 @@
         android:id="@+id/hostEventStats_qr_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan Attendees"
         android:textSize="@dimen/button_text_normal"
         android:textColor="@color/appColor"
         android:padding="15dp"
