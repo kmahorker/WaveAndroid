@@ -156,7 +156,7 @@ public class UserActionAdapter extends BaseAdapter {
                             @Override
                             public void onResultReady(String result) {
                                 if (result.equals("success")) {
-                                    server_createNotification(CurrentUser.getUser().getId(), "", notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
+                                    server_createNotification(CurrentUser.getUser().getId(), notifList.get(position).getSenderID(), notifList.get(position).getSenderID(), type, new OnResultReadyListener<String>() {
                                         @Override
                                         public void onResultReady(String result) {
                                             if (result.equals("success")) {
