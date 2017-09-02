@@ -1116,7 +1116,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 @Override
                                 public void onResultReady(String result) {
                                     Log.d("addInvitedUser", result + "");
-                                    DatabaseAccess.server_createNotification(id, partyID, result, "invite_going", null);
+                                    DatabaseAccess.server_createNotification(id, partyID, partyID, "invite_going", null);
                                     completeThreads();
                                 }
                             });
@@ -1127,7 +1127,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 @Override
                                 public void onResultReady(String result) {
                                     if(result.equals("success")){
-                                        DatabaseAccess.server_createNotification(id, partyID, result, "invite_bouncing", null);
+                                        DatabaseAccess.server_createNotification(id, partyID, partyID, "invite_bouncing", null);
                                         completeThreads();
                                     }
                                 }
@@ -1140,7 +1140,7 @@ public class CreateAnEventActivity extends AppCompatActivity {
                                 @Override
                                 public void onResultReady(String result) {
                                     Log.d("addHostingUser", result + "");
-                                    DatabaseAccess.server_createNotification(hostingId, partyID, result, "hosting", null);
+                                    DatabaseAccess.server_createNotification(hostingId, partyID, partyID, "hosting", null);
                                     completeThreads();
                                 }
                             });
