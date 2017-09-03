@@ -51,7 +51,7 @@ public final class DatabaseAccess {
     private static final String PATH_TO_FOLLOWERS = "followers";
     private static final String PATH_TO_USER_EVENT = "user_event";
     private static final String PATH_TO_NOTIFICATIONS = "notifications";
-    private static final String PATH_TO_GEOFIRE = "geofire";
+    public static final String PATH_TO_GEOFIRE = "geofire";
 
     public static final int INVITED = 128;
     public static final int ATTENDING = 64;
@@ -515,53 +515,6 @@ public final class DatabaseAccess {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    public static void server_getEventsInDistance(LatLng center, double radius, final OnResultReadyListener<Party> onKeyEnteredDelegate) {
-        GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(PATH_TO_GEOFIRE));
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(center.latitude, center.longitude), radius);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                Log.d(TAG, "server_getEventsInDistance onKeyEntered:" + key);
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference(PATH_TO_EVENTS).child(key);
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            Party party = dataSnapshot.getValue(Party.class);
-                            party.setId(dataSnapshot.getKey());
-                            onKeyEnteredDelegate.onResultReady(party);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e(TAG, "server_getEventsInDistance", databaseError.toException());
-                    }
-                });
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-                Log.d(TAG, "server_getEventsInDistance onKeyExited:" + key);
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                Log.d(TAG, "server_getEventsInDistance onKeyMoved:" + key);
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
             }
         });
     }

@@ -37,6 +37,10 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,21 +49,25 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.thewavesocial.waveandroid.BusinessObjects.CurrentUser;
 import com.thewavesocial.waveandroid.BusinessObjects.Party;
 import com.thewavesocial.waveandroid.BusinessObjects.User;
+import com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess;
 import com.thewavesocial.waveandroid.DatabaseObjects.OnResultReadyListener;
 import com.thewavesocial.waveandroid.HomeSwipeActivity;
 import com.thewavesocial.waveandroid.R;
 import com.thewavesocial.waveandroid.UtilityClass;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
-import static com.thewavesocial.waveandroid.DatabaseObjects.DatabaseAccess.server_getEventsInDistance;
-
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
-
+    private static String TAG = HomeSwipeActivity.TAG;
     private static HomeSwipeActivity mainActivity;
     private LocationManager locManager;
     private GoogleMap mMap;
@@ -70,6 +78,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private SearchView searchbar;
     private EditText editText;
     private SlidingUpPanelLayout sliding_layout;
+    private Map<String, Marker> markerMap = new HashMap<>();
 
 
     @Override
@@ -264,23 +273,61 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, (float) 15.0));
         }
 
+        //GeoFire stuff
+        LatLng nePoint = mMap.getProjection().getVisibleRegion().latLngBounds.northeast;
+        LatLng swPoint = mMap.getProjection().getVisibleRegion().latLngBounds.southwest;
+        GeoLocation center = new GeoLocation((nePoint.latitude + swPoint.latitude)/2, (nePoint.longitude + swPoint.longitude)/2);
+        double radius = distance(nePoint, swPoint) / 2;
+
+        final GeoFire geoFire = new GeoFire(FirebaseDatabase.getInstance().getReference(DatabaseAccess.PATH_TO_GEOFIRE));
+        final GeoQuery geoQuery = geoFire.queryAtLocation(center, radius);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(final String key, GeoLocation location) {
+                Log.d(TAG, "MapsFragment onKeyEntered:" + key);
+                DatabaseAccess.server_getPartyObject(key, new OnResultReadyListener<Party>() {
+                    @Override
+                    public void onResultReady(Party result) {
+                        addParty(result);
+                    }
+                });
+            }
+            @Override
+            public void onKeyExited(String key) {
+                Log.d(TAG, "MapsFragment onKeyExited:" + key);
+                markerMap.get(key).remove();
+            }
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                //NOTE: this is called when the event changes location, not when it moves inside the search area
+                Log.d(TAG, "MapsFragment onKeyMoved:" + key);
+                DatabaseAccess.server_getPartyObject(key, new OnResultReadyListener<Party>() {
+                    @Override
+                    public void onResultReady(Party result) {
+                        addParty(result);
+                    }
+                });
+            }
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
         //FIXME: if a event is updated, instead of updating its marker, a new marker will be inserted instead.
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 LatLng nePoint = mMap.getProjection().getVisibleRegion().latLngBounds.northeast;
                 LatLng swPoint = mMap.getProjection().getVisibleRegion().latLngBounds.southwest;
-                LatLng center = new LatLng((nePoint.latitude + swPoint.latitude)/2, (nePoint.longitude + swPoint.longitude)/2);
+                GeoLocation center = new GeoLocation((nePoint.latitude + swPoint.latitude)/2, (nePoint.longitude + swPoint.longitude)/2);
                 double radius = distance(nePoint, swPoint) / 2;
-                Log.d(HomeSwipeActivity.TAG, "OnCameraIdleListener invoked. (" + center + " radius:" + radius + ")");
-                mMap.clear();
-                server_getEventsInDistance(center, radius,
-                    new OnResultReadyListener<Party>() {
-                        @Override
-                        public void onResultReady(Party party) {
-                            addParty(party);
-                        }
-                    });
+                Log.d(HomeSwipeActivity.TAG, "OnCameraIdleListener setting new GeoFire location: (" + center + " radius:" + radius + ")");
+                geoQuery.setLocation(center, radius);
             }
         });
     }
@@ -338,9 +385,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         );
         marker.setTag(party);
         marker.setVisible(true);
+        markerMap.put(party.getId(), marker);
         Log.d(HomeSwipeActivity.TAG, "party added. (Name:\"" + party.getName() + "\" ID:" + party.getId() + ")");
     }
-
 
     public BitmapDrawable writeOnDrawable(int drawableId, String text){
 
